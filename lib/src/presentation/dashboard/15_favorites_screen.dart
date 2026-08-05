@@ -4,14 +4,17 @@ import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
 
-class FavoritesScreen extends StatelessWidget {
+class FavoritesScreen extends ConsumerWidget {
   const FavoritesScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final colors = context.mainColors;
+    
+    final favDocsAsync = ref.watch(favoriteDocumentsProvider);
 
     return Scaffold(
       body: Container(
@@ -108,21 +111,34 @@ class FavoritesScreen extends StatelessWidget {
 
               // Favorites List
               Expanded(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 0.9,
-                  children: [
-                    _buildFavoriteCard(context, l10n.s15_passport_title, l10n.s15_passport_meta, OwnKeepMainIcons.filePdf, colors.dangerRed),
-                    _buildFavoriteCard(context, l10n.s15_insurance_title, l10n.s15_insurance_meta, OwnKeepMainIcons.filePdf, colors.primaryBlue),
-                    _buildFavoriteCard(context, l10n.s15_family_photo_title, l10n.s15_family_photo_meta, OwnKeepMainIcons.image, colors.successGreen),
-                    _buildFavoriteCard(context, l10n.s15_aadhaar_title, l10n.s15_aadhaar_meta, OwnKeepMainIcons.filePdf, colors.dangerRed),
-                    _buildFavoriteCard(context, l10n.s15_licence_title, l10n.s15_licence_meta, OwnKeepMainIcons.filePdf, colors.primaryBlue),
-                    _buildFavoriteCard(context, l10n.s15_bank_title, l10n.s15_bank_meta, OwnKeepMainIcons.filePdf, colors.dangerRed),
-                    _buildFavoriteCard(context, l10n.s15_itr_title, l10n.s15_itr_meta, OwnKeepMainIcons.spreadsheet, colors.warningOrange),
-                  ],
+                child: favDocsAsync.when(
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (error, stack) => Center(child: Text('Failed to load favorites', style: TextStyle(color: colors.textSecondary))),
+                  data: (docs) {
+                    if (docs.isEmpty) {
+                      return Center(child: Text('No favorites yet', style: TextStyle(color: colors.textSecondary)));
+                    }
+                    return GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                        childAspectRatio: 0.9,
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      itemCount: docs.length,
+                      itemBuilder: (context, index) {
+                        final doc = docs[index];
+                        return _buildFavoriteCard(
+                          context,
+                          doc.logicalFilename.isNotEmpty ? doc.logicalFilename : 'Untitled',
+                          doc.documentType.toString().split('.').last, // Just for testing
+                          OwnKeepMainIcons.filePdf, // Map actual icons later
+                          colors.dangerRed,
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
             ],

@@ -5,7 +5,7 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../providers/vault_provider.dart';
+import '../../providers/document_provider.dart';
 
 class RecentScreen extends ConsumerWidget {
   const RecentScreen({super.key});
@@ -15,11 +15,7 @@ class RecentScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final colors = context.mainColors;
 
-    final controller = ref.watch(ingestionControllerProvider);
-
-    if (controller == null) {
-      return Scaffold(backgroundColor: colors.backgroundTop);
-    }
+    final recentDocsAsync = ref.watch(recentDocumentsProvider);
 
     return Scaffold(
       body: Container(
@@ -93,10 +89,10 @@ class RecentScreen extends ConsumerWidget {
 
               // Recent Items List
               Expanded(
-                child: ListenableBuilder(
-                  listenable: controller,
-                  builder: (context, child) {
-                    final docs = controller.dashboardDocuments;
+                child: recentDocsAsync.when(
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (error, stack) => Center(child: Text('Failed to load recent files', style: TextStyle(color: colors.textSecondary))),
+                  data: (docs) {
                     if (docs.isEmpty) {
                       return Center(child: Text('No recent items', style: TextStyle(color: colors.textSecondary)));
                     }

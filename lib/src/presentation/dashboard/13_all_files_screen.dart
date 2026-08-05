@@ -4,14 +4,17 @@ import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
 
-class AllFilesScreen extends StatelessWidget {
+class AllFilesScreen extends ConsumerWidget {
   const AllFilesScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final colors = context.mainColors;
+    
+    final docsAsync = ref.watch(allDocumentsProvider);
 
     return Scaffold(
       body: Container(
@@ -139,7 +142,13 @@ class AllFilesScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Row(
                   children: [
-                    Text('${l10n.s13_all_count} files', style: TextStyle(color: colors.textMuted, fontSize: 14)),
+                    Text(
+                      docsAsync.maybeWhen(
+                        data: (docs) => '${docs.length} files',
+                        orElse: () => '... files',
+                      ),
+                      style: TextStyle(color: colors.textMuted, fontSize: 14),
+                    ),
                   ],
                 ),
               ),
@@ -147,18 +156,28 @@ class AllFilesScreen extends StatelessWidget {
 
               // Files List
               Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  children: [
-                    _buildFileItem(context, l10n.s13_passport_title, l10n.s13_passport_meta, OwnKeepMainIcons.filePdf, colors.dangerRed),
-                    _buildFileItem(context, l10n.s13_insurance_title, l10n.s13_insurance_meta, OwnKeepMainIcons.filePdf, colors.dangerRed),
-                    _buildFileItem(context, l10n.s13_licence_title, l10n.s13_licence_meta, OwnKeepMainIcons.image, colors.successGreen),
-                    _buildFileItem(context, l10n.s13_bank_title, l10n.s13_bank_meta, OwnKeepMainIcons.filePdf, colors.dangerRed),
-                    _buildFileItem(context, l10n.s13_family_photo_title, l10n.s13_family_photo_meta, OwnKeepMainIcons.image, colors.successGreen),
-                    _buildFileItem(context, l10n.s13_investment_title, l10n.s13_investment_meta, OwnKeepMainIcons.spreadsheet, colors.warningOrange),
-                    _buildFileItem(context, l10n.s13_property_title, l10n.s13_property_meta, OwnKeepMainIcons.filePdf, colors.dangerRed),
-                    _buildFileItem(context, l10n.s13_project_title, l10n.s13_project_meta, OwnKeepMainIcons.document, colors.primaryBlue),
-                  ],
+                child: docsAsync.when(
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (error, stack) => Center(child: Text('Failed to load files', style: TextStyle(color: colors.textSecondary))),
+                  data: (docs) {
+                    if (docs.isEmpty) {
+                      return Center(child: Text('No files yet', style: TextStyle(color: colors.textSecondary)));
+                    }
+                    return ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      itemCount: docs.length,
+                      itemBuilder: (context, index) {
+                        final doc = docs[index];
+                        return _buildFileItem(
+                          context,
+                          doc.logicalFilename.isNotEmpty ? doc.logicalFilename : 'Untitled',
+                          doc.documentType.toString().split('.').last,
+                          OwnKeepMainIcons.filePdf,
+                          colors.primaryBlue,
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
             ],

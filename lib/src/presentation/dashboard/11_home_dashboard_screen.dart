@@ -11,6 +11,7 @@ import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ownkeep/src/citizen_vault/ingestion/ingestion_ui_controller.dart';
+import '../../providers/document_provider.dart';
 import '20_navigation_menu.dart';
 
 class HomeDashboardScreen extends ConsumerStatefulWidget {
@@ -165,10 +166,10 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
               // Recent Items List
               SizedBox(
                 height: 110,
-                child: ListenableBuilder(
-                  listenable: controller,
-                  builder: (context, child) {
-                    final docs = controller.dashboardDocuments;
+                child: ref.watch(recentDocumentsProvider).when(
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (error, stack) => Center(child: Text('Error loading documents', style: TextStyle(color: colors.textSecondary))),
+                  data: (docs) {
                     if (docs.isEmpty) {
                       return Center(
                         child: Text(
@@ -184,7 +185,7 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
                           padding: const EdgeInsets.only(right: 12),
                           child: _buildRecentCard(
                             doc.logicalFilename.isNotEmpty ? doc.logicalFilename : 'Untitled',
-                            'Recently added', // Ideally from doc
+                            doc.documentType.toString().split('.').last, // Temporary type mapping
                             OwnKeepMainIcons.file_pdf, // We'll map this properly later
                             colors.primaryBlue,
                             () {},

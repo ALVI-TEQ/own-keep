@@ -4,14 +4,17 @@ import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
 
-class CategoriesScreen extends StatelessWidget {
+class CategoriesScreen extends ConsumerWidget {
   const CategoriesScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final colors = context.mainColors;
+    
+    final docsAsync = ref.watch(allDocumentsProvider);
 
     return Scaffold(
       body: Container(
@@ -98,22 +101,30 @@ class CategoriesScreen extends StatelessWidget {
 
               // Categories List
               Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  children: [
-                    _buildCategoryItem(context, l10n.collection_identity, l10n.s16_identity_count, OwnKeepMainIcons.identity, colors.dangerRed),
-                    _buildCategoryItem(context, l10n.collection_finance, l10n.s16_finance_count, OwnKeepMainIcons.finance, colors.successGreen),
-                    _buildCategoryItem(context, l10n.collection_insurance, l10n.s16_insurance_count, OwnKeepMainIcons.insurance, colors.primaryBlue),
-                    _buildCategoryItem(context, l10n.collection_health, l10n.s16_health_count, OwnKeepMainIcons.health, colors.healthPink),
-                    _buildCategoryItem(context, l10n.collection_property, l10n.s16_property_count, OwnKeepMainIcons.property, colors.warningOrange),
-                    _buildCategoryItem(context, l10n.collection_vehicle, l10n.s16_vehicle_count, OwnKeepMainIcons.vehicle, colors.accentCyan),
-                    _buildCategoryItem(context, l10n.collection_education, l10n.s16_education_count, OwnKeepMainIcons.education, colors.aiPurple),
-                    _buildCategoryItem(context, l10n.collection_work, l10n.s16_work_count, OwnKeepMainIcons.work, colors.primaryBlue),
-                    _buildCategoryItem(context, l10n.collection_personal, l10n.s16_personal_count, OwnKeepMainIcons.profile, colors.successGreen),
-                    _buildCategoryItem(context, l10n.collection_travel, l10n.s16_travel_count, OwnKeepMainIcons.travel, colors.warningOrange),
-                    _buildCategoryItem(context, l10n.collection_family, l10n.s16_family_count, OwnKeepMainIcons.family, colors.healthPink),
-                    _buildCategoryItem(context, l10n.collection_important, l10n.s16_important_count, OwnKeepMainIcons.favorite, colors.dangerRed),
-                  ],
+                child: docsAsync.when(
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (err, stack) => Center(child: Text('Error loading categories')),
+                  data: (docs) {
+                    int getCount(String typeStr) => docs.where((d) => d.documentType.toString().toLowerCase().contains(typeStr)).length;
+                    
+                    return ListView(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      children: [
+                        _buildCategoryItem(context, l10n.collection_identity, '${getCount('identity')} items', OwnKeepMainIcons.identity, colors.dangerRed),
+                        _buildCategoryItem(context, l10n.collection_finance, '${getCount('finance')} items', OwnKeepMainIcons.finance, colors.successGreen),
+                        _buildCategoryItem(context, l10n.collection_insurance, '${getCount('insurance')} items', OwnKeepMainIcons.insurance, colors.primaryBlue),
+                        _buildCategoryItem(context, l10n.collection_health, '${getCount('health')} items', OwnKeepMainIcons.health, colors.healthPink),
+                        _buildCategoryItem(context, l10n.collection_property, '${getCount('property')} items', OwnKeepMainIcons.property, colors.warningOrange),
+                        _buildCategoryItem(context, l10n.collection_vehicle, '${getCount('vehicle')} items', OwnKeepMainIcons.vehicle, colors.accentCyan),
+                        _buildCategoryItem(context, l10n.collection_education, '${getCount('education')} items', OwnKeepMainIcons.education, colors.aiPurple),
+                        _buildCategoryItem(context, l10n.collection_work, '${getCount('work')} items', OwnKeepMainIcons.work, colors.primaryBlue),
+                        _buildCategoryItem(context, l10n.collection_personal, '${getCount('person')} items', OwnKeepMainIcons.profile, colors.successGreen),
+                        _buildCategoryItem(context, l10n.collection_travel, '${getCount('travel')} items', OwnKeepMainIcons.travel, colors.warningOrange),
+                        _buildCategoryItem(context, l10n.collection_family, '${getCount('family')} items', OwnKeepMainIcons.family, colors.healthPink),
+                        _buildCategoryItem(context, l10n.collection_important, '${docs.where((d) => d.isFavourite).length} items', OwnKeepMainIcons.favorite, colors.dangerRed),
+                      ],
+                    );
+                  },
                 ),
               ),
             ],
