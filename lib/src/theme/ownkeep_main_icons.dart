@@ -378,5 +378,7 @@ abstract final class OwnKeepMainIcons {
   static const String security = 'assets/main/icons/security.svg';
   static const String database = 'assets/main/icons/database.svg';
   static const String email = 'assets/main/icons/email.svg';
+  static const String document_tools = 'assets/main/icons/document_group.svg';
+  static const String ai_wand = 'assets/main/icons/custom_sparkle.svg';
 
 }

@@ -105,10 +105,10 @@ class _SmartSuggestionsScreenState extends State<SmartSuggestionsScreen> {
                 margin: const EdgeInsets.only(bottom: 16),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: isSelected ? s['color']?.withValues(alpha: 0.1) : colors.surfacePrimary,
+                  color: isSelected ? (s['color'] as Color?)?.withValues(alpha: 0.1) : colors.surfacePrimary,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: isSelected ? s['color']! : colors.borderSoft,
+                    color: isSelected ? (s['color'] as Color) : colors.borderSoft,
                     width: isSelected ? 2 : 1,
                   ),
                 ),
