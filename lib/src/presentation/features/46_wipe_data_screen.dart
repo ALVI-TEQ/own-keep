@@ -5,15 +5,17 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/vault_provider.dart';
 
-class WipeDataScreen extends StatefulWidget {
+class WipeDataScreen extends ConsumerStatefulWidget {
   const WipeDataScreen({super.key});
 
   @override
-  State<WipeDataScreen> createState() => _WipeDataScreenState();
+  ConsumerState<WipeDataScreen> createState() => _WipeDataScreenState();
 }
 
-class _WipeDataScreenState extends State<WipeDataScreen> {
+class _WipeDataScreenState extends ConsumerState<WipeDataScreen> {
   bool _backupChecked = false;
   bool _recoveryChecked = false;
   bool _deviceChecked = false;
@@ -149,23 +151,28 @@ class _WipeDataScreenState extends State<WipeDataScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _canDelete ? () {} : null,
+                onPressed: _canDelete ? () async {
+                  await ref.read(vaultSessionProvider.notifier).destroyVault();
+                  if (context.mounted) {
+                    context.go('/welcome');
+                  }
+                } : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colors.dangerRed,
                   disabledBackgroundColor: colors.dangerRed.withOpacity(0.3),
-                  foregroundColor: Colors.white,
-                  disabledForegroundColor: Colors.white.withOpacity(0.7),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                 ),
                 child: Text(
                   l10n.s46_delete,
-                  style: const TextStyle(
+                  style: TextStyle(
+                    color: _canDelete ? Colors.white : Colors.white.withOpacity(0.5),
                     fontSize: 16,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                     fontFamily: 'Inter',
+                    letterSpacing: 1.1,
                   ),
                 ),
               ),

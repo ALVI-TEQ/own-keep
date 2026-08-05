@@ -50,7 +50,7 @@ class DuplicateFinderScreen extends StatelessWidget {
               child: Column(
                 children: [
                   SvgPicture.asset(
-                    OwnKeepMainIcons.duplicate_files,
+                    OwnKeepMainIcons.files,
                     colorFilter: ColorFilter.mode(colors.warningOrange, BlendMode.srcIn),
                     width: 48,
                     height: 48,

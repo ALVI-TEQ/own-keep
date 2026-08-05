@@ -95,6 +95,9 @@ abstract interface class VaultLifecycle {
     required File archive,
     required String recoveryPassphrase,
   });
+
+  /// Completely destroys the vault and all its data.
+  Future<void> destroyVault();
 }
 
 /// Failure safe for presentation without exposing sensitive details.
@@ -252,6 +255,14 @@ final class LocalVaultLifecycle implements VaultLifecycle {
     } on Object {
       return false;
     }
+  }
+
+  @override
+  Future<void> destroyVault() async {
+    if (_root.existsSync()) {
+      _root.deleteSync(recursive: true);
+    }
+    await _deleteDeviceKeyBestEffort();
   }
 
   @override

@@ -76,8 +76,9 @@ import '../presentation/features/60_scan_securely_screen.dart';
 
 
 
-import '../presentation/features/61_69_category_collections_screen.dart';
-import '../presentation/features/70_custom_collection_screen.dart';
+import '../presentation/features/collections/smart_collection_category.dart';
+import '../presentation/features/collections/smart_collection_screen.dart';
+import '../presentation/features/collections/70_custom_collection_screen.dart';
 import '../presentation/features/71_ai_chat_screen.dart';
 import '../presentation/features/72_ai_insights_screen.dart';
 import '../presentation/features/73_smart_suggestions_screen.dart';
@@ -99,6 +100,7 @@ import '../presentation/features/88_shared_activity_screen.dart';
 import '../presentation/features/89_invitations_screen.dart';
 import '../presentation/features/90_access_history_screen.dart';
 import '../presentation/features/91_profile_screen.dart';
+import '../presentation/features/91_ownkeep_pro_screen.dart';
 import '../presentation/features/92_themes_screen.dart';
 import '../presentation/features/93_app_lock_screen.dart';
 import '../presentation/features/94_hidden_vault_screen.dart';
@@ -174,15 +176,15 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/features/add-notes', builder: (context, state) => const AddNotesScreen()),
       GoRoute(path: '/features/print-save-as', builder: (context, state) => const PrintSaveAsScreen()),
       GoRoute(path: '/features/scan-securely', builder: (context, state) => const SecureScanScreen()),
-      GoRoute(path: '/features/health-collection', builder: (context, state) => const HealthCollectionScreen()),
-      GoRoute(path: '/features/finance-collection', builder: (context, state) => const FinanceCollectionScreen()),
-      GoRoute(path: '/features/property-collection', builder: (context, state) => const PropertyCollectionScreen()),
-      GoRoute(path: '/features/vehicle-collection', builder: (context, state) => const VehicleCollectionScreen()),
-      GoRoute(path: '/features/education-collection', builder: (context, state) => const EducationCollectionScreen()),
-      GoRoute(path: '/features/identity-collection', builder: (context, state) => const IdentityCollectionScreen()),
-      GoRoute(path: '/features/insurance-collection', builder: (context, state) => const InsuranceCollectionScreen()),
-      GoRoute(path: '/features/travel-collection', builder: (context, state) => const TravelCollectionScreen()),
-      GoRoute(path: '/features/work-collection', builder: (context, state) => const WorkCollectionScreen()),
+      // GoRoute(path: '/features/health-collection', builder: (context, state) => const HealthCollectionScreen()),
+      // GoRoute(path: '/features/finance-collection', builder: (context, state) => const FinanceCollectionScreen()),
+      // GoRoute(path: '/features/property-collection', builder: (context, state) => const PropertyCollectionScreen()),
+      // GoRoute(path: '/features/vehicle-collection', builder: (context, state) => const VehicleCollectionScreen()),
+      // GoRoute(path: '/features/education-collection', builder: (context, state) => const EducationCollectionScreen()),
+      // GoRoute(path: '/features/identity-collection', builder: (context, state) => const IdentityCollectionScreen()),
+      // GoRoute(path: '/features/insurance-collection', builder: (context, state) => const InsuranceCollectionScreen()),
+      // GoRoute(path: '/features/travel-collection', builder: (context, state) => const TravelCollectionScreen()),
+      // GoRoute(path: '/features/work-collection', builder: (context, state) => const WorkCollectionScreen()),
       GoRoute(path: '/features/custom-collection', builder: (context, state) => const CustomCollectionScreen()),
       GoRoute(path: '/features/ai-chat', builder: (context, state) => const AiChatScreen()),
       GoRoute(path: '/features/ai-insights', builder: (context, state) => const AiInsightsScreen()),
@@ -200,11 +202,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/features/permissions', builder: (context, state) => const PermissionsScreen()),
       GoRoute(path: '/features/trusted-contacts', builder: (context, state) => const TrustedContactsScreen()),
       GoRoute(path: '/features/emergency-access', builder: (context, state) => const EmergencyAccessScreen()),
-      GoRoute(path: '/features/shared-collections', builder: (context, state) => const SharedWithMeScreen()),
-      GoRoute(path: '/features/shared-activity', builder: (context, state) => const ActivityFeedScreen()),
-      GoRoute(path: '/features/invitations', builder: (context, state) => const AuditLogScreen()),
-      GoRoute(path: '/features/access-history', builder: (context, state) => const BackupRestoreScreen()),
-      // GoRoute(path: '/features/ownkeep-pro', builder: (context, state) => const OwnKeepProScreen()),
+      GoRoute(path: '/features/shared-collections', builder: (context, state) => const SharedCollectionsScreen()),
+      GoRoute(path: '/features/shared-activity', builder: (context, state) => const SharedActivityScreen()),
+      GoRoute(path: '/features/invitations', builder: (context, state) => const InvitationsScreen()),
+      GoRoute(path: '/features/access-history', builder: (context, state) => const AccessHistoryScreen()),
+      GoRoute(path: '/features/pro', builder: (context, state) => const OwnKeepProScreen()),
       GoRoute(path: '/features/themes', builder: (context, state) => const ThemesScreen()),
       GoRoute(path: '/features/app-lock', builder: (context, state) => const AppLockScreen()),
       GoRoute(path: '/features/hidden-vault', builder: (context, state) => const HiddenVaultScreen()),
@@ -214,6 +216,18 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/features/device-migration', builder: (context, state) => const DeviceMigrationScreen()),
       GoRoute(path: '/features/restore-vault', builder: (context, state) => const RestoreVaultScreen()),
       GoRoute(path: '/features/security-audit', builder: (context, state) => const SecurityAuditScreen()),
+      // GoRoute(path: '/features/ownkeep-pro', builder: (context, state) => const OwnKeepProScreen()),
+
+      // Collections Routes
+      GoRoute(path: '/collections/custom/new', builder: (context, state) => const CustomCollectionScreen()),
+      GoRoute(
+        path: '/collections/:category',
+        builder: (context, state) {
+          final categoryName = state.pathParameters['category'] ?? '';
+          final category = SmartCollectionCategory.fromName(categoryName) ?? SmartCollectionCategory.health;
+          return SmartCollectionScreen(category: category);
+        },
+      ),
 
       // Dashboard Shell Route
       ShellRoute(

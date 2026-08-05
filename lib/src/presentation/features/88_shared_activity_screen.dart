@@ -1,114 +1,132 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
-class ActivityFeedScreen extends StatelessWidget {
-  const ActivityFeedScreen({super.key});
+class SharedActivityScreen extends StatelessWidget {
+  const SharedActivityScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const activities = [
-      (OwnKeepColors.pink, 'H', 'Harika added Health Report', 'Health Records', 'Today, 10:30 AM'),
-      (OwnKeepColors.primary, 'A', 'Arjun updated Insurance Policy', 'Family Documents', 'Today, 9:15 AM'),
-      (Color(0xFF7C3AED), 'S', 'Alekhya viewed Education Certificate', 'Education', 'Yesterday, 7:40 PM'),
-      (OwnKeepColors.success, 'H', 'Harika added a reminder', 'Health Records', 'Yesterday, 4:20 PM'),
-      (Color(0xFFF59E0B), 'C', 'Charvika opened School ID', 'Education', '12 May, 11:10 AM'),
-      (OwnKeepColors.primary, 'A', 'Arjun created Emergency Pack', 'Emergency Pack', '10 May, 8:45 AM'),
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
+
+    final activities = [
+      {'time': l10n.s88_time_1, 'event': l10n.s88_event_1, 'collection': l10n.s88_collection_1, 'initial': 'H', 'color': const Color(0xFFFF4C9A)},
+      {'time': l10n.s88_time_2, 'event': l10n.s88_event_2, 'collection': l10n.s88_collection_2, 'initial': 'A', 'color': const Color(0xFF4668FF)},
+      {'time': l10n.s88_time_3, 'event': l10n.s88_event_3, 'collection': l10n.s88_collection_3, 'initial': 'A', 'color': const Color(0xFF8548FF)},
+      {'time': l10n.s88_time_4, 'event': l10n.s88_event_4, 'collection': l10n.s88_collection_4, 'initial': 'H', 'color': const Color(0xFFFF4C9A)},
+      {'time': l10n.s88_time_5, 'event': l10n.s88_event_5, 'collection': l10n.s88_collection_5, 'initial': 'C', 'color': const Color(0xFF28CC91)},
+      {'time': l10n.s88_time_6, 'event': l10n.s88_event_6, 'collection': l10n.s88_collection_6, 'initial': 'A', 'color': const Color(0xFF4668FF)},
     ];
 
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('Shared Activity', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('Local family vault actions', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.darkSurfaceElevated, borderRadius: BorderRadius.circular(10)),
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.crop_square_rounded, color: OwnKeepColors.darkTextSecondary, size: 20)),
-          ),
-        ],
+        title: Column(
+          children: [
+            Text(l10n.s88_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(l10n.s88_subtitle, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+          ],
+        ),
+        centerTitle: true,
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 2),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(children: [
-          ...activities.asMap().entries.map((e) {
-            final a = e.value;
-            final i = e.key;
-            return IntrinsicHeight(
-              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                // Date + avatar column
-                SizedBox(
-                  width: 100,
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 14, right: 10),
-                      child: Text(a.$5.split(',').last.trim(), style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 11, fontFamily: 'Inter')),
-                    ),
-                  ]),
-                ),
-                // Dot + line
-                Column(children: [
-                  Container(width: 14, height: 14, margin: EdgeInsets.only(top: 14), decoration: BoxDecoration(color: a.$1, shape: BoxShape.circle)),
-                  if (i < activities.length - 1)
-                    Expanded(child: Container(width: 1.5, color: OwnKeepColors.darkBorder.withValues(alpha: 0.3))),
-                ]),
-                SizedBox(width: 10),
-                // Card
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm, top: 6),
-                    padding: EdgeInsets.all(OwnKeepSpacing.md),
-                    decoration: BoxDecoration(
-                      color: OwnKeepColors.darkSurfaceElevated,
-                      borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                      border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-                    ),
-                    child: Row(children: [
-                      Container(
-                        width: 38, height: 38,
-                        decoration: BoxDecoration(color: a.$1, shape: BoxShape.circle),
-                        child: Center(child: Text(a.$2, style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700, fontFamily: 'Inter'))),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text(a.$3, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 13, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                        Text(a.$4, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 11, fontFamily: 'Inter')),
-                      ])),
-                    ]),
-                  ),
-                ),
-              ]),
-            );
-          }),
-          SizedBox(height: OwnKeepSpacing.sm),
-          Container(
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Activity log location', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 11, fontFamily: 'Inter')),
-                Text('Stored only in this family vault', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-              ]),
-            ]),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-        ]),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: colors.surfacePrimary,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: colors.borderSoft),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.lock_outline, color: colors.textMuted, size: 16),
+                    const SizedBox(width: 8),
+                    Text('${l10n.s88_location}: ', style: TextStyle(color: colors.textMuted, fontSize: 12)),
+                    Text(l10n.s88_location_value, style: TextStyle(color: colors.textSecondary, fontSize: 12, fontWeight: FontWeight.w500)),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                itemCount: activities.length,
+                itemBuilder: (context, index) {
+                  final item = activities[index];
+                  final showLine = index != activities.length - 1;
+
+                  return IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: item['color'] as Color,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Text(item['initial'] as String, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+                              ),
+                            ),
+                            if (showLine)
+                              Expanded(
+                                child: Container(
+                                  width: 2,
+                                  color: colors.borderSoft,
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 24.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(item['event'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500)),
+                                const SizedBox(height: 4),
+                                Text(item['collection'] as String, style: TextStyle(color: colors.primaryBlue, fontSize: 14)),
+                                const SizedBox(height: 8),
+                                Text(item['time'] as String, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

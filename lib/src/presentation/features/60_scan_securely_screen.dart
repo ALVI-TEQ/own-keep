@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class SecureScanScreen extends StatefulWidget {
   const SecureScanScreen({super.key});
@@ -12,185 +13,306 @@ class SecureScanScreen extends StatefulWidget {
 }
 
 class _SecureScanScreenState extends State<SecureScanScreen> {
+  bool _flashEnabled = false;
   bool _autoCrop = true;
   bool _enhance = true;
-  bool _ocr = true;
+  bool _ocr = false;
   bool _multiPage = false;
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: Colors.black, // Camera screens are usually black
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+          onPressed: () => Navigator.pop(context),
         ),
         title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text('Secure Scan', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            Text('Capture and encrypt instantly', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
+          children: [
+            Text(
+              l10n.s60_title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+            Text(
+              l10n.s60_subtitle,
+              style: const TextStyle(
+                color: Colors.white70,
+                fontSize: 13,
+                fontFamily: 'Inter',
+              ),
+            ),
           ],
         ),
+        centerTitle: true,
         actions: [
-          Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.darkSurfaceElevated, borderRadius: BorderRadius.circular(10)),
-            child: IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.bolt_rounded, color: OwnKeepColors.primary, size: 20),
+          IconButton(
+            icon: SvgPicture.asset(
+              OwnKeepMainIcons.flash, // using flash icon
+              colorFilter: ColorFilter.mode(_flashEnabled ? colors.warningOrange : Colors.white, BlendMode.srcIn),
             ),
+            onPressed: () {
+              setState(() {
+                _flashEnabled = !_flashEnabled;
+              });
+            },
           ),
         ],
       ),
-      bottomNavigationBar: OwnKeepBottomNav(),
-      body: Column(
+      body: Stack(
         children: [
-          // Viewfinder area
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.all(OwnKeepSpacing.base),
-              decoration: BoxDecoration(
-                color: OwnKeepColors.darkSurfaceElevated,
-                borderRadius: BorderRadius.circular(OwnKeepRadius.xl),
-                border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-              ),
+          // Camera Preview Area
+          Positioned.fill(
+            child: SvgPicture.asset(
+              'assets/main/illustrations/secure_scan_document.svg',
+              fit: BoxFit.cover,
+            ),
+          ),
+          
+          // Scanner Corners overlaid on top of the preview
+          Positioned.fill(
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
               child: Stack(
                 children: [
-                  Center(
-                    child: Container(
-                      width: 240, height: 320,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEAEBF0),
-                        borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('DOCUMENT', style: TextStyle(color: Color(0xFF1A2340), fontSize: 16, fontWeight: FontWeight.w700, letterSpacing: 1, fontFamily: 'Inter')),
-                          SizedBox(height: 20),
-                          ...List.generate(5, (i) => Container(
-                            margin: EdgeInsets.only(bottom: 10, left: 20, right: 20),
-                            height: 4, decoration: BoxDecoration(color: const Color(0xFFB0B8CC), borderRadius: BorderRadius.circular(2)),
-                          )),
-                        ],
-                      ),
+                  // Top Left
+                  Positioned(
+                    top: 0, left: 0,
+                    child: SvgPicture.asset(OwnKeepMainIcons.scanner_corner, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn), width: 32),
+                  ),
+                  // Top Right (rotated)
+                  Positioned(
+                    top: 0, right: 0,
+                    child: Transform.rotate(
+                      angle: 1.5708, // 90 degrees
+                      child: SvgPicture.asset(OwnKeepMainIcons.scanner_corner, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn), width: 32),
                     ),
                   ),
-                  // Corner brackets
-                  ...[ [0.0, 0.0], [1.0, 0.0], [0.0, 1.0], [1.0, 1.0] ].map((pos) => Positioned(
-                    left: pos[0] == 0.0 ? 20 : null,
-                    right: pos[0] == 1.0 ? 20 : null,
-                    top: pos[1] == 0.0 ? 20 : null,
-                    bottom: pos[1] == 1.0 ? 20 : null,
-                    child: CustomPaint(
-                      size: const Size(24, 24),
-                      painter: _CornerPainter(
-                        flipH: pos[0] == 1.0,
-                        flipV: pos[1] == 1.0,
-                      ),
+                  // Bottom Left (rotated)
+                  Positioned(
+                    bottom: 0, left: 0,
+                    child: Transform.rotate(
+                      angle: -1.5708, // -90 degrees
+                      child: SvgPicture.asset(OwnKeepMainIcons.scanner_corner, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn), width: 32),
                     ),
-                  )),
-                  const Positioned(
-                    bottom: 16, left: 0, right: 0,
-                    child: Text('Document detected', textAlign: TextAlign.center,
-                        style: TextStyle(color: OwnKeepColors.success, fontSize: 13, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+                  ),
+                  // Bottom Right (rotated)
+                  Positioned(
+                    bottom: 0, right: 0,
+                    child: Transform.rotate(
+                      angle: 3.14159, // 180 degrees
+                      child: SvgPicture.asset(OwnKeepMainIcons.scanner_corner, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn), width: 32),
+                    ),
                   ),
                 ],
               ),
             ),
           ),
-          // Toggle grid
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-            child: GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              mainAxisSpacing: OwnKeepSpacing.sm,
-              crossAxisSpacing: OwnKeepSpacing.sm,
-              childAspectRatio: 4,
-              children: [
-                _ToggleChip(label: 'Auto Crop', active: _autoCrop, onTap: () => setState(() => _autoCrop = !_autoCrop)),
-                _ToggleChip(label: 'Enhance', active: _enhance, onTap: () => setState(() => _enhance = !_enhance)),
-                _ToggleChip(label: 'OCR', active: _ocr, onTap: () => setState(() => _ocr = !_ocr)),
-                _ToggleChip(label: 'Multi-page', active: _multiPage, onTap: () => setState(() => _multiPage = !_multiPage)),
-              ],
+          
+          // Document Detected Badge
+          Positioned(
+            top: 24,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: colors.successGreen.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.document_scanner, color: Colors.white, size: 16),
+                    const SizedBox(width: 8),
+                    Text(
+                      l10n.s60_detected,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-          SizedBox(height: OwnKeepSpacing.xl),
-          // Shutter button
-          Container(
-            width: 72, height: 72,
-            decoration: BoxDecoration(
-              gradient: const RadialGradient(colors: [Color(0xFF8B6CFF), OwnKeepColors.primary]),
-              shape: BoxShape.circle,
-              boxShadow: [BoxShadow(color: OwnKeepColors.primary.withValues(alpha: 0.4), blurRadius: 16, spreadRadius: 2)],
+          
+          // Controls and Capture Button
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: EdgeInsets.only(
+                left: OwnKeepSpacing.md,
+                right: OwnKeepSpacing.md,
+                top: OwnKeepSpacing.xl,
+                bottom: MediaQuery.of(context).padding.bottom + OwnKeepSpacing.lg,
+              ),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Colors.black.withOpacity(0.9),
+                    Colors.black.withOpacity(0.0),
+                  ],
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Mode Pills
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildModePill(l10n.s60_document, true),
+                        _buildModePill(l10n.s60_multi_page, _multiPage, onTap: () {
+                          setState(() {
+                            _multiPage = !_multiPage;
+                          });
+                        }),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: OwnKeepSpacing.lg),
+                  
+                  // Capture Button Row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Toggles column
+                      Column(
+                        children: [
+                          _buildToggleItem(l10n.s60_auto_crop, _autoCrop, () => setState(() => _autoCrop = !_autoCrop)),
+                          const SizedBox(height: OwnKeepSpacing.sm),
+                          _buildToggleItem(l10n.s60_enhance, _enhance, () => setState(() => _enhance = !_enhance)),
+                        ],
+                      ),
+                      
+                      // Capture Button
+                      GestureDetector(
+                        onTap: () {},
+                        child: SvgPicture.asset(
+                          OwnKeepMainIcons.capture_button, // assuming this exists
+                          width: 80,
+                          height: 80,
+                          placeholderBuilder: (context) => Container(
+                            width: 80, height: 80, 
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 4),
+                              color: colors.primaryBlue,
+                            ),
+                          ),
+                        ),
+                      ),
+                      
+                      // OCR toggle
+                      _buildToggleItem(l10n.s60_ocr, _ocr, () => setState(() => _ocr = !_ocr)),
+                    ],
+                  ),
+                  const SizedBox(height: OwnKeepSpacing.xl),
+                  
+                  // Security Notice
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        OwnKeepMainIcons.tip_check,
+                        colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn),
+                        width: 16,
+                        height: 16,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        l10n.s60_notice,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            child: const Center(child: Icon(Icons.circle, color: Colors.white, size: 28)),
           ),
-          SizedBox(height: OwnKeepSpacing.sm),
-          Text('Scans are encrypted before saving', style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 12, fontFamily: 'Inter')),
-          SizedBox(height: OwnKeepSpacing.xl),
         ],
       ),
     );
   }
-}
-
-class _ToggleChip extends StatelessWidget {
-  const _ToggleChip({required this.label, required this.active, required this.onTap});
-  final String label;
-  final bool active;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
+  
+  Widget _buildModePill(String text, bool isSelected, {VoidCallback? onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: OwnKeepColors.darkSurfaceElevated,
-          borderRadius: BorderRadius.circular(OwnKeepRadius.sm),
-          border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+          color: isSelected ? Colors.white24 : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
         ),
-        padding: EdgeInsets.symmetric(horizontal: 12),
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text(label, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 13, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-          Icon(active ? Icons.check_rounded : Icons.radio_button_unchecked_rounded,
-              color: active ? OwnKeepColors.success : OwnKeepColors.darkTextMuted, size: 16),
-        ]),
+        child: Text(
+          text,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.white70,
+            fontSize: 14,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            fontFamily: 'Inter',
+          ),
+        ),
       ),
     );
   }
-}
 
-class _CornerPainter extends CustomPainter {
-  const _CornerPainter({required this.flipH, required this.flipV});
-  final bool flipH, flipV;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = OwnKeepColors.primary..strokeWidth = 3..style = PaintingStyle.stroke..strokeCap = StrokeCap.round;
-    if (!flipH && !flipV) {
-      canvas.drawLine(Offset.zero, Offset(size.width, 0), paint);
-      canvas.drawLine(Offset.zero, Offset(0, size.height), paint);
-    } else if (flipH && !flipV) {
-      canvas.drawLine(Offset(size.width, 0), Offset.zero, paint);
-      canvas.drawLine(Offset(size.width, 0), Offset(size.width, size.height), paint);
-    } else if (!flipH && flipV) {
-      canvas.drawLine(Offset(0, size.height), Offset.zero, paint);
-      canvas.drawLine(Offset(0, size.height), Offset(size.width, size.height), paint);
-    } else {
-      canvas.drawLine(Offset(size.width, size.height), Offset(0, size.height), paint);
-      canvas.drawLine(Offset(size.width, size.height), Offset(size.width, 0), paint);
-    }
+  Widget _buildToggleItem(String label, bool isSelected, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: isSelected ? Colors.white24 : Colors.black45,
+              shape: BoxShape.circle,
+            ),
+            child: SvgPicture.asset(
+              isSelected ? OwnKeepMainIcons.tip_check : OwnKeepMainIcons.radio_unselected,
+              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              width: 20,
+              height: 20,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontFamily: 'Inter',
+            ),
+          ),
+        ],
+      ),
+    );
   }
-
-  @override
-  bool shouldRepaint(_) => false;
 }

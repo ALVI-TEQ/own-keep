@@ -1,166 +1,231 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
 class InviteMembersScreen extends StatefulWidget {
   const InviteMembersScreen({super.key});
+
   @override
   State<InviteMembersScreen> createState() => _InviteMembersScreenState();
 }
 
 class _InviteMembersScreenState extends State<InviteMembersScreen> {
-  final _nameController = TextEditingController(text: 'Harika');
-  int _selectedRole = 0; // 0=Adult, 1=Child, 2=Trusted
-
-  final _roles = [
-    ('Adult', 'Full family access'),
-    ('Child', 'Limited by collection'),
-    ('Trusted Contact', 'Emergency-only access'),
-  ];
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
-  }
+  int _selectedMethodIndex = 0; // 0 = QR, 1 = Nearby, 2 = File
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('Invite Member', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('Create an offline encrypted invitation', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.darkSurfaceElevated, borderRadius: BorderRadius.circular(10)),
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.help_outline_rounded, color: OwnKeepColors.darkTextSecondary, size: 20)),
-          ),
-        ],
+        title: Column(
+          children: [
+            Text(l10n.s83_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(l10n.s83_subtitle, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+          ],
+        ),
+        centerTitle: true,
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 3),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          // Member Name
-          Text('Member Name', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          SizedBox(height: OwnKeepSpacing.sm),
-          TextField(
-            controller: _nameController,
-            style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter'),
-            decoration: InputDecoration(
-              filled: true, fillColor: OwnKeepColors.darkSurfaceElevated,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md), borderSide: const BorderSide(color: OwnKeepColors.primary)),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md), borderSide: BorderSide(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3))),
-              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md), borderSide: const BorderSide(color: OwnKeepColors.primary, width: 1.5)),
-              isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          SizedBox(height: OwnKeepSpacing.xl),
-          // Role
-          Text('Role', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          SizedBox(height: OwnKeepSpacing.sm),
-          ..._roles.asMap().entries.map((e) => GestureDetector(
-            onTap: () => setState(() => _selectedRole = e.key),
-            child: Container(
-              margin: EdgeInsets.only(bottom: 8),
-              padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.md, vertical: 14),
-              decoration: BoxDecoration(
-                color: OwnKeepColors.darkSurfaceElevated,
-                borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                border: Border.all(
-                  color: _selectedRole == e.key ? OwnKeepColors.primary : OwnKeepColors.darkBorder.withValues(alpha: 0.3),
-                  width: _selectedRole == e.key ? 1.5 : 1,
-                ),
-              ),
-              child: Row(children: [
-                Container(
-                  width: 22, height: 22,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: _selectedRole == e.key ? OwnKeepColors.primary : OwnKeepColors.darkTextMuted, width: 2),
-                    color: _selectedRole == e.key ? OwnKeepColors.primary : Colors.transparent,
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Member Name Field
+              Text(l10n.s83_member_name, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+              const SizedBox(height: 8),
+              TextFormField(
+                initialValue: l10n.s83_member_name_value,
+                style: TextStyle(color: colors.textPrimary, fontSize: 16),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: colors.surfacePrimary,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(color: colors.borderSoft),
                   ),
-                  child: _selectedRole == e.key ? Icon(Icons.circle, color: Colors.white, size: 8) : null,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(color: colors.borderSoft),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(color: colors.primaryBlue),
+                  ),
                 ),
-                SizedBox(width: OwnKeepSpacing.md),
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(e.value.$1, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                  Text(e.value.$2, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-                ]),
-              ]),
-            ),
-          )),
-          SizedBox(height: OwnKeepSpacing.xl),
-          // Invitation Method
-          Text('Invitation Method', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          SizedBox(height: OwnKeepSpacing.sm),
-          ...[
-            (Color(0xFF7C3AED), Color(0xFF3D1A7A), Icons.grid_view_rounded, 'QR Code', 'Scan directly on the second device'),
-            (OwnKeepColors.ai, Color(0xFF0A3D3D), Icons.compare_arrows_rounded, 'Nearby Transfer', 'Send over local network'),
-            (OwnKeepColors.success, Color(0xFF0A4A2E), Icons.download_rounded, 'Encrypted File', 'Save a portable invitation package'),
-          ].map((m) => Container(
-            margin: EdgeInsets.only(bottom: 8),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(children: [
-              Container(
-                width: 36, height: 36,
-                decoration: BoxDecoration(color: m.$2, borderRadius: BorderRadius.circular(9)),
-                child: Icon(m.$3, color: Colors.white.withValues(alpha: 0.85), size: 18),
               ),
-              SizedBox(width: OwnKeepSpacing.md),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(m.$4, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                Text(m.$5, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ])),
-              Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-            ]),
-          )),
-          SizedBox(height: OwnKeepSpacing.sm),
-          // Expiry note
-          Container(
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Invitation expires', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 11, fontFamily: 'Inter')),
-                Text('24 hours after creation', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-              ]),
-              Text('Change', style: TextStyle(color: OwnKeepColors.primary, fontSize: 13, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            ]),
+              const SizedBox(height: 24),
+
+              // Role Dropdown (Mocked as Container for UI)
+              Text(l10n.s83_role, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                decoration: BoxDecoration(
+                  color: colors.surfacePrimary,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: colors.borderSoft),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Adult', style: TextStyle(color: colors.textPrimary, fontSize: 16)),
+                    Icon(Icons.keyboard_arrow_down, color: colors.textSecondary),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // Invitation Method Selection
+              Text(l10n.s83_invitation_method, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+              const SizedBox(height: 16),
+              
+              _buildMethodCard(
+                title: l10n.s83_qr,
+                body: l10n.s83_qr_body,
+                iconPath: OwnKeepMainIcons.qr_code,
+                isSelected: _selectedMethodIndex == 0,
+                onTap: () => setState(() => _selectedMethodIndex = 0),
+                colors: colors,
+              ),
+              const SizedBox(height: 12),
+              
+              _buildMethodCard(
+                title: l10n.s83_nearby,
+                body: l10n.s83_nearby_body,
+                iconPath: OwnKeepMainIcons.device_sync,
+                isSelected: _selectedMethodIndex == 1,
+                onTap: () => setState(() => _selectedMethodIndex = 1),
+                colors: colors,
+              ),
+              const SizedBox(height: 12),
+
+              _buildMethodCard(
+                title: l10n.s83_file,
+                body: l10n.s83_file_body,
+                iconPath: OwnKeepMainIcons.folder_export,
+                isSelected: _selectedMethodIndex == 2,
+                onTap: () => setState(() => _selectedMethodIndex = 2),
+                colors: colors,
+              ),
+              
+              const SizedBox(height: 32),
+              
+              // Expiry Notice
+              Row(
+                children: [
+                  Icon(Icons.info_outline, color: colors.textMuted, size: 16),
+                  const SizedBox(width: 8),
+                  Text('${l10n.s83_expires_label}: ', style: TextStyle(color: colors.textMuted, fontSize: 12)),
+                  Text(l10n.s83_expires_value, style: TextStyle(color: colors.textPrimary, fontSize: 12, fontWeight: FontWeight.w500)),
+                ],
+              ),
+            ],
           ),
-          SizedBox(height: OwnKeepSpacing.base),
-          FilledButton(
-            onPressed: () {},
-            style: FilledButton.styleFrom(
-              backgroundColor: OwnKeepColors.primary,
-              minimumSize: const Size.fromHeight(52),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: ElevatedButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Offline invitation package created')));
+                context.pop();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colors.primaryBlue,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              ),
+              child: Text(
+                l10n.s83_create,
+                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+              ),
             ),
-            child: Text('Create Invitation', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
           ),
-        ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMethodCard({
+    required String title,
+    required String body,
+    required String iconPath,
+    required bool isSelected,
+    required VoidCallback onTap,
+    required OwnKeepMainColorsTheme colors,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isSelected ? colors.primaryBlue.withValues(alpha: 0.1) : colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected ? colors.primaryBlue : colors.borderSoft,
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colors.primaryBlue.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: SvgPicture.asset(iconPath, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 24),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500)),
+                  const SizedBox(height: 4),
+                  Text(body, style: TextStyle(color: colors.textSecondary, fontSize: 12)),
+                ],
+              ),
+            ),
+            const SizedBox(width: 16),
+            Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected ? colors.primaryBlue : colors.textSecondary,
+                  width: 2,
+                ),
+                color: isSelected ? colors.primaryBlue : Colors.transparent,
+              ),
+              child: isSelected ? const Icon(Icons.check, size: 16, color: Colors.white) : null,
+            ),
+          ],
+        ),
       ),
     );
   }

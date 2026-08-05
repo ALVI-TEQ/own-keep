@@ -5,12 +5,14 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/vault_provider.dart';
 
-class AddItemMenuScreen extends StatelessWidget {
+class AddItemMenuScreen extends ConsumerWidget {
   const AddItemMenuScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
 
@@ -44,25 +46,34 @@ class AddItemMenuScreen extends StatelessWidget {
             const SizedBox(height: OwnKeepSpacing.md),
             Row(
               children: [
-                Expanded(child: _buildGridItem(context, colors, OwnKeepMainIcons.scan, l10n.s25_scan, colors.primaryBlue)),
+                Expanded(child: _buildGridItem(context, colors, OwnKeepMainIcons.scan, l10n.s25_scan, colors.primaryBlue, () async {
+                  final c = ref.read(ingestionControllerProvider);
+                  if (c != null && context.mounted) { context.pop(); await c.captureImage(); }
+                })),
                 const SizedBox(width: OwnKeepSpacing.md),
-                Expanded(child: _buildGridItem(context, colors, OwnKeepMainIcons.camera, l10n.s25_photo, colors.successGreen)),
+                Expanded(child: _buildGridItem(context, colors, OwnKeepMainIcons.camera, l10n.s25_photo, colors.successGreen, () async {
+                  final c = ref.read(ingestionControllerProvider);
+                  if (c != null && context.mounted) { context.pop(); await c.captureImage(); }
+                })),
               ],
             ),
             const SizedBox(height: OwnKeepSpacing.md),
             Row(
               children: [
-                Expanded(child: _buildGridItem(context, colors, OwnKeepMainIcons.file_add, l10n.s25_add_files, colors.warningOrange)),
+                Expanded(child: _buildGridItem(context, colors, OwnKeepMainIcons.file_add, l10n.s25_add_files, colors.warningOrange, () async {
+                  final c = ref.read(ingestionControllerProvider);
+                  if (c != null && context.mounted) { context.pop(); await c.importFile(); }
+                })),
                 const SizedBox(width: OwnKeepSpacing.md),
-                Expanded(child: _buildGridItem(context, colors, OwnKeepMainIcons.microphone, l10n.s25_voice, colors.aiPurple)),
+                Expanded(child: _buildGridItem(context, colors, OwnKeepMainIcons.microphone, l10n.s25_voice, colors.aiPurple, null)),
               ],
             ),
             const SizedBox(height: OwnKeepSpacing.md),
             Row(
               children: [
-                Expanded(child: _buildGridItem(context, colors, OwnKeepMainIcons.note, l10n.s25_note, const Color(0xFF27C5E8))), // accentCyan
+                Expanded(child: _buildGridItem(context, colors, OwnKeepMainIcons.note, l10n.s25_note, const Color(0xFF27C5E8), null)),
                 const SizedBox(width: OwnKeepSpacing.md),
-                Expanded(child: _buildGridItem(context, colors, OwnKeepMainIcons.contact, l10n.s25_contact, const Color(0xFFE54B86))), // tagPink
+                Expanded(child: _buildGridItem(context, colors, OwnKeepMainIcons.contact, l10n.s25_contact, const Color(0xFFE54B86), null)),
               ],
             ),
             
@@ -71,18 +82,24 @@ class AddItemMenuScreen extends StatelessWidget {
             // Import From Section
             _buildSectionTitle(l10n.s25_import_from, colors),
             const SizedBox(height: OwnKeepSpacing.md),
-            _buildListTile(context, colors, OwnKeepMainIcons.gallery, l10n.s25_gallery, null),
+            _buildListTile(context, colors, OwnKeepMainIcons.gallery, l10n.s25_gallery, null, () async {
+              final c = ref.read(ingestionControllerProvider);
+              if (c != null && context.mounted) { context.pop(); await c.importGalleryImage(); }
+            }),
             const SizedBox(height: OwnKeepSpacing.sm),
-            _buildListTile(context, colors, OwnKeepMainIcons.files, l10n.s25_files, null),
+            _buildListTile(context, colors, OwnKeepMainIcons.files, l10n.s25_files, null, () async {
+              final c = ref.read(ingestionControllerProvider);
+              if (c != null && context.mounted) { context.pop(); await c.importFile(); }
+            }),
             const SizedBox(height: OwnKeepSpacing.sm),
-            _buildListTile(context, colors, OwnKeepMainIcons.cloud, l10n.s25_cloud, l10n.s25_cloud_note),
+            _buildListTile(context, colors, OwnKeepMainIcons.cloud, l10n.s25_cloud, l10n.s25_cloud_note, null),
 
             const SizedBox(height: OwnKeepSpacing.xxl),
 
             // Create New Folder Section
             _buildSectionTitle(l10n.s25_create_folder, colors),
             const SizedBox(height: OwnKeepSpacing.md),
-            _buildListTile(context, colors, OwnKeepMainIcons.folder, l10n.s25_new_folder, null, iconColor: colors.favoriteYellow),
+            _buildListTile(context, colors, OwnKeepMainIcons.folder, l10n.s25_new_folder, null, null, iconColor: colors.favoriteYellow),
 
             const SizedBox(height: OwnKeepSpacing.xxl),
 
@@ -131,9 +148,9 @@ class AddItemMenuScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGridItem(BuildContext context, OwnKeepMainColorsTheme colors, String icon, String label, Color iconColor) {
+  Widget _buildGridItem(BuildContext context, OwnKeepMainColorsTheme colors, String icon, String label, Color iconColor, VoidCallback? onTap) {
     return InkWell(
-      onTap: () {},
+      onTap: onTap ?? () {},
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 12),
@@ -174,10 +191,10 @@ class AddItemMenuScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildListTile(BuildContext context, OwnKeepMainColorsTheme colors, String icon, String title, String? subtitle, {Color? iconColor}) {
+  Widget _buildListTile(BuildContext context, OwnKeepMainColorsTheme colors, String iconPath, String title, String? subtitle, VoidCallback? onTap, {Color? iconColor}) {
     return InkWell(
-      onTap: () {},
-      borderRadius: BorderRadius.circular(12),
+      onTap: onTap ?? () {},
+      borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -187,7 +204,7 @@ class AddItemMenuScreen extends StatelessWidget {
         ),
         child: Row(
           children: [
-            SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor ?? colors.textSecondary, BlendMode.srcIn), width: 24, height: 24),
+            SvgPicture.asset(iconPath, colorFilter: ColorFilter.mode(iconColor ?? colors.textSecondary, BlendMode.srcIn), width: 24, height: 24),
             const SizedBox(width: OwnKeepSpacing.md),
             Expanded(
               child: Column(

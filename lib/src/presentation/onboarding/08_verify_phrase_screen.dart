@@ -6,6 +6,7 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../providers/vault_provider.dart';
 import '../../theme/ownkeep_onboarding_colors.dart';
 import '../../theme/ownkeep_onboarding_icons.dart';
+import 'package:ownkeep/src/citizen_vault/vault/vault_lifecycle.dart';
 
 class VerifyPhraseScreen extends ConsumerStatefulWidget {
   const VerifyPhraseScreen({super.key});
@@ -84,10 +85,21 @@ class _VerifyPhraseScreenState extends ConsumerState<VerifyPhraseScreen> {
         
         if (!mounted) return;
         context.push('/enable-biometrics');
+      } on VaultLifecycleFailure catch (e) {
+        if (mounted) {
+          setState(() {
+            if (e.code == 'vault_already_exists') {
+              _error = 'Vault already exists on this device.';
+            } else {
+              _error = 'Failed to create vault: ${e.code}';
+            }
+            _isCreating = false;
+          });
+        }
       } catch (e) {
         if (mounted) {
           setState(() {
-            _error = 'Failed to create vault: $e';
+            _error = 'An unexpected error occurred.';
             _isCreating = false;
           });
         }

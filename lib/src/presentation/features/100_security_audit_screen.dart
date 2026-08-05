@@ -1,122 +1,176 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
 class SecurityAuditScreen extends StatelessWidget {
   const SecurityAuditScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const auditItems = [
-      (Color(0xFF0A4A2E), OwnKeepColors.success, Icons.check_rounded, 'Vault encryption', 'Strong and verified', 'Pass', OwnKeepColors.success),
-      (Color(0xFF0A4A2E), OwnKeepColors.success, Icons.check_rounded, 'Recovery phrase', 'Verified 12-word phrase', 'Pass', OwnKeepColors.success),
-      (Color(0xFF0A4A2E), OwnKeepColors.success, Icons.fingerprint_rounded, 'Biometric lock', 'Enabled', 'Pass', OwnKeepColors.success),
-      (Color(0xFF7A3D0A), Color(0xFFF59E0B), Icons.download_rounded, 'Encrypted backup', 'Created 14 days ago', 'Review', Color(0xFFF59E0B)),
-      (Color(0xFF1A3D7A), OwnKeepColors.primary, Icons.circle_rounded, 'Hidden vault', 'Not configured', 'Optional', OwnKeepColors.primary),
-      (Color(0xFF3D1A7A), Color(0xFF7C3AED), Icons.error_outline_rounded, 'Decoy vault', 'Not configured', 'Optional', Color(0xFF7C3AED)),
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
+
+    final auditResults = [
+      {'title': l10n.s100_encryption, 'body': l10n.s100_encryption_body, 'ok': true},
+      {'title': l10n.s100_recovery, 'body': l10n.s100_recovery_body, 'ok': true},
+      {'title': l10n.s100_biometric, 'body': l10n.s100_biometric_body, 'ok': true},
+      {'title': l10n.s100_backup, 'body': l10n.s100_backup_body, 'ok': false, 'warning': true},
+      {'title': l10n.s100_hidden, 'body': l10n.s100_hidden_body, 'ok': false},
+      {'title': l10n.s100_decoy, 'body': l10n.s100_decoy_body, 'ok': false},
     ];
 
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('Security Audit', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('Final vault safety review', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
+        title: Column(
+          children: [
+            Text(l10n.s100_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(l10n.s100_subtitle, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+          ],
+        ),
+        centerTitle: true,
         actions: [
-          Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.darkSurfaceElevated, borderRadius: BorderRadius.circular(10)),
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.refresh_rounded, color: OwnKeepColors.darkTextSecondary, size: 20)),
-          ),
+          IconButton(
+            icon: SvgPicture.asset(OwnKeepMainIcons.device_sync, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+            onPressed: () {},
+          )
         ],
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 3),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          // Score circle
-          Center(
-            child: Container(
-              width: 160, height: 160,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color(0xFF0A2E1A),
-                border: Border.all(color: OwnKeepColors.success, width: 2),
-              ),
-              child: Column(mainAxisAlignment: MainAxisAlignment.center, children: const [
-                Text('98', style: TextStyle(color: OwnKeepColors.success, fontSize: 52, fontWeight: FontWeight.w800, fontFamily: 'Inter', height: 1)),
-                Text('Security Score', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ]),
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          SizedBox(height: OwnKeepSpacing.lg),
-          const Center(child: Text('Excellent protection', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 20, fontWeight: FontWeight.w700, fontFamily: 'Inter'))),
-          const Center(child: Text('Last audited today at 9:35 AM', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter'))),
-          SizedBox(height: OwnKeepSpacing.xl),
-          Text('Audit Results', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-          SizedBox(height: OwnKeepSpacing.sm),
-          ...auditItems.map((a) => Container(
-            margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(children: [
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Score Arc Graphic (Mocked with Container for now)
               Container(
-                width: 36, height: 36,
-                decoration: BoxDecoration(color: a.$1, borderRadius: BorderRadius.circular(9)),
-                child: Icon(a.$3, color: a.$2, size: 18),
-              ),
-              SizedBox(width: OwnKeepSpacing.md),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(a.$4, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                Text(a.$5, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ])),
-              OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: a.$7,
-                  side: BorderSide(color: a.$7),
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  minimumSize: Size.zero,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                width: 160,
+                height: 160,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: colors.successGreen, width: 8),
+                  color: colors.surfacePrimary,
                 ),
-                child: Text(a.$6, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: a.$7, fontFamily: 'Inter')),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(l10n.s100_score, style: TextStyle(color: colors.textPrimary, fontSize: 48, fontWeight: FontWeight.bold)),
+                      Text(l10n.s100_score_label, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+                    ],
+                  ),
+                ),
               ),
-              SizedBox(width: 6),
-              Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-            ]),
-          )),
-          SizedBox(height: OwnKeepSpacing.sm),
-          // Recommended next step
-          Container(
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(children: const [
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Recommended next step', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 11, fontFamily: 'Inter')),
-                Text('Create a fresh encrypted backup', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-              ])),
-              Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-            ]),
+              const SizedBox(height: 16),
+              Text(l10n.s100_rating, style: TextStyle(color: colors.successGreen, fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text(l10n.s100_last_audit, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+              const SizedBox(height: 40),
+
+              // Results List
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(l10n.s100_results, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(height: 16),
+              
+              ...auditResults.map((result) => _buildResultRow(result, colors)),
+              
+              const SizedBox(height: 32),
+
+              // Recommendation Banner
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: colors.warningOrange.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: colors.warningOrange.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.warning_amber_rounded, color: colors.warningOrange, size: 24),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(l10n.s100_next, style: TextStyle(color: colors.warningOrange, fontSize: 14, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 4),
+                          Text(l10n.s100_next_body, style: TextStyle(color: colors.textPrimary, fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text('Backup', style: TextStyle(color: colors.primaryBlue, fontSize: 14)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildResultRow(Map<String, dynamic> result, OwnKeepMainColorsTheme colors) {
+    bool isOk = result['ok'] == true;
+    bool isWarning = result['warning'] == true;
+
+    Color iconColor;
+    IconData iconData;
+    if (isOk) {
+      iconColor = colors.successGreen;
+      iconData = Icons.check_circle;
+    } else if (isWarning) {
+      iconColor = colors.warningOrange;
+      iconData = Icons.error_outline;
+    } else {
+      iconColor = colors.textMuted;
+      iconData = Icons.remove_circle_outline;
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.borderSoft),
+      ),
+      child: Row(
+        children: [
+          Icon(iconData, color: iconColor, size: 24),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(result['title'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500)),
+                const SizedBox(height: 4),
+                Text(result['body'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 12)),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

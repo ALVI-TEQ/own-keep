@@ -41,7 +41,7 @@ class HelpSupportScreen extends StatelessWidget {
           children: [
             // Header
             Text(
-              l10n.s30_how_can_we_help,
+              l10n.s30_title,
               style: TextStyle(
                 color: colors.textPrimary,
                 fontSize: 24,
@@ -66,7 +66,7 @@ class HelpSupportScreen extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      l10n.s30_search_help,
+                      'Search help...',
                       style: TextStyle(
                         color: colors.textSecondary,
                         fontSize: 15,
@@ -94,8 +94,8 @@ class HelpSupportScreen extends StatelessWidget {
               colors: colors,
               icon: OwnKeepMainIcons.guide_book,
               iconColor: colors.warningOrange,
-              title: l10n.s30_guide,
-              subtitle: l10n.s30_guide_body,
+              title: l10n.s30_user_guide,
+              subtitle: l10n.s30_user_guide_body,
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
             _buildSupportOption(
@@ -111,7 +111,7 @@ class HelpSupportScreen extends StatelessWidget {
 
             // Popular Topics
             Text(
-              l10n.s30_popular,
+              'Popular Topics',
               style: TextStyle(
                 color: colors.textSecondary,
                 fontSize: 14,
@@ -121,16 +121,16 @@ class HelpSupportScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.md),
-            _buildPopularTopic(colors, l10n.s30_recover),
-            _buildPopularTopic(colors, l10n.s30_share),
-            _buildPopularTopic(colors, l10n.s30_backup),
+            _buildPopularTopic(colors, 'Recover'),
+            _buildPopularTopic(colors, 'Share'),
+            _buildPopularTopic(colors, 'Backup'),
 
             const SizedBox(height: OwnKeepSpacing.xxl),
             
             // App Version
             Center(
               child: Text(
-                l10n.s30_app_version,
+                l10n.s30_version,
                 style: TextStyle(
                   color: colors.textMuted,
                   fontSize: 12,

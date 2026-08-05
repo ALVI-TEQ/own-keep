@@ -1,124 +1,156 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
 class DecoyVaultScreen extends StatelessWidget {
   const DecoyVaultScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const steps = [
-      (Color(0xFF1A3D7A), OwnKeepColors.primary, '1', 'Choose decoy PIN', 'Must differ from your real PIN'),
-      (Color(0xFF0A4A2E), OwnKeepColors.success, '2', 'Add harmless files', 'Select ordinary documents or photos'),
-      (Color(0xFF3D1A7A), Color(0xFF7C3AED), '3', 'Test decoy unlock', 'Verify the alternate vault opens'),
-      (Color(0xFF7A3D0A), Color(0xFFF59E0B), '4', 'Enable silent mode', 'No warning appears during unlock'),
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
+
+    final steps = [
+      {'title': l10n.s95_step_1, 'body': l10n.s95_step_1_body, 'icon': OwnKeepMainIcons.pin, 'color': colors.primaryBlue},
+      {'title': l10n.s95_step_2, 'body': l10n.s95_step_2_body, 'icon': OwnKeepMainIcons.folder, 'color': colors.warningOrange},
+      {'title': l10n.s95_step_3, 'body': l10n.s95_step_3_body, 'icon': OwnKeepMainIcons.security, 'color': colors.successGreen},
+      {'title': l10n.s95_step_4, 'body': l10n.s95_step_4_body, 'icon': OwnKeepMainIcons.warning, 'color': colors.aiPurple},
     ];
 
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('Decoy Vault', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('Open a harmless vault with a separate PIN', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.danger.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.error_outline_rounded, color: OwnKeepColors.danger, size: 20)),
-          ),
-        ],
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 3),
-      body: Padding(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(children: [
-          // Safety feature banner
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: const Color(0xFF3D1A0A),
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: Color(0xFFF59E0B).withValues(alpha: 0.5)),
-            ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-              Text('Safety Feature', style: TextStyle(color: Color(0xFFF59E0B), fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.8, fontFamily: 'Inter')),
-              SizedBox(height: 6),
-              Text('Create a believable alternate vault', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 17, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-              SizedBox(height: 6),
-              Text(
-                'A decoy PIN opens a separate vault containing only the items you choose. Your real vault stays hidden.',
-                style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, height: 1.5, fontFamily: 'Inter'),
-              ),
-            ]),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          SizedBox(height: OwnKeepSpacing.xl),
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Text('Decoy Setup', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-          ),
-          SizedBox(height: OwnKeepSpacing.sm),
-          Expanded(
-            child: ListView(children: [
-              ...steps.map((s) => Container(
-                margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-                padding: EdgeInsets.all(OwnKeepSpacing.md),
-                decoration: BoxDecoration(
-                  color: OwnKeepColors.darkSurfaceElevated,
-                  borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                  border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-                ),
-                child: Row(children: [
-                  Container(
-                    width: 36, height: 36,
-                    decoration: BoxDecoration(color: s.$1, borderRadius: BorderRadius.circular(9)),
-                    child: Center(child: Text(s.$3, style: TextStyle(color: s.$2, fontSize: 14, fontWeight: FontWeight.w800, fontFamily: 'Inter'))),
-                  ),
-                  SizedBox(width: OwnKeepSpacing.md),
-                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(s.$4, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                    Text(s.$5, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-                  ])),
-                  Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-                ]),
-              )),
-              // Important warning
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Badge
               Container(
-                padding: EdgeInsets.all(OwnKeepSpacing.md),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 decoration: BoxDecoration(
-                  color: OwnKeepColors.danger.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                  border: Border.all(color: OwnKeepColors.danger.withValues(alpha: 0.3)),
+                  color: colors.surfaceSecondary,
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-                  Text('Important', style: TextStyle(color: OwnKeepColors.danger, fontSize: 13, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                  SizedBox(height: 4),
-                  Text('Decoy mode does not replace physical safety precautions', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-                ]),
+                child: Text(l10n.s95_safety.toUpperCase(), style: TextStyle(color: colors.textSecondary, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
               ),
-            ]),
+              const SizedBox(height: 24),
+
+              Text(l10n.s95_title, style: TextStyle(color: colors.textPrimary, fontSize: 28, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text(l10n.s95_hero, textAlign: TextAlign.center, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 12),
+              Text(l10n.s95_hero_body, textAlign: TextAlign.center, style: TextStyle(color: colors.textSecondary, fontSize: 14, height: 1.5)),
+              const SizedBox(height: 40),
+
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(l10n.s95_setup, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(height: 16),
+              
+              ...List.generate(steps.length, (index) {
+                final step = steps[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 24.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: (step['color'] as Color).withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: SvgPicture.asset(step['icon'] as String, colorFilter: ColorFilter.mode(step['color'] as Color, BlendMode.srcIn), width: 24),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(step['title'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                            const SizedBox(height: 4),
+                            Text(step['body'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                          ],
+                        ),
+                      ),
+                      Text('${index + 1}', style: TextStyle(color: colors.borderSoft, fontSize: 24, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                );
+              }),
+
+              const SizedBox(height: 16),
+              // Warning Banner
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: colors.dangerRed.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: colors.dangerRed.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.warning_amber_rounded, color: colors.dangerRed, size: 24),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(l10n.s95_important, style: TextStyle(color: colors.dangerRed, fontSize: 14, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 4),
+                          Text(l10n.s95_important_body, style: TextStyle(color: colors.textPrimary, fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 40),
+            ],
           ),
-          SizedBox(height: OwnKeepSpacing.sm),
-          FilledButton(
-            onPressed: () {},
-            style: FilledButton.styleFrom(
-              backgroundColor: const Color(0xFFF59E0B),
-              minimumSize: const Size.fromHeight(52),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: ElevatedButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Mock Decoy Vault Setup started')));
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colors.primaryBlue,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              ),
+              child: Text(
+                l10n.s95_create,
+                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+              ),
             ),
-            child: Text('Create Decoy Vault', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
           ),
-        ]),
+        ),
       ),
     );
   }

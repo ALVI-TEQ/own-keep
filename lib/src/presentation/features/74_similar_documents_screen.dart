@@ -1,114 +1,168 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
 class SimilarDocumentsScreen extends StatelessWidget {
   const SimilarDocumentsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const groups = [
-      (Icons.crop_square_rounded, OwnKeepColors.primary, 'Vehicle Insurance Policies', '3 files  •  88–96% similar'),
-      (Icons.currency_rupee_rounded, OwnKeepColors.success, 'Salary Slips - 2025', '6 files  •  Same layout'),
-      (Icons.favorite_rounded, OwnKeepColors.pink, 'Health Reports', '4 files  •  Same hospital'),
-      (Icons.home_rounded, Color(0xFFF59E0B), 'Property Tax Receipts', '3 files  •  Same property'),
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
+
+    final similarGroups = [
+      {
+        'title': l10n.s74_vehicle,
+        'meta': l10n.s74_vehicle_meta,
+        'icon': OwnKeepMainIcons.vehicle,
+        'color': colors.accentCyan,
+      },
+      {
+        'title': l10n.s74_salary,
+        'meta': l10n.s74_salary_meta,
+        'icon': OwnKeepMainIcons.finance,
+        'color': colors.successGreen,
+      },
+      {
+        'title': l10n.s74_health,
+        'meta': l10n.s74_health_meta,
+        'icon': OwnKeepMainIcons.health,
+        'color': colors.healthPink,
+      },
+      {
+        'title': l10n.s74_property,
+        'meta': l10n.s74_property_meta,
+        'icon': OwnKeepMainIcons.property,
+        'color': colors.warningOrange,
+      },
     ];
 
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('Similar Documents', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('Group related files', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.darkSurfaceElevated, borderRadius: BorderRadius.circular(10)),
-            child: IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.more_vert_rounded, color: OwnKeepColors.darkTextSecondary, size: 20),
-            ),
-          ),
-        ],
+        title: Column(
+          children: [
+            Text(l10n.s74_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(l10n.s74_subtitle, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+          ],
+        ),
+        centerTitle: true,
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 1),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(children: [
-          // Header stat
-          Container(
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('4 similarity groups found', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-                Text('AI compares text and file structure locally', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ]),
-              Text('92%', style: TextStyle(color: OwnKeepColors.ai, fontSize: 20, fontWeight: FontWeight.w800, fontFamily: 'Inter')),
-            ]),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          SizedBox(height: OwnKeepSpacing.base),
-          ...groups.map((g) => Container(
-            margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+        ),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: colors.primaryBlue.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(OwnKeepMainIcons.ai_sparkle, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(l10n.s74_found, style: TextStyle(color: colors.primaryBlue, fontSize: 16, fontWeight: FontWeight.w600)),
+                                Text(l10n.s74_local, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              ),
             ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                Container(
-                  width: 40, height: 40,
-                  decoration: BoxDecoration(color: g.$2.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
-                  child: Icon(g.$1, color: g.$2, size: 20),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final group = similarGroups[index];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: colors.surfacePrimary,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: colors.borderSoft),
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: (group['color'] as Color).withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: SvgPicture.asset(group['icon'] as String, colorFilter: ColorFilter.mode(group['color'] as Color, BlendMode.srcIn), width: 24),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(group['title'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                                    const SizedBox(height: 4),
+                                    Text(group['meta'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            decoration: BoxDecoration(
+                              border: Border(top: BorderSide(color: colors.borderSoft)),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(l10n.common_view_all, style: TextStyle(color: colors.primaryBlue, fontSize: 14, fontWeight: FontWeight.w500)),
+                                SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  childCount: similarGroups.length,
                 ),
-                SizedBox(width: OwnKeepSpacing.md),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(g.$3, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                  Text(g.$4, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-                ])),
-              ]),
-              SizedBox(height: OwnKeepSpacing.sm),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: OwnKeepColors.primary,
-                    side: const BorderSide(color: OwnKeepColors.primary),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  ),
-                  child: Text('Preview Group', style: TextStyle(fontSize: 12, fontFamily: 'Inter')),
-                ),
-                OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: OwnKeepColors.ai,
-                    side: const BorderSide(color: OwnKeepColors.ai),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  ),
-                  child: Text('Organize', style: TextStyle(fontSize: 12, fontFamily: 'Inter')),
-                ),
-              ]),
-            ]),
-          )),
-        ]),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

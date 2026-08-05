@@ -1,134 +1,169 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
 class AiInsightsScreen extends StatelessWidget {
   const AiInsightsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const insights = [
-      (Icons.tag_rounded, Color(0xFF7C3AED), '12 documents need tags', 'Mostly insurance and finance files'),
-      (Icons.calendar_today_rounded, Color(0xFFF59E0B), '3 documents expire this month', 'Vehicle insurance, licence, health policy'),
-      (Icons.copy_rounded, OwnKeepColors.success, '5 duplicate groups detected', 'Potentially save 1.4 GB'),
-      (Icons.add_box_rounded, OwnKeepColors.primary, '8 files are uncategorized', 'AI can organize them automatically'),
-      (Icons.warning_amber_rounded, OwnKeepColors.danger, '2 reminders may be outdated', 'Review and update due dates'),
-    ];
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('AI Insights', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('Patterns found in your vault', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.darkSurfaceElevated, borderRadius: BorderRadius.circular(10)),
-            child: IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.refresh_rounded, color: OwnKeepColors.primary, size: 20),
-            ),
-          ),
-        ],
+        title: Column(
+          children: [
+            Text(l10n.s72_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(l10n.s72_subtitle, style: TextStyle(color: colors.primaryBlue, fontSize: 12)),
+          ],
+        ),
+        centerTitle: true,
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 0),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          // Monthly vault insight card
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(OwnKeepSpacing.lg),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-              border: Border.all(color: OwnKeepColors.ai.withValues(alpha: 0.5)),
-            ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('Monthly Vault Insight', style: TextStyle(color: OwnKeepColors.ai, fontSize: 12, fontWeight: FontWeight.w600, fontFamily: 'Inter', letterSpacing: 0.5)),
-              SizedBox(height: 8),
-              Text('Your vault is getting healthier', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-              SizedBox(height: 6),
-              Text(
-                'You organized 34 documents, resolved 12 duplicates and added 6 expiry reminders this month.',
-                style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, fontFamily: 'Inter', height: 1.5),
-              ),
-            ]),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          SizedBox(height: OwnKeepSpacing.base),
-          // Stats row
-          Row(
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _StatChip(value: '34', label: 'Organized', color: OwnKeepColors.primary),
-              SizedBox(width: 8),
-              _StatChip(value: '12', label: 'Duplicates fixed', color: OwnKeepColors.success),
-              SizedBox(width: 8),
-              _StatChip(value: '6', label: 'Reminders', color: Color(0xFFF59E0B)),
-              SizedBox(width: 8),
-              _StatChip(value: '2.8 GB', label: 'Space saved', color: OwnKeepColors.ai),
+              // Hero Banner
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [colors.primaryBlue.withValues(alpha: 0.2), colors.aiPurple.withValues(alpha: 0.1)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: colors.primaryBlue.withValues(alpha: 0.3)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        SvgPicture.asset(OwnKeepMainIcons.ai_sparkle, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+                        const SizedBox(width: 8),
+                        Text(l10n.s72_monthly, style: TextStyle(color: colors.primaryBlue, fontSize: 14, fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Text(l10n.s72_hero_title, style: TextStyle(color: colors.textPrimary, fontSize: 24, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    Text(l10n.s72_hero_body, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              
+              // Stats Grid
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 1.5,
+                children: [
+                  _buildStatCard(l10n.s72_organized_value, l10n.s72_organized, OwnKeepMainIcons.collection, colors),
+                  _buildStatCard(l10n.s72_duplicates_value, l10n.s72_duplicates, OwnKeepMainIcons.copy, colors),
+                  _buildStatCard(l10n.s72_reminders_value, l10n.s72_reminders, OwnKeepMainIcons.reminder, colors),
+                  _buildStatCard(l10n.s72_space_value, l10n.s72_space, OwnKeepMainIcons.pie_chart, colors),
+                ],
+              ),
+              const SizedBox(height: 40),
+
+              // Insights List
+              Text(l10n.s72_insights, style: TextStyle(color: colors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              _buildInsightRow(OwnKeepMainIcons.tag, l10n.s72_tags_title, l10n.s72_tags_body, colors.warningOrange, colors),
+              _buildInsightRow(OwnKeepMainIcons.due_soon, l10n.s72_expiry_title, l10n.s72_expiry_body, colors.dangerRed, colors),
+              _buildInsightRow(OwnKeepMainIcons.duplicate, l10n.s72_duplicate_title, l10n.s72_duplicate_body, colors.aiPurple, colors),
+              _buildInsightRow(OwnKeepMainIcons.folder, l10n.s72_uncategorized_title, l10n.s72_uncategorized_body, colors.primaryBlue, colors),
+              _buildInsightRow(OwnKeepMainIcons.calendar, l10n.s72_outdated_title, l10n.s72_outdated_body, colors.textSecondary, colors),
             ],
           ),
-          SizedBox(height: OwnKeepSpacing.lg),
-          Text('Insights', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-          SizedBox(height: OwnKeepSpacing.sm),
-          ...insights.map((ins) => Container(
-            margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(children: [
-              Container(
-                width: 40, height: 40,
-                decoration: BoxDecoration(color: ins.$2.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
-                child: Icon(ins.$1, color: ins.$2, size: 20),
-              ),
-              SizedBox(width: OwnKeepSpacing.md),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(ins.$3, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                Text(ins.$4, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ])),
-              Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-            ]),
-          )),
-        ]),
+        ),
       ),
     );
   }
-}
 
-class _StatChip extends StatelessWidget {
-  const _StatChip({required this.value, required this.label, required this.color});
-  final String value, label;
-  final Color color;
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-          color: OwnKeepColors.darkSurfaceElevated,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-        ),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Text(value, style: TextStyle(color: color, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-          SizedBox(height: 2),
-          Text(label, style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 9, fontFamily: 'Inter'), textAlign: TextAlign.center),
-        ]),
+  Widget _buildStatCard(String value, String label, String iconPath, OwnKeepMainColorsTheme colors) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.borderSoft),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SvgPicture.asset(iconPath, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 24),
+              Text(value, style: TextStyle(color: colors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(label, style: TextStyle(color: colors.textSecondary, fontSize: 12)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInsightRow(String iconPath, String title, String body, Color iconColor, OwnKeepMainColorsTheme colors) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.borderSoft),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: iconColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: SvgPicture.asset(iconPath, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn), width: 24),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 4),
+                Text(body, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+              ],
+            ),
+          ),
+          SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn)),
+        ],
       ),
     );
   }

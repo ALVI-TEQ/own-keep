@@ -5,9 +5,44 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/vault_provider.dart';
 
-class FileDetailsScreen extends StatelessWidget {
-  const FileDetailsScreen({super.key});
+class FileDetailsScreen extends ConsumerStatefulWidget {
+  final String? documentId;
+  const FileDetailsScreen({super.key, this.documentId});
+
+  @override
+  ConsumerState<FileDetailsScreen> createState() => _FileDetailsScreenState();
+}
+
+class _FileDetailsScreenState extends ConsumerState<FileDetailsScreen> {
+  bool _isLoading = true;
+  dynamic _document;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDocument();
+  }
+
+  Future<void> _loadDocument() async {
+    if (widget.documentId == null) {
+      if (mounted) setState(() => _isLoading = false);
+      return;
+    }
+    try {
+      final controller = ref.read(ingestionControllerProvider);
+      if (controller != null) {
+        final doc = await controller.document(widget.documentId!);
+        if (mounted) setState(() { _document = doc; _isLoading = false; });
+      } else {
+        if (mounted) setState(() => _isLoading = false);
+      }
+    } catch (e) {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +61,7 @@ class FileDetailsScreen extends StatelessWidget {
         title: Column(
           children: [
             Text(
-              l10n.s48_title,
+              _document?.summary.logicalFilename ?? l10n.s48_title,
               style: TextStyle(
                 color: colors.textPrimary,
                 fontSize: 18,
@@ -35,7 +70,7 @@ class FileDetailsScreen extends StatelessWidget {
               ),
             ),
             Text(
-              l10n.s48_subtitle,
+              _document?.summary.mimeType ?? l10n.s48_subtitle,
               style: TextStyle(
                 color: colors.textSecondary,
                 fontSize: 13,
@@ -103,13 +138,13 @@ class FileDetailsScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildDetailRow(colors, l10n.s48_file_name_label, l10n.s48_file_name),
+                  _buildDetailRow(colors, l10n.s48_file_name_label, _document?.summary.logicalFilename ?? l10n.s48_file_name),
                   _buildDivider(colors),
-                  _buildDetailRow(colors, l10n.s48_type_label, l10n.s48_type),
+                  _buildDetailRow(colors, l10n.s48_type_label, _document?.summary.mimeType ?? l10n.s48_type),
                   _buildDivider(colors),
-                  _buildDetailRow(colors, l10n.s48_size_label, l10n.s48_size),
+                  _buildDetailRow(colors, l10n.s48_size_label, _document != null ? '${_document.byteLength} bytes' : l10n.s48_size),
                   _buildDivider(colors),
-                  _buildDetailRow(colors, l10n.s48_added_label, l10n.s48_added),
+                  _buildDetailRow(colors, l10n.s48_added_label, _document?.summary.importedAt.toString() ?? l10n.s48_added),
                   _buildDivider(colors),
                   _buildDetailRow(colors, l10n.s48_modified_label, l10n.s48_modified),
                   _buildDivider(colors),

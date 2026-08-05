@@ -59,7 +59,7 @@ class SetupCompleteScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: ElevatedButton(
-                  onPressed: () => context.go('/home'),
+                  onPressed: () => context.go('/dashboard/home'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,

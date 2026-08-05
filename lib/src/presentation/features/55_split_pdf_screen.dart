@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class SplitPdfScreen extends StatefulWidget {
   const SplitPdfScreen({super.key});
@@ -12,149 +13,352 @@ class SplitPdfScreen extends StatefulWidget {
 }
 
 class _SplitPdfScreenState extends State<SplitPdfScreen> {
-  final Set<int> _selected = {1, 2}; // pages 2 and 3 selected (0-indexed)
-  int _splitOption = 0; // 0=extract, 1=separate, 2=remove
+  final List<bool> _selectedPages = [false, true, true, false];
+  String _selectedOption = 'extract'; // 'extract', 'separate', 'remove'
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => Navigator.pop(context),
         ),
         title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text('Split PDF', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            Text('Choose pages to extract', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
+          children: [
+            Text(
+              l10n.s55_title,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+            Text(
+              l10n.s55_subtitle,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontFamily: 'Inter',
+              ),
+            ),
           ],
         ),
+        centerTitle: true,
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 1),
-      body: Padding(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(OwnKeepSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Source file
+            // File Info
             Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(OwnKeepSpacing.md),
+              padding: const EdgeInsets.all(OwnKeepSpacing.md),
               decoration: BoxDecoration(
-                color: OwnKeepColors.darkSurfaceElevated,
-                borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.borderSoft),
               ),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-                Text('Insurance Policy.pdf', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                SizedBox(height: 2),
-                Text('4 pages  •  2.4 MB', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ]),
-            ),
-            SizedBox(height: OwnKeepSpacing.lg),
-            Text('Select Pages', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            SizedBox(height: OwnKeepSpacing.md),
-            // Page thumbnails row
-            Row(
-              children: List.generate(4, (i) {
-                final isSelected = _selected.contains(i);
-                return Expanded(
-                  child: GestureDetector(
-                    onTap: () => setState(() {
-                      if (isSelected) {
-                        _selected.remove(i);
-                      } else {
-                        _selected.add(i);
-                      }
-                    }),
-                    child: Container(
-                      margin: EdgeInsets.only(right: i < 3 ? 8 : 0),
-                      height: 110,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEAEBF0),
-                        borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                        border: Border.all(
-                          color: isSelected ? OwnKeepColors.primary : Colors.transparent,
-                          width: 2,
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: colors.backgroundTop,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: SvgPicture.asset(
+                      OwnKeepMainIcons.file_pdf,
+                      colorFilter: ColorFilter.mode(colors.dangerRed, BlendMode.srcIn),
+                      width: 20,
+                      height: 20,
+                    ),
+                  ),
+                  const SizedBox(width: OwnKeepSpacing.sm),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.s55_file,
+                          style: TextStyle(
+                            color: colors.textPrimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Inter',
+                          ),
                         ),
+                        Text(
+                          l10n.s55_file_meta,
+                          style: TextStyle(
+                            color: colors.textSecondary,
+                            fontSize: 13,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: OwnKeepSpacing.xl),
+            
+            Text(
+              l10n.s55_select_pages,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            
+            // Grid of Pages
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: OwnKeepSpacing.md,
+                mainAxisSpacing: OwnKeepSpacing.md,
+                childAspectRatio: 0.8,
+              ),
+              itemCount: 4,
+              itemBuilder: (context, index) {
+                final isSelected = _selectedPages[index];
+                
+                String pageLabel = '';
+                if (index == 0) pageLabel = l10n.s55_page_1;
+                else if (index == 1) pageLabel = l10n.s55_page_2;
+                else if (index == 2) pageLabel = l10n.s55_page_3;
+                else if (index == 3) pageLabel = l10n.s55_page_4;
+                
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedPages[index] = !_selectedPages[index];
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: colors.surfacePrimary,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: isSelected ? colors.primaryBlue : colors.borderSoft,
+                        width: isSelected ? 2 : 1,
                       ),
-                      child: Stack(children: [
-                        Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
-                          Text('PAGE ${i + 1}', style: TextStyle(color: Color(0xFF1A2340), fontSize: 10, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-                          SizedBox(height: 8),
-                          Text('Insurance', style: TextStyle(color: Color(0xFF6B7A99), fontSize: 9, fontFamily: 'Inter')),
-                        ])),
+                    ),
+                    child: Stack(
+                      children: [
+                        // Page representation (could use the illustration here if provided)
+                        Padding(
+                          padding: const EdgeInsets.all(OwnKeepSpacing.sm),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  color: colors.backgroundTop,
+                                  child: Center(
+                                    child: Text(
+                                      l10n.s55_page_label,
+                                      style: TextStyle(
+                                        color: colors.textMuted,
+                                        fontSize: 10,
+                                        fontFamily: 'Inter',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                pageLabel,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: isSelected ? colors.primaryBlue : colors.textSecondary,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Inter',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Checkbox
                         if (isSelected)
                           Positioned(
-                            top: 4, right: 4,
+                            top: 8,
+                            right: 8,
+                            child: SvgPicture.asset(
+                              OwnKeepMainIcons.page_selected,
+                              colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn),
+                              width: 24,
+                              height: 24,
+                            ),
+                          )
+                        else
+                          Positioned(
+                            top: 8,
+                            right: 8,
                             child: Container(
-                              width: 18, height: 18,
-                              decoration: BoxDecoration(color: OwnKeepColors.primary, shape: BoxShape.circle),
-                              child: Icon(Icons.check_rounded, color: Colors.white, size: 12),
+                              width: 24,
+                              height: 24,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: colors.borderSoft, width: 1.5),
+                              ),
                             ),
                           ),
-                      ]),
+                      ],
                     ),
                   ),
                 );
-              }),
+              },
             ),
-            SizedBox(height: OwnKeepSpacing.lg),
-            Text('Split Options', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            SizedBox(height: OwnKeepSpacing.sm),
-            ...[
-              ('Extract selected pages', 'Create one PDF from pages 2–3'),
-              ('Save pages separately', 'Create individual files'),
-              ('Remove selected pages', 'Create PDF without pages 2–3'),
-            ].asMap().entries.map((e) => GestureDetector(
-              onTap: () => setState(() => _splitOption = e.key),
-              child: Container(
-                margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-                padding: EdgeInsets.all(OwnKeepSpacing.md),
-                decoration: BoxDecoration(
-                  color: _splitOption == e.key
-                      ? OwnKeepColors.primary.withValues(alpha: 0.1)
-                      : OwnKeepColors.darkSurfaceElevated,
-                  borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                  border: Border.all(
-                    color: _splitOption == e.key
-                        ? OwnKeepColors.primary.withValues(alpha: 0.5)
-                        : OwnKeepColors.darkBorder.withValues(alpha: 0.3),
+
+            const SizedBox(height: OwnKeepSpacing.xl),
+            
+            Text(
+              l10n.s55_split_options,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            
+            Container(
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Column(
+                children: [
+                  _buildOptionItem(
+                    colors, 
+                    'extract', 
+                    l10n.s55_extract, 
+                    l10n.s55_extract_body,
                   ),
-                ),
-                child: Row(children: [
-                  Container(
-                    width: 20, height: 20,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: _splitOption == e.key ? OwnKeepColors.primary : OwnKeepColors.darkTextMuted, width: 2),
+                  Divider(color: colors.borderSoft, height: 1),
+                  _buildOptionItem(
+                    colors, 
+                    'separate', 
+                    l10n.s55_separate, 
+                    l10n.s55_separate_body,
+                  ),
+                  Divider(color: colors.borderSoft, height: 1),
+                  _buildOptionItem(
+                    colors, 
+                    'remove', 
+                    l10n.s55_remove, 
+                    l10n.s55_remove_body,
+                  ),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: 100),
+          ],
+        ),
+      ),
+      bottomSheet: Container(
+        padding: EdgeInsets.only(
+          left: OwnKeepSpacing.md,
+          right: OwnKeepSpacing.md,
+          top: OwnKeepSpacing.md,
+          bottom: MediaQuery.of(context).padding.bottom + OwnKeepSpacing.md,
+        ),
+        decoration: BoxDecoration(
+          color: colors.navigationBackground,
+          border: Border(top: BorderSide(color: colors.borderSoft)),
+        ),
+        child: ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            backgroundColor: colors.primaryBlue,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            minimumSize: const Size(double.infinity, 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            elevation: 0,
+          ),
+          child: Text(
+            l10n.s55_action,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Inter',
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOptionItem(OwnKeepMainColorsTheme colors, String value, String title, String subtitle) {
+    final isSelected = _selectedOption == value;
+    
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _selectedOption = value;
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(OwnKeepSpacing.md),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SvgPicture.asset(
+              isSelected ? OwnKeepMainIcons.radio_selected : OwnKeepMainIcons.radio_unselected,
+              colorFilter: ColorFilter.mode(isSelected ? colors.primaryBlue : colors.borderSoft, BlendMode.srcIn),
+              width: 24,
+              height: 24,
+            ),
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Inter',
                     ),
-                    child: _splitOption == e.key
-                        ? Center(child: Container(width: 10, height: 10, decoration: BoxDecoration(color: OwnKeepColors.primary, shape: BoxShape.circle)))
-                        : null,
                   ),
-                  SizedBox(width: OwnKeepSpacing.md),
-                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(e.value.$1, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                    Text(e.value.$2, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-                  ])),
-                ]),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
               ),
-            )),
-            const Spacer(),
-            FilledButton(
-              onPressed: () {},
-              style: FilledButton.styleFrom(
-                backgroundColor: OwnKeepColors.primary,
-                minimumSize: const Size.fromHeight(52),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
-              ),
-              child: Text('Split PDF', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
             ),
           ],
         ),

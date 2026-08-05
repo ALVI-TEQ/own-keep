@@ -4,14 +4,22 @@ import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/vault_provider.dart';
 
-class RecentScreen extends StatelessWidget {
+class RecentScreen extends ConsumerWidget {
   const RecentScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final colors = context.mainColors;
+
+    final controller = ref.watch(ingestionControllerProvider);
+
+    if (controller == null) {
+      return Scaffold(backgroundColor: colors.backgroundTop);
+    }
 
     return Scaffold(
       body: Container(
@@ -85,26 +93,29 @@ class RecentScreen extends StatelessWidget {
 
               // Recent Items List
               Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  children: [
-                    // Today Group
-                    Text(l10n.common_today, style: TextStyle(color: colors.textMuted, fontSize: 14, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 12),
-                    _buildRecentItem(context, l10n.s14_insurance_title, l10n.s14_insurance_meta, OwnKeepMainIcons.document, colors.primaryBlue),
-                    _buildRecentItem(context, l10n.s14_passport_title, l10n.s14_passport_meta, OwnKeepMainIcons.identity, colors.dangerRed),
-                    _buildRecentItem(context, l10n.s14_vehicle_title, l10n.s14_vehicle_meta, OwnKeepMainIcons.vehicle, colors.accentCyan),
-                    
-                    const SizedBox(height: 24),
-                    
-                    // Yesterday Group
-                    Text(l10n.common_yesterday, style: TextStyle(color: colors.textMuted, fontSize: 14, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 12),
-                    _buildRecentItem(context, l10n.s14_licence_title, l10n.s14_licence_meta, OwnKeepMainIcons.identity, colors.successGreen),
-                    _buildRecentItem(context, l10n.s14_bank_title, l10n.s14_bank_meta, OwnKeepMainIcons.finance, colors.primaryBlue),
-                    _buildRecentItem(context, l10n.s14_aadhaar_title, l10n.s14_aadhaar_meta, OwnKeepMainIcons.identity, colors.dangerRed),
-                    _buildRecentItem(context, l10n.s14_lic_title, l10n.s14_lic_meta, OwnKeepMainIcons.insurance, colors.warningOrange),
-                  ],
+                child: ListenableBuilder(
+                  listenable: controller,
+                  builder: (context, child) {
+                    final docs = controller.dashboardDocuments;
+                    if (docs.isEmpty) {
+                      return Center(child: Text('No recent items', style: TextStyle(color: colors.textSecondary)));
+                    }
+
+                    return ListView(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      children: [
+                        Text(l10n.filter_all, style: TextStyle(color: colors.textMuted, fontSize: 14, fontWeight: FontWeight.w600)),
+                        const SizedBox(height: 12),
+                        ...docs.map((doc) => _buildRecentItem(
+                          context,
+                          doc.logicalFilename.isNotEmpty ? doc.logicalFilename : 'Untitled',
+                          doc.documentType.toString().split('.').last, // Just for testing
+                          OwnKeepMainIcons.file_pdf,
+                          colors.primaryBlue,
+                        )).toList(),
+                      ],
+                    );
+                  },
                 ),
               ),
             ],

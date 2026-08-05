@@ -1,150 +1,199 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
-class AuditLogScreen extends StatelessWidget {
-  const AuditLogScreen({super.key});
+class InvitationsScreen extends StatelessWidget {
+  const InvitationsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const pending = [
-      (OwnKeepColors.pink, 'H', 'Harika', 'Adult member  •  QR invitation', 'Expires in 18h'),
-      (OwnKeepColors.primary, 'R', 'Ramesh', 'Trusted contact  •  Encrypted file', 'Expires in 2d'),
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
+
+    final pending = [
+      {
+        'name': 'Harika',
+        'meta': l10n.s89_harika_meta,
+        'expiry': l10n.s89_harika_expiry,
+        'initial': 'H',
+        'color': const Color(0xFFFF4C9A),
+      },
+      {
+        'name': 'Ramesh',
+        'meta': l10n.s89_ramesh_meta,
+        'expiry': l10n.s89_ramesh_expiry,
+        'initial': 'R',
+        'color': const Color(0xFFFFA42F),
+      },
     ];
 
-    const completed = [
-      (Color(0xFF7C3AED), 'S', 'Alekhya', 'Joined 12 May 2026', 'Accepted', OwnKeepColors.success),
-      (OwnKeepColors.success, 'C', 'Charvika', 'Joined 12 May 2026', 'Accepted', OwnKeepColors.success),
-    ];
-
-    const security = [
-      (OwnKeepColors.success, Color(0xFF0A4A2E), Icons.check_rounded, 'Single Use', 'Each invitation can be accepted once'),
-      (Color(0xFFF59E0B), Color(0xFF7A3D0A), Icons.crop_square_rounded, 'Time Limited', 'Invitations expire automatically'),
-      (OwnKeepColors.primary, Color(0xFF1A3D7A), Icons.grid_view_rounded, 'Device Verified', 'Second device confirms local keys'),
+    final completed = [
+      {
+        'name': 'Alekhya',
+        'meta': l10n.s89_alekhya_joined,
+        'initial': 'A',
+        'color': const Color(0xFF8548FF),
+      },
+      {
+        'name': 'Charvika',
+        'meta': l10n.s89_charvika_joined,
+        'initial': 'C',
+        'color': const Color(0xFF28CC91),
+      },
     ];
 
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('Invitations', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('Pending offline invitations', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.darkSurfaceElevated, borderRadius: BorderRadius.circular(10)),
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.add_rounded, color: OwnKeepColors.primary, size: 20)),
+        title: Column(
+          children: [
+            Text(l10n.s89_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(l10n.s89_subtitle, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+          ],
+        ),
+        centerTitle: true,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Pending Section
+              Text(l10n.s89_pending, style: TextStyle(color: colors.warningOrange, fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              ...pending.map((inv) => _buildInvitationCard(inv, true, colors)),
+              
+              const SizedBox(height: 32),
+
+              // Completed Section
+              Text(l10n.s89_completed, style: TextStyle(color: colors.successGreen, fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              ...completed.map((inv) => _buildInvitationCard(inv, false, colors)),
+
+              const SizedBox(height: 40),
+
+              // Security Banner
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: colors.surfacePrimary,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: colors.borderSoft),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.shield_outlined, color: colors.primaryBlue, size: 24),
+                        const SizedBox(width: 8),
+                        Text(l10n.s89_security, style: TextStyle(color: colors.primaryBlue, fontSize: 16, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    _buildSecurityRule(l10n.s89_single_use, l10n.s89_single_use_body, colors),
+                    const SizedBox(height: 12),
+                    _buildSecurityRule(l10n.s89_time_limited, l10n.s89_time_limited_body, colors),
+                    const SizedBox(height: 12),
+                    _buildSecurityRule(l10n.s89_device_verified, l10n.s89_device_verified_body, colors),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInvitationCard(Map<String, dynamic> inv, bool isPending, OwnKeepMainColorsTheme colors) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.borderSoft),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: inv['color'] as Color,
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Text(inv['initial'] as String, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(inv['name'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 4),
+                Text(inv['meta'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                if (isPending) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: colors.warningOrange.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(inv['expiry'] as String, style: TextStyle(color: colors.warningOrange, fontSize: 12)),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          if (isPending)
+            IconButton(
+              icon: Icon(Icons.close, color: colors.textMuted),
+              onPressed: () {},
+            ),
         ],
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 3),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Pending', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-          SizedBox(height: OwnKeepSpacing.sm),
-          ...pending.map((p) => Container(
-            margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                Container(
-                  width: 44, height: 44,
-                  decoration: BoxDecoration(color: p.$1, shape: BoxShape.circle),
-                  child: Center(child: Text(p.$2, style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700, fontFamily: 'Inter'))),
-                ),
-                SizedBox(width: OwnKeepSpacing.md),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(p.$3, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                  Text(p.$4, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-                ])),
-                Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-              ]),
-              SizedBox(height: 8),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(border: Border.all(color: OwnKeepColors.ai), borderRadius: BorderRadius.circular(20)),
-                child: Text(p.$5, style: TextStyle(color: OwnKeepColors.ai, fontSize: 11, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-              ),
-            ]),
-          )),
-          SizedBox(height: OwnKeepSpacing.lg),
-          Text('Completed', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-          SizedBox(height: OwnKeepSpacing.sm),
-          ...completed.map((c) => Container(
-            margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(children: [
-              Container(
-                width: 44, height: 44,
-                decoration: BoxDecoration(color: c.$1, shape: BoxShape.circle),
-                child: Center(child: Text(c.$2, style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700, fontFamily: 'Inter'))),
-              ),
-              SizedBox(width: OwnKeepSpacing.md),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(c.$3, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                Text(c.$4, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ])),
-              OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: c.$6,
-                  side: BorderSide(color: c.$6),
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  minimumSize: Size.zero,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                ),
-                child: Text(c.$5, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: c.$6, fontFamily: 'Inter')),
-              ),
-            ]),
-          )),
-          SizedBox(height: OwnKeepSpacing.lg),
-          Text('Invitation Security', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-          SizedBox(height: OwnKeepSpacing.sm),
-          ...security.map((s) => Container(
-            margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(children: [
-              Container(
-                width: 36, height: 36,
-                decoration: BoxDecoration(color: s.$2, borderRadius: BorderRadius.circular(9)),
-                child: Icon(s.$3, color: Colors.white.withValues(alpha: 0.85), size: 18),
-              ),
-              SizedBox(width: OwnKeepSpacing.md),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(s.$4, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                Text(s.$5, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ])),
-              Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-            ]),
-          )),
-        ]),
-      ),
+    );
+  }
+
+  Widget _buildSecurityRule(String title, String body, OwnKeepMainColorsTheme colors) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(Icons.check, color: colors.successGreen, size: 16),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: TextStyle(color: colors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+              const SizedBox(height: 2),
+              Text(body, style: TextStyle(color: colors.textSecondary, fontSize: 12)),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

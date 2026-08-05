@@ -1,134 +1,179 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
 class AiSearchResultsScreen extends StatelessWidget {
   const AiSearchResultsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const results = [
-      (Color(0xFFCC2200), 'Vehicle Insurance', 'Expires in 15 days  •  20 Aug 2026', '15 days', OwnKeepColors.danger),
-      (Color(0xFFF59E0B), 'Health Insurance', 'Expires in 16 days  •  21 Aug 2026', '16 days', Color(0xFFF59E0B)),
-      (Color(0xFFF59E0B), 'Driving Licence', 'Expires in 26 days  •  31 Aug 2026', '26 days', Color(0xFFF59E0B)),
-    ];
-
-    const suggestedActions = [
-      (Color(0xFF7C3AED), Icons.notifications_outlined, 'Create renewal reminders', 'Add reminders 7 days before expiry'),
-      (OwnKeepColors.primary, Icons.picture_as_pdf_outlined, 'Open vehicle insurance', 'Review policy details'),
-      (OwnKeepColors.success, Icons.compare_arrows_rounded, 'Compare current policies', 'See coverage and premium changes'),
-    ];
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('AI Search Results', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('Question: What expires soon?', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
-        actions: [
+        title: Text(l10n.s78_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+        centerTitle: true,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Search Question Box
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: colors.surfacePrimary,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: colors.borderSoft),
+                ),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(OwnKeepMainIcons.search, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn)),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(l10n.s78_question, style: TextStyle(color: colors.textPrimary, fontSize: 16)),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // AI Summary
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: colors.primaryBlue.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        SvgPicture.asset(OwnKeepMainIcons.ai_sparkle, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+                        const SizedBox(width: 8),
+                        Text(l10n.s78_summary_label, style: TextStyle(color: colors.primaryBlue, fontSize: 14, fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Text(l10n.s78_summary, style: TextStyle(color: colors.textPrimary, fontSize: 16, height: 1.5)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // Result Cards
+              _buildResultCard(l10n.s78_vehicle, l10n.s78_vehicle_meta, l10n.s78_vehicle_days, OwnKeepMainIcons.vehicle, colors.accentCyan, colors),
+              const SizedBox(height: 16),
+              _buildResultCard(l10n.s78_health, l10n.s78_health_meta, l10n.s78_health_days, OwnKeepMainIcons.health, colors.healthPink, colors),
+              const SizedBox(height: 16),
+              _buildResultCard(l10n.s78_licence, l10n.s78_licence_meta, l10n.s78_licence_days, OwnKeepMainIcons.profile, colors.primaryBlue, colors),
+              const SizedBox(height: 40),
+
+              // Suggested Actions
+              Text(l10n.s78_suggested, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 16),
+              _buildActionCard(l10n.s78_create_title, l10n.s78_create_body, OwnKeepMainIcons.reminder, colors),
+              const SizedBox(height: 12),
+              _buildActionCard(l10n.s78_open_title, l10n.s78_open_body, OwnKeepMainIcons.open, colors),
+              const SizedBox(height: 12),
+              _buildActionCard(l10n.s78_compare_title, l10n.s78_compare_body, OwnKeepMainIcons.compare, colors),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildResultCard(String title, String meta, String badge, String iconPath, Color iconColor, OwnKeepMainColorsTheme colors) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.borderSoft),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.darkSurfaceElevated, borderRadius: BorderRadius.circular(10)),
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.add_rounded, color: OwnKeepColors.primary, size: 20)),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: iconColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: SvgPicture.asset(iconPath, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn), width: 24),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(child: Text(title, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600))),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(color: colors.dangerRed.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(8)),
+                      child: Text(badge, style: TextStyle(color: colors.dangerRed, fontSize: 12, fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(meta, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+              ],
+            ),
           ),
         ],
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 0),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          // AI Summary card
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.ai.withValues(alpha: 0.4)),
+    );
+  }
+
+  Widget _buildActionCard(String title, String body, String iconPath, OwnKeepMainColorsTheme colors) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.borderSoft),
+      ),
+      child: Row(
+        children: [
+          SvgPicture.asset(iconPath, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 20),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500)),
+                const SizedBox(height: 4),
+                Text(body, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+              ],
             ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-              Text('AI Summary', style: TextStyle(color: OwnKeepColors.ai, fontSize: 12, fontWeight: FontWeight.w700, fontFamily: 'Inter', letterSpacing: 0.5)),
-              SizedBox(height: 6),
-              Text(
-                'Three important documents expire within the next 30 days. Vehicle insurance is the most urgent.',
-                style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontFamily: 'Inter', height: 1.5),
-              ),
-            ]),
           ),
-          SizedBox(height: OwnKeepSpacing.base),
-          // Result items
-          ...results.map((r) => Container(
-            margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(children: [
-              Container(
-                width: 40, height: 40,
-                decoration: BoxDecoration(color: r.$1.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
-                child: Icon(Icons.calendar_today_rounded, color: r.$1, size: 18),
-              ),
-              SizedBox(width: OwnKeepSpacing.md),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(r.$2, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                Text(r.$3, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ])),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(border: Border.all(color: r.$5), borderRadius: BorderRadius.circular(6)),
-                child: Text(r.$4, style: TextStyle(color: r.$5, fontSize: 12, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-              ),
-            ]),
-          )),
-          SizedBox(height: OwnKeepSpacing.sm),
-          Text('Suggested Actions', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-          SizedBox(height: OwnKeepSpacing.sm),
-          ...suggestedActions.map((a) => Container(
-            margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(children: [
-              Container(
-                width: 40, height: 40,
-                decoration: BoxDecoration(color: a.$1.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
-                child: Icon(a.$2, color: a.$1, size: 20),
-              ),
-              SizedBox(width: OwnKeepSpacing.md),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(a.$3, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                Text(a.$4, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ])),
-              Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-            ]),
-          )),
-          SizedBox(height: OwnKeepSpacing.sm),
-          FilledButton(
-            onPressed: () {},
-            style: FilledButton.styleFrom(
-              backgroundColor: OwnKeepColors.primary,
-              minimumSize: const Size.fromHeight(52),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
-            ),
-            child: Text('Create All Reminders', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          ),
-        ]),
+          SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn)),
+        ],
       ),
     );
   }

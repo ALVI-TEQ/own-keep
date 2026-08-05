@@ -1,152 +1,218 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
 class AppLockScreen extends StatefulWidget {
   const AppLockScreen({super.key});
+
   @override
   State<AppLockScreen> createState() => _AppLockScreenState();
 }
 
 class _AppLockScreenState extends State<AppLockScreen> {
-  bool _biometric = true;
-  bool _pinFallback = true;
-  bool _recoveryPhrase = true;
-  int _autoLockIndex = 1; // After 30 seconds selected
-
-  final _autoLockOptions = [
-    'Immediately',
-    'After 30 seconds',
-    'After 2 minutes',
-    'When app goes to background',
-  ];
+  int _autoLockIndex = 0; // 0=Immediately, 1=30s, 2=2m
 
   @override
   Widget build(BuildContext context) {
-    final lockMethods = [
-      (Icons.fingerprint_rounded, const Color(0xFF0A4A2E), OwnKeepColors.success, 'Biometric unlock', 'Use fingerprint or face unlock', _biometric, (v) => setState(() => _biometric = v)),
-      (Icons.circle_rounded, const Color(0xFF1A3D7A), OwnKeepColors.primary, 'PIN fallback', 'Required after device restart', _pinFallback, (v) => setState(() => _pinFallback = v)),
-      (Icons.grid_view_rounded, const Color(0xFF3D1A7A), const Color(0xFF7C3AED), 'Recovery phrase', 'Emergency recovery only', _recoveryPhrase, (v) => setState(() => _recoveryPhrase = v)),
-    ];
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('App Lock', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('Control when OwnKeep locks', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.primary.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.check_rounded, color: OwnKeepColors.primary, size: 20)),
+        title: Column(
+          children: [
+            Text(l10n.s93_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(l10n.s93_subtitle, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+          ],
+        ),
+        centerTitle: true,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Status Header
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: colors.surfacePrimary,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: colors.borderSoft),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: colors.successGreen.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.shield_rounded, color: colors.successGreen, size: 40),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(l10n.s93_status_label, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                    const SizedBox(height: 4),
+                    Text(l10n.s93_status, style: TextStyle(color: colors.successGreen, fontSize: 24, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: colors.surfaceSecondary,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(l10n.s93_method_summary, style: TextStyle(color: colors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // Lock Methods
+              Text(l10n.s93_methods, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              _buildMethodItem(l10n.s93_biometric, l10n.s93_biometric_body, OwnKeepMainIcons.fingerprint, true, colors),
+              _buildMethodItem(l10n.s93_pin, l10n.s93_pin_body, OwnKeepMainIcons.pin, true, colors),
+              _buildMethodItem(l10n.s93_recovery, l10n.s93_recovery_body, OwnKeepMainIcons.key, false, colors),
+              
+              const SizedBox(height: 32),
+
+              // Auto Lock
+              Text(l10n.s93_auto_lock, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              
+              Container(
+                decoration: BoxDecoration(
+                  color: colors.surfacePrimary,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: colors.borderSoft),
+                ),
+                child: Column(
+                  children: [
+                    _buildRadioRow(l10n.s93_immediately, 0, colors),
+                    Divider(color: colors.borderSoft, height: 1),
+                    _buildRadioRow(l10n.s93_after_30, 1, colors),
+                    Divider(color: colors.borderSoft, height: 1),
+                    _buildRadioRow(l10n.s93_after_2, 2, colors),
+                  ],
+                ),
+              ),
+              
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Icon(Icons.info_outline, color: colors.textMuted, size: 16),
+                  const SizedBox(width: 8),
+                  Text(l10n.s93_background, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vault locked.')));
+              },
+              icon: const Icon(Icons.lock_outline, color: Colors.white),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colors.dangerRed,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              ),
+              label: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(l10n.s93_lock_now, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text(l10n.s93_lock_now_body, style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 10)),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMethodItem(String title, String body, String iconPath, bool isActive, OwnKeepMainColorsTheme colors) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.borderSoft),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: colors.surfaceSecondary,
+              shape: BoxShape.circle,
+            ),
+            child: SvgPicture.asset(iconPath, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 24),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500)),
+                const SizedBox(height: 4),
+                Text(body, style: TextStyle(color: colors.textSecondary, fontSize: 12)),
+              ],
+            ),
+          ),
+          if (isActive)
+            Icon(Icons.check_circle, color: colors.successGreen, size: 24)
+          else
+            Icon(Icons.circle_outlined, color: colors.textMuted, size: 24),
         ],
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 3),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          // Status card
-          Container(
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.primary.withValues(alpha: 0.4)),
+    );
+  }
+
+  Widget _buildRadioRow(String label, int index, OwnKeepMainColorsTheme colors) {
+    return InkWell(
+      onTap: () => setState(() => _autoLockIndex = index),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label, style: TextStyle(color: colors.textPrimary, fontSize: 16)),
+            Radio<int>(
+              value: index,
+              groupValue: _autoLockIndex,
+              onChanged: (v) => setState(() => _autoLockIndex = v!),
+              activeColor: colors.primaryBlue,
             ),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Vault Lock Status', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 11, fontFamily: 'Inter')),
-                Text('Protected', style: TextStyle(color: OwnKeepColors.success, fontSize: 18, fontWeight: FontWeight.w800, fontFamily: 'Inter')),
-              ]),
-              Text('Biometric + PIN', style: TextStyle(color: OwnKeepColors.primary, fontSize: 13, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            ]),
-          ),
-          SizedBox(height: OwnKeepSpacing.xl),
-          Text('Lock Methods', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-          SizedBox(height: OwnKeepSpacing.sm),
-          ...lockMethods.map((m) => Container(
-            margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-            padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.md, vertical: 6),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(children: [
-              Container(
-                width: 36, height: 36,
-                decoration: BoxDecoration(color: m.$2, borderRadius: BorderRadius.circular(9)),
-                child: Icon(m.$1, color: m.$3, size: 18),
-              ),
-              SizedBox(width: OwnKeepSpacing.md),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(m.$4, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                Text(m.$5, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ])),
-              Switch(value: m.$6, onChanged: m.$7, activeThumbColor: OwnKeepColors.primary),
-            ]),
-          )),
-          SizedBox(height: OwnKeepSpacing.lg),
-          Text('Auto Lock', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-          SizedBox(height: OwnKeepSpacing.sm),
-          ..._autoLockOptions.asMap().entries.map((e) {
-            final isSelected = _autoLockIndex == e.key;
-            return GestureDetector(
-              onTap: () => setState(() => _autoLockIndex = e.key),
-              child: Container(
-                margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-                padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.md, vertical: 14),
-                decoration: BoxDecoration(
-                  color: OwnKeepColors.darkSurfaceElevated,
-                  borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                  border: Border.all(
-                    color: isSelected ? OwnKeepColors.primary : OwnKeepColors.darkBorder.withValues(alpha: 0.3),
-                    width: isSelected ? 1.5 : 1,
-                  ),
-                ),
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Text(e.value, style: TextStyle(
-                    color: isSelected ? OwnKeepColors.darkTextPrimary : OwnKeepColors.darkTextSecondary,
-                    fontSize: 14,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                    fontFamily: 'Inter',
-                  )),
-                  if (isSelected)
-                    Icon(Icons.check_rounded, color: OwnKeepColors.primary, size: 18),
-                ]),
-              ),
-            );
-          }),
-          SizedBox(height: OwnKeepSpacing.sm),
-          // Lock Now row (danger)
-          Container(
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.danger.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.danger.withValues(alpha: 0.3)),
-            ),
-            child: Row(children: const [
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Lock Now', style: TextStyle(color: OwnKeepColors.danger, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                Text('Immediately secure all vault content', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ])),
-              Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-            ]),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }

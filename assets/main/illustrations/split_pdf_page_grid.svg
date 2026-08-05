@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none"><defs>
+<linearGradient id="scanRing" x1="55" y1="36" x2="200" y2="220" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#8D58FF"/>
+  <stop offset="1" stop-color="#3E62FF"/>
+</linearGradient>
+</defs>
+<g font-family="Arial,sans-serif" text-anchor="middle">
+<rect x="6" y="45" width="56" height="166" rx="10" fill="#EFF1F7"/>
+<rect x="68" y="45" width="56" height="166" rx="10" fill="#EFF1F7" stroke="#3E62FF" stroke-width="3"/>
+<rect x="130" y="45" width="56" height="166" rx="10" fill="#EFF1F7" stroke="#3E62FF" stroke-width="3"/>
+<rect x="192" y="45" width="56" height="166" rx="10" fill="#EFF1F7"/>
+<g fill="#283452" font-size="13" font-weight="700">
+<text x="34" y="103">PAGE 1</text><text x="96" y="103">PAGE 2</text><text x="158" y="103">PAGE 3</text><text x="220" y="103">PAGE 4</text>
+</g>
+<g fill="#72819C" font-size="9">
+<text x="34" y="170">Insurance</text><text x="96" y="170">Insurance</text><text x="158" y="170">Insurance</text><text x="220" y="170">Insurance</text>
+</g>
+<circle cx="112" cy="61" r="14" fill="#3E62FF"/><path d="m105 61 5 5 9-11" stroke="#FFF" stroke-width="3"/>
+<circle cx="174" cy="61" r="14" fill="#3E62FF"/><path d="m167 61 5 5 9-11" stroke="#FFF" stroke-width="3"/>
+</g>
+</svg>

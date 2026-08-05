@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
+import 'ownkeep_main_colors.dart';
 
 class OwnKeepColors {
   // Deep Navy Theme
@@ -120,10 +121,15 @@ class AppTheme {
       ),
       extensions: [
         colors,
+        OwnKeepMainColorsTheme.defaultDark,
       ],
     );
   }
 
   // Optional light theme placeholder
-  static ThemeData get lightTheme => ThemeData.light();
+  static ThemeData get lightTheme => ThemeData.light().copyWith(
+    extensions: [
+      OwnKeepMainColorsTheme.defaultLight,
+    ],
+  );
 }

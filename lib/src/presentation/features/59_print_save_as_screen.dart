@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class PrintSaveAsScreen extends StatefulWidget {
   const PrintSaveAsScreen({super.key});
@@ -12,125 +13,388 @@ class PrintSaveAsScreen extends StatefulWidget {
 }
 
 class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
-  int _selected = 0;
-
-  final _outputs = [
-    (Icons.print_outlined, const Color(0xFF3A5ED0), 'Print', 'Use a connected printer'),
-    (Icons.picture_as_pdf_outlined, const Color(0xFFCC2200), 'Save as PDF', 'Create a new PDF copy'),
-    (Icons.folder_outlined, OwnKeepColors.success, 'Save to Files', 'Choose a local folder'),
-    (Icons.image_outlined, OwnKeepColors.ai, 'Export Images', 'Save each page as image'),
-  ];
+  String _selectedOutput = 'print';
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => Navigator.pop(context),
         ),
         title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text('Print / Save As', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            Text('Choose output option', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
+          children: [
+            Text(
+              l10n.s59_title,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+            Text(
+              l10n.s59_subtitle,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontFamily: 'Inter',
+              ),
+            ),
           ],
         ),
+        centerTitle: true,
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 1),
-      body: Padding(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(OwnKeepSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Source file card
+            // File Info
             Container(
-              padding: EdgeInsets.all(OwnKeepSpacing.md),
+              padding: const EdgeInsets.all(OwnKeepSpacing.md),
               decoration: BoxDecoration(
-                color: OwnKeepColors.darkSurfaceElevated,
-                borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.borderSoft),
               ),
-              child: Row(children: [
-                Container(
-                  width: 48, height: 48,
-                  decoration: BoxDecoration(color: const Color(0xFFEAEBF0), borderRadius: BorderRadius.circular(8)),
-                  child: const Center(child: Text('PDF', style: TextStyle(color: Color(0xFFCC2200), fontSize: 13, fontWeight: FontWeight.w800, fontFamily: 'Inter'))),
-                ),
-                SizedBox(width: OwnKeepSpacing.md),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('Insurance Policy.pdf', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                  Text('4 pages  •  2.4 MB', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-                  Text('Finance › Insurance', style: TextStyle(color: OwnKeepColors.primary, fontSize: 11, fontFamily: 'Inter')),
-                ])),
-              ]),
-            ),
-            SizedBox(height: OwnKeepSpacing.lg),
-            Text('Output', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            SizedBox(height: OwnKeepSpacing.sm),
-            ..._outputs.asMap().entries.map((e) => GestureDetector(
-              onTap: () => setState(() => _selected = e.key),
-              child: Container(
-                margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-                padding: EdgeInsets.all(OwnKeepSpacing.md),
-                decoration: BoxDecoration(
-                  color: _selected == e.key ? OwnKeepColors.primary.withValues(alpha: 0.1) : OwnKeepColors.darkSurfaceElevated,
-                  borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                  border: Border.all(
-                    color: _selected == e.key ? OwnKeepColors.primary.withValues(alpha: 0.5) : OwnKeepColors.darkBorder.withValues(alpha: 0.3),
-                  ),
-                ),
-                child: Row(children: [
+              child: Row(
+                children: [
                   Container(
-                    width: 40, height: 40,
-                    decoration: BoxDecoration(color: e.value.$2.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
-                    child: Icon(e.value.$1, color: e.value.$2, size: 22),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: colors.backgroundTop,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: SvgPicture.asset(
+                      OwnKeepMainIcons.file_pdf,
+                      colorFilter: ColorFilter.mode(colors.dangerRed, BlendMode.srcIn),
+                      width: 24,
+                      height: 24,
+                    ),
                   ),
-                  SizedBox(width: OwnKeepSpacing.md),
-                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(e.value.$3, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                    Text(e.value.$4, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-                  ])),
-                  Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-                ]),
+                  const SizedBox(width: OwnKeepSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.s59_file,
+                          style: TextStyle(
+                            color: colors.textPrimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Row(
+                          children: [
+                            Text(
+                              l10n.s59_file_meta,
+                              style: TextStyle(
+                                color: colors.textSecondary,
+                                fontSize: 13,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 6),
+                              child: Text(
+                                '•',
+                                style: TextStyle(color: colors.textMuted, fontSize: 13),
+                              ),
+                            ),
+                            Text(
+                              l10n.s59_location,
+                              style: TextStyle(
+                                color: colors.textSecondary,
+                                fontSize: 13,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            )),
-            SizedBox(height: OwnKeepSpacing.sm),
-            Text('Page Range', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            SizedBox(height: OwnKeepSpacing.sm),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.md, vertical: 14),
-              decoration: BoxDecoration(
-                color: OwnKeepColors.darkSurfaceElevated,
-                borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-              ),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
-                Text('All pages', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-                Text('1–4', style: TextStyle(color: OwnKeepColors.primary, fontSize: 13, fontFamily: 'Inter')),
-              ]),
             ),
-            SizedBox(height: OwnKeepSpacing.md),
-            Text('Privacy', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            SizedBox(height: 4),
+            
+            const SizedBox(height: OwnKeepSpacing.xl),
+            
             Text(
-              'Printing or saving creates an unencrypted copy outside OwnKeep. Continue only when you trust the destination.',
-              style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter', height: 1.5),
-            ),
-            const Spacer(),
-            FilledButton(
-              onPressed: () {},
-              style: FilledButton.styleFrom(
-                backgroundColor: OwnKeepColors.primary,
-                minimumSize: const Size.fromHeight(52),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
+              l10n.s59_output,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+                letterSpacing: 0.5,
               ),
-              child: Text('Continue', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
             ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            
+            Container(
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Column(
+                children: [
+                  _buildOptionItem(
+                    colors,
+                    id: 'print',
+                    icon: OwnKeepMainIcons.print,
+                    title: l10n.s59_print,
+                    subtitle: l10n.s59_print_body,
+                  ),
+                  Divider(color: colors.borderSoft, height: 1),
+                  _buildOptionItem(
+                    colors,
+                    id: 'save_pdf',
+                    icon: OwnKeepMainIcons.save_pdf,
+                    title: l10n.s59_save_pdf,
+                    subtitle: l10n.s59_save_pdf_body,
+                  ),
+                  Divider(color: colors.borderSoft, height: 1),
+                  _buildOptionItem(
+                    colors,
+                    id: 'save_files',
+                    icon: OwnKeepMainIcons.save_files,
+                    title: l10n.s59_save_files,
+                    subtitle: l10n.s59_save_files_body,
+                  ),
+                  Divider(color: colors.borderSoft, height: 1),
+                  _buildOptionItem(
+                    colors,
+                    id: 'export_images',
+                    icon: OwnKeepMainIcons.export_images,
+                    title: l10n.s59_export_images,
+                    subtitle: l10n.s59_export_images_body,
+                  ),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: OwnKeepSpacing.xl),
+            
+            Text(
+              l10n.s59_page_range,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            
+            Container(
+              padding: const EdgeInsets.all(OwnKeepSpacing.md),
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l10n.s59_all_pages,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 15,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        l10n.s59_page_value,
+                        style: TextStyle(
+                          color: colors.textSecondary,
+                          fontSize: 15,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                      const SizedBox(width: OwnKeepSpacing.xs),
+                      SvgPicture.asset(
+                        OwnKeepMainIcons.chevron_right,
+                        colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
+                        width: 20,
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: OwnKeepSpacing.xl),
+            
+            Text(
+              l10n.s59_privacy,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            
+            Container(
+              padding: const EdgeInsets.all(OwnKeepSpacing.md),
+              decoration: BoxDecoration(
+                color: colors.surfaceDanger.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.dangerRed.withOpacity(0.3)),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SvgPicture.asset(
+                    OwnKeepMainIcons.info, // Assuming info or warning icon exists
+                    colorFilter: ColorFilter.mode(colors.dangerRed, BlendMode.srcIn),
+                    width: 20,
+                    height: 20,
+                  ),
+                  const SizedBox(width: OwnKeepSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      l10n.s59_privacy_body,
+                      style: TextStyle(
+                        color: colors.dangerRed,
+                        fontSize: 13,
+                        fontFamily: 'Inter',
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: 100),
+          ],
+        ),
+      ),
+      bottomSheet: Container(
+        padding: EdgeInsets.only(
+          left: OwnKeepSpacing.md,
+          right: OwnKeepSpacing.md,
+          top: OwnKeepSpacing.md,
+          bottom: MediaQuery.of(context).padding.bottom + OwnKeepSpacing.md,
+        ),
+        decoration: BoxDecoration(
+          color: colors.navigationBackground,
+          border: Border(top: BorderSide(color: colors.borderSoft)),
+        ),
+        child: ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            backgroundColor: colors.primaryBlue,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            minimumSize: const Size(double.infinity, 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            elevation: 0,
+          ),
+          child: Text(
+            l10n.common_continue,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Inter',
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOptionItem(OwnKeepMainColorsTheme colors, {required String id, required String icon, required String title, required String subtitle}) {
+    final isSelected = _selectedOutput == id;
+
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _selectedOutput = id;
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(OwnKeepSpacing.md),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: isSelected ? colors.primaryBlue.withOpacity(0.1) : colors.backgroundTop,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: SvgPicture.asset(
+                icon,
+                colorFilter: ColorFilter.mode(isSelected ? colors.primaryBlue : colors.textSecondary, BlendMode.srcIn),
+                width: 24,
+                height: 24,
+              ),
+            ),
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (isSelected)
+              SvgPicture.asset(
+                OwnKeepMainIcons.selection_checked,
+                colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn),
+                width: 24,
+                height: 24,
+              )
+            else
+              Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: colors.borderSoft, width: 1.5),
+                ),
+              ),
           ],
         ),
       ),

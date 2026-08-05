@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none"><defs>
+<linearGradient id="scanRing" x1="55" y1="36" x2="200" y2="220" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#8D58FF"/>
+  <stop offset="1" stop-color="#3E62FF"/>
+</linearGradient>
+</defs>
+<rect x="12" y="24" width="108" height="208" rx="12" fill="#EFF1F7"/>
+<rect x="136" y="24" width="108" height="208" rx="12" fill="#EFF1F7"/>
+<g fill="#283452" font-family="Arial,sans-serif" font-size="10">
+<text x="27" y="56" font-weight="700">Policy Number</text><text x="27" y="82">POL/AGI/2024/123</text>
+<text x="27" y="112" font-weight="700">Policy Holder</text><text x="27" y="138">Arjun Sharma</text>
+<text x="27" y="167" font-weight="700">Premium</text><rect x="22" y="174" width="88" height="26" rx="5" stroke="#FF5C68" stroke-width="2"/><text x="27" y="192">₹12,500</text>
+<text x="151" y="56" font-weight="700">Policy Number</text><text x="151" y="82">POL/AGI/2024/123</text>
+<text x="151" y="112" font-weight="700">Policy Holder</text><text x="151" y="138">Arjun Sharma</text>
+<text x="151" y="167" font-weight="700">Premium</text><rect x="146" y="174" width="88" height="26" rx="5" stroke="#27CD8B" stroke-width="2"/><text x="151" y="192">₹13,250</text>
+</g>
+</svg>

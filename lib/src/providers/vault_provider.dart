@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ownkeep/src/citizen_vault/vault/vault_lifecycle.dart';
+import 'package:ownkeep/src/citizen_vault/ingestion/ingestion_ui_controller.dart';
 
 class AppDarkModeNotifier extends Notifier<bool> {
   final bool initialValue;
@@ -98,6 +99,12 @@ class VaultSessionNotifier extends AsyncNotifier<UnlockedVaultHandle?> {
     }
     state = const AsyncData(null);
   }
+
+  Future<void> destroyVault() async {
+    await lockVault();
+    final lifecycle = ref.read(vaultLifecycleProvider);
+    await lifecycle.destroyVault();
+  }
 }
 
 final vaultSessionProvider = AsyncNotifierProvider<VaultSessionNotifier, UnlockedVaultHandle?>(VaultSessionNotifier.new);
@@ -122,9 +129,7 @@ class OnboardingPinNotifier extends Notifier<String?> {
 final onboardingPinProvider = NotifierProvider<OnboardingPinNotifier, String?>(OnboardingPinNotifier.new);
 
 // Exposes the IngestionUiController from the currently unlocked vault
-final ingestionControllerProvider = Provider<dynamic>((ref) {
+final ingestionControllerProvider = Provider<IngestionUiController?>((ref) {
   final vaultHandle = ref.watch(unlockedVaultProvider);
-  // Using dynamic here temporarily to avoid deep imports from citizen_vault_app internal paths, 
-  // but it's guaranteed to be an IngestionUiController.
   return vaultHandle?.ingestionController;
 });

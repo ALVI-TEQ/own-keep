@@ -5,9 +5,45 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/vault_provider.dart';
+import 'dart:typed_data';
 
-class DocumentPreviewScreen extends StatelessWidget {
-  const DocumentPreviewScreen({super.key});
+class DocumentPreviewScreen extends ConsumerStatefulWidget {
+  final String? documentId;
+  const DocumentPreviewScreen({super.key, this.documentId});
+
+  @override
+  ConsumerState<DocumentPreviewScreen> createState() => _DocumentPreviewScreenState();
+}
+
+class _DocumentPreviewScreenState extends ConsumerState<DocumentPreviewScreen> {
+  Uint8List? _previewBytes;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreview();
+  }
+
+  Future<void> _loadPreview() async {
+    if (widget.documentId == null) {
+      if (mounted) setState(() => _isLoading = false);
+      return;
+    }
+    try {
+      final controller = ref.read(ingestionControllerProvider);
+      if (controller != null) {
+        final bytes = await controller.documentPreview(widget.documentId!);
+        if (mounted) setState(() { _previewBytes = bytes; _isLoading = false; });
+      } else {
+        if (mounted) setState(() => _isLoading = false);
+      }
+    } catch (e) {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +91,19 @@ class DocumentPreviewScreen extends StatelessWidget {
               child: Stack(
                 children: [
                   Center(
-                    child: SvgPicture.asset(
-                      'assets/main/illustrations/passport_preview_placeholder.svg',
-                      fit: BoxFit.contain,
-                      height: 300,
-                    ),
+                    child: _isLoading 
+                      ? const CircularProgressIndicator() 
+                      : _previewBytes != null
+                          ? Image.memory(
+                              _previewBytes!,
+                              fit: BoxFit.contain,
+                              height: 340,
+                            )
+                          : SvgPicture.asset(
+                              'assets/main/illustrations/passport_preview_placeholder.svg',
+                              fit: BoxFit.contain,
+                              height: 300,
+                            ),
                   ),
                   Positioned(
                     bottom: 16,

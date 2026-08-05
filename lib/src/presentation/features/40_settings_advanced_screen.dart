@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
+import '../../theme/ownkeep_onboarding_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 
 class SettingsAdvancedScreen extends StatelessWidget {
@@ -208,7 +209,7 @@ class SettingsAdvancedScreen extends StatelessWidget {
               ),
             if (isToggle)
               SvgPicture.asset(
-                isToggleOn ? OwnKeepMainIcons.toggle_on : OwnKeepMainIcons.toggle_off,
+                isToggleOn ? OwnKeepOnboardingIcons.toggle_on : OwnKeepOnboardingIcons.toggle_off,
               )
             else if (value != null || (!isToggle && !isDanger))
               Padding(

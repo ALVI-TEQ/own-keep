@@ -1,150 +1,229 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
 class MembersScreen extends StatelessWidget {
   const MembersScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const members = [
-      ('A', OwnKeepColors.primary, 'Arjun Sharma', 'Owner  •  This device', 'Owner', OwnKeepColors.primary),
-      ('H', OwnKeepColors.pink, 'Harika', 'Adult  •  Full access', 'Active', OwnKeepColors.danger),
-      ('S', Color(0xFF7C3AED), 'Alekhya', 'Child  •  Limited access', 'Active', Color(0xFF7C3AED)),
-      ('C', OwnKeepColors.success, 'Charvika', 'Child  •  Limited access', 'Active', OwnKeepColors.success),
-    ];
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
 
-    const transferOptions = [
-      (OwnKeepColors.ai, Color(0xFF0A3D3D), Icons.compare_arrows_rounded, 'Nearby Transfer', 'Share encrypted access on local network'),
-      (Color(0xFF7C3AED), Color(0xFF3D1A7A), Icons.grid_view_rounded, 'QR Invitation', 'Scan on another device'),
-      (OwnKeepColors.success, Color(0xFF0A4A2E), Icons.download_rounded, 'Encrypted Package', 'Export an offline invitation file'),
+    final members = [
+      {
+        'name': 'Arjun',
+        'meta': l10n.s82_arjun_meta,
+        'initial': 'A',
+        'color': const Color(0xFF4668FF),
+        'isOwner': true,
+      },
+      {
+        'name': 'Harika',
+        'meta': l10n.s82_harika_meta,
+        'initial': 'H',
+        'color': const Color(0xFFFF4C9A),
+        'isOwner': false,
+      },
+      {
+        'name': 'Alekhya',
+        'meta': l10n.s82_alekhya_meta,
+        'initial': 'A',
+        'color': const Color(0xFF8548FF),
+        'isOwner': false,
+      },
+      {
+        'name': 'Charvika',
+        'meta': l10n.s82_charvika_meta,
+        'initial': 'C',
+        'color': const Color(0xFF28CC91),
+        'isOwner': false,
+      },
     ];
 
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('Family Members', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('4 members', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.darkSurfaceElevated, borderRadius: BorderRadius.circular(10)),
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.add_rounded, color: OwnKeepColors.primary, size: 20)),
-          ),
-        ],
+        title: Column(
+          children: [
+            Text(l10n.s82_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(l10n.s82_member_count, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+          ],
+        ),
+        centerTitle: true,
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 3),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          // Member list
-          ...members.map((m) => Container(
-            margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(children: [
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Access Summary Card
               Container(
-                width: 44, height: 44,
-                decoration: BoxDecoration(color: m.$2, shape: BoxShape.circle),
-                child: Center(child: Text(m.$1, style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700, fontFamily: 'Inter'))),
-              ),
-              SizedBox(width: OwnKeepSpacing.md),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(m.$3, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                Text(m.$4, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ])),
-              OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: m.$6,
-                  side: BorderSide(color: m.$6),
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  minimumSize: Size.zero,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: colors.surfacePrimary,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: colors.borderSoft),
                 ),
-                child: Text(m.$5, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: m.$6, fontFamily: 'Inter')),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.s82_access_summary, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildStat(l10n.s82_members_value, l10n.s82_members_label, colors.primaryBlue, colors),
+                        _buildStat(l10n.s82_collections_value, l10n.s82_collections_label, colors.successGreen, colors),
+                        _buildStat(l10n.s82_trusted_value, l10n.s82_trusted_label, colors.aiPurple, colors),
+                        _buildStat(l10n.s82_pending_value, l10n.s82_pending_label, colors.warningOrange, colors),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(width: 6),
-              Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-            ]),
-          )),
-          SizedBox(height: OwnKeepSpacing.lg),
-          Text('Access Summary', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-          SizedBox(height: OwnKeepSpacing.sm),
-          Row(children: const [
-            _SumChip(value: '4', label: 'Members', color: OwnKeepColors.primary),
-            SizedBox(width: 8),
-            _SumChip(value: '6', label: 'Collections', color: Color(0xFF7C3AED)),
-            SizedBox(width: 8),
-            _SumChip(value: '2', label: 'Trusted', color: OwnKeepColors.success),
-            SizedBox(width: 8),
-            _SumChip(value: '1', label: 'Pending', color: Color(0xFFF59E0B)),
-          ]),
-          SizedBox(height: OwnKeepSpacing.lg),
-          Text('Transfer Options', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-          SizedBox(height: OwnKeepSpacing.sm),
-          ...transferOptions.map((t) => Container(
-            margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+              const SizedBox(height: 32),
+
+              // Member List
+              ...members.map((member) => _buildMemberCard(member, colors, context)),
+              
+              const SizedBox(height: 32),
+              
+              // Transfer Options
+              Text(l10n.s82_transfer_options, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 16),
+              _buildTransferOption(l10n.s82_nearby, l10n.s82_nearby_body, OwnKeepMainIcons.device_sync, colors.accentCyan, colors),
+              _buildTransferOption(l10n.s82_qr, l10n.s82_qr_body, OwnKeepMainIcons.qr_code, colors.primaryBlue, colors),
+              _buildTransferOption(l10n.s82_package, l10n.s82_package_body, OwnKeepMainIcons.folder_export, colors.aiPurple, colors),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: ElevatedButton(
+              onPressed: () => context.push('/features/invite-members'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colors.primaryBlue,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              ),
+              child: Text(
+                l10n.s81_add_member,
+                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+              ),
             ),
-            child: Row(children: [
-              Container(
-                width: 36, height: 36,
-                decoration: BoxDecoration(color: t.$2, borderRadius: BorderRadius.circular(9)),
-                child: Icon(t.$3, color: Colors.white.withValues(alpha: 0.85), size: 18),
-              ),
-              SizedBox(width: OwnKeepSpacing.md),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(t.$4, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                Text(t.$5, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ])),
-              Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-            ]),
-          )),
-        ]),
+          ),
+        ),
       ),
     );
   }
-}
 
-class _SumChip extends StatelessWidget {
-  const _SumChip({required this.value, required this.label, required this.color});
-  final String value, label;
-  final Color color;
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
+  Widget _buildStat(String value, String label, Color valueColor, OwnKeepMainColorsTheme colors) {
+    return Column(
+      children: [
+        Text(value, style: TextStyle(color: valueColor, fontSize: 20, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 4),
+        Text(label, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+      ],
+    );
+  }
+
+  Widget _buildMemberCard(Map<String, dynamic> member, OwnKeepMainColorsTheme colors, BuildContext context) {
+    final bool isOwner = member['isOwner'] as bool;
+    return GestureDetector(
+      onTap: isOwner ? null : () => context.push('/features/permissions'),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 12),
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: OwnKeepColors.darkSurfaceElevated,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+          color: colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: isOwner ? colors.primaryBlue.withValues(alpha: 0.3) : colors.borderSoft),
         ),
-        child: Column(children: [
-          Text(value, style: TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-          SizedBox(height: 2),
-          Text(label, style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 10, fontFamily: 'Inter')),
-        ]),
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: member['color'] as Color,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(member['initial'] as String, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(member['name'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 4),
+                  Text(member['meta'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                ],
+              ),
+            ),
+            if (!isOwner)
+              SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTransferOption(String title, String body, String iconPath, Color iconColor, OwnKeepMainColorsTheme colors) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.borderSoft),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: iconColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: SvgPicture.asset(iconPath, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn), width: 24),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500)),
+                const SizedBox(height: 4),
+                Text(body, style: TextStyle(color: colors.textSecondary, fontSize: 12)),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

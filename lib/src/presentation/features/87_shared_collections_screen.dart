@@ -1,106 +1,202 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
-class SharedWithMeScreen extends StatelessWidget {
-  const SharedWithMeScreen({super.key});
+class SharedCollectionsScreen extends StatelessWidget {
+  const SharedCollectionsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const collections = [
-      (Icons.crop_square_rounded, OwnKeepColors.primary, 'Family Documents', '28 items  •  All members', '4 members', OwnKeepColors.primary),
-      (Icons.favorite_rounded, OwnKeepColors.pink, 'Health Records', '16 items  •  Parents only', '2 members', OwnKeepColors.pink),
-      (Icons.home_rounded, Color(0xFFF59E0B), 'Property Papers', '9 items  •  Adults only', '2 members', Color(0xFFF59E0B)),
-      (Icons.diamond_rounded, Color(0xFF7C3AED), 'Education', '12 items  •  Children and parents', '4 members', Color(0xFF7C3AED)),
-      (Icons.warning_amber_rounded, OwnKeepColors.danger, 'Emergency Pack', '6 items  •  Trusted contacts', '2 contacts', OwnKeepColors.danger),
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
+
+    final collections = [
+      {
+        'title': l10n.s87_family_documents,
+        'meta': l10n.s87_family_documents_meta,
+        'members': l10n.s87_family_documents_members,
+        'icon': OwnKeepMainIcons.folder,
+        'color': colors.primaryBlue,
+      },
+      {
+        'title': l10n.s87_health,
+        'meta': l10n.s87_health_meta,
+        'members': l10n.s87_health_members,
+        'icon': OwnKeepMainIcons.health,
+        'color': colors.healthPink,
+      },
+      {
+        'title': l10n.s87_property,
+        'meta': l10n.s87_property_meta,
+        'members': l10n.s87_property_members,
+        'icon': OwnKeepMainIcons.property,
+        'color': colors.warningOrange,
+      },
+      {
+        'title': l10n.s87_education,
+        'meta': l10n.s87_education_meta,
+        'members': l10n.s87_education_members,
+        'icon': OwnKeepMainIcons.education,
+        'color': colors.successGreen,
+      },
+      {
+        'title': l10n.s87_emergency,
+        'meta': l10n.s87_emergency_meta,
+        'members': l10n.s87_emergency_contacts,
+        'icon': OwnKeepMainIcons.emergency,
+        'color': colors.dangerRed,
+      },
     ];
 
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('Shared Collections', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('Available to family members', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
-        actions: [
+        title: Column(
+          children: [
+            Text(l10n.s87_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(l10n.s87_subtitle, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+          ],
+        ),
+        centerTitle: true,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Method Info Banner
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: colors.surfacePrimary,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: colors.borderSoft),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: colors.primaryBlue.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: SvgPicture.asset(OwnKeepMainIcons.device_sync, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 24),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(l10n.s87_method, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                          const SizedBox(height: 4),
+                          Text(l10n.s87_method_value, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // Collections List
+              ...collections.map((col) => _buildCollectionCard(col, colors)),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colors.primaryBlue,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              ),
+              child: Text(
+                l10n.s87_create,
+                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCollectionCard(Map<String, dynamic> col, OwnKeepMainColorsTheme colors) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.borderSoft),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: (col['color'] as Color).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: SvgPicture.asset(col['icon'] as String, colorFilter: ColorFilter.mode(col['color'] as Color, BlendMode.srcIn), width: 24),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(col['title'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 4),
+                    Text(col['meta'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                  ],
+                ),
+              ),
+              SvgPicture.asset(OwnKeepMainIcons.more_vert, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn)),
+            ],
+          ),
+          const SizedBox(height: 16),
           Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.darkSurfaceElevated, borderRadius: BorderRadius.circular(10)),
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.add_rounded, color: OwnKeepColors.primary, size: 20)),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: colors.surfaceSecondary,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.people_outline, color: colors.textMuted, size: 16),
+                const SizedBox(width: 8),
+                Text(col['members'] as String, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+              ],
+            ),
           ),
         ],
-      ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 1),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          ...collections.map((c) => Container(
-            margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                Container(
-                  width: 56, height: 56,
-                  decoration: BoxDecoration(color: c.$2.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
-                  child: Icon(c.$1, color: c.$2, size: 26),
-                ),
-                SizedBox(width: OwnKeepSpacing.md),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(c.$3, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                  Text(c.$4, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-                ])),
-                Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-              ]),
-              SizedBox(height: OwnKeepSpacing.sm),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(border: Border.all(color: c.$6), borderRadius: BorderRadius.circular(20)),
-                child: Text(c.$5, style: TextStyle(color: c.$6, fontSize: 11, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-              ),
-            ]),
-          )),
-          SizedBox(height: OwnKeepSpacing.sm),
-          // Sharing method footer
-          Container(
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Sharing method', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 11, fontFamily: 'Inter')),
-                Text('Encrypted package or nearby transfer', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-              ]),
-              Text('Change', style: TextStyle(color: OwnKeepColors.primary, fontSize: 13, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            ]),
-          ),
-          SizedBox(height: OwnKeepSpacing.base),
-          FilledButton(
-            onPressed: () {},
-            style: FilledButton.styleFrom(
-              backgroundColor: OwnKeepColors.primary,
-              minimumSize: const Size.fromHeight(52),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
-            ),
-            child: Text('Create Shared Collection', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          ),
-        ]),
       ),
     );
   }

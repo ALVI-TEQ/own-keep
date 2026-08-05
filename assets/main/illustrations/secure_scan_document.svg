@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none"><defs>
+<linearGradient id="scanRing" x1="55" y1="36" x2="200" y2="220" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#8D58FF"/>
+  <stop offset="1" stop-color="#3E62FF"/>
+</linearGradient>
+</defs>
+<rect x="16" y="16" width="224" height="224" rx="20" fill="#20252C" stroke="#2B3E5E" stroke-width="4"/>
+<path d="M29 67V29h38M227 67V29h-38M29 189v38h38M227 189v38h-38" stroke="#4365FF" stroke-width="6"/>
+<rect x="70" y="60" width="116" height="139" rx="8" fill="#EFF1F7"/>
+<text x="128" y="96" text-anchor="middle" fill="#283452" font-family="Arial,sans-serif" font-size="19" font-weight="700">DOCUMENT</text>
+<path d="M90 121h76M90 141h76M90 161h76M90 181h76" stroke="#AAB3C6" stroke-width="5" stroke-linecap="round"/>
+</svg>

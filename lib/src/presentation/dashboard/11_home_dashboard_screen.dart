@@ -10,6 +10,7 @@ import '../../theme/app_theme.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ownkeep/src/citizen_vault/ingestion/ingestion_ui_controller.dart';
 import '20_navigation_menu.dart';
 
 class HomeDashboardScreen extends ConsumerStatefulWidget {
@@ -43,7 +44,9 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
     
     // Ensure the vault is unlocked before displaying the dashboard
     final vault = ref.watch(unlockedVaultProvider);
-    if (vault == null) {
+    final controller = ref.watch(ingestionControllerProvider);
+
+    if (vault == null || controller == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.go('/splash');
       });
@@ -162,13 +165,34 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
               // Recent Items List
               SizedBox(
                 height: 110,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    _buildRecentCard(l10n.s11_recent_passport, l10n.s11_recent_passport_time, OwnKeepMainIcons.identity, colors.dangerRed, () {}),
-                    _buildRecentCard(l10n.s11_recent_insurance, l10n.s11_recent_insurance_time, OwnKeepMainIcons.insurance, colors.primaryBlue, () {}),
-                    _buildRecentCard(l10n.s11_recent_licence, l10n.s11_recent_licence_time, OwnKeepMainIcons.identity, colors.successGreen, () {}),
-                  ],
+                child: ListenableBuilder(
+                  listenable: controller,
+                  builder: (context, child) {
+                    final docs = controller.dashboardDocuments;
+                    if (docs.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No recent files',
+                          style: TextStyle(color: colors.textSecondary),
+                        ),
+                      );
+                    }
+                    return ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: docs.take(3).map((doc) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: _buildRecentCard(
+                            doc.logicalFilename.isNotEmpty ? doc.logicalFilename : 'Untitled',
+                            'Recently added', // Ideally from doc
+                            OwnKeepMainIcons.file_pdf, // We'll map this properly later
+                            colors.primaryBlue,
+                            () {},
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 32),
@@ -186,10 +210,10 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
                 mainAxisSpacing: 16,
                 childAspectRatio: 2.5,
                 children: [
-                  _buildCollectionCard(l10n.collection_personal, l10n.s11_personal_count, OwnKeepMainIcons.profile, colors.primaryBlue, () {}),
-                  _buildCollectionCard(l10n.collection_finance, l10n.s11_finance_count, OwnKeepMainIcons.finance, colors.successGreen, () {}),
-                  _buildCollectionCard(l10n.collection_health, l10n.s11_health_count, OwnKeepMainIcons.health, colors.dangerRed, () {}),
-                  _buildCollectionCard(l10n.collection_property, l10n.s11_property_count, OwnKeepMainIcons.property, colors.warningOrange, () {}),
+                  _buildCollectionCard(l10n.collection_personal, l10n.s11_personal_count, OwnKeepMainIcons.profile, colors.primaryBlue, () => context.push('/collections/identity')),
+                  _buildCollectionCard(l10n.collection_finance, l10n.s11_finance_count, OwnKeepMainIcons.finance, colors.successGreen, () => context.push('/collections/finance')),
+                  _buildCollectionCard(l10n.collection_health, l10n.s11_health_count, OwnKeepMainIcons.health, colors.dangerRed, () => context.push('/collections/health')),
+                  _buildCollectionCard(l10n.collection_property, l10n.s11_property_count, OwnKeepMainIcons.property, colors.warningOrange, () => context.push('/collections/property')),
                 ],
               ),
               const SizedBox(height: 32),

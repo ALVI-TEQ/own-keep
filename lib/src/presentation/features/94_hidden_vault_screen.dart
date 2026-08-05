@@ -1,127 +1,161 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
 class HiddenVaultScreen extends StatelessWidget {
   const HiddenVaultScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const howItWorks = [
-      (Color(0xFF3D1A7A), Color(0xFF7C3AED), Icons.circle_rounded, 'Separate PIN', 'Different from your main vault PIN'),
-      (Color(0xFF1A3D7A), OwnKeepColors.primary, Icons.north_east_rounded, 'Hidden entry gesture', 'Access from the lock screen'),
-      (Color(0xFF0A4A2E), OwnKeepColors.success, Icons.check_rounded, 'No recent activity', 'Hidden files do not appear elsewhere'),
-      (Color(0xFF7A3D0A), Color(0xFFF59E0B), Icons.crop_square_rounded, 'Local-only storage', 'Never uploaded or synchronized'),
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
+
+    final infoItems = [
+      {'title': l10n.s94_pin, 'body': l10n.s94_pin_body, 'icon': OwnKeepMainIcons.pin, 'color': colors.primaryBlue},
+      {'title': l10n.s94_gesture, 'body': l10n.s94_gesture_body, 'icon': OwnKeepMainIcons.security, 'color': colors.aiPurple},
+      {'title': l10n.s94_activity, 'body': l10n.s94_activity_body, 'icon': OwnKeepMainIcons.history, 'color': colors.warningOrange},
+      {'title': l10n.s94_storage, 'body': l10n.s94_storage_body, 'icon': OwnKeepMainIcons.database, 'color': colors.successGreen},
     ];
 
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('Hidden Vault', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('Keep sensitive items out of sight', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
-        actions: [
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Hero Icon
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: colors.surfacePrimary,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: colors.borderSoft),
+                  boxShadow: [
+                    BoxShadow(color: colors.primaryBlue.withValues(alpha: 0.1), blurRadius: 24, spreadRadius: 4),
+                  ],
+                ),
+                child: Center(
+                  child: SvgPicture.asset(OwnKeepMainIcons.hidden_vault, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 40),
+                ),
+              ),
+              const SizedBox(height: 24),
+              
+              Text(l10n.s94_title, style: TextStyle(color: colors.textPrimary, fontSize: 24, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text(l10n.s94_subtitle, style: TextStyle(color: colors.textSecondary, fontSize: 16)),
+              const SizedBox(height: 16),
+              
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: colors.surfaceSecondary,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(l10n.s94_status, style: TextStyle(color: colors.textMuted, fontSize: 14, fontWeight: FontWeight.w600)),
+              ),
+              const SizedBox(height: 32),
+              
+              Text(l10n.s94_body, textAlign: TextAlign.center, style: TextStyle(color: colors.textPrimary, fontSize: 14, height: 1.5)),
+              const SizedBox(height: 40),
+              
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(l10n.s94_how, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(height: 16),
+              
+              ...infoItems.map((item) => _buildInfoRow(item, colors)),
+              
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Mock Hidden Vault Setup started')));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: colors.primaryBlue,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  ),
+                  child: Text(
+                    l10n.s94_setup,
+                    style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.info_outline, color: colors.textMuted, size: 16),
+                  const SizedBox(width: 8),
+                  Text(l10n.s94_note, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(Map<String, dynamic> item, OwnKeepMainColorsTheme colors) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.darkSurfaceElevated, borderRadius: BorderRadius.circular(10)),
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.north_east_rounded, color: OwnKeepColors.primary, size: 20)),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: (item['color'] as Color).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: SvgPicture.asset(item['icon'] as String, colorFilter: ColorFilter.mode(item['color'] as Color, BlendMode.srcIn), width: 24),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(item['title'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 4),
+                Text(item['body'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+              ],
+            ),
           ),
         ],
-      ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 3),
-      body: Padding(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                // Hero circle
-                Center(
-                  child: Container(
-                    width: 150, height: 150,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xFF7C3AED), width: 2),
-                      color: const Color(0xFF1A0A3D),
-                    ),
-                    child: Center(
-                      child: Container(
-                        width: 60, height: 60,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(0xFF7C3AED),
-                        ),
-                        child: Center(
-                          child: Container(
-                            width: 24, height: 24,
-                            decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFF1A0A3D)),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: OwnKeepSpacing.lg),
-                const Center(child: Text('Hidden Vault Disabled', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 22, fontWeight: FontWeight.w700, fontFamily: 'Inter'))),
-                SizedBox(height: 8),
-                const Center(
-                  child: Text(
-                    'Hidden Vault is concealed from the main app and\nopens only with a separate gesture and PIN.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, height: 1.6, fontFamily: 'Inter'),
-                  ),
-                ),
-                SizedBox(height: OwnKeepSpacing.xl),
-                Text('How it works', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-                SizedBox(height: OwnKeepSpacing.sm),
-                ...howItWorks.map((h) => Container(
-                  margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-                  padding: EdgeInsets.all(OwnKeepSpacing.md),
-                  decoration: BoxDecoration(
-                    color: OwnKeepColors.darkSurfaceElevated,
-                    borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                    border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-                  ),
-                  child: Row(children: [
-                    Container(
-                      width: 36, height: 36,
-                      decoration: BoxDecoration(color: h.$1, borderRadius: BorderRadius.circular(9)),
-                      child: Icon(h.$3, color: h.$2, size: 18),
-                    ),
-                    SizedBox(width: OwnKeepSpacing.md),
-                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(h.$4, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                      Text(h.$5, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-                    ])),
-                    Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-                  ]),
-                )),
-              ]),
-            ),
-          ),
-          SizedBox(height: OwnKeepSpacing.sm),
-          FilledButton(
-            onPressed: () {},
-            style: FilledButton.styleFrom(
-              backgroundColor: const Color(0xFF7C3AED),
-              minimumSize: const Size.fromHeight(52),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
-            ),
-            child: Text('Set Up Hidden Vault', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          ),
-          SizedBox(height: 8),
-          Text('You can remove the hidden vault at any time', style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 11, fontFamily: 'Inter')),
-        ]),
       ),
     );
   }

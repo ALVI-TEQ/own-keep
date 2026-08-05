@@ -1,106 +1,158 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
 class EncryptionDetailsScreen extends StatelessWidget {
   const EncryptionDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const details = [
-      (Color(0xFF0A4A2E), OwnKeepColors.success, Icons.check_rounded, 'Content encryption', 'AES-256-GCM'),
-      (Color(0xFF3D1A7A), Color(0xFF7C3AED), 'K', 'Key derivation', 'Argon2id'),
-      (Color(0xFF1A3D7A), OwnKeepColors.primary, 'M', 'Manifest format', 'Canonical CBOR'),
-      (Color(0xFF0A3D3D), OwnKeepColors.ai, '#', 'Integrity', 'SHA-256 digests'),
-      (Color(0xFF7A3D0A), Color(0xFFF59E0B), Icons.crop_square_rounded, 'Container', 'Encrypted .cvault'),
-      (Color(0xFF7A1A2E), OwnKeepColors.pink, 'R', 'Recovery envelope', 'Authenticated and local'),
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
+
+    final technicalSpecs = [
+      {'title': l10n.s97_content, 'value': l10n.s97_content_value, 'icon': OwnKeepMainIcons.security},
+      {'title': l10n.s97_kdf, 'value': l10n.s97_kdf_value, 'icon': OwnKeepMainIcons.key},
+      {'title': l10n.s97_manifest, 'value': l10n.s97_manifest_value, 'icon': OwnKeepMainIcons.document},
+      {'title': l10n.s97_integrity, 'value': l10n.s97_integrity_value, 'icon': OwnKeepMainIcons.check},
+      {'title': l10n.s97_container, 'value': l10n.s97_container_value, 'icon': OwnKeepMainIcons.database},
+      {'title': l10n.s97_envelope, 'value': l10n.s97_envelope_value, 'icon': OwnKeepMainIcons.email},
     ];
 
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('Encryption Details', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('How OwnKeep protects your vault', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.darkSurfaceElevated, borderRadius: BorderRadius.circular(10)),
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.info_outline_rounded, color: OwnKeepColors.darkTextSecondary, size: 20)),
-          ),
-        ],
+        title: Column(
+          children: [
+            Text(l10n.s97_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(l10n.s97_subtitle, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+          ],
+        ),
+        centerTitle: true,
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 3),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          // Hero
-          Center(
-            child: Container(
-              width: 150, height: 150,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: OwnKeepColors.success, width: 2),
-                color: const Color(0xFF0A2E1A),
-              ),
-              child: Icon(Icons.check_rounded, color: OwnKeepColors.success, size: 64),
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          SizedBox(height: OwnKeepSpacing.lg),
-          const Center(child: Text('Vault Fully Encrypted', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 22, fontWeight: FontWeight.w700, fontFamily: 'Inter'))),
-          const Center(child: Text('All checks passed', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, fontFamily: 'Inter'))),
-          SizedBox(height: OwnKeepSpacing.xl),
-          // Detail rows
-          ...details.map((d) => Container(
-            margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(children: [
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Status Header
               Container(
-                width: 36, height: 36,
-                decoration: BoxDecoration(color: d.$1, borderRadius: BorderRadius.circular(9)),
-                child: Center(child: d.$3 is IconData
-                    ? Icon(d.$3 as IconData, color: d.$2, size: 18)
-                    : Text(d.$3 as String, style: TextStyle(color: d.$2, fontSize: 14, fontWeight: FontWeight.w800, fontFamily: 'Inter'))),
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [colors.successGreen.withValues(alpha: 0.1), colors.backgroundTop],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: colors.successGreen.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: colors.successGreen,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.verified_user_outlined, color: Colors.white, size: 24),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(l10n.s97_status, style: TextStyle(color: colors.successGreen, fontSize: 18, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 4),
+                          Text(l10n.s97_status_body, style: TextStyle(color: colors.textPrimary, fontSize: 14)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(width: OwnKeepSpacing.md),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(d.$4, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                Text(d.$5, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ])),
-              Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-            ]),
-          )),
-          SizedBox(height: OwnKeepSpacing.sm),
-          // Security model footer
-          Container(
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-              Text('Security model', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-              SizedBox(height: 4),
-              Text('OwnKeep cannot read or recover your vault', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-            ]),
+              const SizedBox(height: 32),
+
+              // Technical Specs
+              ...technicalSpecs.map((spec) => _buildSpecItem(spec, colors)),
+              
+              const SizedBox(height: 24),
+              
+              // Security Model Note
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: colors.surfacePrimary,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: colors.borderSoft),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.privacy_tip_outlined, color: colors.primaryBlue, size: 24),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(l10n.s97_security_model, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 4),
+                          Text(l10n.s97_security_model_body, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSpecItem(Map<String, dynamic> spec, OwnKeepMainColorsTheme colors) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.borderSoft),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: colors.surfaceSecondary,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: SvgPicture.asset(spec['icon'] as String, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 20),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Text(spec['title'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+          ),
+          Text(spec['value'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'monospace')),
+        ],
       ),
     );
   }

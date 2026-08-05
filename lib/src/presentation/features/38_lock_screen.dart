@@ -3,33 +3,64 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
+import '../../theme/ownkeep_onboarding_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 
-class LockScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../providers/vault_provider.dart';
+
+class LockScreen extends ConsumerStatefulWidget {
   const LockScreen({super.key});
 
   @override
-  State<LockScreen> createState() => _LockScreenState();
+  ConsumerState<LockScreen> createState() => _LockScreenState();
 }
 
-class _LockScreenState extends State<LockScreen> {
+class _LockScreenState extends ConsumerState<LockScreen> {
   String _pin = '';
 
+  String? _error;
+  bool _isAuthenticating = false;
+
   void _onKeypadTap(String value) {
-    if (_pin.length < 4) {
+    if (_pin.length < 4 && !_isAuthenticating) {
       setState(() {
         _pin += value;
+        _error = null;
       });
       if (_pin.length == 4) {
-        // Authenticate logic
+        _authenticate();
+      }
+    }
+  }
+
+  Future<void> _authenticate() async {
+    setState(() {
+      _isAuthenticating = true;
+    });
+
+    try {
+      await ref.read(vaultSessionProvider.notifier).unlockVault(_pin);
+      if (mounted) {
+        context.go('/dashboard/home');
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = 'Incorrect PIN';
+          _pin = '';
+          _isAuthenticating = false;
+        });
       }
     }
   }
 
   void _onBackspaceTap() {
-    if (_pin.isNotEmpty) {
+    if (_pin.isNotEmpty && !_isAuthenticating) {
       setState(() {
         _pin = _pin.substring(0, _pin.length - 1);
+        _error = null;
       });
     }
   }
@@ -87,6 +118,17 @@ class _LockScreenState extends State<LockScreen> {
                 );
               }),
             ),
+            
+            const SizedBox(height: 16),
+            if (_isAuthenticating)
+              const CircularProgressIndicator()
+            else if (_error != null)
+              Text(
+                _error!,
+                style: TextStyle(color: colors.dangerRed, fontSize: 14, fontFamily: 'Inter'),
+              )
+            else
+              const SizedBox(height: 20),
 
             const Spacer(),
 
@@ -104,7 +146,7 @@ class _LockScreenState extends State<LockScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildIconButton(OwnKeepMainIcons.face_id, colors, () {}),
+                      _buildIconButton(OwnKeepOnboardingIcons.face_id, colors, () {}),
                       _buildNumberKey('0', '', colors),
                       _buildIconButton(OwnKeepMainIcons.keypad_backspace, colors, _onBackspaceTap),
                     ],

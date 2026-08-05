@@ -5,53 +5,22 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/vault_provider.dart';
 
-class RecentlyDeletedScreen extends StatelessWidget {
+class RecentlyDeletedScreen extends ConsumerWidget {
   const RecentlyDeletedScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
 
-    final deletedItems = [
-      {
-        'icon': OwnKeepMainIcons.file_pdf,
-        'title': l10n.s23_old_insurance,
-        'meta': l10n.s23_old_insurance_meta,
-        'date': l10n.s23_old_insurance_date,
-      },
-      {
-        'icon': OwnKeepMainIcons.image,
-        'title': l10n.s23_screenshot,
-        'meta': l10n.s23_screenshot_meta,
-        'date': l10n.s23_screenshot_date,
-      },
-      {
-        'icon': OwnKeepMainIcons.file_pdf,
-        'title': l10n.s23_bank,
-        'meta': l10n.s23_bank_meta,
-        'date': l10n.s23_bank_date,
-      },
-      {
-        'icon': OwnKeepMainIcons.image,
-        'title': l10n.s23_image,
-        'meta': l10n.s23_image_meta,
-        'date': l10n.s23_image_date,
-      },
-      {
-        'icon': OwnKeepMainIcons.file_pdf,
-        'title': l10n.s23_tax,
-        'meta': l10n.s23_tax_meta,
-        'date': l10n.s23_tax_date,
-      },
-      {
-        'icon': OwnKeepMainIcons.document,
-        'title': l10n.s23_project,
-        'meta': l10n.s23_project_meta,
-        'date': l10n.s23_project_date,
-      },
-    ];
+    final controller = ref.watch(ingestionControllerProvider);
+
+    if (controller == null) {
+      return Scaffold(backgroundColor: colors.backgroundTop);
+    }
 
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -166,66 +135,34 @@ class RecentlyDeletedScreen extends StatelessWidget {
 
           // List
           Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.sm),
-              itemCount: deletedItems.length,
-              separatorBuilder: (context, index) => const Divider(color: Color(0xFF1B2940), height: OwnKeepSpacing.lg),
-              itemBuilder: (context, index) {
-                final item = deletedItems[index];
-                return InkWell(
-                  onTap: () {},
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: colors.surfacePrimary,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: colors.borderSoft),
-                        ),
-                        child: SvgPicture.asset(
-                          item['icon']!,
-                          colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn),
-                          width: 24,
-                          height: 24,
-                        ),
-                      ),
-                      const SizedBox(width: OwnKeepSpacing.md),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item['title']!,
-                              style: TextStyle(
-                                color: colors.textPrimary,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'Inter',
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              item['meta']!,
-                              style: TextStyle(
-                                color: colors.textSecondary,
-                                fontSize: 13,
-                                fontFamily: 'Inter',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Text(
-                        item['date']!,
-                        style: TextStyle(
-                          color: colors.dangerRed,
-                          fontSize: 12,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ],
-                  ),
+            child: ListenableBuilder(
+              listenable: controller,
+              builder: (context, child) {
+                final deletedItems = controller.dashboardDocuments.where((doc) => doc.isDeleted).toList();
+
+                if (deletedItems.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'No recently deleted items',
+                      style: TextStyle(color: colors.textSecondary),
+                    ),
+                  );
+                }
+
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.sm),
+                  itemCount: deletedItems.length,
+                  itemBuilder: (context, index) {
+                    final item = deletedItems[index];
+                    return _buildDeletedItem(
+                      context, 
+                      colors, 
+                      OwnKeepMainIcons.file_pdf, 
+                      item.logicalFilename.isNotEmpty ? item.logicalFilename : 'Untitled',
+                      'Deleted recently',
+                      item.importedAt.toString().split(' ')[0],
+                    );
+                  },
                 );
               },
             ),
@@ -285,6 +222,65 @@ class RecentlyDeletedScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildDeletedItem(BuildContext context, OwnKeepMainColorsTheme colors, String iconPath, String title, String subtitle, String dateStr) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: OwnKeepSpacing.sm),
+      padding: const EdgeInsets.all(OwnKeepSpacing.md),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: colors.borderSoft),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: colors.backgroundTop,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: SvgPicture.asset(iconPath, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn)),
+          ),
+          const SizedBox(width: OwnKeepSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Inter',
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: colors.dangerRed,
+                    fontSize: 13,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            dateStr,
+            style: TextStyle(
+              color: colors.textMuted,
+              fontSize: 12,
+              fontFamily: 'Inter',
+            ),
+          ),
+        ],
       ),
     );
   }

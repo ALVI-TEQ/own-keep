@@ -1,155 +1,195 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
 class DeviceMigrationScreen extends StatefulWidget {
   const DeviceMigrationScreen({super.key});
+
   @override
   State<DeviceMigrationScreen> createState() => _DeviceMigrationScreenState();
 }
 
 class _DeviceMigrationScreenState extends State<DeviceMigrationScreen> {
-  final _checklist = [true, true, true, false];
-  final _checkLabels = [
-    'Create fresh backup',
-    'Keep both devices charged',
-    'Verify available storage',
-    'Do not delete old vault yet',
-  ];
+  int _selectedMethod = 0; // 0=Nearby, 1=File
 
   @override
   Widget build(BuildContext context) {
-    const methods = [
-      (Color(0xFF0A4A2E), OwnKeepColors.ai, Icons.compare_arrows_rounded, 'Nearby Transfer', 'Fast local transfer on the same network'),
-      (Color(0xFF0A4A2E), OwnKeepColors.success, Icons.download_rounded, 'Encrypted Migration File', 'Move using USB, Files or SD card'),
-      (Color(0xFF3D1A7A), Color(0xFF7C3AED), Icons.grid_view_rounded, 'QR Pairing', 'Pair devices before local transfer'),
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
+
+    final checklist = [
+      {'title': l10n.s98_backup, 'done': true},
+      {'title': l10n.s98_charge, 'done': true},
+      {'title': l10n.s98_storage, 'done': true},
+      {'title': l10n.s98_keep_old, 'done': false},
     ];
 
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('Device Migration', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('Move your vault to another device', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.darkSurfaceElevated, borderRadius: BorderRadius.circular(10)),
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.compare_arrows_rounded, color: OwnKeepColors.ai, size: 20)),
-          ),
-        ],
+        title: Column(
+          children: [
+            Text(l10n.s98_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(l10n.s98_subtitle, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+          ],
+        ),
+        centerTitle: true,
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 3),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          // Hero banner
-          Container(
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.ai.withValues(alpha: 0.4)),
-            ),
-            child: Row(children: [
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-                Text('Secure Device-to-Device Transfer', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-                SizedBox(height: 6),
-                Text(
-                  'Transfer through local network or an encrypted migration package. No cloud account is required.',
-                  style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, height: 1.5, fontFamily: 'Inter'),
-                ),
-              ])),
-              SizedBox(width: OwnKeepSpacing.md),
-              Container(
-                width: 52, height: 52,
-                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: OwnKeepColors.ai, width: 2)),
-                child: Icon(Icons.compare_arrows_rounded, color: OwnKeepColors.ai, size: 24),
-              ),
-            ]),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          SizedBox(height: OwnKeepSpacing.xl),
-          Text('Choose Method', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-          SizedBox(height: OwnKeepSpacing.sm),
-          ...methods.map((m) => Container(
-            margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(children: [
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header Banner
               Container(
-                width: 36, height: 36,
-                decoration: BoxDecoration(color: m.$1, borderRadius: BorderRadius.circular(9)),
-                child: Icon(m.$3, color: m.$2, size: 18),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: colors.primaryBlue.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: colors.primaryBlue.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: colors.primaryBlue,
+                        shape: BoxShape.circle,
+                      ),
+                      child: SvgPicture.asset(OwnKeepMainIcons.device_sync, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn), width: 24),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(l10n.s98_secure, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 4),
+                          Text(l10n.s98_secure_body, style: TextStyle(color: colors.textSecondary, fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(width: OwnKeepSpacing.md),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(m.$4, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                Text(m.$5, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ])),
-              Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-            ]),
-          )),
-          SizedBox(height: OwnKeepSpacing.lg),
-          Text('Migration Checklist', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-          SizedBox(height: OwnKeepSpacing.sm),
-          ..._checklist.asMap().entries.map((e) {
-            final done = e.value;
-            return Container(
-              margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-              padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.md, vertical: 14),
+              const SizedBox(height: 32),
+
+              Text(l10n.s98_choose, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              
+              _buildMethodCard(l10n.s98_nearby, l10n.s98_nearby_body, OwnKeepMainIcons.device_sync, 0, colors),
+              _buildMethodCard(l10n.s98_file, l10n.s98_file_body, OwnKeepMainIcons.folder_export, 1, colors),
+              
+              const SizedBox(height: 32),
+
+              Text(l10n.s98_checklist, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              
+              ...checklist.map((item) => _buildChecklistItem(item['title'] as String, item['done'] as bool, colors)),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: ElevatedButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Mock Migration Flow Started')));
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colors.primaryBlue,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              ),
+              child: Text(
+                l10n.s98_start,
+                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMethodCard(String title, String body, String iconPath, int index, OwnKeepMainColorsTheme colors) {
+    bool isSelected = _selectedMethod == index;
+    return GestureDetector(
+      onTap: () => setState(() => _selectedMethod = index),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isSelected ? colors.primaryBlue.withValues(alpha: 0.1) : colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: isSelected ? colors.primaryBlue : colors.borderSoft, width: isSelected ? 2 : 1),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: OwnKeepColors.darkSurfaceElevated,
-                borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+                color: colors.surfaceSecondary,
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Row(children: [
-                Container(
-                  width: 22, height: 22,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: done ? OwnKeepColors.success : Colors.transparent,
-                    border: Border.all(color: done ? OwnKeepColors.success : OwnKeepColors.darkTextMuted, width: 2),
-                  ),
-                  child: done ? Icon(Icons.check_rounded, color: Colors.white, size: 14) : null,
-                ),
-                SizedBox(width: OwnKeepSpacing.md),
-                Text(
-                  _checkLabels[e.key],
-                  style: TextStyle(
-                    color: done ? OwnKeepColors.darkTextPrimary : OwnKeepColors.darkTextSecondary,
-                    fontSize: 14,
-                    fontWeight: done ? FontWeight.w600 : FontWeight.w400,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-              ]),
-            );
-          }),
-          SizedBox(height: OwnKeepSpacing.sm),
-          FilledButton(
-            onPressed: () {},
-            style: FilledButton.styleFrom(
-              backgroundColor: OwnKeepColors.primary,
-              minimumSize: const Size.fromHeight(52),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
+              child: SvgPicture.asset(iconPath, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 24),
             ),
-            child: Text('Start Device Migration', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          ),
-        ]),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 4),
+                  Text(body, style: TextStyle(color: colors.textSecondary, fontSize: 12)),
+                ],
+              ),
+            ),
+            Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: isSelected ? colors.primaryBlue : colors.textSecondary, width: 2),
+                color: isSelected ? colors.primaryBlue : Colors.transparent,
+              ),
+              child: isSelected ? const Icon(Icons.check, size: 16, color: Colors.white) : null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChecklistItem(String title, bool done, OwnKeepMainColorsTheme colors) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: Row(
+        children: [
+          Icon(done ? Icons.check_circle : Icons.radio_button_unchecked, color: done ? colors.successGreen : colors.textMuted, size: 24),
+          const SizedBox(width: 12),
+          Text(title, style: TextStyle(color: done ? colors.textPrimary : colors.textSecondary, fontSize: 16)),
+        ],
       ),
     );
   }

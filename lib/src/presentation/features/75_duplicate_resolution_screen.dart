@@ -1,171 +1,234 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
 class DuplicateResolutionScreen extends StatefulWidget {
   const DuplicateResolutionScreen({super.key});
+
   @override
   State<DuplicateResolutionScreen> createState() => _DuplicateResolutionScreenState();
 }
 
 class _DuplicateResolutionScreenState extends State<DuplicateResolutionScreen> {
-  int _selected = 0; // 0 = current, 1 = copy
+  int _selectedIndex = 0; // 0 = current, 1 = duplicate
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('Duplicate Resolution', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('Choose what to keep', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.primary.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
-            child: IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.check_rounded, color: OwnKeepColors.primary, size: 20),
-            ),
-          ),
-        ],
+        title: Column(
+          children: [
+            Text(l10n.s75_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(l10n.s75_subtitle, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+          ],
+        ),
+        centerTitle: true,
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 1),
-      body: Padding(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          // Group header
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Group 1 of 5', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-                Text('Insurance Policy duplicates', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-              ]),
-              Text('2.4 MB', style: TextStyle(color: OwnKeepColors.success, fontSize: 14, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-            ]),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          SizedBox(height: OwnKeepSpacing.base),
-          // File A — Current (selectable)
-          GestureDetector(
-            onTap: () => setState(() => _selected = 0),
-            child: _FileCard(
-              name: 'Insurance Policy.pdf', sub: 'Added today  •  2.4 MB',
-              badgeLabel: 'Current', badgeColor: OwnKeepColors.primary,
-              selected: _selected == 0,
-            ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Text(l10n.s75_group, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(l10n.s75_group_title, style: TextStyle(color: colors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold)),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: colors.surfacePrimary,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: colors.borderSoft),
+                    ),
+                    child: Text(l10n.s75_group_size, style: TextStyle(color: colors.textMuted, fontSize: 12, fontWeight: FontWeight.w500)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
+
+              // Recommendations Box
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: colors.primaryBlue.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(OwnKeepMainIcons.ai_sparkle, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(l10n.s75_recommended, style: TextStyle(color: colors.primaryBlue, fontSize: 14, fontWeight: FontWeight.w600)),
+                          Text(l10n.s75_recommendation, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // File 1 (Current)
+              _buildFileCard(
+                title: l10n.s75_current_name,
+                meta: l10n.s75_current_meta,
+                badge: l10n.s75_current,
+                isSelected: _selectedIndex == 0,
+                onTap: () => setState(() => _selectedIndex = 0),
+                colors: colors,
+              ),
+              const SizedBox(height: 16),
+
+              // File 2 (Duplicate)
+              _buildFileCard(
+                title: l10n.s75_duplicate_name,
+                meta: l10n.s75_duplicate_meta,
+                badge: l10n.s75_duplicate,
+                isSelected: _selectedIndex == 1,
+                onTap: () => setState(() => _selectedIndex = 1),
+                colors: colors,
+              ),
+            ],
           ),
-          SizedBox(height: OwnKeepSpacing.sm),
-          // File B — Duplicate
-          GestureDetector(
-            onTap: () => setState(() => _selected = 1),
-            child: _FileCard(
-              name: 'Insurance Policy Copy.pdf', sub: 'Added 2 days ago  •  2.4 MB',
-              badgeLabel: 'Duplicate', badgeColor: OwnKeepColors.danger,
-              selected: _selected == 1,
-            ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Duplicate resolved!')));
+                    context.pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: colors.dangerRed,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  ),
+                  child: Text(
+                    l10n.s75_keep_selected,
+                    style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () => context.pop(),
+                child: Text(l10n.s75_keep_both, style: TextStyle(color: colors.primaryBlue, fontSize: 16)),
+              ),
+            ],
           ),
-          SizedBox(height: OwnKeepSpacing.base),
-          // AI recommendation
-          Container(
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-              Text('Recommended', style: TextStyle(color: OwnKeepColors.ai, fontSize: 12, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-              SizedBox(height: 4),
-              Text('Keep the newer file and delete the copy', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            ]),
-          ),
-          const Spacer(),
-          FilledButton(
-            onPressed: () {},
-            style: FilledButton.styleFrom(
-              backgroundColor: OwnKeepColors.primary,
-              minimumSize: const Size.fromHeight(52),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
-            ),
-            child: Text('Keep Selected & Delete Duplicate', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          ),
-          SizedBox(height: OwnKeepSpacing.sm),
-          OutlinedButton(
-            onPressed: () {},
-            style: OutlinedButton.styleFrom(
-              foregroundColor: OwnKeepColors.primary,
-              side: const BorderSide(color: OwnKeepColors.primary),
-              minimumSize: const Size.fromHeight(48),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
-            ),
-            child: Text('Keep Both Files', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          ),
-        ]),
+        ),
       ),
     );
   }
-}
 
-class _FileCard extends StatelessWidget {
-  const _FileCard({required this.name, required this.sub, required this.badgeLabel, required this.badgeColor, required this.selected});
-  final String name, sub, badgeLabel;
-  final Color badgeColor;
-  final bool selected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(OwnKeepSpacing.md),
-      decoration: BoxDecoration(
-        color: OwnKeepColors.darkSurfaceElevated,
-        borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-        border: Border.all(
-          color: selected ? OwnKeepColors.primary.withValues(alpha: 0.7) : OwnKeepColors.darkBorder.withValues(alpha: 0.3),
-          width: selected ? 1.5 : 1,
+  Widget _buildFileCard({
+    required String title,
+    required String meta,
+    required String badge,
+    required bool isSelected,
+    required VoidCallback onTap,
+    required OwnKeepMainColorsTheme colors,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isSelected ? colors.primaryBlue.withValues(alpha: 0.1) : colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected ? colors.primaryBlue : colors.borderSoft,
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colors.primaryBlue.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: SvgPicture.asset(OwnKeepMainIcons.file_pdf, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(title, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: colors.surfaceSecondary,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(badge, style: TextStyle(color: colors.textMuted, fontSize: 10)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(meta, style: TextStyle(color: colors.textSecondary, fontSize: 12)),
+                  const SizedBox(height: 8),
+                  Text('View document', style: TextStyle(color: colors.primaryBlue, fontSize: 14, fontWeight: FontWeight.w500)),
+                ],
+              ),
+            ),
+            const SizedBox(width: 16),
+            Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected ? colors.primaryBlue : colors.textSecondary,
+                  width: 2,
+                ),
+                color: isSelected ? colors.primaryBlue : Colors.transparent,
+              ),
+              child: isSelected ? const Icon(Icons.check, size: 16, color: Colors.white) : null,
+            ),
+          ],
         ),
       ),
-      child: Row(children: [
-        Container(
-          width: 72, height: 80,
-          decoration: BoxDecoration(color: const Color(0xFFEAEBF0), borderRadius: BorderRadius.circular(8)),
-          child: const Center(child: Text('PDF', style: TextStyle(color: OwnKeepColors.danger, fontSize: 16, fontWeight: FontWeight.w800, fontFamily: 'Inter'))),
-        ),
-        SizedBox(width: OwnKeepSpacing.md),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(name, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          SizedBox(height: 4),
-          Text(sub, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-          SizedBox(height: 8),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(border: Border.all(color: badgeColor), borderRadius: BorderRadius.circular(6)),
-            child: Text(badgeLabel, style: TextStyle(color: badgeColor, fontSize: 11, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          ),
-        ])),
-        if (selected)
-          Container(
-            width: 28, height: 28,
-            decoration: BoxDecoration(color: OwnKeepColors.primary, shape: BoxShape.circle),
-            child: Icon(Icons.check_rounded, color: Colors.white, size: 16),
-          ),
-      ]),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
+import '../../theme/ownkeep_onboarding_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 
 class AdvancedSearchScreen extends StatefulWidget {
@@ -78,7 +79,7 @@ class _AdvancedSearchScreenState extends State<AdvancedSearchScreen> {
                       shape: BoxShape.circle,
                       border: Border.all(color: colors.borderSoft),
                     ),
-                    child: SvgPicture.asset(OwnKeepMainIcons.sliders, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+                    child: SvgPicture.asset(OwnKeepMainIcons.filter, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
                   ),
                 ],
               ),
@@ -191,7 +192,7 @@ class _AdvancedSearchScreenState extends State<AdvancedSearchScreen> {
                     ),
                     _buildResultItem(
                       colors: colors,
-                      icon: OwnKeepMainIcons.folder_open,
+                      icon: OwnKeepMainIcons.folder,
                       iconColor: colors.warningOrange,
                       title: l10n.s34_folder,
                       meta: l10n.s34_folder_meta,
@@ -247,7 +248,7 @@ class _AdvancedSearchScreenState extends State<AdvancedSearchScreen> {
                             width: double.infinity,
                             child: ElevatedButton.icon(
                               onPressed: () {},
-                              icon: SvgPicture.asset(OwnKeepMainIcons.ai_powered, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+                              icon: SvgPicture.asset(OwnKeepOnboardingIcons.ai_powered, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
                               label: Text(
                                 l10n.s34_ai_button,
                                 style: const TextStyle(

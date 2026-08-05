@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class MoveToScreen extends StatefulWidget {
   const MoveToScreen({super.key});
@@ -12,127 +13,322 @@ class MoveToScreen extends StatefulWidget {
 }
 
 class _MoveToScreenState extends State<MoveToScreen> {
-  String? _selected;
+  String _selectedFolderId = '';
 
-  final _collections = [
-    ('Personal', '28 items', OwnKeepColors.primary, Icons.circle),
-    ('Finance', '16 items', OwnKeepColors.success, Icons.currency_rupee_rounded),
-    ('Health', '12 items', OwnKeepColors.pink, Icons.favorite_rounded),
-    ('Property', '9 items', OwnKeepColors.warning, Icons.home_rounded),
-    ('Vehicle', '8 items', OwnKeepColors.ai, Icons.article_rounded),
-    ('Education', '6 items', OwnKeepColors.ai, Icons.diamond_rounded),
+  final List<Map<String, dynamic>> _collections = [
+    {
+      'id': 'personal',
+      'titleKey': 'collection_personal',
+      'subtitleKey': 's52_personal_count',
+      'icon': OwnKeepMainIcons.personal_category,
+      'color': const Color(0xFF4F46E5), // blue
+    },
+    {
+      'id': 'finance',
+      'titleKey': 'collection_finance',
+      'subtitleKey': 's52_finance_count',
+      'icon': OwnKeepMainIcons.finance_category,
+      'color': const Color(0xFF10B981), // green
+    },
+    {
+      'id': 'health',
+      'titleKey': 'collection_health',
+      'subtitleKey': 's52_health_count',
+      'icon': OwnKeepMainIcons.health_category,
+      'color': const Color(0xFFEF4444), // red
+    },
+    {
+      'id': 'property',
+      'titleKey': 'collection_property',
+      'subtitleKey': 's52_property_count',
+      'icon': OwnKeepMainIcons.property_category,
+      'color': const Color(0xFFF59E0B), // orange
+    },
+    {
+      'id': 'vehicle',
+      'titleKey': 'collection_vehicle',
+      'subtitleKey': 's52_vehicle_count',
+      'icon': OwnKeepMainIcons.vehicle_category,
+      'color': const Color(0xFF06B6D4), // cyan
+    },
+    {
+      'id': 'education',
+      'titleKey': 'collection_education',
+      'subtitleKey': 's52_education_count',
+      'icon': OwnKeepMainIcons.education_category,
+      'color': const Color(0xFF8B5CF6), // purple
+    },
   ];
+
+  String _getLocalizedString(AppLocalizations l10n, String key) {
+    switch (key) {
+      case 'collection_personal': return l10n.collection_personal;
+      case 's52_personal_count': return l10n.s52_personal_count;
+      case 'collection_finance': return l10n.collection_finance;
+      case 's52_finance_count': return l10n.s52_finance_count;
+      case 'collection_health': return l10n.collection_health;
+      case 's52_health_count': return l10n.s52_health_count;
+      case 'collection_property': return l10n.collection_property;
+      case 's52_property_count': return l10n.s52_property_count;
+      case 'collection_vehicle': return l10n.collection_vehicle;
+      case 's52_vehicle_count': return l10n.s52_vehicle_count;
+      case 'collection_education': return l10n.collection_education;
+      case 's52_education_count': return l10n.s52_education_count;
+      default: return key;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => Navigator.pop(context),
         ),
         title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text('Move To', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            Text('Choose destination', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-          ],
-        ),
-      ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 1),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Selected files banner
-          Container(
-            margin: EdgeInsets.all(OwnKeepSpacing.base),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-              Text('Selected', style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 12, fontFamily: 'Inter')),
-              SizedBox(height: 4),
-              Text('3 files  •  6.7 MB', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 16, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-            ]),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-            child: Text('Collections', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          ),
-          SizedBox(height: OwnKeepSpacing.sm),
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-              children: [
-                ..._collections.map((col) => _CollectionTile(
-                  label: col.$1, count: col.$2, color: col.$3, icon: col.$4,
-                  selected: _selected == col.$1,
-                  onTap: () => setState(() => _selected = col.$1),
-                )),
-                _CollectionTile(
-                  label: 'Create New Folder', count: 'Add destination',
-                  color: OwnKeepColors.warning, icon: Icons.add,
-                  selected: false, onTap: () {},
-                ),
-              ],
-            ),
-          ),
-          // Move Here button
-          Padding(
-            padding: EdgeInsets.all(OwnKeepSpacing.base),
-            child: SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: () {},
-                style: FilledButton.styleFrom(
-                  backgroundColor: OwnKeepColors.primary,
-                  minimumSize: const Size.fromHeight(54),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
-                ),
-                child: Text('Move Here', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+          children: [
+            Text(
+              l10n.s52_title,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
               ),
             ),
+            Text(
+              l10n.s52_subtitle,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ],
+        ),
+        centerTitle: true,
+      ),
+      body: Stack(
+        children: [
+          ListView(
+            padding: const EdgeInsets.all(OwnKeepSpacing.md).copyWith(bottom: 100),
+            children: [
+              _buildSectionTitle(l10n.s52_selected, colors),
+              const SizedBox(height: OwnKeepSpacing.sm),
+              Container(
+                padding: const EdgeInsets.all(OwnKeepSpacing.md),
+                decoration: BoxDecoration(
+                  color: colors.surfacePrimary,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: colors.borderSoft),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: colors.backgroundTop,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: SvgPicture.asset(
+                        OwnKeepMainIcons.selection_checked,
+                        colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn),
+                        width: 24,
+                        height: 24,
+                      ),
+                    ),
+                    const SizedBox(width: OwnKeepSpacing.md),
+                    Text(
+                      l10n.s52_selected_summary,
+                      style: TextStyle(
+                        color: colors.textPrimary,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: OwnKeepSpacing.xl),
+              _buildSectionTitle(l10n.s52_collections, colors),
+              const SizedBox(height: OwnKeepSpacing.sm),
+              ..._collections.map((item) {
+                final isSelected = _selectedFolderId == item['id'];
+                return _buildFolderItem(
+                  colors,
+                  icon: item['icon'] as String,
+                  title: _getLocalizedString(l10n, item['titleKey'] as String),
+                  subtitle: _getLocalizedString(l10n, item['subtitleKey'] as String),
+                  iconColor: item['color'] as Color,
+                  isSelected: isSelected,
+                  onTap: () {
+                    setState(() {
+                      _selectedFolderId = item['id'] as String;
+                    });
+                  },
+                );
+              }),
+              const SizedBox(height: OwnKeepSpacing.sm),
+              _buildFolderItem(
+                colors,
+                icon: OwnKeepMainIcons.new_folder,
+                title: l10n.s52_create_folder,
+                subtitle: l10n.s52_create_folder_body,
+                iconColor: colors.textPrimary,
+                isSelected: false,
+                isDashed: true,
+                onTap: () {},
+              ),
+            ],
           ),
+          
+          if (_selectedFolderId.isNotEmpty)
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: EdgeInsets.only(
+                  left: OwnKeepSpacing.md,
+                  right: OwnKeepSpacing.md,
+                  top: OwnKeepSpacing.md,
+                  bottom: MediaQuery.of(context).padding.bottom + OwnKeepSpacing.md,
+                ),
+                decoration: BoxDecoration(
+                  color: colors.navigationBackground,
+                  border: Border(top: BorderSide(color: colors.borderSoft)),
+                ),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: colors.primaryBlue,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: Text(
+                    l10n.s52_move_here,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
   }
-}
 
-class _CollectionTile extends StatelessWidget {
-  const _CollectionTile({required this.label, required this.count, required this.color, required this.icon, required this.selected, required this.onTap});
-  final String label, count;
-  final Color color;
-  final IconData icon;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-      decoration: BoxDecoration(
-        color: selected ? OwnKeepColors.primary.withValues(alpha: 0.1) : OwnKeepColors.darkSurfaceElevated,
-        borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-        border: Border.all(color: selected ? OwnKeepColors.primary.withValues(alpha: 0.4) : OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-      ),
-      child: ListTile(
-        onTap: onTap,
-        leading: Container(
-          width: 38, height: 38,
-          decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
-          child: Icon(icon, color: color, size: 20),
+  Widget _buildSectionTitle(String title, OwnKeepMainColorsTheme colors) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Text(
+        title,
+        style: TextStyle(
+          color: colors.textSecondary,
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          fontFamily: 'Inter',
+          letterSpacing: 0.5,
         ),
-        title: Text(label, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-        subtitle: Text(count, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        trailing: Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
+      ),
+    );
+  }
+
+  Widget _buildFolderItem(
+    OwnKeepMainColorsTheme colors, {
+    required String icon,
+    required String title,
+    required String subtitle,
+    required Color iconColor,
+    required bool isSelected,
+    bool isDashed = false,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: OwnKeepSpacing.sm),
+        padding: const EdgeInsets.all(OwnKeepSpacing.md),
+        decoration: BoxDecoration(
+          color: isSelected ? colors.surfaceSelected : colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected ? colors.primaryBlue : colors.borderSoft,
+            width: isSelected ? 1.5 : 1,
+            // If dashed, we should ideally use a DashedBorder package, but we'll fall back to solid border for now
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: colors.backgroundTop,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: SvgPicture.asset(
+                icon,
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                width: 24,
+                height: 24,
+              ),
+            ),
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (isSelected)
+              SvgPicture.asset(
+                OwnKeepMainIcons.selection_checked,
+                colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn),
+                width: 24,
+                height: 24,
+              )
+            else
+              SvgPicture.asset(
+                OwnKeepMainIcons.chevron_right,
+                colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
+                width: 20,
+                height: 20,
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class AddNotesScreen extends StatefulWidget {
   const AddNotesScreen({super.key});
@@ -12,11 +13,17 @@ class AddNotesScreen extends StatefulWidget {
 }
 
 class _AddNotesScreenState extends State<AddNotesScreen> {
-  final _titleController = TextEditingController(text: 'Renewal Notes');
-  final _noteController = TextEditingController(
-    text: 'Call insurer before 20 March.\n\nAsk about family floater upgrade and cashless hospitals near home.\n\nCompare premium with last year before renewing.',
-  );
-  bool _addReminder = false;
+  late TextEditingController _titleController;
+  late TextEditingController _noteController;
+  bool _reminderEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController(text: 'Renewal Notes');
+    _noteController = TextEditingController(
+        text: 'Call insurer before 20 March.\n\nAsk about family floater upgrade and cashless hospitals near home.\n\nCompare premium with last year before renewing.');
+  }
 
   @override
   void dispose() {
@@ -27,112 +34,254 @@ class _AddNotesScreenState extends State<AddNotesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => Navigator.pop(context),
         ),
         title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text('Add Note', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            Text('Insurance Policy.pdf', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
+          children: [
+            Text(
+              l10n.s58_title,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+            Text(
+              l10n.s58_subtitle,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontFamily: 'Inter',
+              ),
+            ),
           ],
         ),
+        centerTitle: true,
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 1),
-      body: Padding(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(OwnKeepSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Title
-            Text('Title', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            SizedBox(height: OwnKeepSpacing.sm),
-            TextField(
-              controller: _titleController,
-              style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w500, fontFamily: 'Inter'),
-              decoration: InputDecoration(
-                filled: true, fillColor: OwnKeepColors.darkSurfaceElevated,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md), borderSide: const BorderSide(color: OwnKeepColors.primary)),
-                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md), borderSide: BorderSide(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3))),
-                focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md), borderSide: const BorderSide(color: OwnKeepColors.primary, width: 1.5)),
-                isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+            Text(
+              l10n.s58_title_label,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+                letterSpacing: 0.5,
               ),
             ),
-            SizedBox(height: OwnKeepSpacing.lg),
-            // Note
-            Text('Note', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            SizedBox(height: OwnKeepSpacing.sm),
-            Expanded(
-              child: Stack(children: [
-                TextField(
-                  controller: _noteController,
-                  maxLines: null, expands: true,
-                  style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 13, fontFamily: 'Inter', height: 1.7),
-                  decoration: InputDecoration(
-                    filled: true, fillColor: OwnKeepColors.darkSurfaceElevated,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md), borderSide: BorderSide(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3))),
-                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md), borderSide: BorderSide(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3))),
-                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md), borderSide: const BorderSide(color: OwnKeepColors.primary, width: 1.5)),
-                    contentPadding: EdgeInsets.all(14),
-                    isDense: true,
+            const SizedBox(height: OwnKeepSpacing.xs),
+            Container(
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: TextField(
+                controller: _titleController,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 16,
+                  fontFamily: 'Inter',
+                ),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  isDense: true,
+                ),
+              ),
+            ),
+            
+            const SizedBox(height: OwnKeepSpacing.xl),
+            
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  l10n.s58_note_label,
+                  style: TextStyle(
+                    color: colors.textSecondary,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                    letterSpacing: 0.5,
                   ),
                 ),
-                const Positioned(
-                  bottom: 10, right: 14,
-                  child: Text('164 / 2000', style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 11, fontFamily: 'Inter')),
+                Text(
+                  l10n.s58_counter, // Can be dynamically calculated based on _noteController text
+                  style: TextStyle(
+                    color: colors.textMuted,
+                    fontSize: 12,
+                    fontFamily: 'Inter',
+                  ),
                 ),
-              ]),
+              ],
             ),
-            SizedBox(height: OwnKeepSpacing.lg),
-            // Attach To
-            Text('Attach To', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            SizedBox(height: OwnKeepSpacing.sm),
+            const SizedBox(height: OwnKeepSpacing.xs),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.md, vertical: 14),
+              height: 200,
               decoration: BoxDecoration(
-                color: OwnKeepColors.darkSurfaceElevated,
-                borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.borderSoft),
               ),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
-                Text('Insurance Policy.pdf', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-                Icon(Icons.check_rounded, color: OwnKeepColors.success, size: 18),
-              ]),
+              child: TextField(
+                controller: _noteController,
+                maxLines: null,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 15,
+                  fontFamily: 'Inter',
+                  height: 1.5,
+                ),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.all(16),
+                ),
+              ),
             ),
-            SizedBox(height: OwnKeepSpacing.lg),
-            // Reminder
-            Text('Reminder', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            SizedBox(height: OwnKeepSpacing.sm),
+            
+            const SizedBox(height: OwnKeepSpacing.xl),
+            
+            Text(
+              l10n.s58_attach,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xs),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.md, vertical: 6),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: OwnKeepColors.darkSurfaceElevated,
-                borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.borderSoft),
               ),
-              child: Row(children: [
-                const Expanded(child: Text('Add reminder for this note', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontFamily: 'Inter'))),
-                Switch(value: _addReminder, onChanged: (v) => setState(() => _addReminder = v), activeThumbColor: OwnKeepColors.primary),
-              ]),
-            ),
-            SizedBox(height: OwnKeepSpacing.lg),
-            FilledButton(
-              onPressed: () {},
-              style: FilledButton.styleFrom(
-                backgroundColor: OwnKeepColors.primary,
-                minimumSize: const Size.fromHeight(52),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    OwnKeepMainIcons.tip_check, // The reference uses a generic check or file icon here? s58_attach suggests attach icon or file icon.
+                    colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn),
+                    width: 20,
+                    height: 20,
+                  ),
+                  const SizedBox(width: OwnKeepSpacing.md),
+                  Text(
+                    l10n.s58_attach_value,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 15,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
               ),
-              child: Text('Save Note', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
             ),
+
+            const SizedBox(height: OwnKeepSpacing.xl),
+            
+            Container(
+              padding: const EdgeInsets.all(OwnKeepSpacing.md),
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.s58_reminder,
+                          style: TextStyle(
+                            color: colors.textPrimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          l10n.s58_reminder_body,
+                          style: TextStyle(
+                            color: colors.textSecondary,
+                            fontSize: 13,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Switch(
+                    value: _reminderEnabled,
+                    onChanged: (value) {
+                      setState(() {
+                        _reminderEnabled = value;
+                      });
+                    },
+                    activeColor: colors.primaryBlue,
+                    inactiveTrackColor: colors.borderSoft,
+                    inactiveThumbColor: colors.textMuted,
+                  ),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: 100),
           ],
+        ),
+      ),
+      bottomSheet: Container(
+        padding: EdgeInsets.only(
+          left: OwnKeepSpacing.md,
+          right: OwnKeepSpacing.md,
+          top: OwnKeepSpacing.md,
+          bottom: MediaQuery.of(context).padding.bottom + OwnKeepSpacing.md,
+        ),
+        decoration: BoxDecoration(
+          color: colors.navigationBackground,
+          border: Border(top: BorderSide(color: colors.borderSoft)),
+        ),
+        child: ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            backgroundColor: colors.primaryBlue,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            minimumSize: const Size(double.infinity, 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            elevation: 0,
+          ),
+          child: Text(
+            l10n.s58_save,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Inter',
+            ),
+          ),
         ),
       ),
     );

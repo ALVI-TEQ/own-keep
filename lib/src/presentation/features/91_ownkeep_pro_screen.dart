@@ -1,120 +1,169 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
 class OwnKeepProScreen extends StatelessWidget {
   const OwnKeepProScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const features = [
-      ('PDF', Color(0xFF1A3D7A), OwnKeepColors.primary, 'Advanced document tools', 'Merge, split, compare and OCR'),
-      ('★', Color(0xFF3D1A7A), Color(0xFF7C3AED), 'On-device AI', 'Smart search, tags and insights'),
-      ('♥', Color(0xFF7A1A2E), OwnKeepColors.pink, 'Family Vault', 'Offline encrypted sharing'),
-      ('✓', Color(0xFF0A4A2E), OwnKeepColors.success, 'Security tools', 'Hidden vault, decoy vault and audit'),
-      ('□', Color(0xFF7A3D0A), Color(0xFFF59E0B), 'Unlimited collections', 'Create and customize freely'),
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
+
+    final features = [
+      {'title': l10n.s91_document_tools, 'body': l10n.s91_document_tools_body, 'icon': OwnKeepMainIcons.document_tools, 'color': colors.primaryBlue},
+      {'title': l10n.s91_ai, 'body': l10n.s91_ai_body, 'icon': OwnKeepMainIcons.ai_wand, 'color': colors.aiPurple},
+      {'title': l10n.s91_family, 'body': l10n.s91_family_body, 'icon': OwnKeepMainIcons.folder, 'color': colors.warningOrange},
+      {'title': l10n.s91_security, 'body': l10n.s91_security_body, 'icon': OwnKeepMainIcons.security, 'color': colors.dangerRed},
+      {'title': l10n.s91_collections, 'body': l10n.s91_collections_body, 'icon': OwnKeepMainIcons.collection, 'color': colors.successGreen},
     ];
 
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('OwnKeep Pro', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('Unlock advanced local features', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
-        actions: [
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Badge
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [const Color(0xFFFFD700).withValues(alpha: 0.2), const Color(0xFFFF8C00).withValues(alpha: 0.2)],
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: const Color(0xFFFFD700).withValues(alpha: 0.5)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.star, color: const Color(0xFFFFD700), size: 16),
+                    const SizedBox(width: 8),
+                    Text(l10n.s91_badge, style: const TextStyle(color: Color(0xFFFFD700), fontSize: 14, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              
+              // Hero Text
+              Text(l10n.s91_hero, textAlign: TextAlign.center, style: TextStyle(color: colors.textPrimary, fontSize: 32, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              Text(l10n.s91_hero_body, textAlign: TextAlign.center, style: TextStyle(color: colors.textSecondary, fontSize: 16, height: 1.5)),
+              const SizedBox(height: 32),
+              
+              // Price
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text(l10n.s91_price, style: TextStyle(color: colors.textPrimary, fontSize: 40, fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 8),
+                  Text('/ ${l10n.s91_price_type}', style: TextStyle(color: colors.textMuted, fontSize: 16)),
+                ],
+              ),
+              const SizedBox(height: 48),
+              
+              // Features list
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(l10n.s91_features, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(height: 16),
+              
+              ...features.map((f) => _buildFeatureRow(f, colors)),
+              
+              const SizedBox(height: 40),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Mock Upgrade Successful')));
+                    context.pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: colors.primaryBlue,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  ),
+                  child: Text(
+                    l10n.s91_upgrade,
+                    style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.offline_pin_outlined, color: colors.textMuted, size: 16),
+                  const SizedBox(width: 8),
+                  Text(l10n.s91_offline_note, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFeatureRow(Map<String, dynamic> f, OwnKeepMainColorsTheme colors) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: Color(0xFF3D1A7A), borderRadius: BorderRadius.circular(10)),
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.star_rounded, color: Color(0xFF7C3AED), size: 20)),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: (f['color'] as Color).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: SvgPicture.asset(f['icon'] as String, colorFilter: ColorFilter.mode(f['color'] as Color, BlendMode.srcIn), width: 24),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(f['title'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 4),
+                Text(f['body'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+              ],
+            ),
           ),
         ],
-      ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 3),
-      body: Padding(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(children: [
-          // Hero pricing card
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(OwnKeepSpacing.lg),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1A0A3D),
-              borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-              border: Border.all(color: const Color(0xFF7C3AED), width: 1.5),
-            ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-              Text('OWNKEEP PRO', style: TextStyle(color: Color(0xFF7C3AED), fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 1.2, fontFamily: 'Inter')),
-              SizedBox(height: 10),
-              Text('Everything stays yours', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 22, fontWeight: FontWeight.w800, fontFamily: 'Inter')),
-              SizedBox(height: 6),
-              Text(
-                'One premium upgrade for advanced security, AI organization, document tools and family vault features.',
-                style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, height: 1.5, fontFamily: 'Inter'),
-              ),
-              SizedBox(height: 16),
-              Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Text('₹1,499', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 28, fontWeight: FontWeight.w800, fontFamily: 'Inter')),
-                SizedBox(width: 8),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 4),
-                  child: Text('one-time', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, fontFamily: 'Inter')),
-                ),
-              ]),
-            ]),
-          ),
-          SizedBox(height: OwnKeepSpacing.lg),
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Text('Included Features', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-          ),
-          SizedBox(height: OwnKeepSpacing.sm),
-          Expanded(
-            child: ListView(children: features.map((f) => Container(
-              margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-              padding: EdgeInsets.all(OwnKeepSpacing.md),
-              decoration: BoxDecoration(
-                color: OwnKeepColors.darkSurfaceElevated,
-                borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-              ),
-              child: Row(children: [
-                Container(
-                  width: 44, height: 44,
-                  decoration: BoxDecoration(color: f.$2, borderRadius: BorderRadius.circular(12)),
-                  child: Center(child: Text(f.$1, style: TextStyle(color: f.$3, fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Inter'))),
-                ),
-                SizedBox(width: OwnKeepSpacing.md),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(f.$4, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                  Text(f.$5, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-                ])),
-                Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-              ]),
-            )).toList()),
-          ),
-          SizedBox(height: OwnKeepSpacing.sm),
-          FilledButton(
-            onPressed: () {},
-            style: FilledButton.styleFrom(
-              backgroundColor: const Color(0xFF7C3AED),
-              minimumSize: const Size.fromHeight(52),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
-            ),
-            child: Text('Upgrade to OwnKeep Pro', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          ),
-          SizedBox(height: 8),
-          Text('Purchase entitlement is cached for offline use', style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 11, fontFamily: 'Inter')),
-        ]),
       ),
     );
   }

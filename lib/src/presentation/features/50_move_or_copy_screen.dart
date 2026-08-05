@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
+import '../../theme/ownkeep_onboarding_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 
 class MoveOrCopyScreen extends StatefulWidget {
@@ -151,9 +152,9 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
                         _buildDivider(colors),
                         _buildCategoryItem(colors, OwnKeepMainIcons.property_category, l10n.s50_property, l10n.s50_property_count, colors.aiPurple),
                         _buildDivider(colors),
-                        _buildCategoryItem(colors, OwnKeepMainIcons.vehicle_category, l10n.s50_vehicle, l10n.s50_vehicle_count, colors.primaryBlue),
+                        _buildCategoryItem(colors, OwnKeepMainIcons.vehicle, l10n.s50_vehicle, l10n.s50_vehicle_count, colors.primaryBlue),
                         _buildDivider(colors),
-                        _buildCategoryItem(colors, OwnKeepMainIcons.education_category, l10n.s50_education, l10n.s50_education_count, colors.brandPurpleBright),
+                        _buildCategoryItem(colors, OwnKeepMainIcons.education, l10n.s50_education, l10n.s50_education_count, colors.aiPurple),
                       ],
                     ),
                   ),
@@ -245,7 +246,8 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
                         });
                       },
                       child: SvgPicture.asset(
-                        _keepOriginal ? OwnKeepMainIcons.toggle_on : OwnKeepMainIcons.toggle_off,
+                        _keepOriginal ? OwnKeepOnboardingIcons.toggle_on : OwnKeepOnboardingIcons.toggle_off,
+                        height: 24,
                         colorFilter: ColorFilter.mode(
                           _keepOriginal ? colors.primaryBlue : colors.textMuted,
                           BlendMode.srcIn,

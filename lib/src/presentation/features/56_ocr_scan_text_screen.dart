@@ -1,127 +1,251 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class OcrScanTextScreen extends StatelessWidget {
   const OcrScanTextScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => Navigator.pop(context),
         ),
         title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text('Scan Text', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            Text('Extract text from document', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
+          children: [
+            Text(
+              l10n.s56_title,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+            Text(
+              l10n.s56_subtitle,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontFamily: 'Inter',
+              ),
+            ),
           ],
         ),
+        centerTitle: true,
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 1),
-      body: Padding(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(OwnKeepSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Document preview card
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(OwnKeepSpacing.base),
-              decoration: BoxDecoration(
-                color: OwnKeepColors.darkSurfaceElevated,
-                borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-                border: Border.all(color: OwnKeepColors.primary.withValues(alpha: 0.3)),
-              ),
+            // Preview Image
+            Center(
               child: Container(
-                padding: EdgeInsets.all(OwnKeepSpacing.lg),
-                decoration: BoxDecoration(color: const Color(0xFFEAEBF0), borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Text('INSURANCE POLICY', style: TextStyle(
-                        color: const Color(0xFF1A2340),
-                        fontSize: 16, fontWeight: FontWeight.w800, letterSpacing: 1,
-                        fontFamily: 'Inter',
-                      )),
+                height: 200,
+                width: 150,
+                margin: const EdgeInsets.only(bottom: OwnKeepSpacing.xl),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
                     ),
-                    SizedBox(height: OwnKeepSpacing.md),
-                    ...const [
-                      'Policy Number: POL/AGI/2024/123456789',
-                      'Policy Holder: Arjun Sharma',
-                      'Policy Type: Health Insurance',
-                      'Policy Period: 01 Apr 2024 – 31 Mar 2025',
-                    ].map((line) => Padding(
-                      padding: EdgeInsets.only(bottom: 4),
-                      child: Text(line, style: TextStyle(color: Color(0xFF3C3F4A), fontSize: 12, fontFamily: 'Inter')),
-                    )),
                   ],
                 ),
-              ),
-            ),
-            SizedBox(height: OwnKeepSpacing.lg),
-            Text('Extracted Text', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            SizedBox(height: OwnKeepSpacing.sm),
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(OwnKeepSpacing.md),
-                decoration: BoxDecoration(
-                  color: OwnKeepColors.darkSurfaceElevated,
-                  borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                  border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-                ),
-                child: const SelectableText(
-                  'INSURANCE POLICY\n\nPolicy Number: POL/AGI/2024/123456789\nPolicy Holder: Arjun Sharma\nPolicy Type: Health Insurance\nPolicy Period: 01 Apr 2024 – 31 Mar 2025',
-                  style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 13, fontFamily: 'Inter', height: 1.7),
+                clipBehavior: Clip.antiAlias,
+                child: SvgPicture.asset(
+                  'assets/main/illustrations/ocr_insurance_policy.svg',
+                  fit: BoxFit.cover,
+                  placeholderBuilder: (context) => Container(color: colors.surfacePrimary),
                 ),
               ),
             ),
-            SizedBox(height: OwnKeepSpacing.lg),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {},
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: OwnKeepColors.primary,
-                      backgroundColor: OwnKeepColors.darkSurfaceElevated,
-                      side: BorderSide(color: OwnKeepColors.darkSurfaceElevated),
-                      minimumSize: const Size.fromHeight(52),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
+
+            Text(
+              l10n.s56_extracted,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            
+            // Extracted Text Box
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.s56_document_title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Inter',
                     ),
-                    child: Text('Copy Text', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
                   ),
-                ),
-                SizedBox(width: OwnKeepSpacing.md),
-                Expanded(
-                  child: FilledButton(
-                    onPressed: () {},
-                    style: FilledButton.styleFrom(
-                      backgroundColor: OwnKeepColors.primary,
-                      minimumSize: const Size.fromHeight(52),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
+                  const SizedBox(height: OwnKeepSpacing.md),
+                  Text(
+                    l10n.s56_policy_number,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 14,
+                      fontFamily: 'Inter',
+                      height: 1.5,
                     ),
-                    child: Text('Save as Note', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+                  ),
+                  Text(
+                    l10n.s56_policy_holder,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 14,
+                      fontFamily: 'Inter',
+                      height: 1.5,
+                    ),
+                  ),
+                  Text(
+                    l10n.s56_policy_type,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 14,
+                      fontFamily: 'Inter',
+                      height: 1.5,
+                    ),
+                  ),
+                  Text(
+                    l10n.s56_policy_period,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 14,
+                      fontFamily: 'Inter',
+                      height: 1.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: OwnKeepSpacing.md),
+            
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  OwnKeepMainIcons.tip_check,
+                  colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn),
+                  width: 16,
+                  height: 16,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.s56_local_notice,
+                  style: TextStyle(
+                    color: colors.textMuted,
+                    fontSize: 12,
+                    fontFamily: 'Inter',
                   ),
                 ),
               ],
             ),
-            SizedBox(height: OwnKeepSpacing.sm),
-            const Center(
-              child: Text('Text processed only on this device', style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 12, fontFamily: 'Inter')),
+            
+            const SizedBox(height: 100),
+          ],
+        ),
+      ),
+      bottomSheet: Container(
+        padding: EdgeInsets.only(
+          left: OwnKeepSpacing.md,
+          right: OwnKeepSpacing.md,
+          top: OwnKeepSpacing.md,
+          bottom: MediaQuery.of(context).padding.bottom + OwnKeepSpacing.md,
+        ),
+        decoration: BoxDecoration(
+          color: colors.navigationBackground,
+          border: Border(top: BorderSide(color: colors.borderSoft)),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () {},
+                icon: SvgPicture.asset(
+                  OwnKeepMainIcons.copy_text,
+                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  width: 20,
+                  height: 20,
+                ),
+                label: Text(
+                  l10n.s56_copy,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colors.primaryBlue,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 0,
+                ),
+              ),
             ),
-            SizedBox(height: OwnKeepSpacing.md),
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () {},
+                icon: SvgPicture.asset(
+                  OwnKeepMainIcons.save_note,
+                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  width: 20,
+                  height: 20,
+                ),
+                label: Text(
+                  l10n.s56_save_note,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colors.accentCyan, // or brand color
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 0,
+                ),
+              ),
+            ),
           ],
         ),
       ),

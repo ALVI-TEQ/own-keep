@@ -1,129 +1,180 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
-class AiTimelineScreen extends StatefulWidget {
+class AiTimelineScreen extends StatelessWidget {
   const AiTimelineScreen({super.key});
-  @override
-  State<AiTimelineScreen> createState() => _AiTimelineScreenState();
-}
-
-class _AiTimelineScreenState extends State<AiTimelineScreen> {
-  int _tab = 0;
-  final _tabs = ['All', 'Documents', 'Events', 'Reminders', 'Insights'];
-
-  final _events = [
-    (Color(0xFFF59E0B), Color(0xFF7A3D0A), Icons.notifications_outlined, 'Vehicle insurance reminder created', 'Expires in 15 days', 'Today'),
-    (OwnKeepColors.pink, Color(0xFF7A1A2E), Icons.favorite_rounded, 'Health report added', 'AI detected 4 lab values', 'Yesterday'),
-    (OwnKeepColors.ai, Color(0xFF0A3D3D), Icons.crop_square_rounded, 'Vehicle serviced', 'Odometer: 18,450 km', '12 July'),
-    (OwnKeepColors.primary, Color(0xFF1A3D7A), Icons.picture_as_pdf_outlined, 'Passport document updated', 'New scan replaced older copy', '10 June'),
-    (Color(0xFF7C3AED), Color(0xFF3D1A7A), Icons.crop_square_rounded, 'Doctor appointment', 'Dr. R. Sharma  •  4:00 PM', '15 May'),
-    (OwnKeepColors.success, Color(0xFF0A4A2E), Icons.currency_rupee_rounded, 'Income tax return filed', 'FY 2024–25', '03 April'),
-  ];
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
+
+    final timelineEvents = [
+      {
+        'title': l10n.s76_vehicle_title,
+        'body': l10n.s76_vehicle_body,
+        'icon': OwnKeepMainIcons.vehicle,
+        'color': colors.accentCyan,
+        'date': 'Today',
+      },
+      {
+        'title': l10n.s76_health_title,
+        'body': l10n.s76_health_body,
+        'icon': OwnKeepMainIcons.health,
+        'color': colors.healthPink,
+        'date': 'Yesterday',
+      },
+      {
+        'title': l10n.s76_service_title,
+        'body': l10n.s76_service_body,
+        'icon': OwnKeepMainIcons.settings,
+        'color': colors.primaryBlue,
+        'date': 'May 14',
+      },
+      {
+        'title': l10n.s76_passport_title,
+        'body': l10n.s76_passport_body,
+        'icon': OwnKeepMainIcons.profile,
+        'color': colors.aiPurple,
+        'date': 'May 10',
+      },
+      {
+        'title': l10n.s76_doctor_title,
+        'body': l10n.s76_doctor_body,
+        'icon': OwnKeepMainIcons.appointment,
+        'color': colors.healthPink,
+        'date': 'April 28',
+      },
+      {
+        'title': l10n.s76_tax_title,
+        'body': l10n.s76_tax_body,
+        'icon': OwnKeepMainIcons.finance,
+        'color': colors.successGreen,
+        'date': 'April 15',
+      },
+    ];
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('AI Timeline', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('A meaningful view of your life', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.darkSurfaceElevated, borderRadius: BorderRadius.circular(10)),
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.crop_square_rounded, color: OwnKeepColors.darkTextSecondary, size: 20)),
-          ),
-        ],
+        title: Column(
+          children: [
+            Text(l10n.s76_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(l10n.s76_subtitle, style: TextStyle(color: colors.primaryBlue, fontSize: 12)),
+          ],
+        ),
+        centerTitle: true,
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 2),
-      body: Column(children: [
-        // Filter tabs
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base, vertical: OwnKeepSpacing.sm),
-          child: Row(children: _tabs.asMap().entries.map((e) => GestureDetector(
-            onTap: () => setState(() => _tab = e.key),
-            child: Container(
-              margin: EdgeInsets.only(right: 8),
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: _tab == e.key ? OwnKeepColors.primary : OwnKeepColors.darkSurfaceElevated,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: _tab == e.key ? OwnKeepColors.primary : OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-              ),
-              child: Text(e.value, style: TextStyle(
-                color: _tab == e.key ? Colors.white : OwnKeepColors.darkTextSecondary,
-                fontSize: 13, fontWeight: FontWeight.w500, fontFamily: 'Inter',
-              )),
-            ),
-          )).toList()),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
-        Expanded(
-          child: ListView.builder(
-            padding: EdgeInsets.fromLTRB(OwnKeepSpacing.base, 0, OwnKeepSpacing.base, OwnKeepSpacing.base),
-            itemCount: _events.length,
-            itemBuilder: (context, i) {
-              final ev = _events[i];
-              return IntrinsicHeight(
-                child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  // Timeline column
-                  SizedBox(width: 80,
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 14, right: 12),
-                        child: Text(ev.$6, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 11, fontFamily: 'Inter')),
-                      ),
-                    ]),
-                  ),
-                  // Dot + line
-                  Column(children: [
-                    Container(width: 14, height: 14, margin: EdgeInsets.only(top: 14), decoration: BoxDecoration(color: ev.$1, shape: BoxShape.circle)),
-                    if (i < _events.length - 1)
-                      Expanded(child: Container(width: 1.5, color: OwnKeepColors.darkBorder.withValues(alpha: 0.3))),
-                  ]),
-                  SizedBox(width: 12),
-                  // Card
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm, top: 6),
-                      padding: EdgeInsets.all(OwnKeepSpacing.md),
-                      decoration: BoxDecoration(
-                        color: OwnKeepColors.darkSurfaceElevated,
-                        borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                        border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-                      ),
-                      child: Row(children: [
-                        Container(
-                          width: 36, height: 36,
-                          decoration: BoxDecoration(color: ev.$2, borderRadius: BorderRadius.circular(10)),
-                          child: Icon(ev.$3, color: Colors.white.withValues(alpha: 0.85), size: 18),
+        child: ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          itemCount: timelineEvents.length,
+          itemBuilder: (context, index) {
+            final event = timelineEvents[index];
+            final showLine = index != timelineEvents.length - 1;
+
+            return IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Timeline line & dot
+                  Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: (event['color'] as Color).withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
                         ),
-                        SizedBox(width: 10),
-                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          Text(ev.$4, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 13, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                          Text(ev.$5, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 11, fontFamily: 'Inter')),
-                        ])),
-                      ]),
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: event['color'] as Color,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                      if (showLine)
+                        Expanded(
+                          child: Container(
+                            width: 2,
+                            color: colors.borderSoft,
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(width: 16),
+                  
+                  // Content Card
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 24.0),
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: colors.surfacePrimary,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: colors.borderSoft),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: (event['color'] as Color).withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: SvgPicture.asset(event['icon'] as String, colorFilter: ColorFilter.mode(event['color'] as Color, BlendMode.srcIn), width: 20),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Text(event['title'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                                      ),
+                                      Text(event['date'] as String, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(event['body'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ]),
-              );
-            },
-          ),
+                ],
+              ),
+            );
+          },
         ),
-      ]),
+      ),
     );
   }
 }

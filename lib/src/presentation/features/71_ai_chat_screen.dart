@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
 class AiChatScreen extends StatefulWidget {
   const AiChatScreen({super.key});
+
   @override
   State<AiChatScreen> createState() => _AiChatScreenState();
 }
 
 class _AiChatScreenState extends State<AiChatScreen> {
-  final _controller = TextEditingController();
-  bool _hasResponse = true;
-
-  final _prompts = [
-    (Icons.crop_square_rounded, const Color(0xFF1A3D7A), 'Find my vehicle insurance'),
-    (Icons.grid_view_rounded, const Color(0xFF3D1A7A), 'Show documents expiring soon'),
-    (Icons.favorite_rounded, const Color(0xFF7A1A2E), 'Summarize health reports'),
-    (Icons.currency_rupee_rounded, const Color(0xFF0A4A2E), 'How much did I spend on travel?'),
-  ];
+  final TextEditingController _controller = TextEditingController();
+  final List<Map<String, dynamic>> _messages = [];
+  bool _isTyping = false;
 
   @override
   void dispose() {
@@ -27,143 +23,246 @@ class _AiChatScreenState extends State<AiChatScreen> {
     super.dispose();
   }
 
+  void _sendMessage(String text) {
+    if (text.trim().isEmpty) return;
+    setState(() {
+      _messages.add({'role': 'user', 'text': text});
+      _isTyping = true;
+    });
+    _controller.clear();
+
+    // Simulate AI response delay
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() {
+          _isTyping = false;
+          _messages.add({
+            'role': 'ai',
+            'text': 'This is a simulated on-device AI response based on your secure vault data.',
+          });
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('AI Assistant', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('Private  •  On-device', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
+        title: Column(
+          children: [
+            Text(l10n.s71_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(l10n.s71_subtitle, style: TextStyle(color: colors.primaryBlue, fontSize: 12)),
+          ],
+        ),
+        centerTitle: true,
         actions: [
-          Container(
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.darkSurfaceElevated, borderRadius: BorderRadius.circular(10)),
-            child: IconButton(
-              onPressed: () => setState(() => _hasResponse = false),
-              icon: Icon(Icons.refresh_rounded, color: OwnKeepColors.primary, size: 20),
-            ),
+          IconButton(
+            icon: SvgPicture.asset(OwnKeepMainIcons.history, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+            onPressed: () => context.push('/features/ai-history'),
+          ),
+          IconButton(
+            icon: SvgPicture.asset(OwnKeepMainIcons.settings, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+            onPressed: () => context.push('/features/ai-settings'),
           ),
         ],
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 0),
-      body: Column(children: [
-        Expanded(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(OwnKeepSpacing.base),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Center(
-                child: Text('Hello, Arjun 👋', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 22, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-              ),
-              SizedBox(height: 4),
-              const Center(
-                child: Text('How can I help with your vault?', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 14, fontFamily: 'Inter')),
-              ),
-              SizedBox(height: OwnKeepSpacing.xl),
-              // Prompt grid
-              GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                mainAxisSpacing: OwnKeepSpacing.sm,
-                crossAxisSpacing: OwnKeepSpacing.sm,
-                childAspectRatio: 2.5,
-                children: _prompts.map((p) => GestureDetector(
-                  onTap: () => setState(() => _hasResponse = true),
-                  child: Container(
-                    padding: EdgeInsets.all(OwnKeepSpacing.sm),
-                    decoration: BoxDecoration(
-                      color: OwnKeepColors.darkSurfaceElevated,
-                      borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                      border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-                    ),
-                    child: Row(children: [
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Column(
+          children: [
+            if (_messages.isEmpty) ...[
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                       Container(
-                        width: 32, height: 32,
-                        decoration: BoxDecoration(color: p.$2, borderRadius: BorderRadius.circular(8)),
-                        child: Icon(p.$1, color: Colors.white.withValues(alpha: 0.8), size: 16),
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: colors.primaryBlue.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: SvgPicture.asset(OwnKeepMainIcons.ai_sparkle, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 48),
                       ),
-                      SizedBox(width: 8),
-                      Expanded(child: Text(p.$3, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 12, fontWeight: FontWeight.w500, fontFamily: 'Inter'))),
-                    ]),
-                  ),
-                )).toList(),
-              ),
-              SizedBox(height: OwnKeepSpacing.xl),
-              // AI response
-              if (_hasResponse)
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(OwnKeepSpacing.lg),
-                  decoration: BoxDecoration(
-                    color: OwnKeepColors.darkSurfaceElevated,
-                    borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-                    border: Border.all(color: OwnKeepColors.primary.withValues(alpha: 0.3)),
-                  ),
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('AI', style: TextStyle(color: OwnKeepColors.primary, fontSize: 12, fontWeight: FontWeight.w700, fontFamily: 'Inter', letterSpacing: 1)),
-                    SizedBox(height: OwnKeepSpacing.sm),
-                    Text(
-                      'Your vehicle insurance is in Vehicle › Documents. It expires in 15 days. I found the policy PDF and a renewal reminder.',
-                      style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontFamily: 'Inter', height: 1.6),
-                    ),
-                    SizedBox(height: OwnKeepSpacing.md),
-                    OutlinedButton(
-                      onPressed: () {},
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: OwnKeepColors.primary,
-                        side: const BorderSide(color: OwnKeepColors.primary),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.sm)),
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      const SizedBox(height: 24),
+                      Text(l10n.s71_greeting, style: TextStyle(color: colors.textPrimary, fontSize: 24, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 8),
+                      Text(l10n.s71_greeting_subtitle, style: TextStyle(color: colors.textSecondary, fontSize: 16)),
+                      const SizedBox(height: 40),
+                      
+                      // Prompt Suggestions
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Wrap(
+                          spacing: 12,
+                          runSpacing: 12,
+                          children: [
+                            _buildSuggestionChip(l10n.s71_prompt_insurance, colors),
+                            _buildSuggestionChip(l10n.s71_prompt_expenses, colors),
+                            _buildSuggestionChip(l10n.s71_prompt_expiry, colors),
+                            _buildSuggestionChip(l10n.s71_prompt_summarize, colors),
+                          ],
+                        ),
                       ),
-                      child: Text('Open Insurance Policy', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                    ),
-                  ]),
+                    ],
+                  ),
                 ),
-            ]),
-          ),
-        ),
-        // Input bar
-        Container(
-          margin: EdgeInsets.all(OwnKeepSpacing.base),
-          padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.md, vertical: 8),
-          decoration: BoxDecoration(
-            color: OwnKeepColors.darkSurfaceElevated,
-            borderRadius: BorderRadius.circular(OwnKeepRadius.xl),
-            border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-          ),
-          child: Row(children: [
-            Expanded(child: TextField(
-              controller: _controller,
-              style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontFamily: 'Inter'),
-              decoration: const InputDecoration(
-                hintText: 'Ask anything...',
-                hintStyle: TextStyle(color: OwnKeepColors.darkTextMuted, fontFamily: 'Inter'),
-                border: InputBorder.none, isDense: true,
               ),
-            )),
-            Icon(Icons.mic_none_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-            SizedBox(width: 8),
+            ] else ...[
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(24),
+                  itemCount: _messages.length + (_isTyping ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index == _messages.length) {
+                      return _buildTypingIndicator(colors);
+                    }
+                    final msg = _messages[index];
+                    final isUser = msg['role'] == 'user';
+                    return _buildMessageBubble(msg['text'], isUser, colors);
+                  },
+                ),
+              ),
+            ],
+
+            // Input Area
             Container(
-              width: 36, height: 36,
-              decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF8B6CFF), OwnKeepColors.primary]), shape: BoxShape.circle),
-              child: Icon(Icons.send_rounded, color: Colors.white, size: 18),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                border: Border(top: BorderSide(color: colors.borderSoft)),
+              ),
+              child: SafeArea(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _controller,
+                        style: TextStyle(color: colors.textPrimary),
+                        decoration: InputDecoration(
+                          hintText: l10n.s71_input_hint,
+                          hintStyle: TextStyle(color: colors.textMuted),
+                          filled: true,
+                          fillColor: colors.backgroundBottom,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        ),
+                        onSubmitted: _sendMessage,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    GestureDetector(
+                      onTap: () => _sendMessage(_controller.text),
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: colors.primaryBlue,
+                          shape: BoxShape.circle,
+                        ),
+                        child: SvgPicture.asset(OwnKeepMainIcons.send, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ]),
+          ],
         ),
-        const Padding(
-          padding: EdgeInsets.only(bottom: 10),
-          child: Text('All AI processing happens on this device', style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 12, fontFamily: 'Inter')),
+      ),
+    );
+  }
+
+  Widget _buildSuggestionChip(String text, OwnKeepMainColorsTheme colors) {
+    return ActionChip(
+      label: Text(text, style: TextStyle(color: colors.textPrimary, fontSize: 14)),
+      backgroundColor: colors.surfacePrimary,
+      side: BorderSide(color: colors.borderSoft),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      onPressed: () => _sendMessage(text),
+    );
+  }
+
+  Widget _buildMessageBubble(String text, bool isUser, OwnKeepMainColorsTheme colors) {
+    return Align(
+      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(16),
+        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+        decoration: BoxDecoration(
+          color: isUser ? colors.primaryBlue : colors.surfaceSecondary,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(16),
+            topRight: const Radius.circular(16),
+            bottomLeft: Radius.circular(isUser ? 16 : 4),
+            bottomRight: Radius.circular(isUser ? 4 : 16),
+          ),
         ),
-      ]),
+        child: Text(
+          text,
+          style: TextStyle(color: isUser ? Colors.white : colors.textPrimary, fontSize: 16),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTypingIndicator(OwnKeepMainColorsTheme colors) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: colors.surfaceSecondary,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+            bottomLeft: Radius.circular(4),
+            bottomRight: Radius.circular(16),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _dot(colors),
+            const SizedBox(width: 4),
+            _dot(colors),
+            const SizedBox(width: 4),
+            _dot(colors),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dot(OwnKeepMainColorsTheme colors) {
+    return Container(
+      width: 6,
+      height: 6,
+      decoration: BoxDecoration(
+        color: colors.textMuted,
+        shape: BoxShape.circle,
+      ),
     );
   }
 }
