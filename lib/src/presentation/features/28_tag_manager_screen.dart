@@ -5,14 +5,17 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
 
-class TagManagerScreen extends StatelessWidget {
+class TagManagerScreen extends ConsumerWidget {
   const TagManagerScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
+    
+    final customTagsAsync = ref.watch(customTagsProvider);
 
     final smartTags = [
       {'icon': OwnKeepMainIcons.identity, 'title': l10n.s28_identity, 'count': l10n.s28_identity_count},
@@ -104,10 +107,24 @@ class TagManagerScreen extends StatelessWidget {
             // Custom Tags Section
             _buildSectionHeader(l10n.s28_custom_tags, l10n.s28_custom_count, colors),
             const SizedBox(height: OwnKeepSpacing.md),
-            ...customTags.map((tag) => Padding(
-              padding: const EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-              child: _buildTagRow(colors, tag['icon']!, tag['title']!, tag['count']!),
-            )),
+            customTagsAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, st) => const Text('Error loading tags'),
+              data: (tags) {
+                if (tags.isEmpty) {
+                  return Padding(
+                    padding: const EdgeInsets.all(OwnKeepSpacing.md),
+                    child: Text('No custom tags yet.', style: TextStyle(color: colors.textSecondary)),
+                  );
+                }
+                return Column(
+                  children: tags.map((tag) => Padding(
+                    padding: const EdgeInsets.only(bottom: OwnKeepSpacing.sm),
+                    child: _buildTagRow(colors, OwnKeepMainIcons.tag, tag.name, '0'),
+                  )).toList(),
+                );
+              },
+            ),
           ],
         ),
       ),

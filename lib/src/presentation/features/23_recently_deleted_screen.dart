@@ -6,7 +6,7 @@ import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../providers/vault_provider.dart';
+import '../../providers/document_provider.dart';
 
 class RecentlyDeletedScreen extends ConsumerWidget {
   const RecentlyDeletedScreen({super.key});
@@ -16,11 +16,7 @@ class RecentlyDeletedScreen extends ConsumerWidget {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
 
-    final controller = ref.watch(ingestionControllerProvider);
-
-    if (controller == null) {
-      return Scaffold(backgroundColor: colors.backgroundTop);
-    }
+    final trashDocsAsync = ref.watch(trashDocumentsProvider);
 
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -135,11 +131,10 @@ class RecentlyDeletedScreen extends ConsumerWidget {
 
           // List
           Expanded(
-            child: ListenableBuilder(
-              listenable: controller,
-              builder: (context, child) {
-                final deletedItems = controller.dashboardDocuments.where((doc) => doc.isDeleted).toList();
-
+            child: trashDocsAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stack) => Center(child: Text('Failed to load trash', style: TextStyle(color: colors.textSecondary))),
+              data: (deletedItems) {
                 if (deletedItems.isEmpty) {
                   return Center(
                     child: Text(

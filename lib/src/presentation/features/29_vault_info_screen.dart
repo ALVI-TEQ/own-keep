@@ -5,14 +5,24 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
 
-class VaultInfoScreen extends StatelessWidget {
+class VaultInfoScreen extends ConsumerWidget {
   const VaultInfoScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
+    
+    final storageStats = ref.watch(storageStatsProvider);
+    
+    String formatBytes(int bytes) {
+      if (bytes < 1024) return '$bytes B';
+      if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+      if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+      return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
+    }
 
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -90,8 +100,8 @@ class VaultInfoScreen extends StatelessWidget {
                   _buildDetailRow(colors, l10n.s29_kdf_label, l10n.s29_kdf, true),
                   _buildDetailRow(colors, l10n.s29_created_label, l10n.s29_created, true),
                   _buildDetailRow(colors, l10n.s29_modified_label, l10n.s29_modified, true),
-                  _buildDetailRow(colors, l10n.s29_items_label, l10n.s29_items, true),
-                  _buildDetailRow(colors, l10n.s29_size_label, l10n.s29_size, false),
+                  _buildDetailRow(colors, l10n.s29_items_label, storageStats.maybeWhen(data: (s) => '${s['documentCount']}', orElse: () => '-'), true),
+                  _buildDetailRow(colors, l10n.s29_size_label, storageStats.maybeWhen(data: (s) => formatBytes(s['totalSize'] as int), orElse: () => '-'), false),
                 ],
               ),
             ),

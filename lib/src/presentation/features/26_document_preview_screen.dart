@@ -147,75 +147,83 @@ class _DocumentPreviewScreenState extends ConsumerState<DocumentPreviewScreen> {
             ),
 
             // Metadata Section
-            Padding(
-              padding: const EdgeInsets.all(OwnKeepSpacing.lg),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.s26_file,
-                    style: TextStyle(
-                      color: colors.textPrimary,
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Inter',
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    l10n.s26_type,
-                    style: TextStyle(
-                      color: colors.primaryBlue,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'Inter',
-                    ),
-                  ),
-                  const SizedBox(height: OwnKeepSpacing.xl),
+            if (widget.documentId != null)
+              ref.watch(documentDetailProvider(widget.documentId!)).when(
+                loading: () => const Padding(padding: EdgeInsets.all(OwnKeepSpacing.lg), child: Center(child: CircularProgressIndicator())),
+                error: (e, st) => const Padding(padding: EdgeInsets.all(OwnKeepSpacing.lg), child: Text('Failed to load details')),
+                data: (doc) {
+                  if (doc == null) return const SizedBox.shrink();
                   
-                  // Info rows
-                  _buildInfoRow(colors, l10n.s26_added),
-                  const SizedBox(height: 12),
-                  _buildInfoRow(colors, l10n.s26_location),
-                  const SizedBox(height: OwnKeepSpacing.xl),
-                  
-                  // Tags
-                  Text(
-                    l10n.s26_tags,
-                    style: TextStyle(
-                      color: colors.textSecondary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'Inter',
+                  return Padding(
+                    padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          doc.logicalFilename.isNotEmpty ? doc.logicalFilename : 'Untitled',
+                          style: TextStyle(
+                            color: colors.textPrimary,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          doc.documentType.toString().split('.').last,
+                          style: TextStyle(
+                            color: colors.primaryBlue,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        const SizedBox(height: OwnKeepSpacing.xl),
+                        
+                        // Info rows
+                        _buildInfoRow(colors, 'Added: ${doc.importedAt.toString().split('.')[0]}'),
+                        const SizedBox(height: 12),
+                        _buildInfoRow(colors, 'Size: ${(doc.sizeBytes / 1024).toStringAsFixed(1)} KB'),
+                        const SizedBox(height: OwnKeepSpacing.xl),
+                        
+                        // Tags
+                        if (doc.tags.isNotEmpty) ...[
+                          Text(
+                            l10n.s26_tags,
+                            style: TextStyle(
+                              color: colors.textSecondary,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: doc.tags.map((tag) => _buildTag(colors, tag.name, const Color(0xFF27C5E8))).toList(),
+                          ),
+                          const SizedBox(height: OwnKeepSpacing.xl),
+                          const Divider(color: Color(0xFF1B2940)),
+                          const SizedBox(height: OwnKeepSpacing.xl),
+                        ],
+                        
+                        // Notes
+                        if (doc.contentPreview != null && doc.contentPreview!.isNotEmpty)
+                          Text(
+                            doc.contentPreview!,
+                            style: TextStyle(
+                              color: colors.textSecondary,
+                              fontSize: 14,
+                              fontFamily: 'Inter',
+                              height: 1.5,
+                            ),
+                          ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      _buildTag(colors, l10n.s26_tag_identity, const Color(0xFF27C5E8)), // accentCyan
-                      _buildTag(colors, l10n.s26_tag_important, colors.warningOrange),
-                      _buildTag(colors, l10n.s26_tag_personal, colors.aiPurple),
-                    ],
-                  ),
-                  const SizedBox(height: OwnKeepSpacing.xl),
-                  const Divider(color: Color(0xFF1B2940)),
-                  const SizedBox(height: OwnKeepSpacing.xl),
-                  
-                  // Notes
-                  Text(
-                    l10n.s26_notes,
-                    style: TextStyle(
-                      color: colors.textSecondary,
-                      fontSize: 14,
-                      fontFamily: 'Inter',
-                      height: 1.5,
-                    ),
-                  ),
-                ],
+                  );
+                },
               ),
-            ),
           ],
         ),
       ),

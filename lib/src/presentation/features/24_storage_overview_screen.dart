@@ -6,13 +6,24 @@ import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 
-class StorageOverviewScreen extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
+
+class StorageOverviewScreen extends ConsumerWidget {
   const StorageOverviewScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
+    
+    final storageStats = ref.watch(storageStatsProvider);
+    
+    String formatBytes(int bytes) {
+      if (bytes < 1024) return '$bytes B';
+      if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+      if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+      return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
+    }
 
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -89,23 +100,29 @@ class StorageOverviewScreen extends StatelessWidget {
                             Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                  l10n.s24_used_percent,
-                                  style: TextStyle(
-                                    color: colors.textPrimary,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Inter',
+                                  Text(
+                                    storageStats.maybeWhen(
+                                      data: (stats) => 'Active',
+                                      orElse: () => '-',
+                                    ),
+                                    style: TextStyle(
+                                      color: colors.textPrimary,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w700,
+                                      fontFamily: 'Inter',
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  l10n.s24_used,
-                                  style: TextStyle(
-                                    color: colors.textSecondary,
-                                    fontSize: 12,
-                                    fontFamily: 'Inter',
+                                  Text(
+                                    storageStats.maybeWhen(
+                                      data: (stats) => formatBytes(stats['totalSize'] as int),
+                                      orElse: () => '-',
+                                    ),
+                                    style: TextStyle(
+                                      color: colors.textSecondary,
+                                      fontSize: 12,
+                                      fontFamily: 'Inter',
+                                    ),
                                   ),
-                                ),
                               ],
                             ),
                           ],
