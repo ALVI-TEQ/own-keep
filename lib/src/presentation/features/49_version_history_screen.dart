@@ -1,155 +1,350 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class VersionHistoryScreen extends StatelessWidget {
   const VersionHistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
         title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text('Version History', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            Text('Passport.pdf', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
+          children: [
+            Text(
+              l10n.s49_title,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+            Text(
+              l10n.s49_subtitle,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontFamily: 'Inter',
+              ),
+            ),
           ],
         ),
+        centerTitle: true,
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 1),
-      body: Padding(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Current version banner
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(OwnKeepSpacing.md),
-              decoration: BoxDecoration(
-                color: OwnKeepColors.darkSurfaceElevated,
-                borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-              ),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-                  Text('Current version', style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 12, fontFamily: 'Inter')),
-                  SizedBox(height: 4),
-                  Text('Version 4', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 16, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-                ]),
-                Text('Today, 10:31 AM', style: TextStyle(color: OwnKeepColors.primary, fontSize: 13, fontFamily: 'Inter')),
-              ]),
-            ),
-
-            SizedBox(height: OwnKeepSpacing.xl),
-            Text('Previous Versions', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            SizedBox(height: OwnKeepSpacing.md),
-
-            // Version list
-            _VersionCard(version: 'Version 3', subtitle: 'Metadata updated', time: 'Today, 10:30 AM', color: OwnKeepColors.ai),
-            SizedBox(height: OwnKeepSpacing.sm),
-            _VersionCard(version: 'Version 2', subtitle: 'Tags changed', time: '9 May 2025, 4:20 PM', color: OwnKeepColors.primary),
-            SizedBox(height: OwnKeepSpacing.sm),
-            _VersionCard(version: 'Version 1', subtitle: 'Original document added', time: '8 May 2025, 2:15 PM', color: OwnKeepColors.success),
-
-            const Spacer(),
-
-            // Version storage
-            Container(
-              padding: EdgeInsets.all(OwnKeepSpacing.md),
-              decoration: BoxDecoration(
-                color: OwnKeepColors.darkSurfaceElevated,
-                borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-              ),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-                Text('Version storage', style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 12, fontFamily: 'Inter')),
-                SizedBox(height: 4),
-                Text('3 previous versions  •  4.8 MB', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-              ]),
-            ),
-            SizedBox(height: OwnKeepSpacing.md),
-            Text('How it works', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            SizedBox(height: 6),
+            // Current Version
             Text(
-              'OwnKeep stores local encrypted snapshots when you edit metadata or replace a file. Versions never leave your device and can be removed at any time.',
-              style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, fontFamily: 'Inter', height: 1.5),
+              l10n.s49_current,
+              style: TextStyle(
+                color: colors.primaryBlue,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+                letterSpacing: 1.1,
+              ),
             ),
-            SizedBox(height: OwnKeepSpacing.lg),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            Container(
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.primaryBlue.withOpacity(0.5), width: 1.5),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: colors.primaryBlue.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '4',
+                        style: TextStyle(
+                          color: colors.primaryBlue,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: OwnKeepSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.s49_version_4,
+                          style: TextStyle(
+                            color: colors.textPrimary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          l10n.s49_version_4_time,
+                          style: TextStyle(
+                            color: colors.textSecondary,
+                            fontSize: 13,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xl),
+
+            // Previous Versions
+            Text(
+              l10n.s49_previous,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+                letterSpacing: 1.1,
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            Container(
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Column(
+                children: [
+                  _buildVersionItem(colors, '3', l10n.s49_version_3, l10n.s49_version_3_body, l10n.s49_version_3_time, l10n.common_restore, OwnKeepMainIcons.version_restore_purple),
+                  _buildDivider(colors),
+                  _buildVersionItem(colors, '2', l10n.s49_version_2, l10n.s49_version_2_body, l10n.s49_version_2_time, l10n.common_restore, OwnKeepMainIcons.version_restore_blue),
+                  _buildDivider(colors),
+                  _buildVersionItem(colors, '1', l10n.s49_version_1, l10n.s49_version_1_body, l10n.s49_version_1_time, l10n.common_restore, OwnKeepMainIcons.version_restore_green),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Storage & Info
+            Container(
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        l10n.s49_storage,
+                        style: TextStyle(
+                          color: colors.textPrimary,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                      Text(
+                        l10n.s49_storage_value,
+                        style: TextStyle(
+                          color: colors.textSecondary,
+                          fontSize: 14,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    l10n.s49_how,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    l10n.s49_how_body,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xl),
+
+            // Delete Button
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
                 onPressed: () {},
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: OwnKeepColors.danger,
-                  side: const BorderSide(color: OwnKeepColors.danger),
-                  minimumSize: const Size.fromHeight(52),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
+                  foregroundColor: colors.dangerRed,
+                  side: BorderSide(color: colors.dangerRed),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: Text('Delete Old Versions', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+                child: Text(
+                  l10n.s49_delete_old,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                  ),
+                ),
               ),
             ),
+            const SizedBox(height: OwnKeepSpacing.xxl),
           ],
         ),
       ),
     );
   }
-}
 
-class _VersionCard extends StatelessWidget {
-  const _VersionCard({required this.version, required this.subtitle, required this.time, required this.color});
-  final String version;
-  final String subtitle;
-  final String time;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(OwnKeepSpacing.md),
-      decoration: BoxDecoration(
-        color: OwnKeepColors.darkSurfaceElevated,
-        borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-        border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-      ),
+  Widget _buildVersionItem(
+    OwnKeepMainColorsTheme colors, 
+    String number,
+    String title,
+    String body,
+    String time,
+    String restoreText,
+    String iconPath,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 36, height: 36,
-            decoration: BoxDecoration(color: color.withValues(alpha: 0.15), shape: BoxShape.circle),
-            child: Icon(Icons.refresh_rounded, color: color, size: 18),
-          ),
-          SizedBox(width: OwnKeepSpacing.md),
-          Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(version, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-              Text(subtitle, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              Text(time, style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 11, fontFamily: 'Inter')),
-            ]),
-          ),
-          OutlinedButton(
-            onPressed: () {},
-            style: OutlinedButton.styleFrom(
-              foregroundColor: OwnKeepColors.primary,
-              side: BorderSide(color: OwnKeepColors.primary.withValues(alpha: 0.5)),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.sm)),
-              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: colors.surfaceSelected,
+              shape: BoxShape.circle,
             ),
-            child: Text('Restore', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
+            child: Center(
+              child: Text(
+                number,
+                style: TextStyle(
+                  color: colors.textSecondary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: OwnKeepSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: colors.textPrimary,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                    Text(
+                      time,
+                      style: TextStyle(
+                        color: colors.textMuted,
+                        fontSize: 12,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  body,
+                  style: TextStyle(
+                    color: colors.textSecondary,
+                    fontSize: 13,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                const SizedBox(height: 12),
+                InkWell(
+                  onTap: () {},
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgPicture.asset(iconPath, width: 16),
+                      const SizedBox(width: 6),
+                      Text(
+                        restoreText,
+                        style: TextStyle(
+                          color: colors.textPrimary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDivider(OwnKeepMainColorsTheme colors) {
+    return Divider(
+      color: colors.borderSoft,
+      height: 1,
+      indent: 64, 
     );
   }
 }

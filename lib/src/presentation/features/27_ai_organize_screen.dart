@@ -1,132 +1,309 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class AiOrganizeScreen extends StatelessWidget {
   const AiOrganizeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return OwnKeepScaffold(
-      title: 'AI Organize',
-      actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.history_rounded, color: OwnKeepColors.darkTextPrimary)),
-      ],
-      body: ListView(
-        children: [
-          // AI Scan Complete banner
-          Container(
-            margin: EdgeInsets.all(OwnKeepSpacing.base),
-            padding: EdgeInsets.all(OwnKeepSpacing.xl),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  OwnKeepColors.ai.withValues(alpha: 0.25),
-                  OwnKeepColors.primary.withValues(alpha: 0.15),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-              border: Border.all(color: OwnKeepColors.ai.withValues(alpha: 0.3)),
-            ),
-            child: Column(
-              children: [
-                Container(
-                  width: 56, height: 56,
-                  decoration: BoxDecoration(
-                    color: OwnKeepColors.ai.withValues(alpha: 0.2),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.check_circle_rounded, color: OwnKeepColors.ai, size: 32),
-                ),
-                SizedBox(height: OwnKeepSpacing.md),
-                Text('AI Scan Complete', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-                SizedBox(height: OwnKeepSpacing.xs),
-                Text('I found 28 items that can be\nbetter organized.', textAlign: TextAlign.center, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 14, fontFamily: 'Inter')),
-                SizedBox(height: OwnKeepSpacing.lg),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(vertical: 14),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(colors: [OwnKeepColors.ai, OwnKeepColors.primary]),
-                    borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                  ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Review Suggestions', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                      SizedBox(width: 8),
-                      Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 18),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      backgroundColor: colors.backgroundTop,
+      appBar: AppBar(
+        backgroundColor: colors.backgroundTop,
+        elevation: 0,
+        leading: IconButton(
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
+        ),
+        title: Text(
+          l10n.s27_title,
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
           ),
-          // Suggestions
-          const OwnKeepSectionHeader(title: 'Suggestions (12)'),
-          OwnKeepListTile(
-            title: 'Uncategorized Documents',
-            subtitle: '8 items\nMove to appropriate collections',
-            icon: Icons.folder_outlined,
-            iconColor: OwnKeepColors.orange,
-            onTap: () {},
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: SvgPicture.asset(OwnKeepMainIcons.history, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+            onPressed: () {},
           ),
-          OwnKeepListTile(
-            title: 'Duplicate Items',
-            subtitle: '5 items\nReview and remove duplicates',
-            icon: Icons.file_copy_outlined,
-            iconColor: OwnKeepColors.danger,
-            onTap: () {},
-          ),
-          OwnKeepListTile(
-            title: 'Missing Tags',
-            subtitle: '7 items\nAdd relevant tags automatically',
-            icon: Icons.label_outline_rounded,
-            iconColor: OwnKeepColors.primary,
-            onTap: () {},
-          ),
-          OwnKeepListTile(
-            title: 'Similar Documents',
-            subtitle: '4 groups\nOrganize similar documents together',
-            icon: Icons.compare_outlined,
-            iconColor: OwnKeepColors.ai,
-            onTap: () {},
-          ),
-          // Auto Organization toggle
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base, vertical: OwnKeepSpacing.xs),
-            padding: EdgeInsets.all(OwnKeepSpacing.base),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(
-              children: [
-                const Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Auto Organization', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-                      SizedBox(height: 2),
-                      Text('Let AI organize new items automatically', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, fontFamily: 'Inter')),
-                    ],
-                  ),
-                ),
-                Switch(
-                  value: true,
-                  onChanged: (_) {},
-                  activeThumbColor: OwnKeepColors.primary,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: OwnKeepSpacing.xl),
         ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // AI Scan Complete Card
+            Container(
+              padding: const EdgeInsets.all(OwnKeepSpacing.xl),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [colors.aiPurple, colors.primaryBlue],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: SvgPicture.asset(
+                      OwnKeepMainIcons.check_circle,
+                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      width: 32,
+                      height: 32,
+                    ),
+                  ),
+                  const SizedBox(height: OwnKeepSpacing.md),
+                  Text(
+                    l10n.s27_scan_complete,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    l10n.s27_scan_complete_body,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.8),
+                      fontSize: 14,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: OwnKeepSpacing.xl),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: colors.aiPurple,
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                    ),
+                    child: Text(
+                      l10n.s27_review,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Suggestions Title
+            Text(
+              l10n.s27_suggestions,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+                letterSpacing: 1.1,
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.md),
+
+            // Suggestions List
+            _buildSuggestionCard(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.folder,
+              iconColor: const Color(0xFF27C5E8), // accentCyan
+              title: l10n.s27_uncategorized,
+              subtitle: l10n.s27_uncategorized_body,
+              countLabel: l10n.s27_uncategorized_count,
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            _buildSuggestionCard(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.duplicate,
+              iconColor: colors.warningOrange,
+              title: l10n.s27_duplicates,
+              subtitle: l10n.s27_duplicates_body,
+              countLabel: l10n.s27_duplicates_count,
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            _buildSuggestionCard(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.tag,
+              iconColor: const Color(0xFFE54B86), // tagPink
+              title: l10n.s27_missing_tags,
+              subtitle: l10n.s27_missing_tags_body,
+              countLabel: l10n.s27_missing_tags_count,
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            _buildSuggestionCard(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.similar_documents,
+              iconColor: colors.successGreen,
+              title: l10n.s27_similar,
+              subtitle: l10n.s27_similar_body,
+              countLabel: l10n.s27_similar_count,
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Auto Organization Toggle
+            Container(
+              padding: const EdgeInsets.all(OwnKeepSpacing.md),
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.s27_auto,
+                          style: TextStyle(
+                            color: colors.textPrimary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          l10n.s27_auto_body,
+                          style: TextStyle(
+                            color: colors.textSecondary,
+                            fontSize: 13,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SvgPicture.asset(
+                    OwnKeepMainIcons.toggle_on,
+                    colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn),
+                    width: 40,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xl),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSuggestionCard({
+    required BuildContext context,
+    required OwnKeepMainColorsTheme colors,
+    required String icon,
+    required Color iconColor,
+    required String title,
+    required String subtitle,
+    required String countLabel,
+  }) {
+    return InkWell(
+      onTap: () {},
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: colors.borderSoft),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colors.surfaceSelected,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+            ),
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: colors.surfaceSelected,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          countLabel,
+                          style: TextStyle(
+                            color: colors.primaryBlue,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          subtitle,
+                          style: TextStyle(
+                            color: colors.textSecondary,
+                            fontSize: 12,
+                            fontFamily: 'Inter',
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            SvgPicture.asset(OwnKeepMainIcons.arrow_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+          ],
+        ),
       ),
     );
   }

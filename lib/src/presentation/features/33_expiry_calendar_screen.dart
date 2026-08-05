@@ -1,191 +1,325 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class ExpiryCalendarScreen extends StatelessWidget {
   const ExpiryCalendarScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return OwnKeepScaffold(
-      title: 'Expiry Calendar',
-      actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.calendar_today_outlined, color: OwnKeepColors.darkTextPrimary, size: 20)),
-      ],
-      body: ListView(
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      backgroundColor: colors.backgroundTop,
+      appBar: AppBar(
+        backgroundColor: colors.backgroundTop,
+        elevation: 0,
+        leading: IconButton(
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
+        ),
+        title: Text(
+          l10n.s33_title,
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Calendar Header
+            Padding(
+              padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l10n.s33_month,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: SvgPicture.asset(OwnKeepMainIcons.chevron_left, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+                        onPressed: () {},
+                      ),
+                      IconButton(
+                        icon: SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            
+            // Weekday Headers
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildWeekdayLabel(colors, l10n.weekday_sun),
+                  _buildWeekdayLabel(colors, l10n.weekday_mon),
+                  _buildWeekdayLabel(colors, l10n.weekday_tue),
+                  _buildWeekdayLabel(colors, l10n.weekday_wed),
+                  _buildWeekdayLabel(colors, l10n.weekday_thu),
+                  _buildWeekdayLabel(colors, l10n.weekday_fri),
+                  _buildWeekdayLabel(colors, l10n.weekday_sat),
+                ],
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.md),
+
+            // Calendar Grid (Mock representation for 12-18 May 2025 week)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildDayCell(colors, '11', false, false),
+                  _buildDayCell(colors, '12', true, false), // Has event
+                  _buildDayCell(colors, '13', false, false),
+                  _buildDayCell(colors, '14', false, false),
+                  _buildDayCell(colors, '15', true, true),  // Selected and has event
+                  _buildDayCell(colors, '16', false, false),
+                  _buildDayCell(colors, '17', false, false),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Upcoming Expiries Header
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l10n.s33_this_month,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  Text(
+                    l10n.common_view_all,
+                    style: TextStyle(
+                      color: colors.primaryBlue,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.md),
+
+            // Expiry List
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              child: Column(
+                children: [
+                  _buildExpiryCard(
+                    context: context,
+                    colors: colors,
+                    icon: OwnKeepMainIcons.identity,
+                    iconColor: colors.primaryBlue,
+                    title: l10n.s33_driving_licence,
+                    subtitle: l10n.s33_driving_expiry,
+                    date: l10n.s33_driving_days,
+                    isCritical: true,
+                  ),
+                  const SizedBox(height: OwnKeepSpacing.sm),
+                  _buildExpiryCard(
+                    context: context,
+                    colors: colors,
+                    icon: OwnKeepMainIcons.file_pdf,
+                    iconColor: const Color(0xFF27C5E8),
+                    title: l10n.s33_health_policy,
+                    subtitle: l10n.s33_health_expiry,
+                    date: l10n.s33_health_days,
+                    isCritical: false,
+                  ),
+                  const SizedBox(height: OwnKeepSpacing.sm),
+                  _buildExpiryCard(
+                    context: context,
+                    colors: colors,
+                    icon: OwnKeepMainIcons.identity,
+                    iconColor: colors.aiPurple,
+                    title: l10n.s33_passport,
+                    subtitle: l10n.s33_passport_expiry,
+                    date: l10n.s33_passport_days,
+                    isCritical: false,
+                  ),
+                  const SizedBox(height: OwnKeepSpacing.sm),
+                  _buildExpiryCard(
+                    context: context,
+                    colors: colors,
+                    icon: OwnKeepMainIcons.vehicle,
+                    iconColor: colors.warningOrange,
+                    title: l10n.s33_car,
+                    subtitle: l10n.s33_car_expiry,
+                    date: l10n.s33_car_days,
+                    isCritical: false,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 100), // padding for floating action button
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: colors.primaryBlue,
+        child: SvgPicture.asset(OwnKeepMainIcons.add, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+      ),
+    );
+  }
+
+  Widget _buildWeekdayLabel(OwnKeepMainColorsTheme colors, String label) {
+    return SizedBox(
+      width: 40,
+      child: Text(
+        label,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: colors.textSecondary,
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+          fontFamily: 'Inter',
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDayCell(OwnKeepMainColorsTheme colors, String day, bool hasEvent, bool isSelected) {
+    return Container(
+      width: 40,
+      height: 48,
+      decoration: BoxDecoration(
+        color: isSelected ? colors.primaryBlue : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Calendar header
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base, vertical: OwnKeepSpacing.sm),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(onPressed: () {}, icon: Icon(Icons.chevron_left, color: OwnKeepColors.darkTextPrimary)),
-                Text('May 2025', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                IconButton(onPressed: () {}, icon: Icon(Icons.chevron_right, color: OwnKeepColors.darkTextPrimary)),
-              ],
+          Text(
+            day,
+            style: TextStyle(
+              color: isSelected ? Colors.white : colors.textPrimary,
+              fontSize: 15,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+              fontFamily: 'Inter',
             ),
           ),
-          // Day headers
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-                  .map((d) => SizedBox(width: 36, child: Center(child: Text(d, style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 12, fontFamily: 'Inter')))))
-                  .toList(),
+          if (hasEvent) ...[
+            const SizedBox(height: 4),
+            Container(
+              width: 6,
+              height: 6,
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.white : colors.dangerRed,
+                shape: BoxShape.circle,
+              ),
             ),
-          ),
-          SizedBox(height: OwnKeepSpacing.sm),
-          // Calendar grid
-          _CalendarGrid(),
-          SizedBox(height: OwnKeepSpacing.base),
-          // Filter chips
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-            child: Row(
-              children: const [
-                _Chip(label: 'All', isSelected: true),
-                _Chip(label: 'Documents'),
-                _Chip(label: 'Insurance'),
-                _Chip(label: 'Licenses'),
-                _Chip(label: 'Others'),
-              ],
-            ),
-          ),
-          // This Month
-          OwnKeepSectionHeader(title: 'This Month', actionText: 'View All', onAction: () {}),
-          _ExpiryItem(name: 'Driving License', date: 'Expires on 28 May 2025', daysLeft: 13, color: OwnKeepColors.warning),
-          _ExpiryItem(name: 'Health Insurance Policy', date: 'Expires on 31 May 2025', daysLeft: 16, color: OwnKeepColors.success),
-          _ExpiryItem(name: 'Passport', date: 'Expires on 10 Jun 2025', daysLeft: 26, color: OwnKeepColors.primary),
-          _ExpiryItem(name: 'Car Insurance', date: 'Expires on 20 Jun 2025', daysLeft: 36, color: OwnKeepColors.ai),
-          SizedBox(height: OwnKeepSpacing.xl),
+          ],
         ],
       ),
     );
   }
-}
 
-class _CalendarGrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final days = [
-      [27, 28, 29, 30, 1, 2, 3],
-      [4, 5, 6, 7, 8, 9, 10],
-      [11, 12, 13, 14, 15, 16, 17],
-      [18, 19, 20, 21, 22, 23, 24],
-      [25, 26, 27, 28, 29, 30, 31],
-    ];
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-      child: Column(
-        children: days.asMap().entries.map((weekEntry) {
-          return Padding(
-            padding: EdgeInsets.only(bottom: 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: weekEntry.value.map((day) {
-                final isCurrentMonth = weekEntry.key == 0 ? day <= 3 : (weekEntry.key == 4 ? day >= 25 : true);
-                final isToday = day == 15 && weekEntry.key == 2;
-                final hasExpiry = [8, 15, 28, 31].contains(day) && isCurrentMonth;
-                return SizedBox(
-                  width: 36, height: 40,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 30, height: 30,
-                        decoration: BoxDecoration(
-                          color: isToday ? OwnKeepColors.primary : Colors.transparent,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Text(
-                            '$day',
-                            style: TextStyle(
-                              color: isToday ? Colors.white : (weekEntry.key == 0 && day > 3 ? OwnKeepColors.darkTextMuted : OwnKeepColors.darkTextPrimary),
-                              fontSize: 14,
-                              fontWeight: isToday ? FontWeight.w600 : FontWeight.w400,
-                              fontFamily: 'Inter',
-                            ),
-                          ),
-                        ),
-                      ),
-                      if (hasExpiry)
-                        Container(width: 4, height: 4, decoration: BoxDecoration(color: OwnKeepColors.danger, shape: BoxShape.circle)),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
-
-class _Chip extends StatelessWidget {
-  const _Chip({required this.label, this.isSelected = false});
-  final String label;
-  final bool isSelected;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildExpiryCard({
+    required BuildContext context,
+    required OwnKeepMainColorsTheme colors,
+    required String icon,
+    required Color iconColor,
+    required String title,
+    required String subtitle,
+    required String date,
+    required bool isCritical,
+  }) {
     return Container(
-      margin: EdgeInsets.only(right: OwnKeepSpacing.sm),
-      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isSelected ? OwnKeepColors.primary : OwnKeepColors.darkSurfaceElevated,
-        borderRadius: BorderRadius.circular(OwnKeepRadius.pill),
-        border: Border.all(color: isSelected ? OwnKeepColors.primary : OwnKeepColors.darkBorder),
-      ),
-      child: Text(label, style: TextStyle(color: isSelected ? Colors.white : OwnKeepColors.darkTextSecondary, fontSize: 13, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-    );
-  }
-}
-
-class _ExpiryItem extends StatelessWidget {
-  const _ExpiryItem({required this.name, required this.date, required this.daysLeft, required this.color});
-  final String name;
-  final String date;
-  final int daysLeft;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base, vertical: OwnKeepSpacing.xs),
-      padding: EdgeInsets.all(OwnKeepSpacing.md),
-      decoration: BoxDecoration(
-        color: OwnKeepColors.darkSurfaceElevated,
-        borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-        border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: isCritical ? colors.dangerRed.withOpacity(0.5) : colors.borderSoft),
       ),
       child: Row(
         children: [
-          OwnKeepIconBadge(icon: Icons.description_outlined, color: color),
-          SizedBox(width: OwnKeepSpacing.md),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: colors.surfaceSelected,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+          ),
+          const SizedBox(width: OwnKeepSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-                SizedBox(height: 2),
-                Text(date, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: colors.textSecondary,
+                    fontSize: 13,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    SvgPicture.asset(OwnKeepMainIcons.calendar, colorFilter: ColorFilter.mode(isCritical ? colors.dangerRed : colors.textMuted, BlendMode.srcIn), width: 14),
+                    const SizedBox(width: 4),
+                    Text(
+                      date,
+                      style: TextStyle(
+                        color: isCritical ? colors.dangerRed : colors.textMuted,
+                        fontSize: 12,
+                        fontWeight: isCritical ? FontWeight.w600 : FontWeight.w400,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text('$daysLeft', style: TextStyle(color: daysLeft < 20 ? OwnKeepColors.warning : OwnKeepColors.success, fontSize: 20, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-              Text('Days Left', style: TextStyle(color: daysLeft < 20 ? OwnKeepColors.warning : OwnKeepColors.success, fontSize: 11, fontFamily: 'Inter')),
-            ],
-          ),
+          SvgPicture.asset(OwnKeepMainIcons.more_vertical, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn)),
         ],
       ),
     );

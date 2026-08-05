@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none" stroke-linecap="round" stroke-linejoin="round"><defs>
+<linearGradient id="brand" x1="40" y1="30" x2="210" y2="220" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#8B52FF"/>
+  <stop offset="0.5" stop-color="#5C35E8"/>
+  <stop offset="1" stop-color="#2F1B9A"/>
+</linearGradient>
+<linearGradient id="button" x1="0" y1="0" x2="256" y2="0" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#3C38E7"/>
+  <stop offset="0.5" stop-color="#4630E0"/>
+  <stop offset="1" stop-color="#4E2BD5"/>
+</linearGradient>
+<linearGradient id="success" x1="60" y1="50" x2="196" y2="205" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#51D99A"/>
+  <stop offset="1" stop-color="#1EA86D"/>
+</linearGradient>
+<radialGradient id="vaultFace" cx="0" cy="0" r="1" gradientTransform="translate(112 92) rotate(48) scale(175)">
+  <stop stop-color="#5945D2"/>
+  <stop offset="0.45" stop-color="#1B306B"/>
+  <stop offset="1" stop-color="#07142D"/>
+</radialGradient>
+</defs>
+<rect x="24" y="105" width="208" height="46" rx="23" fill="#16233C"/>
+<rect x="24" y="105" width="78" height="46" rx="23" fill="url(#button)"/>
+</svg>

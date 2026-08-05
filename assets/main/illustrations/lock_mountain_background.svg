@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none"><defs>
+<linearGradient id="purple" x1="60" y1="30" x2="205" y2="225" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#9364FF"/>
+  <stop offset=".55" stop-color="#5F35E9"/>
+  <stop offset="1" stop-color="#241682"/>
+</linearGradient>
+<linearGradient id="vault" x1="70" y1="50" x2="190" y2="220" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#6548FA"/>
+  <stop offset=".55" stop-color="#2924A6"/>
+  <stop offset="1" stop-color="#101948"/>
+</linearGradient>
+<linearGradient id="ring" x1="55" y1="36" x2="194" y2="218" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#3E62FF"/>
+  <stop offset=".55" stop-color="#7E48FF"/>
+  <stop offset="1" stop-color="#9D4DFF"/>
+</linearGradient>
+</defs>
+<rect width="256" height="256" fill="#050B1A"/>
+<circle cx="27" cy="34" r="1.3" fill="#9EB6FF"/><circle cx="58" cy="61" r="1" fill="#7E8EC9"/>
+<circle cx="193" cy="37" r="1.4" fill="#9EB6FF"/><circle cx="222" cy="79" r="1" fill="#7E8EC9"/>
+<circle cx="133" cy="47" r="1.1" fill="#9EB6FF"/><circle cx="101" cy="78" r="1" fill="#7E8EC9"/>
+<path d="M0 205 46 158l27 31 45-66 35 47 28-38 75 73v51H0v-51Z" fill="#111D49"/>
+<path d="M0 221 49 182l34 34 50-59 39 48 31-25 53 42v34H0v-35Z" fill="#0A1434"/>
+<path d="M0 233c47-8 80 4 126-1 47-5 80-16 130-5v29H0v-23Z" fill="#020611"/>
+<path d="M0 238c45-5 82 5 126 1 47-5 82-12 130-4" stroke="#203C78" stroke-width="2" opacity=".65"/>
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none"><defs>
+<linearGradient id="purple" x1="60" y1="30" x2="205" y2="225" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#9364FF"/>
+  <stop offset=".55" stop-color="#5F35E9"/>
+  <stop offset="1" stop-color="#241682"/>
+</linearGradient>
+<linearGradient id="vault" x1="70" y1="50" x2="190" y2="220" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#6548FA"/>
+  <stop offset=".55" stop-color="#2924A6"/>
+  <stop offset="1" stop-color="#101948"/>
+</linearGradient>
+<linearGradient id="ring" x1="55" y1="36" x2="194" y2="218" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#3E62FF"/>
+  <stop offset=".55" stop-color="#7E48FF"/>
+  <stop offset="1" stop-color="#9D4DFF"/>
+</linearGradient>
+</defs>
+<rect x="15" y="25" width="226" height="42" rx="12" fill="#101E34"/>
+<path d="M142 57c18-26 31-8 46-22s24-11 38-2" stroke="#27CD8B" stroke-width="5" fill="none"/>
+<rect x="15" y="78" width="226" height="42" rx="12" fill="#101E34"/>
+<path d="M142 111c16-23 31-8 45-20s25-11 39-3" stroke="#7E48FF" stroke-width="5" fill="none"/>
+<rect x="15" y="131" width="226" height="42" rx="12" fill="#101E34"/>
+<path d="M142 164c18-25 31-9 46-22s24-10 38-2" stroke="#27CD8B" stroke-width="5" fill="none"/>
+<rect x="15" y="184" width="226" height="42" rx="12" fill="#101E34"/>
+<path d="M142 217c17-24 31-8 46-21s24-11 38-2" stroke="#FFCA3A" stroke-width="5" fill="none"/>
+</svg>

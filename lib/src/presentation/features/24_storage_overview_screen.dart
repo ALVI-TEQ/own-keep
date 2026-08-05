@@ -1,207 +1,438 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class StorageOverviewScreen extends StatelessWidget {
   const StorageOverviewScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return OwnKeepScaffold(
-      title: 'Storage Overview',
-      body: ListView(
-        children: [
-          // Vault Storage card with donut chart
-          Container(
-            margin: EdgeInsets.all(OwnKeepSpacing.base),
-            padding: EdgeInsets.all(OwnKeepSpacing.lg),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text('Vault Storage', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                    Text('128 GB Total', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 14, fontFamily: 'Inter')),
-                  ],
-                ),
-                SizedBox(height: OwnKeepSpacing.lg),
-                Row(
-                  children: [
-                    // Donut chart
-                    SizedBox(
-                      width: 120,
-                      height: 120,
-                      child: CustomPaint(
-                        painter: _DonutChartPainter(),
-                        child: const Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text('73%', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 24, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-                              Text('Used', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-                            ],
-                          ),
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      backgroundColor: colors.backgroundTop,
+      appBar: AppBar(
+        backgroundColor: colors.backgroundTop,
+        elevation: 0,
+        leading: IconButton(
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
+        ),
+        title: Text(
+          l10n.s24_title,
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Vault Storage Card
+            Container(
+              padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        l10n.s24_vault_storage,
+                        style: TextStyle(
+                          color: colors.textPrimary,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter',
                         ),
                       ),
-                    ),
-                    SizedBox(width: OwnKeepSpacing.xl),
-                    // Legend
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _LegendItem(color: OwnKeepColors.primary, label: 'Documents', value: '48.5 GB'),
-                        SizedBox(height: 8),
-                        _LegendItem(color: OwnKeepColors.success, label: 'Images', value: '28.3 GB'),
-                        SizedBox(height: 8),
-                        _LegendItem(color: OwnKeepColors.warning, label: 'Videos', value: '22.1 GB'),
-                        SizedBox(height: 8),
-                        _LegendItem(color: OwnKeepColors.darkTextMuted, label: 'Others', value: '6.2 GB'),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(height: OwnKeepSpacing.lg),
-                Text('93.8 GB used of 128 GB', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, fontFamily: 'Inter')),
-                SizedBox(height: OwnKeepSpacing.sm),
-                const OwnKeepProgressBar(value: 0.73),
-              ],
-            ),
-          ),
-          // Large Items section
-          OwnKeepSectionHeader(title: 'Large Items', actionText: 'See All', onAction: () {}),
-          _LargeFileItem(name: 'Vacation Video.mp4', size: '2.4 GB', icon: Icons.play_circle_outline, color: OwnKeepColors.ai),
-          _LargeFileItem(name: 'Family Photo RAW.dng', size: '1.8 GB', icon: Icons.image_outlined, color: OwnKeepColors.success),
-          _LargeFileItem(name: 'Project Files.zip', size: '1.2 GB', icon: Icons.folder_zip_outlined, color: OwnKeepColors.warning),
-          // Cleanup Suggestions
-          const OwnKeepSectionHeader(title: 'Cleanup Suggestions'),
-          OwnKeepListTile(
-            title: 'Duplicate Photos',
-            subtitle: '367 files  •  2.1 GB',
-            icon: Icons.photo_library_outlined,
-            iconColor: OwnKeepColors.ai,
-            onTap: () {},
-          ),
-          OwnKeepListTile(
-            title: 'Large Videos',
-            subtitle: '12 files  •  9.8 GB',
-            icon: Icons.video_library_outlined,
-            iconColor: OwnKeepColors.primary,
-            onTap: () {},
-          ),
-          OwnKeepListTile(
-            title: 'Unopened Documents',
-            subtitle: '23 files  •  1.3 GB',
-            icon: Icons.description_outlined,
-            iconColor: OwnKeepColors.warning,
-            onTap: () {},
-          ),
-          // Scan Again
-          Padding(
-            padding: EdgeInsets.all(OwnKeepSpacing.base),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Last scanned: Today, 9:20 AM', style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 12, fontFamily: 'Inter')),
-                OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: OwnKeepColors.primary),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.pill)),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      Text(
+                        l10n.s24_total,
+                        style: TextStyle(
+                          color: colors.textSecondary,
+                          fontSize: 14,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ],
                   ),
-                  child: Text('Scan Again', style: TextStyle(color: OwnKeepColors.primary, fontSize: 13, fontFamily: 'Inter')),
-                ),
-              ],
+                  const SizedBox(height: OwnKeepSpacing.xl),
+                  Row(
+                    children: [
+                      // Donut Chart
+                      SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/main/illustrations/storage_donut_chart.svg',
+                              width: 120,
+                              height: 120,
+                            ),
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  l10n.s24_used_percent,
+                                  style: TextStyle(
+                                    color: colors.textPrimary,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                                Text(
+                                  l10n.s24_used,
+                                  style: TextStyle(
+                                    color: colors.textSecondary,
+                                    fontSize: 12,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: OwnKeepSpacing.xl),
+                      // Legend
+                      Expanded(
+                        child: Column(
+                          children: [
+                            _buildLegendItem(colors, colors.primaryBlue, l10n.s24_documents, l10n.s24_documents_size),
+                            const SizedBox(height: 12),
+                            _buildLegendItem(colors, colors.successGreen, l10n.s24_images, l10n.s24_images_size),
+                            const SizedBox(height: 12),
+                            _buildLegendItem(colors, colors.warningOrange, l10n.s24_videos, l10n.s24_videos_size),
+                            const SizedBox(height: 12),
+                            _buildLegendItem(colors, colors.aiPurple, l10n.s24_others, l10n.s24_others_size),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: OwnKeepSpacing.xl),
+                  Text(
+                    l10n.s24_usage,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 14,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Large Items
+            _buildSectionHeader(l10n.s24_large_items, l10n.common_see_all, colors),
+            const SizedBox(height: OwnKeepSpacing.md),
+            _buildListItem(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.video,
+              iconColor: colors.warningOrange,
+              title: l10n.s24_video,
+              subtitle: l10n.s24_video_size,
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            _buildListItem(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.raw_image,
+              iconColor: colors.successGreen,
+              title: l10n.s24_raw_photo,
+              subtitle: l10n.s24_raw_photo_size,
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            _buildListItem(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.archive_zip,
+              iconColor: colors.aiPurple,
+              title: l10n.s24_project_zip,
+              subtitle: l10n.s24_project_zip_size,
+            ),
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Cleanup Suggestions
+            _buildSectionHeader(l10n.s24_cleanup, null, colors),
+            const SizedBox(height: OwnKeepSpacing.md),
+            _buildCleanupCard(
+              colors: colors,
+              icon: OwnKeepMainIcons.duplicate,
+              title: l10n.s24_duplicates,
+              subtitle: l10n.s24_duplicates_meta,
+              actionLabel: "Review",
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            _buildCleanupCard(
+              colors: colors,
+              icon: OwnKeepMainIcons.video,
+              title: l10n.s24_large_videos,
+              subtitle: l10n.s24_large_videos_meta,
+              actionLabel: "Review",
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            _buildCleanupCard(
+              colors: colors,
+              icon: OwnKeepMainIcons.files,
+              title: l10n.s24_unopened,
+              subtitle: l10n.s24_unopened_meta,
+              actionLabel: "Review",
+            ),
+            const SizedBox(height: OwnKeepSpacing.xl),
+
+            // Footer
+            Center(
+              child: Column(
+                children: [
+                  Text(
+                    l10n.s24_last_scan,
+                    style: TextStyle(
+                      color: colors.textMuted,
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextButton.icon(
+                    onPressed: () {},
+                    icon: SvgPicture.asset(OwnKeepMainIcons.refresh, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 16, height: 16),
+                    label: Text(
+                      l10n.s24_scan_again,
+                      style: TextStyle(
+                        color: colors.primaryBlue,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xxl),
+          ],
+        ),
       ),
     );
   }
-}
 
-class _DonutChartPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width / 2;
-    const strokeWidth = 14.0;
-    final rect = Rect.fromCircle(center: center, radius: radius - strokeWidth / 2);
-
-    final segments = [
-      (OwnKeepColors.primary, 0.38),
-      (OwnKeepColors.success, 0.22),
-      (OwnKeepColors.warning, 0.17),
-      (const Color(0xFF72819C), 0.05),
-    ];
-
-    double startAngle = -pi / 2;
-    for (final (color, fraction) in segments) {
-      final sweepAngle = 2 * pi * fraction;
-      final paint = Paint()
-        ..color = color
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = strokeWidth
-        ..strokeCap = StrokeCap.round;
-      canvas.drawArc(rect, startAngle, sweepAngle - 0.04, false, paint);
-      startAngle += sweepAngle;
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-class _LegendItem extends StatelessWidget {
-  const _LegendItem({required this.color, required this.label, required this.value});
-  final Color color;
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildLegendItem(OwnKeepMainColorsTheme colors, Color dotColor, String label, String size) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-        SizedBox(width: 8),
-        SizedBox(width: 80, child: Text(label, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, fontFamily: 'Inter'))),
-        Text(value, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 13, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
+        Row(
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: dotColor,
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ],
+        ),
+        Text(
+          size,
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
+          ),
+        ),
       ],
     );
   }
-}
 
-class _LargeFileItem extends StatelessWidget {
-  const _LargeFileItem({required this.name, required this.size, required this.icon, required this.color});
-  final String name;
-  final String size;
-  final IconData icon;
-  final Color color;
+  Widget _buildSectionHeader(String title, String? action, OwnKeepMainColorsTheme colors) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
+          ),
+        ),
+        if (action != null)
+          Text(
+            action,
+            style: TextStyle(
+              color: colors.primaryBlue,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Inter',
+            ),
+          ),
+      ],
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildListItem({
+    required BuildContext context,
+    required OwnKeepMainColorsTheme colors,
+    required String icon,
+    required Color iconColor,
+    required String title,
+    required String subtitle,
+  }) {
+    return InkWell(
+      onTap: () {},
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: colors.borderSoft),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: colors.surfaceSelected,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+            ),
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCleanupCard({
+    required OwnKeepMainColorsTheme colors,
+    required String icon,
+    required String title,
+    required String subtitle,
+    required String actionLabel,
+  }) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base, vertical: OwnKeepSpacing.xs),
-      padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base, vertical: OwnKeepSpacing.md),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: OwnKeepColors.darkSurfaceElevated,
-        borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-        border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: colors.borderSoft),
       ),
       child: Row(
         children: [
-          Icon(icon, color: color, size: 22),
-          SizedBox(width: OwnKeepSpacing.md),
-          Expanded(child: Text(name, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w500, fontFamily: 'Inter'))),
-          Text(size, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 14, fontFamily: 'Inter')),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: colors.surfaceSelected,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+          ),
+          const SizedBox(width: OwnKeepSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: colors.textSecondary,
+                    fontSize: 13,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colors.surfaceSelected,
+              foregroundColor: colors.primaryBlue,
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            child: Text(
+              actionLabel,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ),
         ],
       ),
     );

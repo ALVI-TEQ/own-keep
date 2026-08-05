@@ -1,193 +1,336 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
-class AdvancedSearchScreen extends StatelessWidget {
+class AdvancedSearchScreen extends StatefulWidget {
   const AdvancedSearchScreen({super.key});
 
   @override
+  State<AdvancedSearchScreen> createState() => _AdvancedSearchScreenState();
+}
+
+class _AdvancedSearchScreenState extends State<AdvancedSearchScreen> {
+  int _selectedFilter = 0;
+
+  @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
+    final filters = [
+      l10n.s34_filter_all,
+      l10n.s34_filter_documents,
+      l10n.s34_filter_images,
+      l10n.s34_filter_others,
+    ];
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
-      appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: Text('Search', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 22, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-      ),
-      bottomNavigationBar: OwnKeepBottomNav(),
-      body: ListView(
-        children: [
-          // Search bar
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base, vertical: OwnKeepSpacing.md),
-              decoration: BoxDecoration(
-                color: OwnKeepColors.darkSurfaceElevated,
-                borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-              ),
+      backgroundColor: colors.backgroundTop,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Search Header
+            Padding(
+              padding: const EdgeInsets.all(OwnKeepSpacing.md),
               child: Row(
                 children: [
-                  Icon(Icons.search, color: OwnKeepColors.darkTextMuted, size: 20),
-                  SizedBox(width: 8),
-                  const Expanded(
-                    child: Text('insurance policy', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontFamily: 'Inter')),
+                  IconButton(
+                    icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+                    onPressed: () => context.pop(),
                   ),
-                  Icon(Icons.close, color: OwnKeepColors.darkTextMuted, size: 18),
-                  SizedBox(width: 12),
-                  Icon(Icons.tune_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
+                  Expanded(
+                    child: Container(
+                      height: 48,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: colors.surfacePrimary,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: colors.borderSoft),
+                      ),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(OwnKeepMainIcons.search, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              l10n.s34_query,
+                              style: TextStyle(
+                                color: colors.textPrimary,
+                                fontSize: 15,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                          ),
+                          SvgPicture.asset(OwnKeepMainIcons.close, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: colors.surfacePrimary,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: colors.borderSoft),
+                    ),
+                    child: SvgPicture.asset(OwnKeepMainIcons.sliders, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+                  ),
                 ],
               ),
             ),
-          ),
-          SizedBox(height: OwnKeepSpacing.sm),
-          // Filter chips
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-            child: Row(
-              children: const [
-                _Chip(label: 'All (24)', isSelected: true),
-                _Chip(label: 'Documents (8)'),
-                _Chip(label: 'Images (6)'),
-                _Chip(label: 'Others (10)'),
-              ],
+            
+            // Filter Chips
+            SizedBox(
+              height: 48,
+              child: ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: 4),
+                scrollDirection: Axis.horizontal,
+                itemCount: filters.length,
+                separatorBuilder: (context, index) => const SizedBox(width: OwnKeepSpacing.sm),
+                itemBuilder: (context, index) {
+                  final isSelected = _selectedFilter == index;
+                  return GestureDetector(
+                    onTap: () => setState(() => _selectedFilter = index),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: isSelected ? colors.surfaceSelected : colors.surfacePrimary,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: isSelected ? colors.primaryBlue : colors.borderSoft,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          filters[index],
+                          style: TextStyle(
+                            color: isSelected ? colors.primaryBlue : colors.textSecondary,
+                            fontSize: 13,
+                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-          // Top Results
-          _SectionLabel(title: 'Top Results'),
-          _SearchResultItem(name: 'Health Insurance Policy', type: 'PDF', size: '2.4 MB', date: '31 May 2025', typeColor: OwnKeepColors.danger, isFavorite: true),
-          _SearchResultItem(name: 'Car Insurance Policy', type: 'PDF', size: '1.8 MB', date: '20 Jun 2025', typeColor: OwnKeepColors.danger, isFavorite: true),
-          _SearchResultItem(name: 'Life Insurance Policy', type: 'PDF', size: '1.2 MB', date: '15 Aug 2025', typeColor: OwnKeepColors.danger, isFavorite: true),
-          // Other Results
-          _SectionLabel(title: 'Other Results'),
-          _SearchResultItem(name: 'Insurance Premium Receipt', type: 'JPG', size: '845 KB', date: '15 May 2025', typeColor: OwnKeepColors.success),
-          _SearchResultItem(name: 'Insurance Claim Form', type: 'PDF', size: '1.1 MB', date: '10 Apr 2025', typeColor: OwnKeepColors.danger),
-          _SearchResultItem(name: 'Policy Documents', type: 'Folder', size: '8 Items', date: '', typeColor: OwnKeepColors.warning),
-          _SearchResultItem(name: 'Insurance Policy Copy', type: 'PDF', size: '2.0 MB', date: '5 Jan 2025', typeColor: OwnKeepColors.danger),
-          // AI Search suggestion
-          Container(
-            margin: EdgeInsets.all(OwnKeepSpacing.base),
-            padding: EdgeInsets.all(OwnKeepSpacing.base),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text("Can't find what you're looking for?", style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, fontFamily: 'Inter')),
-                      SizedBox(height: 2),
-                      Text('Try AI Search', style: TextStyle(color: OwnKeepColors.primary, fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-                    ],
-                  ),
+            const SizedBox(height: OwnKeepSpacing.md),
+
+            // Results List
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.s34_top_results,
+                      style: TextStyle(
+                        color: colors.textSecondary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                    const SizedBox(height: OwnKeepSpacing.sm),
+                    _buildResultItem(
+                      colors: colors,
+                      icon: OwnKeepMainIcons.file_pdf,
+                      iconColor: const Color(0xFF27C5E8),
+                      title: l10n.s34_health,
+                      meta: l10n.s34_health_meta,
+                    ),
+                    _buildResultItem(
+                      colors: colors,
+                      icon: OwnKeepMainIcons.file_pdf,
+                      iconColor: const Color(0xFF27C5E8),
+                      title: l10n.s34_car,
+                      meta: l10n.s34_car_meta,
+                    ),
+                    _buildResultItem(
+                      colors: colors,
+                      icon: OwnKeepMainIcons.file_pdf,
+                      iconColor: const Color(0xFF27C5E8),
+                      title: l10n.s34_life,
+                      meta: l10n.s34_life_meta,
+                    ),
+
+                    const SizedBox(height: OwnKeepSpacing.xl),
+
+                    Text(
+                      l10n.s34_other_results,
+                      style: TextStyle(
+                        color: colors.textSecondary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                    const SizedBox(height: OwnKeepSpacing.sm),
+                    _buildResultItem(
+                      colors: colors,
+                      icon: OwnKeepMainIcons.image,
+                      iconColor: colors.primaryBlue,
+                      title: l10n.s34_receipt,
+                      meta: l10n.s34_receipt_meta,
+                    ),
+                    _buildResultItem(
+                      colors: colors,
+                      icon: OwnKeepMainIcons.file_pdf,
+                      iconColor: const Color(0xFF27C5E8),
+                      title: l10n.s34_claim,
+                      meta: l10n.s34_claim_meta,
+                    ),
+                    _buildResultItem(
+                      colors: colors,
+                      icon: OwnKeepMainIcons.folder_open,
+                      iconColor: colors.warningOrange,
+                      title: l10n.s34_folder,
+                      meta: l10n.s34_folder_meta,
+                    ),
+                    _buildResultItem(
+                      colors: colors,
+                      icon: OwnKeepMainIcons.file_pdf,
+                      iconColor: const Color(0xFF27C5E8),
+                      title: l10n.s34_copy,
+                      meta: l10n.s34_copy_meta,
+                    ),
+
+                    const SizedBox(height: OwnKeepSpacing.xxl),
+
+                    // AI Search Prompt
+                    Container(
+                      padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            colors.aiPurple.withOpacity(0.1),
+                            colors.primaryBlue.withOpacity(0.1),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: colors.aiPurple.withOpacity(0.3)),
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            l10n.s34_not_found,
+                            style: TextStyle(
+                              color: colors.textPrimary,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            l10n.s34_try_ai,
+                            style: TextStyle(
+                              color: colors.textSecondary,
+                              fontSize: 13,
+                              fontFamily: 'Inter',
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: OwnKeepSpacing.md),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: () {},
+                              icon: SvgPicture.asset(OwnKeepMainIcons.ai_powered, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+                              label: Text(
+                                l10n.s34_ai_button,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Inter',
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: colors.aiPurple,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: OwnKeepSpacing.xl),
+                  ],
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: OwnKeepColors.ai.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(OwnKeepRadius.pill),
-                    border: Border.all(color: OwnKeepColors.ai.withValues(alpha: 0.3)),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(Icons.auto_awesome, color: OwnKeepColors.ai, size: 14),
-                      SizedBox(width: 4),
-                      Text('AI Search', style: TextStyle(color: OwnKeepColors.ai, fontSize: 13, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
-}
 
-class _Chip extends StatelessWidget {
-  const _Chip({required this.label, this.isSelected = false});
-  final String label;
-  final bool isSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(right: OwnKeepSpacing.sm),
-      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-      decoration: BoxDecoration(
-        color: isSelected ? OwnKeepColors.primary : OwnKeepColors.darkSurfaceElevated,
-        borderRadius: BorderRadius.circular(OwnKeepRadius.pill),
-        border: Border.all(color: isSelected ? OwnKeepColors.primary : OwnKeepColors.darkBorder),
-      ),
-      child: Text(label, style: TextStyle(color: isSelected ? Colors.white : OwnKeepColors.darkTextSecondary, fontSize: 13, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-    );
-  }
-}
-
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel({required this.title});
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(OwnKeepSpacing.base, OwnKeepSpacing.lg, OwnKeepSpacing.base, OwnKeepSpacing.sm),
-      child: Text(title, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-    );
-  }
-}
-
-class _SearchResultItem extends StatelessWidget {
-  const _SearchResultItem({required this.name, required this.type, required this.size, required this.date, required this.typeColor, this.isFavorite = false});
-  final String name;
-  final String type;
-  final String size;
-  final String date;
-  final Color typeColor;
-  final bool isFavorite;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base, vertical: OwnKeepSpacing.xs),
-      padding: EdgeInsets.all(OwnKeepSpacing.md),
-      decoration: BoxDecoration(
-        color: OwnKeepColors.darkSurfaceElevated,
-        borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-        border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        children: [
-          OwnKeepIconBadge(icon: type == 'Folder' ? Icons.folder_outlined : Icons.description_outlined, color: typeColor),
-          SizedBox(width: OwnKeepSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-                SizedBox(height: 2),
-                Text('$type  •  $size${date.isNotEmpty ? '  •  $date' : ''}', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ],
+  Widget _buildResultItem({
+    required OwnKeepMainColorsTheme colors,
+    required String icon,
+    required Color iconColor,
+    required String title,
+    required String meta,
+  }) {
+    return InkWell(
+      onTap: () {},
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
             ),
-          ),
-          Icon(
-            isFavorite ? Icons.star_rounded : Icons.star_outline_rounded,
-            color: isFavorite ? OwnKeepColors.warning : OwnKeepColors.darkTextMuted,
-            size: 20,
-          ),
-        ],
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    meta,
+                    style: TextStyle(
+                      color: colors.textMuted,
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+          ],
+        ),
       ),
     );
   }

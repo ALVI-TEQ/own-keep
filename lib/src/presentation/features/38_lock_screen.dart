@@ -1,177 +1,208 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:citizen_vault_app/src/vault/vault_lifecycle.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../../providers/vault_provider.dart';
 
-/// Screen 38 — Lock Screen
-class LockScreen extends ConsumerStatefulWidget {
+class LockScreen extends StatefulWidget {
   const LockScreen({super.key});
 
   @override
-  ConsumerState<LockScreen> createState() => _LockScreenState();
+  State<LockScreen> createState() => _LockScreenState();
 }
 
-class _LockScreenState extends ConsumerState<LockScreen> {
-  bool _isUnlocking = false;
-  String? _errorMessage;
+class _LockScreenState extends State<LockScreen> {
+  String _pin = '';
 
-  @override
-  void initState() {
-    super.initState();
-    // Prompt biometric unlock shortly after the screen renders
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _unlock();
-    });
-  }
-
-  Future<void> _unlock() async {
-    if (_isUnlocking) return;
-    setState(() {
-      _isUnlocking = true;
-      _errorMessage = null;
-    });
-    
-    try {
-      final vaultLifecycle = ref.read(vaultLifecycleProvider);
-      final unlockedVault = await vaultLifecycle.unlockWithBiometrics();
-      if (!mounted) return;
-      ref.read(unlockedVaultProvider.notifier).state = unlockedVault;
-      context.go('/dashboard/home');
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _errorMessage = e is VaultLifecycleFailure && e.code == 'biometric_cancelled' 
-              ? 'Unlock cancelled' 
-              : 'Failed to unlock';
-        });
+  void _onKeypadTap(String value) {
+    if (_pin.length < 4) {
+      setState(() {
+        _pin += value;
+      });
+      if (_pin.length == 4) {
+        // Authenticate logic
       }
-    } finally {
-      if (mounted) setState(() => _isUnlocking = false);
     }
   }
 
-  void _showRecoveryUnlockDialog(BuildContext context) {
-    final textController = TextEditingController();
-    bool isUnlockingRecovery = false;
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              backgroundColor: const Color(0xFF14243B),
-              title: Text('Unlock with Recovery Phrase', style: TextStyle(color: Colors.white, fontSize: 18, fontFamily: 'Inter')),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Enter your 12-word recovery phrase separated by spaces.', style: TextStyle(color: Colors.white70, fontSize: 14)),
-                  SizedBox(height: 16),
-                  TextField(
-                    controller: textController,
-                    style: TextStyle(color: Colors.white),
-                    maxLines: 3,
-                    decoration: InputDecoration(
-                      hintText: 'e.g. apple breeze canvas...',
-                      hintStyle: TextStyle(color: Colors.white38),
-                      filled: true,
-                      fillColor: const Color(0xFF0A1628),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
-                    ),
-                  ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: isUnlockingRecovery ? null : () => Navigator.of(dialogContext).pop(),
-                  child: Text('Cancel', style: TextStyle(color: Colors.white60)),
-                ),
-                TextButton(
-                  onPressed: isUnlockingRecovery ? null : () async {
-                    setDialogState(() => isUnlockingRecovery = true);
-                    try {
-                      final vaultLifecycle = ref.read(vaultLifecycleProvider);
-                      final handle = await vaultLifecycle.unlock(recoveryPassphrase: textController.text.trim());
-                      if (!mounted) return;
-                      ref.read(unlockedVaultProvider.notifier).state = handle;
-                      Navigator.of(dialogContext).pop();
-                      this.context.go('/dashboard/home');
-                    } catch (e) {
-                      setDialogState(() => isUnlockingRecovery = false);
-                      ScaffoldMessenger.of(dialogContext).showSnackBar(
-                        const SnackBar(content: Text('Invalid recovery phrase')),
-                      );
-                    }
-                  },
-                  child: isUnlockingRecovery 
-                    ? SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: OwnKeepColors.primary))
-                    : Text('Unlock', style: TextStyle(color: OwnKeepColors.primary)),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
+  void _onBackspaceTap() {
+    if (_pin.isNotEmpty) {
+      setState(() {
+        _pin = _pin.substring(0, _pin.length - 1);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF0A1628),
+      backgroundColor: colors.backgroundTop,
       body: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          child: Column(
+        child: Column(
           children: [
-            const Spacer(flex: 2),
-            // Lock icon
-            Icon(Icons.lock_outlined, color: Colors.white, size: 48),
-            SizedBox(height: OwnKeepSpacing.md),
-            Text('OwnKeep', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-            SizedBox(height: OwnKeepSpacing.xl),
-            Text('Vault is locked', style: TextStyle(color: Colors.white70, fontSize: 16, fontFamily: 'Inter')),
-            if (_errorMessage != null) ...[
-              SizedBox(height: OwnKeepSpacing.md),
-              Text(_errorMessage!, style: TextStyle(color: OwnKeepColors.danger, fontSize: 14)),
-            ],
             const Spacer(),
-            if (_isUnlocking)
-              const CircularProgressIndicator(color: OwnKeepColors.primary)
-            else
-              // Biometric button
-              GestureDetector(
-                onTap: _unlock,
-                child: Column(
-                  children: [
-                    Container(
-                      width: 60, height: 60,
-                      decoration: BoxDecoration(
-                        color: OwnKeepColors.primary.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                        border: Border.all(color: OwnKeepColors.primary.withValues(alpha: 0.4)),
-                      ),
-                      child: Icon(Icons.fingerprint, color: OwnKeepColors.primary, size: 32),
+
+            // App Name & Prompt
+            Text(
+              l10n.s38_app_name,
+              style: TextStyle(
+                color: colors.primaryBlue,
+                fontSize: 28,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Inter',
+                letterSpacing: -0.5,
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.md),
+            Text(
+              l10n.s38_enter_pin,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Inter',
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // PIN Dots
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(4, (index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: SvgPicture.asset(
+                    index < _pin.length ? OwnKeepMainIcons.pin_dot_active : OwnKeepMainIcons.pin_dot_inactive,
+                    width: 16,
+                    height: 16,
+                    colorFilter: ColorFilter.mode(
+                      index < _pin.length ? colors.primaryBlue : colors.textMuted,
+                      BlendMode.srcIn,
                     ),
-                    SizedBox(height: 8),
-                    Text('Tap to Unlock', style: TextStyle(color: Colors.white60, fontSize: 13, fontFamily: 'Inter')),
-                  ],
+                  ),
+                );
+              }),
+            ),
+
+            const Spacer(),
+
+            // Keypad
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Column(
+                children: [
+                  _buildKeypadRow(['1', '2', '3'], ['', l10n.s38_key_2_letters, l10n.s38_key_3_letters], colors),
+                  const SizedBox(height: 20),
+                  _buildKeypadRow(['4', '5', '6'], [l10n.s38_key_4_letters, l10n.s38_key_5_letters, l10n.s38_key_6_letters], colors),
+                  const SizedBox(height: 20),
+                  _buildKeypadRow(['7', '8', '9'], [l10n.s38_key_7_letters, l10n.s38_key_8_letters, l10n.s38_key_9_letters], colors),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildIconButton(OwnKeepMainIcons.face_id, colors, () {}),
+                      _buildNumberKey('0', '', colors),
+                      _buildIconButton(OwnKeepMainIcons.keypad_backspace, colors, _onBackspaceTap),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Emergency Access
+            TextButton(
+              onPressed: () {},
+              child: Text(
+                l10n.s38_emergency,
+                style: TextStyle(
+                  color: colors.textSecondary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Inter',
                 ),
               ),
-            SizedBox(height: OwnKeepSpacing.lg),
-            TextButton(
-              onPressed: () => _showRecoveryUnlockDialog(context),
-              child: Text('Use Recovery Phrase', style: TextStyle(color: OwnKeepColors.primary, fontSize: 13, fontFamily: 'Inter')),
             ),
-            SizedBox(height: OwnKeepSpacing.xl),
+            
+            const SizedBox(height: OwnKeepSpacing.xl),
           ],
         ),
       ),
-    ));
+    );
+  }
+
+  Widget _buildKeypadRow(List<String> numbers, List<String> letters, OwnKeepMainColorsTheme colors) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: List.generate(3, (index) {
+        return _buildNumberKey(numbers[index], letters[index], colors);
+      }),
+    );
+  }
+
+  Widget _buildNumberKey(String number, String letters, OwnKeepMainColorsTheme colors) {
+    return GestureDetector(
+      onTap: () => _onKeypadTap(number),
+      child: Container(
+        width: 72,
+        height: 72,
+        decoration: const BoxDecoration(
+          color: Colors.transparent,
+          shape: BoxShape.circle,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              number,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 28,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Inter',
+              ),
+            ),
+            if (letters.isNotEmpty)
+              Text(
+                letters,
+                style: TextStyle(
+                  color: colors.textSecondary,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                  letterSpacing: 1.5,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIconButton(String icon, OwnKeepMainColorsTheme colors, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 72,
+        height: 72,
+        decoration: const BoxDecoration(
+          color: Colors.transparent,
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: SvgPicture.asset(
+            icon,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 28,
+            height: 28,
+          ),
+        ),
+      ),
+    );
   }
 }

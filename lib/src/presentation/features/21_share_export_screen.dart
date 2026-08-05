@@ -1,115 +1,215 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class ShareExportScreen extends StatelessWidget {
   const ShareExportScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return OwnKeepScaffold(
-      title: 'Share & Export',
-      actions: [
-        IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.verified_outlined, color: OwnKeepColors.success),
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      backgroundColor: colors.backgroundTop,
+      appBar: AppBar(
+        backgroundColor: colors.backgroundTop,
+        elevation: 0,
+        leading: IconButton(
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-      ],
-      body: ListView(
-        children: [
-          // Hero banner
-          Container(
-            margin: EdgeInsets.all(OwnKeepSpacing.base),
-            padding: EdgeInsets.all(OwnKeepSpacing.xl),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  OwnKeepColors.ai.withValues(alpha: 0.2),
-                  OwnKeepColors.primary.withValues(alpha: 0.15),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+        title: Text(
+          l10n.s21_title,
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Illustration and header
+            Center(
+              child: SvgPicture.asset(
+                'assets/main/illustrations/share_secure_illustration.svg',
+                height: 160,
               ),
-              borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
             ),
-            child: Column(
-              children: [
-                Text(
-                  'Share Securely',
-                  style: TextStyle(
-                    color: OwnKeepColors.darkTextPrimary,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'Inter',
+            const SizedBox(height: OwnKeepSpacing.xl),
+            Center(
+              child: Column(
+                children: [
+                  Text(
+                    l10n.s21_share_securely,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Inter',
+                    ),
                   ),
-                ),
-                SizedBox(height: OwnKeepSpacing.sm),
-                Text(
-                  'Your data stays encrypted.\nYou\'re in control.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: OwnKeepColors.darkTextSecondary,
-                    fontSize: 14,
-                    fontFamily: 'Inter',
+                  const SizedBox(height: OwnKeepSpacing.xs),
+                  Text(
+                    l10n.s21_share_securely_body,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 14,
+                      fontFamily: 'Inter',
+                    ),
                   ),
-                ),
-                SizedBox(height: OwnKeepSpacing.lg),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.lock_outline, size: 40, color: OwnKeepColors.ai.withValues(alpha: 0.7)),
-                    SizedBox(width: 12),
-                    Icon(Icons.security_rounded, size: 50, color: OwnKeepColors.primary.withValues(alpha: 0.8)),
-                    SizedBox(width: 12),
-                    Icon(Icons.mail_outline_rounded, size: 40, color: OwnKeepColors.success.withValues(alpha: 0.7)),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          // Share options
-          OwnKeepListTile(
-            title: 'Share with OwnKeep User',
-            subtitle: 'Share vault items with another\nOwnKeep user via encrypted link',
-            icon: Icons.people_outline_rounded,
-            iconColor: OwnKeepColors.primary,
-            onTap: () {},
-          ),
-          OwnKeepListTile(
-            title: 'Generate Secure Link',
-            subtitle: 'Create a time-limited encrypted\nlink to share',
-            icon: Icons.link_rounded,
-            iconColor: OwnKeepColors.ai,
-            onTap: () {},
-          ),
-          OwnKeepListTile(
-            title: 'Export Encrypted File',
-            subtitle: 'Export as encrypted .ovault file\nto share via any medium',
-            icon: Icons.lock_outline_rounded,
-            iconColor: OwnKeepColors.success,
-            onTap: () {},
-          ),
-          OwnKeepListTile(
-            title: 'Export as PDF',
-            subtitle: 'Export documents as PDF files',
-            icon: Icons.picture_as_pdf_outlined,
-            iconColor: OwnKeepColors.danger,
-            onTap: () {},
-          ),
-          OwnKeepListTile(
-            title: 'Export as ZIP',
-            subtitle: 'Export original files in ZIP\n(Encrypted)',
-            icon: Icons.folder_zip_outlined,
-            iconColor: OwnKeepColors.orange,
-            onTap: () {},
-          ),
-          const OwnKeepTipCard(
-            text: 'Shared items can only be opened in OwnKeep and cannot be accessed by anyone else.',
-          ),
-        ],
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Share Options
+            _buildOptionTile(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.share_user,
+              title: l10n.s21_ownkeep_user,
+              subtitle: l10n.s21_ownkeep_user_body,
+            ),
+            const SizedBox(height: OwnKeepSpacing.md),
+            _buildOptionTile(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.secure_link,
+              title: l10n.s21_secure_link,
+              subtitle: l10n.s21_secure_link_body,
+            ),
+            const SizedBox(height: OwnKeepSpacing.md),
+            _buildOptionTile(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.encrypted_file,
+              title: l10n.s21_encrypted_file,
+              subtitle: l10n.s21_encrypted_file_body,
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xl),
+            const Divider(color: Color(0xFF1B2940)),
+            const SizedBox(height: OwnKeepSpacing.xl),
+
+            // Export Options
+            _buildOptionTile(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.file_pdf,
+              title: l10n.s21_export_pdf,
+              subtitle: l10n.s21_export_pdf_body,
+            ),
+            const SizedBox(height: OwnKeepSpacing.md),
+            _buildOptionTile(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.archive_zip,
+              title: l10n.s21_export_zip,
+              subtitle: l10n.s21_export_zip_body,
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xxl),
+            
+            // Security Note
+            Container(
+              padding: const EdgeInsets.all(OwnKeepSpacing.md),
+              decoration: BoxDecoration(
+                color: colors.surfaceSelected.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Row(
+                children: [
+                  SvgPicture.asset(OwnKeepMainIcons.shield_check, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+                  const SizedBox(width: OwnKeepSpacing.md),
+                  Expanded(
+                    child: Text(
+                      l10n.s21_security_note,
+                      style: TextStyle(
+                        color: colors.textSecondary,
+                        fontSize: 13,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xxl),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOptionTile({
+    required BuildContext context,
+    required OwnKeepMainColorsTheme colors,
+    required String icon,
+    required String title,
+    required String subtitle,
+  }) {
+    return InkWell(
+      onTap: () {},
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(OwnKeepSpacing.md),
+        decoration: BoxDecoration(
+          color: colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: colors.borderSoft),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colors.surfaceSelected,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+            ),
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+          ],
+        ),
       ),
     );
   }

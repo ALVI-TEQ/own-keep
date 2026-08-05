@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none"><defs>
+<linearGradient id="purpleBlue" x1="60" y1="30" x2="220" y2="235" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#7147F3"/>
+  <stop offset=".58" stop-color="#3156F3"/>
+  <stop offset="1" stop-color="#15215B"/>
+</linearGradient>
+<linearGradient id="vault" x1="95" y1="80" x2="205" y2="210" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#6548FA"/>
+  <stop offset=".55" stop-color="#2924A6"/>
+  <stop offset="1" stop-color="#101948"/>
+</linearGradient>
+<linearGradient id="shield" x1="70" y1="40" x2="190" y2="220" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#754CFF"/>
+  <stop offset=".55" stop-color="#3A2DC8"/>
+  <stop offset="1" stop-color="#171D5C"/>
+</linearGradient>
+</defs>
+<rect x="111" y="72" width="91" height="118" rx="22" fill="url(#vault)" stroke="#3156F3" stroke-width="5"/>
+<path d="M89 33 170 70v67c0 54-34 88-81 109-47-21-81-55-81-109V70l81-37Z" fill="url(#shield)" stroke="#805BFF" stroke-width="6"/>
+<rect x="52" y="109" width="74" height="63" rx="16" fill="#BFC7FF"/>
+<path d="M65 110V95c0-19 10-32 24-32s24 13 24 32v15" stroke="#BFC7FF" stroke-width="13"/>
+<circle cx="89" cy="139" r="9" fill="#3027A8"/>
+<path d="M89 147v13" stroke="#3027A8" stroke-width="7"/>
+<circle cx="183" cy="103" r="5" fill="#8CA4FF"/>
+<circle cx="183" cy="127" r="5" fill="#8CA4FF"/>
+<circle cx="183" cy="151" r="5" fill="#8CA4FF"/>
+</svg>

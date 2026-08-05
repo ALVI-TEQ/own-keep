@@ -1,128 +1,265 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class RecoveryCenterScreen extends StatelessWidget {
   const RecoveryCenterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return OwnKeepScaffold(
-      title: 'Recovery Center',
-      actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.verified_outlined, color: OwnKeepColors.success)),
-      ],
-      body: ListView(
-        children: [
-          // Hero banner
-          Container(
-            margin: EdgeInsets.all(OwnKeepSpacing.base),
-            padding: EdgeInsets.all(OwnKeepSpacing.xl),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [OwnKeepColors.ai.withValues(alpha: 0.2), OwnKeepColors.primary.withValues(alpha: 0.12)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      backgroundColor: colors.backgroundTop,
+      appBar: AppBar(
+        backgroundColor: colors.backgroundTop,
+        elevation: 0,
+        leading: IconButton(
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
+        ),
+        title: Text(
+          l10n.s31_title,
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+        child: Column(
+          children: [
+            // Hero Illustration
+            Center(
+              child: SvgPicture.asset(
+                'assets/main/illustrations/recovery_shield_key_illustration.svg',
+                height: 160,
               ),
-              borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
             ),
-            child: Row(
-              children: [
-                Container(
-                  width: 56, height: 56,
-                  decoration: BoxDecoration(
-                    color: OwnKeepColors.ai.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                  ),
-                  child: Icon(Icons.vpn_key_rounded, color: OwnKeepColors.ai, size: 28),
+            const SizedBox(height: OwnKeepSpacing.xl),
+            
+            // Hero Text
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 24,
+                  fontFamily: 'Inter',
                 ),
-                SizedBox(width: OwnKeepSpacing.base),
-                const Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextSpan(
+                    text: '${l10n.s31_hero_title}\n',
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  TextSpan(
+                    text: l10n.s31_hero_body,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Status Card
+            Container(
+              padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Your Recovery Phrase', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 17, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                      SizedBox(height: 2),
-                      Text('is your ultimate access', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 14, fontFamily: 'Inter')),
+                      Text(
+                        l10n.s31_status_title,
+                        style: TextStyle(
+                          color: colors.textSecondary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: colors.successGreen.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: colors.successGreen.withOpacity(0.3)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SvgPicture.asset(OwnKeepMainIcons.verified_shield, colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn), width: 14),
+                            const SizedBox(width: 4),
+                            Text(
+                              l10n.s31_status_verified,
+                              style: TextStyle(
+                                color: colors.successGreen,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                ),
-              ],
-            ),
-          ),
-          // Status card
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-            padding: EdgeInsets.all(OwnKeepSpacing.base),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Recovery Phrase Status', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-                      SizedBox(height: 4),
-                      Text('Verified', style: TextStyle(color: OwnKeepColors.success, fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-                      SizedBox(height: 2),
-                      Text('Last verified: 12 May 2025, 10:30 AM', style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 12, fontFamily: 'Inter')),
-                    ],
+                  const SizedBox(height: OwnKeepSpacing.md),
+                  const Divider(color: Color(0xFF1B2940)),
+                  const SizedBox(height: OwnKeepSpacing.md),
+                  Text(
+                    l10n.s31_last_verified,
+                    style: TextStyle(
+                      color: colors.textMuted,
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                    ),
                   ),
-                ),
-                Container(
-                  width: 44, height: 44,
-                  decoration: BoxDecoration(
-                    color: OwnKeepColors.success.withValues(alpha: 0.15),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.verified_rounded, color: OwnKeepColors.success, size: 24),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          SizedBox(height: OwnKeepSpacing.sm),
-          // Actions
-          OwnKeepListTile(
-            title: 'View Recovery Phrase',
-            subtitle: 'View your 24-word recovery phrase',
-            icon: Icons.visibility_outlined,
-            iconColor: OwnKeepColors.primary,
-            trailing: Icon(Icons.visibility_outlined, color: OwnKeepColors.darkTextMuted, size: 20),
-            showChevron: false,
-            onTap: () {},
-          ),
-          OwnKeepListTile(
-            title: 'Verify Recovery Phrase',
-            subtitle: 'Re-verify to make sure it\'s safe',
-            icon: Icons.check_circle_outline,
-            iconColor: OwnKeepColors.success,
-            onTap: () {},
-          ),
-          OwnKeepListTile(
-            title: 'Recovery Instructions',
-            subtitle: 'Step-by-step guide to recover vault',
-            icon: Icons.menu_book_outlined,
-            iconColor: OwnKeepColors.ai,
-            onTap: () {},
-          ),
-          OwnKeepListTile(
-            title: 'Emergency Access',
-            subtitle: 'Access your vault in critical situations',
-            icon: Icons.warning_amber_rounded,
-            iconColor: OwnKeepColors.danger,
-            onTap: () {},
-          ),
-          const OwnKeepTipCard(
-            text: 'Tip: Store your recovery phrase offline in a safe place. Never share it with anyone.',
-          ),
-        ],
+            const SizedBox(height: OwnKeepSpacing.xl),
+
+            // Options List
+            _buildActionTile(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.eye,
+              title: l10n.s31_view_title,
+              subtitle: l10n.s31_view_body,
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            _buildActionTile(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.recovery_phrase,
+              title: l10n.s31_verify_title,
+              subtitle: l10n.s31_verify_body,
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            _buildActionTile(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.recovery_instructions,
+              title: l10n.s31_instructions_title,
+              subtitle: l10n.s31_instructions_body,
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            _buildActionTile(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.emergency,
+              title: l10n.s31_emergency_title,
+              subtitle: l10n.s31_emergency_body,
+            ),
+            
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Tip box
+            Container(
+              padding: const EdgeInsets.all(OwnKeepSpacing.md),
+              decoration: BoxDecoration(
+                color: colors.surfaceSelected.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Row(
+                children: [
+                  SvgPicture.asset(OwnKeepMainIcons.recovery_shield_key, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+                  const SizedBox(width: OwnKeepSpacing.md),
+                  Expanded(
+                    child: Text(
+                      l10n.s31_tip,
+                      style: TextStyle(
+                        color: colors.textSecondary,
+                        fontSize: 13,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xl),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionTile({
+    required BuildContext context,
+    required OwnKeepMainColorsTheme colors,
+    required String icon,
+    required String title,
+    required String subtitle,
+  }) {
+    return InkWell(
+      onTap: () {},
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: colors.borderSoft),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colors.surfaceSelected,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+            ),
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+          ],
+        ),
       ),
     );
   }

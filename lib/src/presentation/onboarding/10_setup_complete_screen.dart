@@ -1,56 +1,88 @@
 import 'package:flutter/material.dart';
-import '../components/ownkeep_components.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_onboarding_colors.dart';
+import '../../theme/ownkeep_onboarding_icons.dart';
 
 class SetupCompleteScreen extends StatelessWidget {
   const SetupCompleteScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return OwnKeepAppScaffold(
-      title: 'Setup Complete',
-      body: ListView(
-        padding: const EdgeInsets.all(OwnKeepSpacing.base),
-        children: [
-          Container(
-            padding: const EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.25)),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.star_outline_rounded, color: OwnKeepColors.primary, size: 64),
-                const SizedBox(height: OwnKeepSpacing.md),
-                const Text(
-                  'Setup Complete',
-                  style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Inter'),
-                  textAlign: TextAlign.center,
+    final l10n = AppLocalizations.of(context)!;
+    
+    return Scaffold(
+      backgroundColor: context.onboardingColors.backgroundDeep,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Spacer(),
+              Center(
+                child: SvgPicture.asset(
+                  OwnKeepOnboardingIcons.success_check_circle,
+                  height: 120,
+                  width: 120,
                 ),
-                const SizedBox(height: OwnKeepSpacing.sm),
-                const Text(
-                  'This page is part of the Setup Complete flow.',
-                  style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 14, fontFamily: 'Inter'),
-                  textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 48),
+              Text(
+                l10n.s10_title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: context.onboardingColors.textPrimary,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  height: 1.2,
+                  fontFamily: 'Inter',
                 ),
-                const SizedBox(height: OwnKeepSpacing.lg),
-                ElevatedButton(
-                  onPressed: () => Navigator.of(context).pop(),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                l10n.s10_body,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: context.onboardingColors.textSecondary,
+                  fontSize: 16,
+                  height: 1.5,
+                  fontFamily: 'Inter',
+                ),
+              ),
+              const Spacer(),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: OwnKeepOnboardingGradients.primaryButton,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: ElevatedButton(
+                  onPressed: () => context.go('/home'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: OwnKeepColors.primary,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.sm)),
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
-                  child: const Text('Go Back', style: TextStyle(fontFamily: 'Inter')),
+                  child: Text(
+                    l10n.s10_action_home,
+                    style: TextStyle(
+                      color: context.onboardingColors.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 32),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

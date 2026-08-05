@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class WipeDataScreen extends StatefulWidget {
   const WipeDataScreen({super.key});
@@ -12,144 +14,219 @@ class WipeDataScreen extends StatefulWidget {
 }
 
 class _WipeDataScreenState extends State<WipeDataScreen> {
-  final List<bool> _checks = [false, false, false];
-  final _controller = TextEditingController();
+  bool _backupChecked = false;
+  bool _recoveryChecked = false;
+  bool _deviceChecked = false;
+  String _confirmText = '';
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  bool get _canDelete => _backupChecked && _recoveryChecked && _deviceChecked && _confirmText == 'DELETE';
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text('Wipe Data', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            Text('Permanently erase this vault', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-          ],
+        title: Text(
+          l10n.s46_title,
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
+          ),
         ),
+        centerTitle: true,
       ),
-      bottomNavigationBar: OwnKeepBottomNav(),
-      body: Padding(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: OwnKeepSpacing.xl),
-            // Warning icon
+            // Warning Box
             Container(
-              width: 100, height: 100,
+              padding: const EdgeInsets.all(OwnKeepSpacing.lg),
               decoration: BoxDecoration(
-                color: OwnKeepColors.danger.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-                border: Border.all(color: OwnKeepColors.danger.withValues(alpha: 0.6), width: 2),
-              ),
-              child: const Center(child: Icon(Icons.priority_high_rounded, color: OwnKeepColors.danger, size: 52)),
-            ),
-            SizedBox(height: OwnKeepSpacing.xl),
-            Text('This action cannot be undone', textAlign: TextAlign.center,
-                style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 20, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-            SizedBox(height: OwnKeepSpacing.md),
-            Text(
-              'All documents, notes, reminders, tags, recovery settings and encryption keys in this vault will be permanently removed from this device.',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, fontFamily: 'Inter', height: 1.6),
-            ),
-            SizedBox(height: OwnKeepSpacing.xl),
-            // Confirmation checklist
-            Container(
-              padding: EdgeInsets.all(OwnKeepSpacing.md),
-              decoration: BoxDecoration(
-                color: OwnKeepColors.danger.withValues(alpha: 0.07),
-                borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                border: Border.all(color: OwnKeepColors.danger.withValues(alpha: 0.3)),
+                color: colors.dangerRed.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.dangerRed.withOpacity(0.3)),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Before continuing', style: TextStyle(color: OwnKeepColors.danger, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                  SizedBox(height: OwnKeepSpacing.sm),
-                  ..._buildCheckItems([
-                    'I have created an encrypted backup',
-                    'I understand recovery will be impossible',
-                    'I want to erase this vault from this device',
-                  ]),
+                  SvgPicture.asset(OwnKeepMainIcons.danger_exclamation, colorFilter: ColorFilter.mode(colors.dangerRed, BlendMode.srcIn), width: 48),
+                  const SizedBox(height: OwnKeepSpacing.md),
+                  Text(
+                    l10n.s46_warning_title,
+                    style: TextStyle(
+                      color: colors.dangerRed,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Inter',
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    l10n.s46_warning_body,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 14,
+                      fontFamily: 'Inter',
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ],
               ),
             ),
-            SizedBox(height: OwnKeepSpacing.lg),
-            // Type DELETE field
-            TextField(
-              controller: _controller,
-              style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontFamily: 'Inter'),
-              decoration: InputDecoration(
-                hintText: 'Type DELETE to confirm',
-                hintStyle: TextStyle(color: OwnKeepColors.darkTextMuted, fontFamily: 'Inter'),
-                filled: true,
-                fillColor: OwnKeepColors.danger.withValues(alpha: 0.07),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                  borderSide: BorderSide(color: OwnKeepColors.danger.withValues(alpha: 0.4)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                  borderSide: BorderSide(color: OwnKeepColors.danger.withValues(alpha: 0.4)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                  borderSide: const BorderSide(color: OwnKeepColors.danger),
-                ),
+
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Checkboxes
+            Text(
+              l10n.s46_before,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
               ),
             ),
-            SizedBox(height: OwnKeepSpacing.lg),
-            // Delete button
+            const SizedBox(height: OwnKeepSpacing.md),
+            _buildCheckbox(colors, l10n.s46_backup_check, _backupChecked, (val) => setState(() => _backupChecked = val)),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            _buildCheckbox(colors, l10n.s46_recovery_check, _recoveryChecked, (val) => setState(() => _recoveryChecked = val)),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            _buildCheckbox(colors, l10n.s46_device_check, _deviceChecked, (val) => setState(() => _deviceChecked = val)),
+
+            const SizedBox(height: OwnKeepSpacing.xl),
+
+            // Confirmation Input
+            Container(
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TextField(
+                onChanged: (val) {
+                  setState(() {
+                    _confirmText = val;
+                  });
+                },
+                style: TextStyle(
+                  color: colors.dangerRed,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                  letterSpacing: 1.5,
+                ),
+                decoration: InputDecoration(
+                  hintText: l10n.s46_confirm_hint,
+                  hintStyle: TextStyle(
+                    color: colors.textMuted,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0,
+                  ),
+                  border: InputBorder.none,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Action Buttons
             SizedBox(
               width: double.infinity,
-              child: FilledButton(
-                onPressed: () {},
-                style: FilledButton.styleFrom(
-                  backgroundColor: OwnKeepColors.danger,
-                  minimumSize: const Size.fromHeight(52),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
+              child: ElevatedButton(
+                onPressed: _canDelete ? () {} : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colors.dangerRed,
+                  disabledBackgroundColor: colors.dangerRed.withOpacity(0.3),
+                  foregroundColor: Colors.white,
+                  disabledForegroundColor: Colors.white.withOpacity(0.7),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: Text('Permanently Delete Vault', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+                child: Text(
+                  l10n.s46_delete,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Inter',
+                  ),
+                ),
               ),
             ),
-            SizedBox(height: OwnKeepSpacing.md),
-            TextButton(
-              onPressed: () => Navigator.of(context).maybePop(),
-              child: Text('Cancel', style: TextStyle(color: OwnKeepColors.primary, fontSize: 15, fontFamily: 'Inter')),
+            const SizedBox(height: OwnKeepSpacing.md),
+            SizedBox(
+              width: double.infinity,
+              child: TextButton(
+                onPressed: () => context.pop(),
+                child: Text(
+                  l10n.common_cancel,
+                  style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ),
             ),
+            const SizedBox(height: OwnKeepSpacing.xxl),
           ],
         ),
       ),
     );
   }
 
-  List<Widget> _buildCheckItems(List<String> items) {
-    return items.asMap().entries.map((e) {
-      return Row(
+  Widget _buildCheckbox(OwnKeepMainColorsTheme colors, String label, bool isChecked, ValueChanged<bool> onChanged) {
+    return GestureDetector(
+      onTap: () => onChanged(!isChecked),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Checkbox(
-            value: _checks[e.key],
-            onChanged: (v) => setState(() => _checks[e.key] = v ?? false),
-            activeColor: OwnKeepColors.danger,
-            side: const BorderSide(color: OwnKeepColors.darkTextMuted, width: 1.5),
+          Container(
+            width: 24,
+            height: 24,
+            margin: const EdgeInsets.only(top: 2, right: 12),
+            decoration: BoxDecoration(
+              color: isChecked ? colors.dangerRed : Colors.transparent,
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(
+                color: isChecked ? colors.dangerRed : colors.textMuted,
+                width: 2,
+              ),
+            ),
+            child: isChecked
+                ? const Icon(Icons.check, size: 16, color: Colors.white)
+                : null,
           ),
-          Expanded(child: Text(e.value, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, fontFamily: 'Inter'))),
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 15,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ),
         ],
-      );
-    }).toList();
+      ),
+    );
   }
 }

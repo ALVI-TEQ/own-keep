@@ -1,160 +1,249 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class FileDetailsScreen extends StatelessWidget {
   const FileDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
         title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text('File Details', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            Text('Passport.pdf', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
+          children: [
+            Text(
+              l10n.s48_title,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+            Text(
+              l10n.s48_subtitle,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontFamily: 'Inter',
+              ),
+            ),
           ],
         ),
+        centerTitle: true,
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.more_vert_rounded, color: OwnKeepColors.darkTextPrimary)),
+          IconButton(
+            icon: SvgPicture.asset(OwnKeepMainIcons.more_vertical, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+            onPressed: () {},
+          ),
         ],
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 1),
-      body: ListView(
-        children: [
-          // Preview area
-          Container(
-            margin: EdgeInsets.all(OwnKeepSpacing.base),
-            height: 160,
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Center(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE8EBF0),
-                  borderRadius: BorderRadius.circular(OwnKeepRadius.md),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Preview Image
+            Container(
+              height: 200,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                // Try to load illustration or use placeholder
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/main/illustrations/passport_file_preview.svg',
+                      fit: BoxFit.cover,
+                    ),
+                    // Adding gradient overlay if needed or just trusting the SVG
+                  ],
                 ),
-                child: Column(mainAxisSize: MainAxisSize.min, children: const [
-                  Text('PASSPORT', style: TextStyle(color: Color(0xFF1A2340), fontSize: 18, fontWeight: FontWeight.w700, letterSpacing: 1.5, fontFamily: 'Inter')),
-                  SizedBox(height: 4),
-                  Text('Preview', style: TextStyle(color: Color(0xFF6B7A99), fontSize: 12, fontFamily: 'Inter')),
-                ]),
               ),
             ),
-          ),
+            const SizedBox(height: OwnKeepSpacing.xxl),
 
-          // General info section
-          _SectionLabel(text: 'General'),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Column(
-              children: const [
-                _InfoRow(label: 'File name', value: 'Passport.pdf', isFirst: true),
-                _InfoRow(label: 'Type', value: 'PDF document'),
-                _InfoRow(label: 'Size', value: '1.2 MB'),
-                _InfoRow(label: 'Added', value: '10 May 2025, 10:30 AM'),
-                _InfoRow(label: 'Modified', value: '10 May 2025, 10:31 AM'),
-                _InfoRow(label: 'Location', value: 'Personal › Identity', isLast: true),
-              ],
-            ),
-          ),
-
-          // Security section
-          _SectionLabel(text: 'Security'),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: const Column(
-              children: [
-                _InfoRow(label: 'Encryption', value: 'AES-256-GCM', isFirst: true),
-                _InfoRow(label: 'Integrity', value: 'Verified', valueColor: OwnKeepColors.success),
-                _InfoRow(label: 'Local file ID', value: '7FA2-91C8-48D2', isLast: true),
-              ],
-            ),
-          ),
-
-          SizedBox(height: OwnKeepSpacing.lg),
-          // Open Document button
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-            child: FilledButton(
-              onPressed: () {},
-              style: FilledButton.styleFrom(
-                backgroundColor: OwnKeepColors.primary,
-                minimumSize: const Size.fromHeight(52),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
+            // General Section
+            Text(
+              l10n.s48_general,
+              style: TextStyle(
+                color: colors.primaryBlue,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+                letterSpacing: 1.1,
               ),
-              child: Text('Open Document', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            Container(
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Column(
+                children: [
+                  _buildDetailRow(colors, l10n.s48_file_name_label, l10n.s48_file_name),
+                  _buildDivider(colors),
+                  _buildDetailRow(colors, l10n.s48_type_label, l10n.s48_type),
+                  _buildDivider(colors),
+                  _buildDetailRow(colors, l10n.s48_size_label, l10n.s48_size),
+                  _buildDivider(colors),
+                  _buildDetailRow(colors, l10n.s48_added_label, l10n.s48_added),
+                  _buildDivider(colors),
+                  _buildDetailRow(colors, l10n.s48_modified_label, l10n.s48_modified),
+                  _buildDivider(colors),
+                  _buildDetailRow(colors, l10n.s48_location_label, l10n.s48_location),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xl),
+
+            // Security Section
+            Text(
+              l10n.s48_security,
+              style: TextStyle(
+                color: colors.primaryBlue,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+                letterSpacing: 1.1,
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            Container(
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Column(
+                children: [
+                  _buildDetailRow(colors, l10n.s48_encryption_label, l10n.s48_encryption),
+                  _buildDivider(colors),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.s48_integrity_label,
+                          style: TextStyle(
+                            color: colors.textSecondary,
+                            fontSize: 15,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            SvgPicture.asset(OwnKeepMainIcons.verified_shield, colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn), width: 16),
+                            const SizedBox(width: 6),
+                            Text(
+                              l10n.s48_integrity,
+                              style: TextStyle(
+                                color: colors.successGreen,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  _buildDivider(colors),
+                  _buildDetailRow(colors, l10n.s48_local_id_label, l10n.s48_local_id),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xl),
+
+            // Open Document Button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {},
+                icon: SvgPicture.asset(OwnKeepMainIcons.file_pdf, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn), width: 20),
+                label: Text(
+                  l10n.s48_open,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colors.primaryBlue,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xxl),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(OwnKeepMainColorsTheme colors, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              color: colors.textSecondary,
+              fontSize: 15,
+              fontFamily: 'Inter',
             ),
           ),
-          SizedBox(height: OwnKeepSpacing.xl),
+          Text(
+            value,
+            style: TextStyle(
+              color: colors.textPrimary,
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Inter',
+            ),
+          ),
         ],
       ),
     );
   }
-}
 
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel({required this.text});
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(OwnKeepSpacing.base, OwnKeepSpacing.lg, OwnKeepSpacing.base, OwnKeepSpacing.sm),
-      child: Text(text, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-    );
-  }
-}
-
-class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, required this.value, this.valueColor, this.isFirst = false, this.isLast = false});
-  final String label;
-  final String value;
-  final Color? valueColor;
-  final bool isFirst;
-  final bool isLast;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.md, vertical: 14),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(label, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 14, fontFamily: 'Inter')),
-              Text(value, style: TextStyle(color: valueColor ?? OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-            ],
-          ),
-        ),
-        if (!isLast) Divider(height: 1, color: OwnKeepColors.darkBorder.withValues(alpha: 0.25)),
-      ],
+  Widget _buildDivider(OwnKeepMainColorsTheme colors) {
+    return Divider(
+      color: colors.borderSoft,
+      height: 1,
     );
   }
 }

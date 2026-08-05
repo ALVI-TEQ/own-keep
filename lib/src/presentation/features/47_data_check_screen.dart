@@ -1,167 +1,275 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class DataCheckScreen extends StatelessWidget {
   const DataCheckScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
         title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text('Data Check', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            Text('Verify vault integrity', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
+          children: [
+            Text(
+              l10n.s47_title,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+            Text(
+              l10n.s47_subtitle,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontFamily: 'Inter',
+              ),
+            ),
           ],
         ),
+        centerTitle: true,
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.refresh_rounded, color: OwnKeepColors.darkTextPrimary)),
+          IconButton(
+            icon: SvgPicture.asset(OwnKeepMainIcons.refresh, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+            onPressed: () {},
+          ),
         ],
       ),
-      bottomNavigationBar: OwnKeepBottomNav(),
-      body: Padding(
-        padding: EdgeInsets.all(OwnKeepSpacing.base),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: OwnKeepSpacing.xl),
-            // Green check circle
-            Container(
-              width: 110, height: 110,
-              decoration: BoxDecoration(
-                color: OwnKeepColors.success.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-                border: Border.all(color: OwnKeepColors.success.withValues(alpha: 0.6), width: 2.5),
-              ),
-              child: const Center(child: Icon(Icons.check_rounded, color: OwnKeepColors.success, size: 56)),
-            ),
-            SizedBox(height: OwnKeepSpacing.lg),
-            Text('Everything looks good', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 20, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-            SizedBox(height: 6),
-            Text('Last checked today at 9:20 AM', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, fontFamily: 'Inter')),
-            SizedBox(height: OwnKeepSpacing.xl),
-            // Stat chips
-            Row(
-              children: const [
-                _StatChip(value: '248', label: 'Items checked', color: OwnKeepColors.primary),
-                SizedBox(width: OwnKeepSpacing.sm),
-                _StatChip(value: '0', label: 'Corrupt files'),
-                SizedBox(width: OwnKeepSpacing.sm),
-                _StatChip(value: '0', label: 'Missing files'),
-                SizedBox(width: OwnKeepSpacing.sm),
-                _StatChip(value: '100%', label: 'Integrity', color: OwnKeepColors.ai),
-              ],
-            ),
-            SizedBox(height: OwnKeepSpacing.xl),
-            // Checks performed
-            Align(alignment: Alignment.centerLeft,
-                child: Text('Checks Performed', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter'))),
-            SizedBox(height: OwnKeepSpacing.sm),
-            Expanded(
-              child: ListView(
-                children: const [
-                  _CheckItem(title: 'File integrity', subtitle: 'All file hashes match'),
-                  _CheckItem(title: 'Encrypted manifests', subtitle: 'Valid and readable'),
-                  _CheckItem(title: 'Document index', subtitle: 'No missing entries'),
-                  _CheckItem(title: 'Recovery metadata', subtitle: 'Verified'),
-                  _CheckItem(title: 'Storage consistency', subtitle: 'No orphaned files'),
+            // Status Header
+            Center(
+              child: Column(
+                children: [
+                  SvgPicture.asset(
+                    'assets/main/illustrations/data_check_success.svg', // Assumed illustration path
+                    height: 140,
+                  ),
+                  const SizedBox(height: OwnKeepSpacing.lg),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Assuming success_check might be a generic check or success_check_circle
+                      SvgPicture.asset(OwnKeepMainIcons.check_badge, colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn)),
+                      const SizedBox(width: 8),
+                      Text(
+                        l10n.s47_status,
+                        style: TextStyle(
+                          color: colors.textPrimary,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    l10n.s47_last_checked,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 14,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
                 ],
               ),
             ),
-            // Run Again button
-            Padding(
-              padding: EdgeInsets.only(top: OwnKeepSpacing.md),
-              child: SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: () {},
-                  style: FilledButton.styleFrom(
-                    backgroundColor: OwnKeepColors.primary,
-                    minimumSize: const Size.fromHeight(52),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
+
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Metrics Grid
+            Row(
+              children: [
+                Expanded(child: _buildMetric(colors, l10n.s47_items_value, l10n.s47_items_label)),
+                Container(width: 1, height: 40, color: colors.borderSoft),
+                Expanded(child: _buildMetric(colors, l10n.s47_corrupt_value, l10n.s47_corrupt_label, color: colors.dangerRed, valueColor: colors.textPrimary)), // 0 is okay, but if >0 it would be red. Assuming normal style for 0
+              ],
+            ),
+            const SizedBox(height: OwnKeepSpacing.md),
+            Divider(color: colors.borderSoft),
+            const SizedBox(height: OwnKeepSpacing.md),
+            Row(
+              children: [
+                Expanded(child: _buildMetric(colors, l10n.s47_missing_value, l10n.s47_missing_label, color: colors.dangerRed, valueColor: colors.textPrimary)), // Same logic
+                Container(width: 1, height: 40, color: colors.borderSoft),
+                Expanded(child: _buildMetric(colors, l10n.s47_integrity_value, l10n.s47_integrity_label, valueColor: colors.successGreen)),
+              ],
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Checks Performed List
+            Text(
+              l10n.s47_checks,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.md),
+            Container(
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Column(
+                children: [
+                  _buildCheckItem(colors, OwnKeepMainIcons.file_integrity, l10n.s47_file_integrity, l10n.s47_file_integrity_body, const Color(0xFF27C5E8)),
+                  _buildDivider(colors),
+                  _buildCheckItem(colors, OwnKeepMainIcons.encrypted_manifest, l10n.s47_manifests, l10n.s47_manifests_body, colors.aiPurple),
+                  _buildDivider(colors),
+                  _buildCheckItem(colors, OwnKeepMainIcons.document_index, l10n.s47_document_index, l10n.s47_document_index_body, colors.primaryBlue),
+                  _buildDivider(colors),
+                  _buildCheckItem(colors, OwnKeepMainIcons.recovery_metadata, l10n.s47_recovery_metadata, l10n.s47_recovery_metadata_body, colors.warningOrange),
+                  _buildDivider(colors),
+                  _buildCheckItem(colors, OwnKeepMainIcons.storage_consistency, l10n.s47_storage_consistency, l10n.s47_storage_consistency_body, colors.successGreen),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xl),
+
+            // Run Again Button
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: () {},
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: colors.primaryBlue,
+                  side: BorderSide(color: colors.primaryBlue),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Text('Run Data Check Again', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+                ),
+                child: Text(
+                  l10n.s47_run_again,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                  ),
                 ),
               ),
             ),
+            const SizedBox(height: OwnKeepSpacing.xxl),
           ],
         ),
       ),
     );
   }
-}
 
-class _StatChip extends StatelessWidget {
-  const _StatChip({required this.value, required this.label, this.color});
-  final String value;
-  final String label;
-  final Color? color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: OwnKeepSpacing.md),
-        decoration: BoxDecoration(
-          color: OwnKeepColors.darkSurfaceElevated,
-          borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-          border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+  Widget _buildMetric(OwnKeepMainColorsTheme colors, String value, String label, {Color? color, Color? valueColor}) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            color: valueColor ?? colors.textPrimary,
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Inter',
+          ),
         ),
-        child: Column(
-          children: [
-            Text(value, style: TextStyle(color: color ?? OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-            SizedBox(height: 3),
-            Text(label, textAlign: TextAlign.center, style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 10, fontFamily: 'Inter')),
-          ],
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: TextStyle(
+            color: color ?? colors.textSecondary,
+            fontSize: 13,
+            fontFamily: 'Inter',
+          ),
         ),
-      ),
+      ],
     );
   }
-}
 
-class _CheckItem extends StatelessWidget {
-  const _CheckItem({required this.title, required this.subtitle});
-  final String title;
-  final String subtitle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-      padding: EdgeInsets.all(OwnKeepSpacing.md),
-      decoration: BoxDecoration(
-        color: OwnKeepColors.darkSurfaceElevated,
-        borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-        border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-      ),
+  Widget _buildCheckItem(
+    OwnKeepMainColorsTheme colors, 
+    String icon, 
+    String title,
+    String subtitle,
+    Color iconColor,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
       child: Row(
         children: [
           Container(
-            width: 32, height: 32,
-            decoration: BoxDecoration(color: OwnKeepColors.success.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
-            child: Icon(Icons.check_rounded, color: OwnKeepColors.success, size: 18),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: colors.surfaceSelected,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: SvgPicture.asset(
+              icon, 
+              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+            ),
           ),
-          SizedBox(width: OwnKeepSpacing.md),
+          const SizedBox(width: OwnKeepSpacing.md),
           Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(title, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-              Text(subtitle, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-            ]),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: colors.textSecondary,
+                    fontSize: 13,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ],
+            ),
           ),
-          Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 18),
+          SvgPicture.asset(
+            OwnKeepMainIcons.success_check, // Assume we have a success check icon for these passed checks
+            colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn),
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDivider(OwnKeepMainColorsTheme colors) {
+    return Divider(
+      color: colors.borderSoft,
+      height: 1,
+      indent: 64, // Align with text start
     );
   }
 }

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none"><defs>
+<linearGradient id="purpleLogo" x1="55" y1="35" x2="202" y2="220" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#925CFF"/>
+  <stop offset=".52" stop-color="#5B32E9"/>
+  <stop offset="1" stop-color="#26177A"/>
+</linearGradient>
+<linearGradient id="rating" x1="45" y1="35" x2="215" y2="220" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#7652F5"/>
+  <stop offset=".55" stop-color="#4932C6"/>
+  <stop offset="1" stop-color="#261D78"/>
+</linearGradient>
+<linearGradient id="success" x1="70" y1="45" x2="190" y2="215" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#25D893"/>
+  <stop offset="1" stop-color="#0A4638"/>
+</linearGradient>
+</defs>
+<circle cx="128" cy="128" r="82" stroke="#17243A" stroke-width="26"/>
+<circle cx="128" cy="128" r="82" stroke="#2767F5" stroke-width="26" stroke-dasharray="196 515" stroke-dashoffset="0" transform="rotate(-90 128 128)"/>
+<circle cx="128" cy="128" r="82" stroke="#7B42EF" stroke-width="26" stroke-dasharray="129 515" stroke-dashoffset="-196" transform="rotate(-90 128 128)"/>
+<circle cx="128" cy="128" r="82" stroke="#F57644" stroke-width="26" stroke-dasharray="88 515" stroke-dashoffset="-325" transform="rotate(-90 128 128)"/>
+<circle cx="128" cy="128" r="82" stroke="#9ED1D1" stroke-width="26" stroke-dasharray="102 515" stroke-dashoffset="-413" transform="rotate(-90 128 128)"/>
+<text x="128" y="122" text-anchor="middle" fill="#F5F8FF" font-family="Arial,sans-serif" font-size="44">128</text>
+<text x="128" y="153" text-anchor="middle" fill="#F5F8FF" font-family="Arial,sans-serif" font-size="23">GB</text>
+</svg>

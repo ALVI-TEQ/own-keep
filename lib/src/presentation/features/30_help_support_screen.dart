@@ -1,71 +1,232 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../components/ownkeep_ui_kit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
+import '../../theme/ownkeep_spacing.dart';
 
 class HelpSupportScreen extends StatelessWidget {
   const HelpSupportScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return OwnKeepScaffold(
-      title: 'Help & Support',
-      actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.download_outlined, color: OwnKeepColors.darkTextPrimary)),
-      ],
-      body: ListView(
-        children: [
-          // Help Center section
-          const OwnKeepSectionHeader(title: 'Help Center'),
-          OwnKeepListTile(
-            title: 'User Guide',
-            subtitle: 'Learn how to use OwnKeep',
-            icon: Icons.menu_book_outlined,
-            iconColor: OwnKeepColors.primary,
-            onTap: () {},
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      backgroundColor: colors.backgroundTop,
+      appBar: AppBar(
+        backgroundColor: colors.backgroundTop,
+        elevation: 0,
+        leading: IconButton(
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
+        ),
+        title: Text(
+          l10n.s30_title,
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
           ),
-          OwnKeepListTile(
-            title: 'FAQ',
-            subtitle: 'Find answers to common questions',
-            icon: Icons.help_outline_rounded,
-            iconColor: OwnKeepColors.orange,
-            onTap: () {},
-          ),
-          OwnKeepListTile(
-            title: 'Video Tutorials',
-            subtitle: 'Step by step video guides',
-            icon: Icons.play_circle_outline,
-            iconColor: OwnKeepColors.danger,
-            onTap: () {},
-          ),
-          // Support section
-          const OwnKeepSectionHeader(title: 'Support'),
-          OwnKeepListTile(
-            title: 'Contact Support',
-            subtitle: 'We\'ll respond as soon as possible',
-            icon: Icons.headset_mic_outlined,
-            iconColor: OwnKeepColors.success,
-            onTap: () {},
-          ),
-          OwnKeepListTile(
-            title: 'Report an Issue',
-            subtitle: 'Help us improve OwnKeep',
-            icon: Icons.bug_report_outlined,
-            iconColor: OwnKeepColors.warning,
-            onTap: () {},
-          ),
-          // About section
-          const OwnKeepSectionHeader(title: 'About'),
-          OwnKeepListTile(
-            title: 'About OwnKeep',
-            subtitle: 'Version 1.0.0',
-            icon: Icons.info_outline_rounded,
-            iconColor: OwnKeepColors.primary,
-            onTap: () {},
-          ),
-          const OwnKeepTipCard(
-            text: 'Tip: All your data is stored only on your device. We never collect or transmit your information.',
-          ),
-        ],
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Text(
+              l10n.s30_how_can_we_help,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Inter',
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xl),
+
+            // Search Bar
+            Container(
+              height: 52,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(26),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Row(
+                children: [
+                  SvgPicture.asset(OwnKeepMainIcons.search, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      l10n.s30_search_help,
+                      style: TextStyle(
+                        color: colors.textSecondary,
+                        fontSize: 15,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Support Options
+            _buildSupportOption(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.faq,
+              iconColor: const Color(0xFF27C5E8), // accentCyan
+              title: l10n.s30_faq,
+              subtitle: l10n.s30_faq_body,
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            _buildSupportOption(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.guide_book,
+              iconColor: colors.warningOrange,
+              title: l10n.s30_guide,
+              subtitle: l10n.s30_guide_body,
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            _buildSupportOption(
+              context: context,
+              colors: colors,
+              icon: OwnKeepMainIcons.contact_support,
+              iconColor: colors.primaryBlue,
+              title: l10n.s30_contact,
+              subtitle: l10n.s30_contact_body,
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Popular Topics
+            Text(
+              l10n.s30_popular,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+                letterSpacing: 1.1,
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.md),
+            _buildPopularTopic(colors, l10n.s30_recover),
+            _buildPopularTopic(colors, l10n.s30_share),
+            _buildPopularTopic(colors, l10n.s30_backup),
+
+            const SizedBox(height: OwnKeepSpacing.xxl),
+            
+            // App Version
+            Center(
+              child: Text(
+                l10n.s30_app_version,
+                style: TextStyle(
+                  color: colors.textMuted,
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xl),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSupportOption({
+    required BuildContext context,
+    required OwnKeepMainColorsTheme colors,
+    required String icon,
+    required Color iconColor,
+    required String title,
+    required String subtitle,
+  }) {
+    return InkWell(
+      onTap: () {},
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: colors.borderSoft),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colors.surfaceSelected,
+                shape: BoxShape.circle,
+              ),
+              child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+            ),
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPopularTopic(OwnKeepMainColorsTheme colors, String title) {
+    return InkWell(
+      onTap: () {},
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 15,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ),
+            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+          ],
+        ),
       ),
     );
   }

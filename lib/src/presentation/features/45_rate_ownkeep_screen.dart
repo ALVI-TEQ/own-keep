@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class RateOwnKeepScreen extends StatefulWidget {
   const RateOwnKeepScreen({super.key});
@@ -12,176 +14,265 @@ class RateOwnKeepScreen extends StatefulWidget {
 }
 
 class _RateOwnKeepScreenState extends State<RateOwnKeepScreen> {
-  int _selectedStars = 5;
-  final _controller = TextEditingController();
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  int _selectedRating = 0;
 
   @override
   Widget build(BuildContext context) {
-    return OwnKeepScaffold(
-      title: 'Rate OwnKeep',
-      showBottomNav: true,
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      backgroundColor: colors.backgroundTop,
+      appBar: AppBar(
+        backgroundColor: colors.backgroundTop,
+        elevation: 0,
+        leading: IconButton(
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
+        ),
+        title: Text(
+          l10n.s45_title,
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
+          ),
+        ),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: OwnKeepSpacing.xl),
-            // Hero emoji illustration
+            // Illustration
             Center(
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    width: 120, height: 120,
-                    decoration: BoxDecoration(
-                      color: OwnKeepColors.ai.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(28),
-                    ),
-                    child: const Center(child: Icon(Icons.star_rounded, color: OwnKeepColors.warning, size: 64)),
-                  ),
-                  Positioned(
-                    right: -12, bottom: -8,
-                    child: Container(
-                      width: 36, height: 36,
-                      decoration: BoxDecoration(color: OwnKeepColors.pink.withValues(alpha: 0.2), shape: BoxShape.circle),
-                      child: const Center(child: Icon(Icons.favorite_rounded, color: OwnKeepColors.pink, size: 20)),
-                    ),
-                  ),
-                ],
+              child: SvgPicture.asset(
+                'assets/main/illustrations/rate_ownkeep_illustration.svg', // Assumed illustration path
+                height: 180,
               ),
             ),
-            SizedBox(height: OwnKeepSpacing.xl),
-            Text('Enjoying OwnKeep?', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 22, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-            SizedBox(height: 8),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40),
-              child: Text('Your feedback helps us build a better app for you.', textAlign: TextAlign.center,
-                  style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 14, fontFamily: 'Inter', height: 1.5)),
+            const SizedBox(height: OwnKeepSpacing.xl),
+
+            // Hero Text
+            Text(
+              l10n.s45_hero_title,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Inter',
+                letterSpacing: -0.5,
+              ),
+              textAlign: TextAlign.center,
             ),
-            SizedBox(height: OwnKeepSpacing.xl),
-            // Star row
+            const SizedBox(height: 8),
+            Text(
+              l10n.s45_hero_body,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 15,
+                fontFamily: 'Inter',
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Star Rating
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(5, (i) => GestureDetector(
-                onTap: () => setState(() => _selectedStars = i + 1),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 6),
-                  child: Icon(Icons.star_rounded, color: i < _selectedStars ? OwnKeepColors.warning : OwnKeepColors.darkSurfaceMuted, size: 44),
-                ),
-              )),
-            ),
-            SizedBox(height: 8),
-            Text('Tap a star to rate', style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 13, fontFamily: 'Inter')),
-            SizedBox(height: OwnKeepSpacing.xl),
-            // Text feedback
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: OwnKeepColors.darkSurfaceElevated,
-                  borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                  border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(OwnKeepSpacing.md),
-                      child: TextField(
-                        controller: _controller,
-                        maxLines: 4,
-                        style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontFamily: 'Inter'),
-                        decoration: const InputDecoration(
-                          hintText: 'Tell us what you love about OwnKeep...',
-                          hintStyle: TextStyle(color: OwnKeepColors.darkTextMuted, fontFamily: 'Inter'),
-                          border: InputBorder.none,
-                          isDense: true,
-                          contentPadding: EdgeInsets.zero,
-                        ),
+              children: List.generate(5, (index) {
+                final isSelected = index < _selectedRating;
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedRating = index + 1;
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: SvgPicture.asset(
+                      OwnKeepMainIcons.rating_star, // using rating_star icon for both states here and tinting
+                      colorFilter: ColorFilter.mode(
+                        isSelected ? colors.warningOrange : colors.surfaceSelected,
+                        BlendMode.srcIn,
                       ),
+                      width: 40,
                     ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(OwnKeepSpacing.md, 0, OwnKeepSpacing.md, OwnKeepSpacing.sm),
-                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
-                        Text('(Optional)', style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 12, fontFamily: 'Inter')),
-                        Text('0/500', style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 12, fontFamily: 'Inter')),
-                      ]),
-                    ),
-                  ],
-                ),
+                  ),
+                );
+              }),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              l10n.s45_rate_hint,
+              style: TextStyle(
+                color: colors.textMuted,
+                fontSize: 13,
+                fontFamily: 'Inter',
               ),
             ),
-            SizedBox(height: OwnKeepSpacing.lg),
-            // Submit button
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-              child: FilledButton(
-                onPressed: () {},
-                style: FilledButton.styleFrom(
-                  backgroundColor: OwnKeepColors.primary,
-                  minimumSize: const Size.fromHeight(52),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
+            
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Comment Box
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  l10n.s45_optional,
+                  style: TextStyle(
+                    color: colors.textMuted,
+                    fontSize: 13,
+                    fontFamily: 'Inter',
+                  ),
                 ),
-                child: Text('Submit Rating', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-              ),
+                Text(
+                  l10n.s45_counter,
+                  style: TextStyle(
+                    color: colors.textMuted,
+                    fontSize: 13,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: OwnKeepSpacing.lg),
-            // Share & Feedback tiles
+            const SizedBox(height: 8),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
               decoration: BoxDecoration(
-                color: OwnKeepColors.darkSurfaceElevated,
-                borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              child: TextField(
+                maxLines: 4,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 15,
+                  fontFamily: 'Inter',
+                ),
+                decoration: InputDecoration(
+                  hintText: l10n.s45_comment_hint,
+                  hintStyle: TextStyle(
+                    color: colors.textMuted,
+                    fontSize: 15,
+                    fontFamily: 'Inter',
+                  ),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+            
+            const SizedBox(height: OwnKeepSpacing.xl),
+
+            // Submit Button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _selectedRating > 0 ? () {} : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colors.primaryBlue,
+                  disabledBackgroundColor: colors.surfaceSelected,
+                  foregroundColor: Colors.white,
+                  disabledForegroundColor: colors.textMuted,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: Text(
+                  l10n.s45_submit,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Alternative Links
+            Container(
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.borderSoft),
               ),
               child: Column(
                 children: [
-                  _RateTile(icon: Icons.share_outlined, iconColor: OwnKeepColors.primary, title: 'Share OwnKeep', subtitle: 'Recommend to your friends', isFirst: true),
-                  Divider(height: 1, color: OwnKeepColors.darkBorder.withValues(alpha: 0.25), indent: 64),
-                  _RateTile(icon: Icons.mail_outline_rounded, iconColor: OwnKeepColors.ai, title: 'Send Feedback', subtitle: "We'd love to hear from you", isLast: true),
+                  _buildLinkItem(colors, OwnKeepMainIcons.share, l10n.s45_share, l10n.s45_share_body, colors.aiPurple),
+                  Divider(color: colors.borderSoft, height: 1, indent: 64),
+                  _buildLinkItem(colors, OwnKeepMainIcons.contact_email, l10n.s45_feedback, l10n.s45_feedback_body, const Color(0xFF27C5E8)),
                 ],
               ),
             ),
-            SizedBox(height: OwnKeepSpacing.xl),
+            const SizedBox(height: OwnKeepSpacing.xxl),
           ],
         ),
       ),
     );
   }
-}
 
-class _RateTile extends StatelessWidget {
-  const _RateTile({required this.icon, required this.iconColor, required this.title, required this.subtitle, this.isFirst = false, this.isLast = false});
-  final IconData icon;
-  final Color iconColor;
-  final String title;
-  final String subtitle;
-  final bool isFirst;
-  final bool isLast;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildLinkItem(
+    OwnKeepMainColorsTheme colors, 
+    String icon, 
+    String title,
+    String subtitle,
+    Color iconColor,
+  ) {
     return InkWell(
       onTap: () {},
-      borderRadius: BorderRadius.vertical(
-        top: isFirst ? Radius.circular(OwnKeepRadius.md) : Radius.zero,
-        bottom: isLast ? Radius.circular(OwnKeepRadius.md) : Radius.zero,
-      ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.md, vertical: OwnKeepSpacing.md),
-        child: Row(children: [
-          OwnKeepIconBadge(icon: icon, color: iconColor, size: 36, iconSize: 18),
-          SizedBox(width: OwnKeepSpacing.md),
-          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(title, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-            Text(subtitle, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-          ])),
-          Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-        ]),
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: colors.surfaceSelected,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: SvgPicture.asset(
+                icon, 
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              ),
+            ),
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SvgPicture.asset(
+              OwnKeepMainIcons.chevron_right, 
+              colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
+            ),
+          ],
+        ),
       ),
     );
   }

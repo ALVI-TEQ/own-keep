@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../components/ownkeep_components.dart';
+import 'package:go_router/go_router.dart';
 import '../../theme/ownkeep_colors.dart';
 import '../../theme/ownkeep_spacing.dart';
 import '../../theme/ownkeep_radius.dart';
@@ -23,25 +24,19 @@ class ProfileScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const Icon(Icons.settings_suggest_rounded, color: OwnKeepColors.primary, size: 48),
+                const Icon(Icons.account_circle, color: OwnKeepColors.primary, size: 64),
                 const SizedBox(height: OwnKeepSpacing.md),
                 const Text(
-                  'Profile Features',
-                  style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Inter'),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: OwnKeepSpacing.sm),
-                const Text(
-                  'Configure settings and preferences for Profile.',
-                  style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 14, fontFamily: 'Inter'),
+                  'My Vault Profile',
+                  style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Inter'),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: OwnKeepSpacing.xl),
-                _buildMockOption('Option 1', Icons.tune),
+                _buildOption(context, 'Settings & Preferences', Icons.settings_outlined, '/features/settings-advanced'),
                 const Divider(color: OwnKeepColors.darkBorder, height: 1),
-                _buildMockOption('Option 2', Icons.settings_suggest),
+                _buildOption(context, 'Security & App Lock', Icons.security_outlined, '/lock'),
                 const Divider(color: OwnKeepColors.darkBorder, height: 1),
-                _buildMockOption('Advanced Configuration', Icons.miscellaneous_services),
+                _buildOption(context, 'Help & Support', Icons.help_outline, '/features/help-support'),
               ],
             ),
           ),
@@ -50,18 +45,21 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMockOption(String label, IconData icon) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: OwnKeepSpacing.md),
-      child: Row(
-        children: [
-          Icon(icon, color: OwnKeepColors.darkTextMuted, size: 24),
-          const SizedBox(width: OwnKeepSpacing.md),
-          Expanded(
-            child: Text(label, style: const TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontFamily: 'Inter')),
-          ),
-          const Icon(Icons.chevron_right, color: OwnKeepColors.darkTextMuted, size: 20),
-        ],
+  Widget _buildOption(BuildContext context, String label, IconData icon, String route) {
+    return InkWell(
+      onTap: () => context.push(route),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: OwnKeepSpacing.md),
+        child: Row(
+          children: [
+            Icon(icon, color: OwnKeepColors.darkTextMuted, size: 24),
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Text(label, style: const TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontFamily: 'Inter')),
+            ),
+            const Icon(Icons.chevron_right, color: OwnKeepColors.darkTextMuted, size: 20),
+          ],
+        ),
       ),
     );
   }

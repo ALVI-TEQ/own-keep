@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class MoveOrCopyScreen extends StatefulWidget {
   const MoveOrCopyScreen({super.key});
@@ -12,130 +14,271 @@ class MoveOrCopyScreen extends StatefulWidget {
 }
 
 class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
-  bool _keepOriginal = true;
-  String? _selected;
+  bool _keepOriginal = false;
+  String _selectedCategory = 'Personal';
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: OwnKeepColors.darkBackground,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
         ),
         title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text('Move or Copy', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            Text('Choose destination', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
+          children: [
+            Text(
+              l10n.s50_title,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+            Text(
+              l10n.s50_subtitle,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontFamily: 'Inter',
+              ),
+            ),
           ],
         ),
+        centerTitle: true,
       ),
-      bottomNavigationBar: OwnKeepBottomNav(currentIndex: 1),
       body: Column(
         children: [
-          // Selected item banner
-          Container(
-            margin: EdgeInsets.all(OwnKeepSpacing.base),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('Selected item', style: TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 12, fontFamily: 'Inter')),
-                  SizedBox(height: 2),
-                  Text('Passport.pdf', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                ]),
-                Text('1.2 MB', style: TextStyle(color: OwnKeepColors.primary, fontSize: 13, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-              ],
-            ),
-          ),
-
-          // Destination label
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Destination', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            ),
-          ),
-          SizedBox(height: OwnKeepSpacing.sm),
-
-          // Destination list
           Expanded(
-            child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-              children: [
-                _DestTile(icon: Icons.circle, iconColor: OwnKeepColors.primary, label: 'Personal', count: '28 items', selected: _selected == 'Personal', onTap: () => setState(() => _selected = 'Personal')),
-                _DestTile(icon: Icons.square_rounded, iconColor: OwnKeepColors.success, label: 'Finance', count: '16 items', selected: _selected == 'Finance', onTap: () => setState(() => _selected = 'Finance')),
-                _DestTile(icon: Icons.favorite_rounded, iconColor: OwnKeepColors.pink, label: 'Health', count: '12 items', selected: _selected == 'Health', onTap: () => setState(() => _selected = 'Health')),
-                _DestTile(icon: Icons.home_rounded, iconColor: OwnKeepColors.warning, label: 'Property', count: '9 items', selected: _selected == 'Property', onTap: () => setState(() => _selected = 'Property')),
-                _DestTile(icon: Icons.article_rounded, iconColor: OwnKeepColors.ai, label: 'Vehicle', count: '8 items', selected: _selected == 'Vehicle', onTap: () => setState(() => _selected = 'Vehicle')),
-                _DestTile(icon: Icons.diamond_rounded, iconColor: OwnKeepColors.ai, label: 'Education', count: '6 items', selected: _selected == 'Education', onTap: () => setState(() => _selected = 'Education')),
-                _DestTile(icon: Icons.add, iconColor: OwnKeepColors.warning, label: 'New Folder', count: 'Create a new destination', selected: false, onTap: () {}),
-              ],
-            ),
-          ),
-
-          // Copy / Move buttons
-          Padding(
-            padding: EdgeInsets.all(OwnKeepSpacing.base),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {},
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: OwnKeepColors.primary,
-                          side: BorderSide(color: OwnKeepColors.darkSurfaceElevated),
-                          backgroundColor: OwnKeepColors.darkSurfaceElevated,
-                          minimumSize: const Size.fromHeight(52),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Selected Item
+                  Text(
+                    l10n.s50_selected,
+                    style: TextStyle(
+                      color: colors.primaryBlue,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                      letterSpacing: 1.1,
+                    ),
+                  ),
+                  const SizedBox(height: OwnKeepSpacing.sm),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: colors.surfacePrimary,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: colors.borderSoft),
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: colors.surfaceSelected,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: SvgPicture.asset(OwnKeepMainIcons.file_pdf, colorFilter: const ColorFilter.mode(Color(0xFF27C5E8), BlendMode.srcIn)),
                         ),
-                        child: Text('Copy', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+                        const SizedBox(width: OwnKeepSpacing.md),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.s50_file_name,
+                                style: TextStyle(
+                                  color: colors.textPrimary,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Inter',
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                l10n.s50_file_size,
+                                style: TextStyle(
+                                  color: colors.textSecondary,
+                                  fontSize: 13,
+                                  fontFamily: 'Inter',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: OwnKeepSpacing.xl),
+
+                  // Destination
+                  Text(
+                    l10n.s50_destination,
+                    style: TextStyle(
+                      color: colors.primaryBlue,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                      letterSpacing: 1.1,
+                    ),
+                  ),
+                  const SizedBox(height: OwnKeepSpacing.sm),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: colors.surfacePrimary,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: colors.borderSoft),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildCategoryItem(colors, OwnKeepMainIcons.personal_category, l10n.s50_personal, l10n.s50_personal_count, const Color(0xFF27C5E8)),
+                        _buildDivider(colors),
+                        _buildCategoryItem(colors, OwnKeepMainIcons.finance_category, l10n.s50_finance, l10n.s50_finance_count, colors.successGreen),
+                        _buildDivider(colors),
+                        _buildCategoryItem(colors, OwnKeepMainIcons.health_category, l10n.s50_health, l10n.s50_health_count, colors.warningOrange),
+                        _buildDivider(colors),
+                        _buildCategoryItem(colors, OwnKeepMainIcons.property_category, l10n.s50_property, l10n.s50_property_count, colors.aiPurple),
+                        _buildDivider(colors),
+                        _buildCategoryItem(colors, OwnKeepMainIcons.vehicle_category, l10n.s50_vehicle, l10n.s50_vehicle_count, colors.primaryBlue),
+                        _buildDivider(colors),
+                        _buildCategoryItem(colors, OwnKeepMainIcons.education_category, l10n.s50_education, l10n.s50_education_count, colors.brandPurpleBright),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: OwnKeepSpacing.md),
+
+                  // New Folder
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: colors.surfacePrimary,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: colors.borderSoft),
+                      ),
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: colors.primaryBlue.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: SvgPicture.asset(OwnKeepMainIcons.new_folder, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+                          ),
+                          const SizedBox(width: OwnKeepSpacing.md),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  l10n.s50_new_folder,
+                                  style: TextStyle(
+                                    color: colors.primaryBlue,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  l10n.s50_new_folder_body,
+                                  style: TextStyle(
+                                    color: colors.textSecondary,
+                                    fontSize: 13,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+                        ],
                       ),
                     ),
-                    SizedBox(width: OwnKeepSpacing.md),
-                    Expanded(
-                      child: FilledButton(
-                        onPressed: () {},
-                        style: FilledButton.styleFrom(
-                          backgroundColor: OwnKeepColors.primary,
-                          minimumSize: const Size.fromHeight(52),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Bottom Action Bar
+          Container(
+            padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+            decoration: BoxDecoration(
+              color: colors.backgroundTop,
+              border: Border(top: BorderSide(color: colors.borderSoft)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      l10n.s50_keep_original,
+                      style: TextStyle(
+                        color: colors.textPrimary,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _keepOriginal = !_keepOriginal;
+                        });
+                      },
+                      child: SvgPicture.asset(
+                        _keepOriginal ? OwnKeepMainIcons.toggle_on : OwnKeepMainIcons.toggle_off,
+                        colorFilter: ColorFilter.mode(
+                          _keepOriginal ? colors.primaryBlue : colors.textMuted,
+                          BlendMode.srcIn,
                         ),
-                        child: Text('Move', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+                        width: 44,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: OwnKeepSpacing.md),
-                // Keep original toggle
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.md, vertical: OwnKeepSpacing.sm),
-                  decoration: BoxDecoration(
-                    color: OwnKeepColors.darkSurfaceElevated,
-                    borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-                    border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-                  ),
-                  child: Row(
-                    children: [
-                      const Expanded(child: Text('Keep original location', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontFamily: 'Inter'))),
-                      Switch(value: _keepOriginal, onChanged: (v) => setState(() => _keepOriginal = v), activeThumbColor: OwnKeepColors.primary),
-                    ],
+                const SizedBox(height: OwnKeepSpacing.xl),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colors.primaryBlue,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      _keepOriginal ? l10n.common_copy : l10n.common_move,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
                   ),
                 ),
+                const SizedBox(height: OwnKeepSpacing.sm),
               ],
             ),
           ),
@@ -143,37 +286,76 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
       ),
     );
   }
-}
 
-class _DestTile extends StatelessWidget {
-  const _DestTile({required this.icon, required this.iconColor, required this.label, required this.count, required this.selected, required this.onTap});
-  final IconData icon;
-  final Color iconColor;
-  final String label;
-  final String count;
-  final bool selected;
-  final VoidCallback onTap;
+  Widget _buildCategoryItem(
+    OwnKeepMainColorsTheme colors, 
+    String icon, 
+    String title,
+    String count,
+    Color iconColor,
+  ) {
+    final isSelected = _selectedCategory == title;
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-      decoration: BoxDecoration(
-        color: selected ? OwnKeepColors.primary.withValues(alpha: 0.12) : OwnKeepColors.darkSurfaceElevated,
-        borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-        border: Border.all(color: selected ? OwnKeepColors.primary.withValues(alpha: 0.4) : OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-      ),
-      child: ListTile(
-        onTap: onTap,
-        leading: Container(
-          width: 36, height: 36,
-          decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
-          child: Icon(icon, color: iconColor, size: 18),
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _selectedCategory = title;
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: colors.surfaceSelected,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: SvgPicture.asset(
+                icon, 
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              ),
+            ),
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    count,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (isSelected)
+              Icon(Icons.check, color: colors.primaryBlue, size: 20),
+          ],
         ),
-        title: Text(label, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-        subtitle: Text(count, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        trailing: Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
       ),
+    );
+  }
+
+  Widget _buildDivider(OwnKeepMainColorsTheme colors) {
+    return Divider(
+      color: colors.borderSoft,
+      height: 1,
+      indent: 64, 
     );
   }
 }

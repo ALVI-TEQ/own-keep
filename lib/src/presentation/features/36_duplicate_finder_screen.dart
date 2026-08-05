@@ -1,192 +1,301 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class DuplicateFinderScreen extends StatelessWidget {
   const DuplicateFinderScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return OwnKeepScaffold(
-      title: 'Duplicate Finder',
-      actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.settings_outlined, color: OwnKeepColors.darkTextPrimary)),
-      ],
-      body: ListView(
-        children: [
-          // Stats card
-          Container(
-            margin: EdgeInsets.all(OwnKeepSpacing.base),
-            padding: EdgeInsets.all(OwnKeepSpacing.xl),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(
-              children: [
-                // Donut chart
-                SizedBox(
-                  width: 110, height: 110,
-                  child: CustomPaint(
-                    painter: _DuplicateDonut(),
-                    child: const Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text('873', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 26, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-                          Text('Duplicates\nFound', textAlign: TextAlign.center, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 11, fontFamily: 'Inter')),
-                        ],
-                      ),
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      backgroundColor: colors.backgroundTop,
+      appBar: AppBar(
+        backgroundColor: colors.backgroundTop,
+        elevation: 0,
+        leading: IconButton(
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
+        ),
+        title: Text(
+          l10n.s36_title,
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Top Stats Card
+            Container(
+              padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Column(
+                children: [
+                  SvgPicture.asset(
+                    OwnKeepMainIcons.duplicate_files,
+                    colorFilter: ColorFilter.mode(colors.warningOrange, BlendMode.srcIn),
+                    width: 48,
+                    height: 48,
+                  ),
+                  const SizedBox(height: OwnKeepSpacing.md),
+                  Text(
+                    l10n.s36_duplicates,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 32,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Inter',
                     ),
                   ),
-                ),
-                SizedBox(width: OwnKeepSpacing.xl),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _StatRow(icon: Icons.photo_outlined, label: 'Photos', value: '623', color: OwnKeepColors.primary),
-                    SizedBox(height: 10),
-                    _StatRow(icon: Icons.description_outlined, label: 'Documents', value: '186', color: OwnKeepColors.warning),
-                    SizedBox(height: 10),
-                    _StatRow(icon: Icons.video_library_outlined, label: 'Videos', value: '64', color: OwnKeepColors.danger),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          // Free up card
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-            padding: EdgeInsets.all(OwnKeepSpacing.base),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text('You can free up', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, fontFamily: 'Inter')),
-                      SizedBox(height: 2),
-                      Text('2.48 GB', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 22, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
+                  Text(
+                    l10n.s36_found,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 14,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: OwnKeepSpacing.xl),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildStatColumn(colors, l10n.s36_photos_count, l10n.s36_photos, OwnKeepMainIcons.image, colors.primaryBlue),
+                      _buildStatColumn(colors, l10n.s36_documents_count, l10n.s36_documents, OwnKeepMainIcons.file_pdf, const Color(0xFF27C5E8)),
+                      _buildStatColumn(colors, l10n.s36_videos_count, l10n.s36_videos, OwnKeepMainIcons.video, colors.aiPurple),
                     ],
                   ),
-                ),
-                FilledButton(
-                  onPressed: () {},
-                  style: FilledButton.styleFrom(
-                    backgroundColor: OwnKeepColors.primary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ],
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.lg),
+
+            // Free Up Box
+            Container(
+              padding: const EdgeInsets.all(OwnKeepSpacing.md),
+              decoration: BoxDecoration(
+                color: colors.warningOrange.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.warningOrange.withOpacity(0.3)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.s36_free_up,
+                        style: TextStyle(
+                          color: colors.textPrimary,
+                          fontSize: 14,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                      Text(
+                        l10n.s36_free_up_value,
+                        style: TextStyle(
+                          color: colors.warningOrange,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ],
                   ),
-                  child: Text('Review Duplicates', style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w600, fontSize: 13)),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colors.warningOrange,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      l10n.s36_review,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Smart Groups
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  l10n.s36_groups,
+                  style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                Text(
+                  l10n.common_view_all,
+                  style: TextStyle(
+                    color: colors.primaryBlue,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Inter',
+                  ),
                 ),
               ],
             ),
-          ),
-          // Smart Groups
-          OwnKeepSectionHeader(title: 'Smart Groups', actionText: 'View All', onAction: () {}),
-          _GroupItem(label: 'Similar Photos', count: '452 items', size: '1.36 GB', icon: Icons.photo_library_outlined, color: OwnKeepColors.primary),
-          _GroupItem(label: 'Similar Documents', count: '214 items', size: '680 MB', icon: Icons.file_copy_outlined, color: OwnKeepColors.warning),
-          _GroupItem(label: 'Similar Videos', count: '64 items', size: '450 MB', icon: Icons.video_collection_outlined, color: OwnKeepColors.danger),
-          _GroupItem(label: 'Screenshots', count: '143 items', size: '280 MB', icon: Icons.screenshot_outlined, color: OwnKeepColors.ai),
-          SizedBox(height: OwnKeepSpacing.xl),
-        ],
+            const SizedBox(height: OwnKeepSpacing.md),
+
+            Column(
+              children: [
+                _buildGroupCard(
+                  colors: colors,
+                  icon: OwnKeepMainIcons.image,
+                  iconColor: colors.primaryBlue,
+                  title: l10n.s36_similar_photos,
+                  meta: l10n.s36_similar_photos_meta,
+                ),
+                const SizedBox(height: OwnKeepSpacing.sm),
+                _buildGroupCard(
+                  colors: colors,
+                  icon: OwnKeepMainIcons.similar_documents,
+                  iconColor: const Color(0xFF27C5E8),
+                  title: l10n.s36_similar_documents,
+                  meta: l10n.s36_similar_documents_meta,
+                ),
+                const SizedBox(height: OwnKeepSpacing.sm),
+                _buildGroupCard(
+                  colors: colors,
+                  icon: OwnKeepMainIcons.video,
+                  iconColor: colors.aiPurple,
+                  title: l10n.s36_similar_videos,
+                  meta: l10n.s36_similar_videos_meta,
+                ),
+                const SizedBox(height: OwnKeepSpacing.sm),
+                _buildGroupCard(
+                  colors: colors,
+                  icon: OwnKeepMainIcons.image,
+                  iconColor: colors.warningOrange,
+                  title: l10n.s36_screenshots,
+                  meta: l10n.s36_screenshots_meta,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
-}
 
-class _DuplicateDonut extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width / 2 - 8;
-    const strokeWidth = 12.0;
-    final rect = Rect.fromCircle(center: center, radius: radius);
-    final segments = [
-      (OwnKeepColors.primary, 0.52),
-      (OwnKeepColors.warning, 0.21),
-      (OwnKeepColors.danger, 0.07),
-    ];
-    double start = -pi / 2;
-    for (final (color, frac) in segments) {
-      final sweep = 2 * pi * frac;
-      canvas.drawArc(rect, start, sweep - 0.05, false, Paint()
-        ..color = color
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = strokeWidth
-        ..strokeCap = StrokeCap.round);
-      start += sweep;
-    }
-  }
-
-  @override
-  bool shouldRepaint(_) => false;
-}
-
-class _StatRow extends StatelessWidget {
-  const _StatRow({required this.icon, required this.label, required this.value, required this.color});
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
+  Widget _buildStatColumn(OwnKeepMainColorsTheme colors, String count, String label, String icon, Color iconColor) {
+    return Column(
       children: [
-        Icon(icon, color: color, size: 16),
-        SizedBox(width: 6),
-        Text(label, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, fontFamily: 'Inter')),
-        SizedBox(width: 8),
-        Text(value, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 13, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: colors.surfaceSelected,
+            shape: BoxShape.circle,
+          ),
+          child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn), width: 16),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          count,
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
+          ),
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            color: colors.textSecondary,
+            fontSize: 12,
+            fontFamily: 'Inter',
+          ),
+        ),
       ],
     );
   }
-}
 
-class _GroupItem extends StatelessWidget {
-  const _GroupItem({required this.label, required this.count, required this.size, required this.icon, required this.color});
-  final String label;
-  final String count;
-  final String size;
-  final IconData icon;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base, vertical: OwnKeepSpacing.xs),
-      padding: EdgeInsets.all(OwnKeepSpacing.md),
-      decoration: BoxDecoration(
-        color: OwnKeepColors.darkSurfaceElevated,
-        borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-        border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        children: [
-          OwnKeepIconBadge(icon: icon, color: color),
-          SizedBox(width: OwnKeepSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(label, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-                SizedBox(height: 2),
-                Text('$count  •  $size', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ],
+  Widget _buildGroupCard({
+    required OwnKeepMainColorsTheme colors,
+    required String icon,
+    required Color iconColor,
+    required String title,
+    required String meta,
+  }) {
+    return InkWell(
+      onTap: () {},
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: colors.borderSoft),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colors.surfaceSelected,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
             ),
-          ),
-          Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-        ],
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    meta,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+          ],
+        ),
       ),
     );
   }

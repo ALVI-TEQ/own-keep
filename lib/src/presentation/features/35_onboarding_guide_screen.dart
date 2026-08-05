@@ -1,106 +1,162 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
 
-class OnboardingGuideScreen extends StatefulWidget {
+class OnboardingGuideScreen extends StatelessWidget {
   const OnboardingGuideScreen({super.key});
 
   @override
-  State<OnboardingGuideScreen> createState() => _OnboardingGuideScreenState();
-}
-
-class _OnboardingGuideScreenState extends State<OnboardingGuideScreen> {
-  final int _page = 0;
-
-  @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: OwnKeepColors.darkBackground,
+      backgroundColor: colors.backgroundTop,
+      appBar: AppBar(
+        backgroundColor: colors.backgroundTop,
+        elevation: 0,
+        actions: [
+          TextButton(
+            onPressed: () => context.pop(),
+            child: Text(
+              l10n.s35_skip,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ),
+          const SizedBox(width: OwnKeepSpacing.md),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base, vertical: OwnKeepSpacing.md),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(width: 60),
-                  Text('Welcome to OwnKeep', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                  TextButton(
-                    onPressed: () => Navigator.of(context).maybePop(),
-                    child: Text('Skip', style: TextStyle(color: OwnKeepColors.primary, fontSize: 16, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-                  ),
-                ],
-              ),
-            ),
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.xl),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
                 child: Column(
                   children: [
-                    SizedBox(height: OwnKeepSpacing.xl),
-                    // Glowing vault icon
-                    Container(
-                      width: 130, height: 130,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: RadialGradient(colors: [OwnKeepColors.ai.withValues(alpha: 0.25), Colors.transparent]),
-                      ),
-                      child: Center(
-                        child: Container(
-                          width: 96, height: 96,
-                          decoration: BoxDecoration(
-                            color: OwnKeepColors.darkSurfaceElevated,
-                            borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-                            boxShadow: [
-                              BoxShadow(color: OwnKeepColors.ai.withValues(alpha: 0.3), blurRadius: 24, spreadRadius: 4),
-                            ],
-                          ),
-                          child: Icon(Icons.lock_rounded, color: OwnKeepColors.ai, size: 52),
-                        ),
+                    // Hero Illustration
+                    Center(
+                      child: SvgPicture.asset(
+                        'assets/main/illustrations/onboarding_vault_orbit_illustration.svg',
+                        height: 220,
                       ),
                     ),
-                    SizedBox(height: OwnKeepSpacing.xl),
-                    Text('Your Data. Your Control.', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 22, fontWeight: FontWeight.w700, fontFamily: 'Inter'), textAlign: TextAlign.center),
-                    SizedBox(height: OwnKeepSpacing.sm),
-                    Text('100% Offline. End-to-End Encrypted.', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 14, fontFamily: 'Inter'), textAlign: TextAlign.center),
-                    SizedBox(height: OwnKeepSpacing.xl),
-                    // Feature list
-                    _FeatureRow(icon: Icons.lock_outline, label: 'Keep everything private', subtitle: 'Your data never leaves your device.', color: OwnKeepColors.primary),
-                    _FeatureRow(icon: Icons.label_outline_rounded, label: 'Organize with ease', subtitle: 'Smart tags and AI suggestions.', color: OwnKeepColors.success),
-                    _FeatureRow(icon: Icons.notifications_outlined, label: 'Never miss important things', subtitle: 'Reminders for expiries and events.', color: OwnKeepColors.danger),
-                    _FeatureRow(icon: Icons.verified_outlined, label: 'Secure forever', subtitle: 'Your vault, your rules.', color: OwnKeepColors.success),
-                    const Spacer(),
-                    // Page dots
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(4, (i) => AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        width: i == _page ? 24 : 8, height: 8,
-                        margin: EdgeInsets.symmetric(horizontal: 3),
-                        decoration: BoxDecoration(
-                          color: i == _page ? OwnKeepColors.primary : OwnKeepColors.darkTextMuted,
-                          borderRadius: BorderRadius.circular(OwnKeepRadius.pill),
-                        ),
-                      )),
-                    ),
-                    SizedBox(height: OwnKeepSpacing.lg),
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton(
-                        onPressed: () => Navigator.of(context).maybePop(),
-                        style: FilledButton.styleFrom(
-                          backgroundColor: OwnKeepColors.primary,
-                          minimumSize: const Size.fromHeight(52),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
-                        ),
-                        child: Text('Get Started', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+                    const SizedBox(height: OwnKeepSpacing.xl),
+                    
+                    // Hero Text
+                    Text(
+                      l10n.s35_hero_title,
+                      style: TextStyle(
+                        color: colors.textPrimary,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Inter',
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: OwnKeepSpacing.xl),
+                    const SizedBox(height: 8),
+                    Text(
+                      l10n.s35_hero_body,
+                      style: TextStyle(
+                        color: colors.primaryBlue,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Inter',
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: OwnKeepSpacing.xxl),
+
+                    // Features List
+                    _buildFeatureItem(
+                      colors: colors,
+                      icon: OwnKeepMainIcons.secure_lock,
+                      iconColor: const Color(0xFF27C5E8), // accentCyan
+                      title: l10n.s35_private_title,
+                      subtitle: l10n.s35_private_body,
+                    ),
+                    const SizedBox(height: OwnKeepSpacing.lg),
+                    _buildFeatureItem(
+                      colors: colors,
+                      icon: OwnKeepMainIcons.tag,
+                      iconColor: colors.aiPurple,
+                      title: l10n.s35_organize_title,
+                      subtitle: l10n.s35_organize_body,
+                    ),
+                    const SizedBox(height: OwnKeepSpacing.lg),
+                    _buildFeatureItem(
+                      colors: colors,
+                      icon: OwnKeepMainIcons.notification,
+                      iconColor: colors.warningOrange,
+                      title: l10n.s35_reminders_title,
+                      subtitle: l10n.s35_reminders_body,
+                    ),
+                    const SizedBox(height: OwnKeepSpacing.lg),
+                    _buildFeatureItem(
+                      colors: colors,
+                      icon: OwnKeepMainIcons.verified_shield,
+                      iconColor: colors.successGreen,
+                      title: l10n.s35_secure_title,
+                      subtitle: l10n.s35_secure_body,
+                    ),
                   ],
                 ),
+              ),
+            ),
+            
+            // Bottom Section
+            Container(
+              padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+              decoration: BoxDecoration(
+                color: colors.backgroundTop,
+                border: Border(top: BorderSide(color: colors.borderSoft)),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(OwnKeepMainIcons.page_dot_active, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 8),
+                      const SizedBox(width: 8),
+                      SvgPicture.asset(OwnKeepMainIcons.page_dot_inactive, colorFilter: ColorFilter.mode(colors.surfaceSelected, BlendMode.srcIn), width: 8),
+                      const SizedBox(width: 8),
+                      SvgPicture.asset(OwnKeepMainIcons.page_dot_inactive, colorFilter: ColorFilter.mode(colors.surfaceSelected, BlendMode.srcIn), width: 8),
+                    ],
+                  ),
+                  const SizedBox(height: OwnKeepSpacing.lg),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: colors.primaryBlue,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        l10n.s35_get_started,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -108,40 +164,53 @@ class _OnboardingGuideScreenState extends State<OnboardingGuideScreen> {
       ),
     );
   }
-}
 
-
-
-class _FeatureRow extends StatelessWidget {
-  const _FeatureRow({required this.icon, required this.label, required this.subtitle, required this.color});
-  final IconData icon;
-  final String label;
-  final String subtitle;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: OwnKeepSpacing.md),
-      child: Row(
-        children: [
-          Container(
-            width: 40, height: 40,
-            decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(OwnKeepRadius.sm)),
-            child: Icon(icon, color: color, size: 20),
+  Widget _buildFeatureItem({
+    required OwnKeepMainColorsTheme colors,
+    required String icon,
+    required Color iconColor,
+    required String title,
+    required String subtitle,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: colors.surfacePrimary,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: colors.borderSoft),
           ),
-          SizedBox(width: OwnKeepSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(label, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-                Text(subtitle, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ],
-            ),
+          child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+        ),
+        const SizedBox(width: OwnKeepSpacing.md),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  color: colors.textSecondary,
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

@@ -1,55 +1,187 @@
 import 'package:flutter/material.dart';
-import '../components/ownkeep_ui_kit.dart';
-import '../../theme/ownkeep_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 
 class RecentScreen extends StatelessWidget {
   const RecentScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return OwnKeepScaffold(
-      title: 'Recent',
-      showBottomNav: true,
-      body: ListView(
-        padding: const EdgeInsets.all(OwnKeepSpacing.base),
+    final l10n = AppLocalizations.of(context)!;
+    final colors = context.mainColors;
+
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colors.backgroundTop, colors.backgroundBottom],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Header
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => context.pop(),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: colors.surfacePrimary,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: colors.borderSoft),
+                        ),
+                        child: SvgPicture.asset(
+                          OwnKeepMainIcons.backArrow,
+                          colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+                          width: 24,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.s14_title,
+                            style: TextStyle(color: colors.textPrimary, fontSize: 24, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            l10n.s14_subtitle,
+                            style: TextStyle(color: colors.textSecondary, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Filters
+              SizedBox(
+                height: 36,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  children: [
+                    _buildFilterChip(context, l10n.filter_all, true),
+                    _buildFilterChip(context, l10n.filter_viewed, false),
+                    _buildFilterChip(context, l10n.filter_added, false),
+                    _buildFilterChip(context, l10n.filter_updated, false),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Recent Items List
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  children: [
+                    // Today Group
+                    Text(l10n.common_today, style: TextStyle(color: colors.textMuted, fontSize: 14, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 12),
+                    _buildRecentItem(context, l10n.s14_insurance_title, l10n.s14_insurance_meta, OwnKeepMainIcons.document, colors.primaryBlue),
+                    _buildRecentItem(context, l10n.s14_passport_title, l10n.s14_passport_meta, OwnKeepMainIcons.identity, colors.dangerRed),
+                    _buildRecentItem(context, l10n.s14_vehicle_title, l10n.s14_vehicle_meta, OwnKeepMainIcons.vehicle, colors.accentCyan),
+                    
+                    const SizedBox(height: 24),
+                    
+                    // Yesterday Group
+                    Text(l10n.common_yesterday, style: TextStyle(color: colors.textMuted, fontSize: 14, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 12),
+                    _buildRecentItem(context, l10n.s14_licence_title, l10n.s14_licence_meta, OwnKeepMainIcons.identity, colors.successGreen),
+                    _buildRecentItem(context, l10n.s14_bank_title, l10n.s14_bank_meta, OwnKeepMainIcons.finance, colors.primaryBlue),
+                    _buildRecentItem(context, l10n.s14_aadhaar_title, l10n.s14_aadhaar_meta, OwnKeepMainIcons.identity, colors.dangerRed),
+                    _buildRecentItem(context, l10n.s14_lic_title, l10n.s14_lic_meta, OwnKeepMainIcons.insurance, colors.warningOrange),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterChip(BuildContext context, String label, bool isSelected) {
+    final colors = context.mainColors;
+    return Container(
+      margin: const EdgeInsets.only(right: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: isSelected ? colors.primaryBlue : colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: isSelected ? colors.primaryBlue : colors.borderSoft),
+      ),
+      child: Center(
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : colors.textPrimary,
+            fontSize: 14,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecentItem(BuildContext context, String title, String meta, String iconPath, Color iconColor) {
+    final colors = context.mainColors;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.borderSoft),
+      ),
+      child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(OwnKeepSpacing.md),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.25)),
+              color: iconColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
             ),
+            child: SvgPicture.asset(
+              iconPath,
+              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              width: 24,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.dashboard_customize_rounded, color: OwnKeepColors.primary, size: 64),
-                const SizedBox(height: OwnKeepSpacing.md),
-                const Text(
-                  'Recent',
-                  style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Inter'),
-                  textAlign: TextAlign.center,
+                Text(
+                  title,
+                  style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500),
                 ),
-                const SizedBox(height: OwnKeepSpacing.sm),
-                const Text(
-                  'Content for Recent will appear here soon.',
-                  style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 14, fontFamily: 'Inter'),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: OwnKeepSpacing.lg),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: OwnKeepColors.primary,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.sm)),
-                  ),
-                  child: const Text('Refresh Data', style: TextStyle(fontFamily: 'Inter')),
+                const SizedBox(height: 4),
+                Text(
+                  meta,
+                  style: TextStyle(color: colors.textMuted, fontSize: 13),
                 ),
               ],
             ),
+          ),
+          SvgPicture.asset(
+            OwnKeepMainIcons.moreVertical,
+            colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
+            width: 20,
           ),
         ],
       ),

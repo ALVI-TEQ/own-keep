@@ -4,7 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
-import 'package:citizen_vault_app/src/vault/vault_lifecycle.dart';
+import 'package:ownkeep/src/citizen_vault/vault/vault_lifecycle.dart';
 
 import 'src/routing/app_router.dart';
 import 'src/theme/app_theme.dart';

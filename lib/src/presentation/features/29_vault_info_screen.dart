@@ -1,138 +1,218 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
 class VaultInfoScreen extends StatelessWidget {
   const VaultInfoScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return OwnKeepScaffold(
-      title: 'Vault Information',
-      actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.ios_share_outlined, color: OwnKeepColors.darkTextPrimary)),
-      ],
-      body: ListView(
-        children: [
-          SizedBox(height: OwnKeepSpacing.lg),
-          // Vault shield icon
-          Center(
-            child: Container(
-              width: 100, height: 100,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [OwnKeepColors.ai.withValues(alpha: 0.3), OwnKeepColors.primary.withValues(alpha: 0.2)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-                border: Border.all(color: OwnKeepColors.ai.withValues(alpha: 0.3)),
-              ),
-              child: Icon(Icons.lock_rounded, color: OwnKeepColors.ai, size: 48),
-            ),
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      backgroundColor: colors.backgroundTop,
+      appBar: AppBar(
+        backgroundColor: colors.backgroundTop,
+        elevation: 0,
+        leading: IconButton(
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
+        ),
+        title: Text(
+          l10n.s29_title,
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
           ),
-          SizedBox(height: OwnKeepSpacing.lg),
-          // Vault name
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('My First Vault', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 22, fontWeight: FontWeight.w700, fontFamily: 'Inter')),
-              SizedBox(width: 8),
-              Icon(Icons.edit_outlined, color: OwnKeepColors.darkTextMuted, size: 18),
-            ],
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: SvgPicture.asset(OwnKeepMainIcons.edit, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+            onPressed: () {},
           ),
-          const Center(
-            child: Text('Created on 12 May 2025', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 14, fontFamily: 'Inter')),
-          ),
-          SizedBox(height: OwnKeepSpacing.xl),
-          // Info table
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
-            ),
-            child: Column(
-              children: [
-                _VaultInfoRow(label: 'Vault ID', value: 'VK-7F3A-9D2B'),
-                _divider(),
-                _VaultInfoRow(label: 'Version', value: '1.0.0'),
-                _divider(),
-                _VaultInfoRow(label: 'Encryption', value: 'AES-256-GCM'),
-                _divider(),
-                _VaultInfoRow(label: 'Key Derivation', value: 'Argon2id'),
-                _divider(),
-                _VaultInfoRow(label: 'Created On', value: '12 May 2025, 10:20 AM'),
-                _divider(),
-                _VaultInfoRow(label: 'Last Modified', value: '15 May 2025, 09:15 AM'),
-                _divider(),
-                _VaultInfoRow(label: 'Total Items', value: '248 items'),
-                _divider(),
-                _VaultInfoRow(label: 'Total Size', value: '128 GB'),
-                _divider(),
-                _VaultInfoRow(
-                  label: 'Backup',
-                  value: 'Not Created',
-                  valueColor: OwnKeepColors.danger,
-                  valueIcon: Icons.warning_amber_rounded,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: OwnKeepSpacing.xl),
-          // Export button
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-            child: FilledButton(
-              onPressed: () {},
-              style: FilledButton.styleFrom(
-                backgroundColor: OwnKeepColors.primary,
-                minimumSize: const Size.fromHeight(52),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
-              ),
-              child: Text('Export Vault Info', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-            ),
-          ),
-          SizedBox(height: OwnKeepSpacing.xl),
         ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+        child: Column(
+          children: [
+            // Header Image
+            Center(
+              child: SvgPicture.asset(
+                'assets/main/illustrations/vault_information_illustration.svg',
+                height: 180,
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xl),
+            
+            // Vault Name
+            Text(
+              l10n.s29_vault_name,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Inter',
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.s29_created_summary,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 14,
+                fontFamily: 'Inter',
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Info Details Box
+            Container(
+              padding: const EdgeInsets.all(OwnKeepSpacing.lg),
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Column(
+                children: [
+                  _buildDetailRow(colors, l10n.s29_vault_id_label, l10n.s29_vault_id, true),
+                  _buildDetailRow(colors, l10n.s29_version_label, l10n.s29_version, true),
+                  _buildDetailRow(colors, l10n.s29_encryption_label, l10n.s29_encryption, true),
+                  _buildDetailRow(colors, l10n.s29_kdf_label, l10n.s29_kdf, true),
+                  _buildDetailRow(colors, l10n.s29_created_label, l10n.s29_created, true),
+                  _buildDetailRow(colors, l10n.s29_modified_label, l10n.s29_modified, true),
+                  _buildDetailRow(colors, l10n.s29_items_label, l10n.s29_items, true),
+                  _buildDetailRow(colors, l10n.s29_size_label, l10n.s29_size, false),
+                ],
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xl),
+
+            // Backup Status
+            Container(
+              padding: const EdgeInsets.all(OwnKeepSpacing.md),
+              decoration: BoxDecoration(
+                color: colors.surfaceSelected.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Row(
+                children: [
+                  SvgPicture.asset(OwnKeepMainIcons.warning, colorFilter: ColorFilter.mode(colors.warningOrange, BlendMode.srcIn)),
+                  const SizedBox(width: OwnKeepSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.s29_backup_label,
+                          style: TextStyle(
+                            color: colors.textPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        Text(
+                          l10n.s29_backup,
+                          style: TextStyle(
+                            color: colors.warningOrange,
+                            fontSize: 13,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      "Setup",
+                      style: TextStyle(
+                        color: colors.primaryBlue,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Export Button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {},
+                icon: SvgPicture.asset(OwnKeepMainIcons.share_export, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+                label: Text(
+                  l10n.s29_export,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colors.primaryBlue,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xl),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _divider() {
-    return Divider(height: 1, color: OwnKeepColors.darkBorder.withValues(alpha: 0.3), indent: OwnKeepSpacing.base, endIndent: OwnKeepSpacing.base);
-  }
-}
-
-class _VaultInfoRow extends StatelessWidget {
-  const _VaultInfoRow({required this.label, required this.value, this.valueColor, this.valueIcon});
-  final String label;
-  final String value;
-  final Color? valueColor;
-  final IconData? valueIcon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base, vertical: OwnKeepSpacing.md),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 14, fontFamily: 'Inter')),
-          Row(
-            children: [
-              if (valueIcon != null) ...[
-                Icon(valueIcon, color: valueColor ?? OwnKeepColors.darkTextPrimary, size: 16),
-                SizedBox(width: 4),
-              ],
-              Text(value, style: TextStyle(color: valueColor ?? OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-            ],
-          ),
+  Widget _buildDetailRow(OwnKeepMainColorsTheme colors, String label, String value, bool showDivider) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 14,
+                fontFamily: 'Inter',
+              ),
+            ),
+            Text(
+              value,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ],
+        ),
+        if (showDivider) ...[
+          const SizedBox(height: OwnKeepSpacing.md),
+          const Divider(color: Color(0xFF1B2940), height: 1),
+          const SizedBox(height: OwnKeepSpacing.md),
         ],
-      ),
+      ],
     );
   }
 }

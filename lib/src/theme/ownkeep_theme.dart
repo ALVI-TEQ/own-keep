@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'ownkeep_colors.dart';
 import 'ownkeep_radius.dart';
 import 'ownkeep_typography.dart';
+import 'ownkeep_onboarding_colors.dart';
+import 'ownkeep_main_colors.dart';
 
 abstract final class OwnKeepTheme {
   static ThemeData get dark => _build(Brightness.dark);
@@ -109,6 +111,10 @@ abstract final class OwnKeepTheme {
           ),
         ),
       ),
+      extensions: [
+        isDark ? OwnKeepOnboardingColorsTheme.defaultDark : OwnKeepOnboardingColorsTheme.defaultLight,
+        isDark ? OwnKeepMainColorsTheme.defaultDark : OwnKeepMainColorsTheme.defaultLight,
+      ],
     );
   }
 }

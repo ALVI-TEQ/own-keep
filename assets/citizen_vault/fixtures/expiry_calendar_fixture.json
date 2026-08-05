@@ -1,0 +1,54 @@
+{
+  "month": "2025-05",
+  "selected_date": "2025-05-15",
+  "event_dates": [
+    {
+      "date": "2025-05-01",
+      "color": "health_pink"
+    },
+    {
+      "date": "2025-05-02",
+      "color": "warning_orange"
+    },
+    {
+      "date": "2025-05-05",
+      "color": "success_green"
+    },
+    {
+      "date": "2025-05-06",
+      "color": "brand_purple"
+    },
+    {
+      "date": "2025-05-08",
+      "color": "success_green"
+    },
+    {
+      "date": "2025-05-12",
+      "color": "brand_purple"
+    },
+    {
+      "date": "2025-05-13",
+      "color": "brand_purple"
+    },
+    {
+      "date": "2025-05-14",
+      "color": "primary_blue"
+    },
+    {
+      "date": "2025-05-19",
+      "color": "danger_red"
+    },
+    {
+      "date": "2025-05-20",
+      "color": "brand_purple"
+    },
+    {
+      "date": "2025-05-23",
+      "color": "warning_orange"
+    },
+    {
+      "date": "2025-05-25",
+      "color": "health_pink"
+    }
+  ]
+}

@@ -1,206 +1,471 @@
 import 'package:flutter/material.dart';
-import '../../theme/ownkeep_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
-import '../../theme/ownkeep_radius.dart';
-import '../components/ownkeep_ui_kit.dart';
 
-class HealthRemindersScreen extends StatelessWidget {
+class HealthRemindersScreen extends StatefulWidget {
   const HealthRemindersScreen({super.key});
 
   @override
+  State<HealthRemindersScreen> createState() => _HealthRemindersScreenState();
+}
+
+class _HealthRemindersScreenState extends State<HealthRemindersScreen> {
+  int _selectedFilter = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return OwnKeepScaffold(
-      title: 'Health Reminders',
-      actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.notifications_outlined, color: OwnKeepColors.darkTextPrimary)),
-      ],
-      body: Column(
-        children: [
-          // Filter chips
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base, vertical: OwnKeepSpacing.sm),
-            child: Row(
-              children: const [
-                _FilterChip(label: 'All', isSelected: true),
-                _FilterChip(label: 'Medicines'),
-                _FilterChip(label: 'Appointments'),
-                _FilterChip(label: 'Reports'),
-              ],
-            ),
+    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+
+    final filters = [
+      l10n.common_all,
+      l10n.s32_medicines,
+      l10n.s32_appointments,
+      l10n.s32_reports,
+    ];
+
+    return Scaffold(
+      backgroundColor: colors.backgroundTop,
+      appBar: AppBar(
+        backgroundColor: colors.backgroundTop,
+        elevation: 0,
+        leading: IconButton(
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          onPressed: () => context.pop(),
+        ),
+        title: Text(
+          l10n.s32_title,
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
           ),
-          Expanded(
-            child: ListView(
-              children: [
-                // Today section
-                _SectionLabel(title: 'Today'),
-                _ReminderItem(
-                  title: 'Vitamin D3',
-                  subtitle: '1 Tablet after breakfast',
-                  time: '08:00 AM',
-                  icon: Icons.medication_outlined,
-                  color: OwnKeepColors.warning,
-                ),
-                // Upcoming section
-                OwnKeepSectionHeader(title: 'Upcoming', actionText: 'View All', onAction: () {}),
-                _ReminderItem(
-                  title: 'Doctor Appointment',
-                  subtitle: 'Dr. K. Sharma\n15 May 2025, 04:00 PM',
-                  icon: Icons.local_hospital_outlined,
-                  color: OwnKeepColors.primary,
-                ),
-                _ReminderItem(
-                  title: 'Blood Test',
-                  subtitle: 'Complete Blood Count\n17 May 2025, 08:00 AM',
-                  icon: Icons.science_outlined,
-                  color: OwnKeepColors.danger,
-                ),
-                _ReminderItem(
-                  title: 'Medicine Refill',
-                  subtitle: 'Your medicines are running low\n20 May 2025',
-                  icon: Icons.medication_liquid_outlined,
-                  color: OwnKeepColors.pink,
-                ),
-                // Health Summary
-                _SectionLabel(title: 'Health Summary'),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-                  child: Row(
-                    children: [
-                      _SummaryCard(icon: Icons.medication_outlined, label: 'Medicines', value: '8 Active', color: OwnKeepColors.warning),
-                      SizedBox(width: OwnKeepSpacing.sm),
-                      _SummaryCard(icon: Icons.calendar_month_outlined, label: 'Appointments', value: '3 Upcoming', color: OwnKeepColors.pink),
-                      SizedBox(width: OwnKeepSpacing.sm),
-                      _SummaryCard(icon: Icons.description_outlined, label: 'Reports', value: '12 Stored', color: OwnKeepColors.primary),
-                    ],
-                  ),
-                ),
-                SizedBox(height: OwnKeepSpacing.base),
-                // Add button
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base),
-                  child: FilledButton.icon(
-                    onPressed: () {},
-                    icon: Icon(Icons.add, size: 20),
-                    label: Text('Add New Reminder', style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w600)),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: OwnKeepColors.primary,
-                      minimumSize: const Size.fromHeight(50),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
-                    ),
-                  ),
-                ),
-                SizedBox(height: OwnKeepSpacing.xl),
-              ],
-            ),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: SvgPicture.asset(OwnKeepMainIcons.notification, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+            onPressed: () {},
           ),
         ],
       ),
-    );
-  }
-}
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Filter Chips
+            SizedBox(
+              height: 56,
+              child: ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.sm),
+                scrollDirection: Axis.horizontal,
+                itemCount: filters.length,
+                separatorBuilder: (context, index) => const SizedBox(width: OwnKeepSpacing.sm),
+                itemBuilder: (context, index) {
+                  final isSelected = _selectedFilter == index;
+                  return GestureDetector(
+                    onTap: () => setState(() => _selectedFilter = index),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: isSelected ? colors.primaryBlue : colors.surfacePrimary,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: isSelected ? colors.primaryBlue : colors.borderSoft,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          filters[index],
+                          style: TextStyle(
+                            color: isSelected ? Colors.white : colors.textSecondary,
+                            fontSize: 14,
+                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.md),
 
-class _FilterChip extends StatelessWidget {
-  const _FilterChip({required this.label, this.isSelected = false});
-  final String label;
-  final bool isSelected;
+            // Today Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              child: Text(
+                l10n.common_today,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.md),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              child: _buildReminderCard(
+                context: context,
+                colors: colors,
+                icon: OwnKeepMainIcons.medicine_capsule,
+                iconColor: const Color(0xFF27C5E8), // accentCyan
+                title: l10n.s32_vitamin,
+                subtitle: l10n.s32_vitamin_body,
+                time: l10n.s32_vitamin_time,
+                isCompleted: false,
+              ),
+            ),
+            
+            const SizedBox(height: OwnKeepSpacing.xxl),
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(right: OwnKeepSpacing.sm),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: isSelected ? OwnKeepColors.primary : OwnKeepColors.darkSurfaceElevated,
-        borderRadius: BorderRadius.circular(OwnKeepRadius.pill),
-        border: Border.all(color: isSelected ? OwnKeepColors.primary : OwnKeepColors.darkBorder),
+            // Upcoming Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l10n.s32_upcoming,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  Text(
+                    l10n.common_view_all,
+                    style: TextStyle(
+                      color: colors.primaryBlue,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.md),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              child: Column(
+                children: [
+                  _buildUpcomingCard(
+                    context: context,
+                    colors: colors,
+                    icon: OwnKeepMainIcons.doctor_appointment,
+                    iconColor: colors.warningOrange,
+                    title: l10n.s32_doctor,
+                    subtitle: l10n.s32_doctor_name,
+                    time: l10n.s32_doctor_time,
+                  ),
+                  const SizedBox(height: OwnKeepSpacing.sm),
+                  _buildUpcomingCard(
+                    context: context,
+                    colors: colors,
+                    icon: OwnKeepMainIcons.blood_test,
+                    iconColor: colors.dangerRed,
+                    title: l10n.s32_blood,
+                    subtitle: l10n.s32_blood_body,
+                    time: l10n.s32_blood_time,
+                  ),
+                  const SizedBox(height: OwnKeepSpacing.sm),
+                  _buildUpcomingCard(
+                    context: context,
+                    colors: colors,
+                    icon: OwnKeepMainIcons.medicine_bottle,
+                    iconColor: colors.successGreen,
+                    title: l10n.s32_refill,
+                    subtitle: l10n.s32_refill_body,
+                    time: l10n.s32_refill_time,
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: OwnKeepSpacing.xxl),
+
+            // Health Summary Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              child: Text(
+                l10n.s32_summary,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.md),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _buildSummaryBox(
+                      colors: colors,
+                      icon: OwnKeepMainIcons.medicine_box,
+                      iconColor: const Color(0xFF27C5E8),
+                      title: l10n.s32_medicines_count,
+                    ),
+                  ),
+                  const SizedBox(width: OwnKeepSpacing.sm),
+                  Expanded(
+                    child: _buildSummaryBox(
+                      colors: colors,
+                      icon: OwnKeepMainIcons.doctor_appointment,
+                      iconColor: colors.warningOrange,
+                      title: l10n.s32_appointments_count,
+                    ),
+                  ),
+                  const SizedBox(width: OwnKeepSpacing.sm),
+                  Expanded(
+                    child: _buildSummaryBox(
+                      colors: colors,
+                      icon: OwnKeepMainIcons.reports,
+                      iconColor: colors.aiPurple,
+                      title: l10n.s32_reports_count,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 100), // padding for floating action button
+          ],
+        ),
       ),
-      child: Text(label, style: TextStyle(color: isSelected ? Colors.white : OwnKeepColors.darkTextSecondary, fontSize: 13, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {},
+        backgroundColor: colors.primaryBlue,
+        icon: SvgPicture.asset(OwnKeepMainIcons.add, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+        label: Text(
+          l10n.s32_add,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
+          ),
+        ),
+      ),
     );
   }
-}
 
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel({required this.title});
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(OwnKeepSpacing.base, OwnKeepSpacing.lg, OwnKeepSpacing.base, OwnKeepSpacing.sm),
-      child: Text(title, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-    );
-  }
-}
-
-class _ReminderItem extends StatelessWidget {
-  const _ReminderItem({required this.title, required this.subtitle, this.time, required this.icon, required this.color});
-  final String title;
-  final String subtitle;
-  final String? time;
-  final IconData icon;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildReminderCard({
+    required BuildContext context,
+    required OwnKeepMainColorsTheme colors,
+    required String icon,
+    required Color iconColor,
+    required String title,
+    required String subtitle,
+    required String time,
+    required bool isCompleted,
+  }) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.base, vertical: OwnKeepSpacing.xs),
-      padding: EdgeInsets.all(OwnKeepSpacing.md),
+      padding: const EdgeInsets.all(OwnKeepSpacing.md),
       decoration: BoxDecoration(
-        color: OwnKeepColors.darkSurfaceElevated,
-        borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-        border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.borderSoft),
       ),
       child: Row(
         children: [
-          OwnKeepIconBadge(icon: icon, color: color),
-          SizedBox(width: OwnKeepSpacing.md),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: colors.surfaceSelected,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+          ),
+          const SizedBox(width: OwnKeepSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-                SizedBox(height: 2),
-                Text(subtitle, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: colors.textSecondary,
+                    fontSize: 13,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    SvgPicture.asset(OwnKeepMainIcons.clock, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn), width: 14),
+                    const SizedBox(width: 4),
+                    Text(
+                      time,
+                      style: TextStyle(
+                        color: colors.textMuted,
+                        fontSize: 12,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-          if (time != null)
-            Text(time!, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-          SizedBox(width: 8),
-          Icon(Icons.alarm_outlined, color: OwnKeepColors.darkTextMuted, size: 18),
+          Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: colors.primaryBlue, width: 2),
+            ),
+          ),
         ],
       ),
     );
   }
-}
 
-class _SummaryCard extends StatelessWidget {
-  const _SummaryCard({required this.icon, required this.label, required this.value, required this.color});
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
+  Widget _buildUpcomingCard({
+    required BuildContext context,
+    required OwnKeepMainColorsTheme colors,
+    required String icon,
+    required Color iconColor,
+    required String title,
+    required String subtitle,
+    required String time,
+  }) {
+    return InkWell(
+      onTap: () {},
+      borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: EdgeInsets.all(OwnKeepSpacing.md),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: OwnKeepColors.darkSurfaceElevated,
-          borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-          border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+          color: colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: colors.borderSoft),
         ),
-        child: Column(
+        child: Row(
           children: [
-            OwnKeepIconBadge(icon: icon, color: color, size: 36, iconSize: 18),
-            SizedBox(height: 8),
-            Text(label, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 11, fontFamily: 'Inter')),
-            SizedBox(height: 2),
-            Text(value, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 12, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: colors.surfaceSelected,
+                shape: BoxShape.circle,
+              ),
+              child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+            ),
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  time.split(',').first, // Date part
+                  style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 13,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                if (time.contains(',')) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    time.split(',').last.trim(), // Time part
+                    style: TextStyle(
+                      color: colors.textMuted,
+                      fontSize: 11,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ],
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSummaryBox({
+    required OwnKeepMainColorsTheme colors,
+    required String icon,
+    required Color iconColor,
+    required String title,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      decoration: BoxDecoration(
+        color: colors.surfacePrimary,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: colors.borderSoft),
+      ),
+      child: Column(
+        children: [
+          SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+          const SizedBox(height: 8),
+          Text(
+            title.split(' ').first, // Number
+            style: TextStyle(
+              color: colors.textPrimary,
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              fontFamily: 'Inter',
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            title.split(' ').last, // Label
+            style: TextStyle(
+              color: colors.textSecondary,
+              fontSize: 12,
+              fontFamily: 'Inter',
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none"><defs>
+<linearGradient id="purpleLogo" x1="55" y1="35" x2="202" y2="220" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#925CFF"/>
+  <stop offset=".52" stop-color="#5B32E9"/>
+  <stop offset="1" stop-color="#26177A"/>
+</linearGradient>
+<linearGradient id="rating" x1="45" y1="35" x2="215" y2="220" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#7652F5"/>
+  <stop offset=".55" stop-color="#4932C6"/>
+  <stop offset="1" stop-color="#261D78"/>
+</linearGradient>
+<linearGradient id="success" x1="70" y1="45" x2="190" y2="215" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#25D893"/>
+  <stop offset="1" stop-color="#0A4638"/>
+</linearGradient>
+</defs>
+<rect x="30" y="37" width="196" height="182" rx="45" fill="#12154A" stroke="#30306B" stroke-width="4"/>
+<path d="M82 112V86c0-34 18-57 46-57s46 23 46 57v26" stroke="#A886FF" stroke-width="18"/>
+<rect x="69" y="104" width="118" height="90" rx="22" fill="url(#purpleLogo)" stroke="#9C75FF" stroke-width="5"/>
+<circle cx="128" cy="142" r="13" fill="#171344"/>
+<path d="M128 154v18" stroke="#171344" stroke-width="9"/>
+</svg>
