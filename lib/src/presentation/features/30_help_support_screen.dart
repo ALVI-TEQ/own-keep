@@ -62,7 +62,7 @@ class HelpSupportScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  SvgPicture.asset(OwnKeepMainIcons.search, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn)),
+                  SvgPicture.asset(OwnKeepMainIcons.search, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn), width: 20, height: 20),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
@@ -203,7 +203,7 @@ class HelpSupportScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn), width: 20),
           ],
         ),
       ),
@@ -218,7 +218,7 @@ class HelpSupportScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Row(
           children: [
-            SvgPicture.asset(OwnKeepMainIcons.search, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+            SvgPicture.asset(OwnKeepMainIcons.search, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn), width: 24, height: 24),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -226,7 +226,7 @@ class HelpSupportScreen extends StatelessWidget {
                 style: TextStyle(color: colors.textPrimary, fontSize: 15, fontFamily: 'Inter'),
               ),
             ),
-            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn), width: 20),
           ],
         ),
       ),

@@ -62,7 +62,7 @@ class _DataCheckScreenState extends State<DataCheckScreen> {
           IconButton(
             icon: _isChecking 
               ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-              : SvgPicture.asset(OwnKeepMainIcons.refresh, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+              : SvgPicture.asset(OwnKeepMainIcons.refresh, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 24, height: 24),
             onPressed: _isChecking ? null : _runCheck,
           ),
         ],
@@ -78,6 +78,7 @@ class _DataCheckScreenState extends State<DataCheckScreen> {
                 children: [
                   SvgPicture.asset(
                     'assets/main/illustrations/data_check_success.svg', // Assumed illustration path
+                    width: 140,
                     height: 140,
                   ),
                   const SizedBox(height: OwnKeepSpacing.lg),
@@ -87,7 +88,7 @@ class _DataCheckScreenState extends State<DataCheckScreen> {
                       if (_isChecking)
                         const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
                       else
-                        SvgPicture.asset(OwnKeepMainIcons.check_badge, colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn)),
+                        SvgPicture.asset(OwnKeepMainIcons.check_badge, colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn), width: 24, height: 24),
                       const SizedBox(width: 8),
                       Text(
                         _isChecking ? 'Checking Data...' : l10n.s47_status,
@@ -245,6 +246,8 @@ class _DataCheckScreenState extends State<DataCheckScreen> {
             child: SvgPicture.asset(
               icon, 
               colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              width: 24,
+              height: 24,
             ),
           ),
           const SizedBox(width: OwnKeepSpacing.md),
@@ -276,6 +279,8 @@ class _DataCheckScreenState extends State<DataCheckScreen> {
           SvgPicture.asset(
             OwnKeepMainIcons.success_check, // Assume we have a success check icon for these passed checks
             colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn),
+            width: 24,
+            height: 24,
           ),
         ],
       ),

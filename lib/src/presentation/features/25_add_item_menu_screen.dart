@@ -113,7 +113,7 @@ class AddItemMenuScreen extends ConsumerWidget {
               ),
               child: Row(
                 children: [
-                  SvgPicture.asset(OwnKeepMainIcons.lightbulb, colorFilter: ColorFilter.mode(colors.favoriteYellow, BlendMode.srcIn)),
+                  SvgPicture.asset(OwnKeepMainIcons.lightbulb, colorFilter: ColorFilter.mode(colors.favoriteYellow, BlendMode.srcIn), width: 24, height: 24),
                   const SizedBox(width: OwnKeepSpacing.md),
                   Expanded(
                     child: Text(
@@ -233,7 +233,7 @@ class AddItemMenuScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn), width: 20),
           ],
         ),
       ),
