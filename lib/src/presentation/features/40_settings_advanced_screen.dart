@@ -68,13 +68,21 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: colors.borderSoft),
               ),
-              child: Column(
-                children: [
-                  _buildSettingItem(colors, OwnKeepMainIcons.auto_lock, l10n.s40_auto_lock, value: l10n.s40_auto_lock_value),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Column(
+                  children: [
+                    _buildSettingItem(colors, OwnKeepMainIcons.auto_lock, l10n.s40_auto_lock, value: l10n.s40_auto_lock_value, onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Auto Lock Settings')));
+                    }),
                   _buildDivider(colors),
-                  _buildSettingItem(colors, OwnKeepMainIcons.stealth, l10n.s40_stealth, value: l10n.s40_off),
+                  _buildSettingItem(colors, OwnKeepMainIcons.stealth, l10n.s40_stealth, value: l10n.s40_off, onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Stealth Mode Settings')));
+                  }),
                   _buildDivider(colors),
-                  _buildSettingItem(colors, OwnKeepMainIcons.decoy_vault, l10n.s40_decoy, value: l10n.s40_not_set),
+                  _buildSettingItem(colors, OwnKeepMainIcons.decoy_vault, l10n.s40_decoy, value: l10n.s40_not_set, onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Decoy Vault Settings')));
+                  }),
                   _buildDivider(colors),
                   _buildSettingItem(colors, OwnKeepMainIcons.biometric, l10n.s40_biometric, isToggle: true, isToggleOn: _biometricEnabled, onTap: () {
                     setState(() {
@@ -82,9 +90,13 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
                     });
                   }),
                   _buildDivider(colors),
-                  _buildSettingItem(colors, OwnKeepMainIcons.pin_protection, l10n.s40_pin, value: l10n.s40_on),
+                  _buildSettingItem(colors, OwnKeepMainIcons.pin_protection, l10n.s40_pin, value: l10n.s40_on, onTap: () {
+                    context.push('/lock');
+                  }),
                   _buildDivider(colors),
-                  _buildSettingItem(colors, OwnKeepMainIcons.vault_encryption, l10n.s40_encryption, value: l10n.s40_encryption_value),
+                  _buildSettingItem(colors, OwnKeepMainIcons.vault_encryption, l10n.s40_encryption, value: l10n.s40_encryption_value, onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Encryption Details')));
+                  }),
                 ],
               ),
             ),
@@ -109,15 +121,19 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: colors.borderSoft),
               ),
-              child: Column(
-                children: [
-                  _buildSettingItem(colors, OwnKeepMainIcons.backup_reminder, l10n.s40_backup, isToggle: true, isToggleOn: _backupEnabled, onTap: () {
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Column(
+                  children: [
+                    _buildSettingItem(colors, OwnKeepMainIcons.backup_reminder, l10n.s40_backup, isToggle: true, isToggleOn: _backupEnabled, onTap: () {
                     setState(() {
                       _backupEnabled = !_backupEnabled;
                     });
                   }),
                   _buildDivider(colors),
-                  _buildSettingItem(colors, OwnKeepMainIcons.data_check, l10n.s40_data_check, value: l10n.s40_last_check),
+                  _buildSettingItem(colors, OwnKeepMainIcons.data_check, l10n.s40_data_check, value: l10n.s40_last_check, onTap: () {
+                    context.push('/features/data-check');
+                  }),
                   _buildDivider(colors),
                   _buildSettingItem(
                     colors, 
@@ -125,6 +141,9 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
                     l10n.s40_wipe, 
                     subtitle: l10n.s40_wipe_body,
                     isDanger: true,
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wipe Data Request')));
+                    },
                   ),
                 ],
               ),
@@ -150,13 +169,21 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: colors.borderSoft),
               ),
-              child: Column(
-                children: [
-                  _buildSettingItem(colors, OwnKeepMainIcons.developer, l10n.s40_developer),
-                  _buildDivider(colors),
-                  _buildSettingItem(colors, OwnKeepMainIcons.logs, l10n.s40_logs),
-                  _buildDivider(colors),
-                  _buildSettingItem(colors, OwnKeepMainIcons.reset, l10n.s40_reset, isDanger: true),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Column(
+                  children: [
+                    _buildSettingItem(colors, OwnKeepMainIcons.developer, l10n.s40_developer, onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Developer Mode')));
+                    }),
+                    _buildDivider(colors),
+                    _buildSettingItem(colors, OwnKeepMainIcons.logs, l10n.s40_logs, onTap: () {
+                      context.push('/features/security-audit');
+                    }),
+                    _buildDivider(colors),
+                    _buildSettingItem(colors, OwnKeepMainIcons.reset, l10n.s40_reset, isDanger: true, onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Factory Reset')));
+                    }),
                 ],
               ),
             ),

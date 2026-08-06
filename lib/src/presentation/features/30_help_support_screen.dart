@@ -153,16 +153,20 @@ class HelpSupportScreen extends StatelessWidget {
     required String title,
     required String subtitle,
   }) {
-    return InkWell(
-      onTap: () {},
+    return Material(
+      color: colors.surfacePrimary,
       borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: colors.surfacePrimary,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: colors.borderSoft),
-        ),
+      child: InkWell(
+        onTap: () {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Opening $title')));
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: colors.borderSoft),
+          ),
         child: Row(
           children: [
             Container(
@@ -210,18 +214,15 @@ class HelpSupportScreen extends StatelessWidget {
     return InkWell(
       onTap: () {},
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            SvgPicture.asset(OwnKeepMainIcons.search, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
                 title,
-                style: TextStyle(
-                  color: colors.textPrimary,
-                  fontSize: 15,
-                  fontFamily: 'Inter',
-                ),
+                style: TextStyle(color: colors.textPrimary, fontSize: 15, fontFamily: 'Inter'),
               ),
             ),
             SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
