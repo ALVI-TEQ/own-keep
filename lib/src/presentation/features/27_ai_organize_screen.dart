@@ -249,7 +249,12 @@ class AiOrganizeScreen extends StatelessWidget {
                 color: colors.surfaceSelected,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+              child: SvgPicture.asset(
+                icon, 
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                width: 24,
+                height: 24,
+              ),
             ),
             const SizedBox(width: OwnKeepSpacing.md),
             Expanded(

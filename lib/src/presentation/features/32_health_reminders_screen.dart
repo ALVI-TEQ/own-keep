@@ -248,7 +248,12 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {},
         backgroundColor: colors.primaryBlue,
-        icon: SvgPicture.asset(OwnKeepMainIcons.add, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+        icon: SvgPicture.asset(
+          OwnKeepMainIcons.add, 
+          colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          width: 24,
+          height: 24,
+        ),
         label: Text(
           l10n.s32_add,
           style: const TextStyle(
@@ -287,7 +292,12 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
               color: colors.surfaceSelected,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+            child: SvgPicture.asset(
+              icon, 
+              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              width: 24,
+              height: 24,
+            ),
           ),
           const SizedBox(width: OwnKeepSpacing.md),
           Expanded(

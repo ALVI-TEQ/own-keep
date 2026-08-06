@@ -99,6 +99,7 @@ import '../presentation/features/87_shared_collections_screen.dart';
 import '../presentation/features/88_shared_activity_screen.dart';
 import '../presentation/features/89_invitations_screen.dart';
 import '../presentation/features/90_access_history_screen.dart';
+import '../presentation/features/90_backup_restore_screen.dart';
 import '../presentation/features/91_profile_screen.dart';
 import '../presentation/features/91_ownkeep_pro_screen.dart';
 import '../presentation/features/92_themes_screen.dart';
@@ -206,6 +207,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/features/shared-activity', builder: (context, state) => const SharedActivityScreen()),
       GoRoute(path: '/features/invitations', builder: (context, state) => const InvitationsScreen()),
       GoRoute(path: '/features/access-history', builder: (context, state) => const AccessHistoryScreen()),
+      GoRoute(path: '/features/backup-restore', builder: (context, state) => const BackupRestoreScreen()),
       GoRoute(path: '/features/pro', builder: (context, state) => const OwnKeepProScreen()),
       GoRoute(path: '/features/themes', builder: (context, state) => const ThemesScreen()),
       GoRoute(path: '/features/app-lock', builder: (context, state) => const AppLockScreen()),

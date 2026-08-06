@@ -37,7 +37,7 @@ class SmartCollectionScreen extends ConsumerWidget {
           ),
           IconButton(
             icon: SvgPicture.asset(OwnKeepMainIcons.add, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
-            onPressed: () => context.push('/add'),
+            onPressed: () => context.push('/features/add-item-menu'),
           ),
         ],
       ),
