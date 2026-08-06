@@ -100,6 +100,7 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
                 ],
               ),
             ),
+            ),
 
             const SizedBox(height: OwnKeepSpacing.xl),
 
@@ -148,6 +149,7 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
                 ],
               ),
             ),
+            ),
 
             const SizedBox(height: OwnKeepSpacing.xl),
 
@@ -186,6 +188,7 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
                     }),
                 ],
               ),
+            ),
             ),
             const SizedBox(height: OwnKeepSpacing.xxl),
           ],
