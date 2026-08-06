@@ -248,17 +248,25 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
               ),
             ),
             if (value != null)
-              Text(
-                value,
-                style: TextStyle(
-                  color: colors.textSecondary,
-                  fontSize: 14,
-                  fontFamily: 'Inter',
+              Flexible(
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    color: colors.textSecondary,
+                    fontSize: 14,
+                    fontFamily: 'Inter',
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  textAlign: TextAlign.right,
                 ),
               ),
             if (isToggle)
-              SvgPicture.asset(
-                isToggleOn ? OwnKeepOnboardingIcons.toggle_on : OwnKeepOnboardingIcons.toggle_off,
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: SvgPicture.asset(
+                  isToggleOn ? OwnKeepOnboardingIcons.toggle_on : OwnKeepOnboardingIcons.toggle_off,
+                ),
               )
             else if (value != null || (!isToggle && !isDanger))
               Padding(
