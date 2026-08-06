@@ -22,7 +22,7 @@ class AddItemMenuScreen extends ConsumerWidget {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.close, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(OwnKeepMainIcons.close, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn), width: 24, height: 24),
           onPressed: () => context.pop(),
         ),
         title: Text(

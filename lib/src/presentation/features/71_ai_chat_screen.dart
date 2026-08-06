@@ -56,7 +56,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn), width: 24, height: 24),
           onPressed: () => context.pop(),
         ),
         title: Column(
@@ -68,11 +68,11 @@ class _AiChatScreenState extends State<AiChatScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: SvgPicture.asset(OwnKeepMainIcons.history, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+            icon: SvgPicture.asset(OwnKeepMainIcons.history, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn), width: 24, height: 24),
             onPressed: () => context.push('/features/ai-history'),
           ),
           IconButton(
-            icon: SvgPicture.asset(OwnKeepMainIcons.settings, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+            icon: SvgPicture.asset(OwnKeepMainIcons.settings, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn), width: 24, height: 24),
             onPressed: () => context.push('/features/ai-settings'),
           ),
         ],
