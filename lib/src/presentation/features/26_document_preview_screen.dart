@@ -161,7 +161,7 @@ class _DocumentPreviewScreenState extends ConsumerState<DocumentPreviewScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          doc.logicalFilename.isNotEmpty ? doc.logicalFilename : 'Untitled',
+                          doc.summary.logicalFilename.isNotEmpty ? doc.summary.logicalFilename : 'Untitled',
                           style: TextStyle(
                             color: colors.textPrimary,
                             fontSize: 22,
@@ -171,7 +171,7 @@ class _DocumentPreviewScreenState extends ConsumerState<DocumentPreviewScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          doc.documentType.toString().split('.').last,
+                          doc.summary.documentType.toString().split('.').last,
                           style: TextStyle(
                             color: colors.primaryBlue,
                             fontSize: 14,
@@ -182,13 +182,13 @@ class _DocumentPreviewScreenState extends ConsumerState<DocumentPreviewScreen> {
                         const SizedBox(height: OwnKeepSpacing.xl),
                         
                         // Info rows
-                        _buildInfoRow(colors, 'Added: ${doc.importedAt.toString().split('.')[0]}'),
+                        _buildInfoRow(colors, 'Added: ${doc.summary.importedAt.toString().split('.')[0]}'),
                         const SizedBox(height: 12),
-                        _buildInfoRow(colors, 'Size: ${(doc.sizeBytes / 1024).toStringAsFixed(1)} KB'),
+                        _buildInfoRow(colors, 'Size: Unknown KB'),
                         const SizedBox(height: OwnKeepSpacing.xl),
                         
                         // Tags
-                        if (doc.tags.isNotEmpty) ...[
+                        if (doc.summary.tags.isNotEmpty) ...[
                           Text(
                             l10n.s26_tags,
                             style: TextStyle(
@@ -202,7 +202,7 @@ class _DocumentPreviewScreenState extends ConsumerState<DocumentPreviewScreen> {
                           Wrap(
                             spacing: 8,
                             runSpacing: 8,
-                            children: doc.tags.map((tag) => _buildTag(colors, tag.name, const Color(0xFF27C5E8))).toList(),
+                            children: doc.summary.tags.map((tag) => _buildTag(colors, tag.name, const Color(0xFF27C5E8))).toList(),
                           ),
                           const SizedBox(height: OwnKeepSpacing.xl),
                           const Divider(color: Color(0xFF1B2940)),
@@ -210,9 +210,9 @@ class _DocumentPreviewScreenState extends ConsumerState<DocumentPreviewScreen> {
                         ],
                         
                         // Notes
-                        if (doc.contentPreview != null && doc.contentPreview!.isNotEmpty)
+                        if (doc.textPages.isNotEmpty && doc.textPages.first.text.isNotEmpty)
                           Text(
-                            doc.contentPreview!,
+                            doc.textPages.first.text,
                             style: TextStyle(
                               color: colors.textSecondary,
                               fontSize: 14,

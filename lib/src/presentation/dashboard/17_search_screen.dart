@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
+import '../../theme/ownkeep_spacing.dart';
+import '../../theme/ownkeep_main_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/document_provider.dart';
 
@@ -83,7 +85,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                 controller: _searchController,
                                 autofocus: true,
                                 decoration: InputDecoration(
-                                  hintText: l10n.s17_search_hint, // Use hint text from translation if available or a generic one
+                                  hintText: l10n.s17_subtitle, // Use hint text from translation if available or a generic one
                                   border: InputBorder.none,
                                   hintStyle: TextStyle(color: colors.textMuted, fontSize: 16),
                                 ),

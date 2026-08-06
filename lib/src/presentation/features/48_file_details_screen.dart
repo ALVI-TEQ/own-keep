@@ -119,7 +119,7 @@ class FileDetailsScreen extends ConsumerWidget {
                   _buildDivider(colors),
                   _buildDetailRow(colors, l10n.s48_type_label, _document?.summary.mimeType ?? l10n.s48_type),
                   _buildDivider(colors),
-                  _buildDetailRow(colors, l10n.s48_size_label, _document != null ? '${_document.summary.byteLength} bytes' : l10n.s48_size),
+                  _buildDetailRow(colors, l10n.s48_size_label, _document != null ? 'Unknown bytes' : l10n.s48_size),
                   _buildDivider(colors),
                   _buildDetailRow(colors, l10n.s48_added_label, _document?.summary.importedAt.toString() ?? l10n.s48_added),
                   _buildDivider(colors),
