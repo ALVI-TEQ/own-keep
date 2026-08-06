@@ -59,13 +59,13 @@ class ImportExportScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildActionItem(colors, OwnKeepMainIcons.import_files, l10n.s41_import_files, l10n.s41_import_files_body, const Color(0xFF27C5E8)),
+                  _buildActionItem(context, colors, OwnKeepMainIcons.import_files, l10n.s41_import_files, l10n.s41_import_files_body, const Color(0xFF27C5E8)),
                   _buildDivider(colors),
-                  _buildActionItem(colors, OwnKeepMainIcons.import_gallery, l10n.s41_import_gallery, l10n.s41_import_gallery_body, colors.warningOrange),
+                  _buildActionItem(context, colors, OwnKeepMainIcons.import_gallery, l10n.s41_import_gallery, l10n.s41_import_gallery_body, colors.warningOrange),
                   _buildDivider(colors),
-                  _buildActionItem(colors, OwnKeepMainIcons.import_cloud, l10n.s41_import_cloud, l10n.s41_import_cloud_body, colors.primaryBlue),
+                  _buildActionItem(context, colors, OwnKeepMainIcons.import_cloud, l10n.s41_import_cloud, l10n.s41_import_cloud_body, colors.primaryBlue),
                   _buildDivider(colors),
-                  _buildActionItem(colors, OwnKeepMainIcons.import_computer, l10n.s41_import_computer, l10n.s41_import_computer_body, colors.aiPurple),
+                  _buildActionItem(context, colors, OwnKeepMainIcons.import_computer, l10n.s41_import_computer, l10n.s41_import_computer_body, colors.aiPurple),
                 ],
               ),
             ),
@@ -92,13 +92,13 @@ class ImportExportScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildActionItem(colors, OwnKeepMainIcons.backup, l10n.s41_export_backup, l10n.s41_export_backup_body, colors.successGreen),
+                  _buildActionItem(context, colors, OwnKeepMainIcons.backup, l10n.s41_export_backup, l10n.s41_export_backup_body, colors.successGreen),
                   _buildDivider(colors),
-                  _buildActionItem(colors, OwnKeepMainIcons.file_pdf, l10n.s41_export_documents, l10n.s41_export_documents_body, const Color(0xFF27C5E8)),
+                  _buildActionItem(context, colors, OwnKeepMainIcons.file_pdf, l10n.s41_export_documents, l10n.s41_export_documents_body, const Color(0xFF27C5E8)),
                   _buildDivider(colors),
-                  _buildActionItem(colors, OwnKeepMainIcons.export_media, l10n.s41_export_media, l10n.s41_export_media_body, colors.warningOrange),
+                  _buildActionItem(context, colors, OwnKeepMainIcons.export_media, l10n.s41_export_media, l10n.s41_export_media_body, colors.warningOrange),
                   _buildDivider(colors),
-                  _buildActionItem(colors, OwnKeepMainIcons.export_report, l10n.s41_export_report, l10n.s41_export_report_body, colors.aiPurple),
+                  _buildActionItem(context, colors, OwnKeepMainIcons.export_report, l10n.s41_export_report, l10n.s41_export_report_body, colors.aiPurple),
                 ],
               ),
             ),
@@ -139,6 +139,7 @@ class ImportExportScreen extends StatelessWidget {
   }
 
   Widget _buildActionItem(
+    BuildContext context,
     OwnKeepMainColorsTheme colors, 
     String icon, 
     String title,
@@ -146,7 +147,11 @@ class ImportExportScreen extends StatelessWidget {
     Color iconColor,
   ) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Started $title...')),
+        );
+      },
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(

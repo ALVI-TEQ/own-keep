@@ -94,11 +94,11 @@ class AiInsightsScreen extends StatelessWidget {
               // Insights List
               Text(l10n.s72_insights, style: TextStyle(color: colors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-              _buildInsightRow(OwnKeepMainIcons.tag, l10n.s72_tags_title, l10n.s72_tags_body, colors.warningOrange, colors),
-              _buildInsightRow(OwnKeepMainIcons.due_soon, l10n.s72_expiry_title, l10n.s72_expiry_body, colors.dangerRed, colors),
-              _buildInsightRow(OwnKeepMainIcons.duplicate, l10n.s72_duplicate_title, l10n.s72_duplicate_body, colors.aiPurple, colors),
-              _buildInsightRow(OwnKeepMainIcons.folder, l10n.s72_uncategorized_title, l10n.s72_uncategorized_body, colors.primaryBlue, colors),
-              _buildInsightRow(OwnKeepMainIcons.calendar, l10n.s72_outdated_title, l10n.s72_outdated_body, colors.textSecondary, colors),
+              _buildInsightRow(context, OwnKeepMainIcons.tag, l10n.s72_tags_title, l10n.s72_tags_body, colors.warningOrange, colors),
+              _buildInsightRow(context, OwnKeepMainIcons.due_soon, l10n.s72_expiry_title, l10n.s72_expiry_body, colors.dangerRed, colors),
+              _buildInsightRow(context, OwnKeepMainIcons.duplicate, l10n.s72_duplicate_title, l10n.s72_duplicate_body, colors.aiPurple, colors),
+              _buildInsightRow(context, OwnKeepMainIcons.folder, l10n.s72_uncategorized_title, l10n.s72_uncategorized_body, colors.primaryBlue, colors),
+              _buildInsightRow(context, OwnKeepMainIcons.calendar, l10n.s72_outdated_title, l10n.s72_outdated_body, colors.textSecondary, colors),
             ],
           ),
         ),
@@ -132,9 +132,15 @@ class AiInsightsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInsightRow(String iconPath, String title, String body, Color iconColor, OwnKeepMainColorsTheme colors) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+  Widget _buildInsightRow(BuildContext context, String iconPath, String title, String body, Color iconColor, OwnKeepMainColorsTheme colors) {
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Processing "$title"...')),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colors.surfacePrimary,
@@ -164,6 +170,7 @@ class AiInsightsScreen extends StatelessWidget {
           ),
           SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn)),
         ],
+      ),
       ),
     );
   }

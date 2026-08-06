@@ -41,7 +41,9 @@ class SecurityAuditScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: SvgPicture.asset(OwnKeepMainIcons.device_sync, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
-            onPressed: () {},
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Mock Audit Started')));
+            },
           )
         ],
       ),
@@ -118,7 +120,9 @@ class SecurityAuditScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Resolving Issue...')));
+                      },
                       child: Text('Backup', style: TextStyle(color: colors.primaryBlue, fontSize: 14)),
                     ),
                   ],

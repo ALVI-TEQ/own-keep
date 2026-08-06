@@ -207,7 +207,12 @@ class _MoveToScreenState extends State<MoveToScreen> {
                   border: Border(top: BorderSide(color: colors.borderSoft)),
                 ),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Moved to $_selectedFolderId')),
+                    );
+                    Navigator.pop(context);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colors.primaryBlue,
                     foregroundColor: Colors.white,

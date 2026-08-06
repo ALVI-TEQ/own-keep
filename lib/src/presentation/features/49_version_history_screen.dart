@@ -143,11 +143,11 @@ class VersionHistoryScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildVersionItem(colors, '3', l10n.s49_version_3, l10n.s49_version_3_body, l10n.s49_version_3_time, l10n.common_restore, OwnKeepMainIcons.version_restore_purple),
+                  _buildVersionItem(colors, '3', l10n.s49_version_3, l10n.s49_version_3_body, l10n.s49_version_3_time, l10n.common_restore, colors.aiPurple),
                   _buildDivider(colors),
-                  _buildVersionItem(colors, '2', l10n.s49_version_2, l10n.s49_version_2_body, l10n.s49_version_2_time, l10n.common_restore, OwnKeepMainIcons.version_restore_blue),
+                  _buildVersionItem(colors, '2', l10n.s49_version_2, l10n.s49_version_2_body, l10n.s49_version_2_time, l10n.common_restore, colors.primaryBlue),
                   _buildDivider(colors),
-                  _buildVersionItem(colors, '1', l10n.s49_version_1, l10n.s49_version_1_body, l10n.s49_version_1_time, l10n.common_restore, OwnKeepMainIcons.version_restore_green),
+                  _buildVersionItem(colors, '1', l10n.s49_version_1, l10n.s49_version_1_body, l10n.s49_version_1_time, l10n.common_restore, colors.successGreen),
                 ],
               ),
             ),
@@ -217,7 +217,11 @@ class VersionHistoryScreen extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () {},
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Old versions deleted')),
+                  );
+                },
                 style: OutlinedButton.styleFrom(
                   foregroundColor: colors.dangerRed,
                   side: BorderSide(color: colors.dangerRed),
@@ -250,84 +254,92 @@ class VersionHistoryScreen extends StatelessWidget {
     String body,
     String time,
     String restoreText,
-    String iconPath,
+    Color iconColor,
   ) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: colors.surfaceSelected,
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(
-                number,
-                style: TextStyle(
-                  color: colors.textSecondary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter',
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: OwnKeepSpacing.md),
-          Expanded(
-            child: Column(
+    return Builder(
+      builder: (context) {
+        return InkWell(
+          onTap: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Version restored')),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      title,
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: colors.surfaceSelected,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      number,
                       style: TextStyle(
-                        color: colors.textPrimary,
-                        fontSize: 15,
+                        color: colors.textSecondary,
+                        fontSize: 16,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Inter',
                       ),
                     ),
-                    Text(
-                      time,
-                      style: TextStyle(
-                        color: colors.textMuted,
-                        fontSize: 12,
-                        fontFamily: 'Inter',
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  body,
-                  style: TextStyle(
-                    color: colors.textSecondary,
-                    fontSize: 13,
-                    fontFamily: 'Inter',
                   ),
                 ),
-                const SizedBox(height: 12),
-                InkWell(
-                  onTap: () {},
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
+                const SizedBox(width: OwnKeepSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SvgPicture.asset(iconPath, width: 16),
-                      const SizedBox(width: 6),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            title,
+                            style: TextStyle(
+                              color: colors.textPrimary,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                          Text(
+                            time,
+                            style: TextStyle(
+                              color: colors.textMuted,
+                              fontSize: 12,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
                       Text(
-                        restoreText,
+                        body,
                         style: TextStyle(
-                          color: colors.textPrimary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                          color: colors.textSecondary,
+                          fontSize: 13,
                           fontFamily: 'Inter',
                         ),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.restore, size: 16, color: iconColor),
+                          const SizedBox(width: 6),
+                          Text(
+                            restoreText,
+                            style: TextStyle(
+                              color: colors.textPrimary,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -335,8 +347,8 @@ class VersionHistoryScreen extends StatelessWidget {
               ],
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

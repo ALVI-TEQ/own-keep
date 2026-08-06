@@ -144,13 +144,13 @@ class FamilyVaultScreen extends StatelessWidget {
               // Member Avatars Preview
               Row(
                 children: [
-                  _buildAvatar('A', const Color(0xFF4668FF)),
+                  _buildAvatar(context, 'A', const Color(0xFF4668FF)),
                   const SizedBox(width: -12),
-                  _buildAvatar('H', const Color(0xFFFF4C9A)),
+                  _buildAvatar(context, 'H', const Color(0xFFFF4C9A)),
                   const SizedBox(width: -12),
-                  _buildAvatar('C', const Color(0xFF28CC91)),
+                  _buildAvatar(context, 'C', const Color(0xFF28CC91)),
                   const SizedBox(width: -12),
-                  _buildAvatar('R', const Color(0xFFFFA42F)),
+                  _buildAvatar(context, 'R', const Color(0xFFFFA42F)),
                   const SizedBox(width: 16),
                   GestureDetector(
                     onTap: () => context.push('/features/invite-members'),
@@ -181,7 +181,7 @@ class FamilyVaultScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               
-              ...sharedCollections.map((col) => _buildCollectionCard(col, colors)),
+              ...sharedCollections.map((col) => _buildCollectionCard(context, col, colors)),
             ],
           ),
         ),
@@ -189,8 +189,12 @@ class FamilyVaultScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAvatar(String initial, Color color) {
-    return Container(
+  Widget _buildAvatar(BuildContext context, String initial, Color color) {
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Viewing member $initial')));
+      },
+      child: Container(
       width: 48,
       height: 48,
       decoration: BoxDecoration(
@@ -201,11 +205,16 @@ class FamilyVaultScreen extends StatelessWidget {
       child: Center(
         child: Text(initial, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
       ),
+      ),
     );
   }
 
-  Widget _buildCollectionCard(Map<String, dynamic> col, OwnKeepMainColorsTheme colors) {
-    return Container(
+  Widget _buildCollectionCard(BuildContext context, Map<String, dynamic> col, OwnKeepMainColorsTheme colors) {
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Viewing collection: ${col['title']}')));
+      },
+      child: Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -249,6 +258,7 @@ class FamilyVaultScreen extends StatelessWidget {
           ),
           SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn)),
         ],
+      ),
       ),
     );
   }

@@ -22,6 +22,8 @@ enum DocumentType {
   vehicleDocument('VEHICLE_DOCUMENT', 'Vehicle document'),
   receipt('RECEIPT', 'Receipt'),
   invoice('INVOICE', 'Invoice'),
+  password('PASSWORD', 'Password'),
+  note('NOTE', 'Note'),
   generalDocument('GENERAL_DOCUMENT', 'General document'),
   unknown('UNKNOWN', 'Unknown');
 

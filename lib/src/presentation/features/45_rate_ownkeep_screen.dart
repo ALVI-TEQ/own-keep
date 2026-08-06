@@ -171,7 +171,12 @@ class _RateOwnKeepScreenState extends State<RateOwnKeepScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _selectedRating > 0 ? () {} : null,
+                onPressed: _selectedRating > 0 ? () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Thank you for rating $_selectedRating stars!')),
+                  );
+                  context.pop();
+                } : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colors.primaryBlue,
                   disabledBackgroundColor: colors.surfaceSelected,

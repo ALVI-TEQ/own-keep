@@ -23,6 +23,9 @@ import 'package:vault_platform/vault_platform.dart';
 
 /// An unlocked vault owned by the application shell.
 abstract interface class UnlockedVaultHandle {
+  /// The active database session for this vault.
+  VaultDatabaseSession get databaseSession;
+
   /// Controller backed by this handle's encrypted database and object store.
   IngestionUiController get ingestionController;
 
@@ -649,6 +652,9 @@ final class _LocalUnlockedVaultHandle implements UnlockedVaultHandle {
   }) : _createBackup = createBackup;
 
   final VaultDatabaseSession _databaseSession;
+
+  @override
+  VaultDatabaseSession get databaseSession => _databaseSession;
   final VaultFileRootKey _fileRootKey;
   final Future<PendingVaultBackup> Function(String recoveryPassphrase)
   _createBackup;

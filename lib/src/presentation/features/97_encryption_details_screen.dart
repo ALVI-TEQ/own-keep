@@ -91,7 +91,7 @@ class EncryptionDetailsScreen extends StatelessWidget {
               const SizedBox(height: 32),
 
               // Technical Specs
-              ...technicalSpecs.map((spec) => _buildSpecItem(spec, colors)),
+              ...technicalSpecs.map((spec) => _buildSpecItem(context, spec, colors)),
               
               const SizedBox(height: 24),
               
@@ -128,8 +128,12 @@ class EncryptionDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSpecItem(Map<String, dynamic> spec, OwnKeepMainColorsTheme colors) {
-    return Container(
+  Widget _buildSpecItem(BuildContext context, Map<String, dynamic> spec, OwnKeepMainColorsTheme colors) {
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Copied ${spec['title']} details')));
+      },
+      child: Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -153,6 +157,7 @@ class EncryptionDetailsScreen extends StatelessWidget {
           ),
           Text(spec['value'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'monospace')),
         ],
+      ),
       ),
     );
   }

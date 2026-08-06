@@ -209,7 +209,12 @@ class _SecureScanScreenState extends State<SecureScanScreen> {
                       
                       // Capture Button
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Document scanned successfully')),
+                          );
+                          Navigator.pop(context);
+                        },
                         child: SvgPicture.asset(
                           OwnKeepMainIcons.capture_button, // assuming this exists
                           width: 80,

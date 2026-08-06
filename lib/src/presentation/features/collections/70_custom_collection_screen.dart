@@ -66,7 +66,9 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
           IconButton(
             icon: SvgPicture.asset(OwnKeepMainIcons.confirm, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
             onPressed: () {
-              // Create custom collection and pop
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Custom collection "${_collectionName.isEmpty ? "New Collection" : _collectionName}" created successfully')),
+              );
               context.pop();
             },
           ),

@@ -127,7 +127,11 @@ class AiTimelineScreen extends StatelessWidget {
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 24.0),
-                      child: Container(
+                      child: GestureDetector(
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Viewing timeline event: ${event['title']}')));
+                        },
+                        child: Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: colors.surfacePrimary,
@@ -165,6 +169,7 @@ class AiTimelineScreen extends StatelessWidget {
                               ),
                             ),
                           ],
+                        ),
                         ),
                       ),
                     ),

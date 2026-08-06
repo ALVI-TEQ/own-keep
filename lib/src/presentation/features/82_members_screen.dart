@@ -109,9 +109,9 @@ class MembersScreen extends StatelessWidget {
               // Transfer Options
               Text(l10n.s82_transfer_options, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
               const SizedBox(height: 16),
-              _buildTransferOption(l10n.s82_nearby, l10n.s82_nearby_body, OwnKeepMainIcons.device_sync, colors.accentCyan, colors),
-              _buildTransferOption(l10n.s82_qr, l10n.s82_qr_body, OwnKeepMainIcons.qr_code, colors.primaryBlue, colors),
-              _buildTransferOption(l10n.s82_package, l10n.s82_package_body, OwnKeepMainIcons.folder_export, colors.aiPurple, colors),
+              _buildTransferOption(context, l10n.s82_nearby, l10n.s82_nearby_body, OwnKeepMainIcons.device_sync, colors.accentCyan, colors),
+              _buildTransferOption(context, l10n.s82_qr, l10n.s82_qr_body, OwnKeepMainIcons.qr_code, colors.primaryBlue, colors),
+              _buildTransferOption(context, l10n.s82_package, l10n.s82_package_body, OwnKeepMainIcons.folder_export, colors.aiPurple, colors),
             ],
           ),
         ),
@@ -193,8 +193,12 @@ class MembersScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTransferOption(String title, String body, String iconPath, Color iconColor, OwnKeepMainColorsTheme colors) {
-    return Container(
+  Widget _buildTransferOption(BuildContext context, String title, String body, String iconPath, Color iconColor, OwnKeepMainColorsTheme colors) {
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Starting transfer via $title')));
+      },
+      child: Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -224,6 +228,7 @@ class MembersScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }

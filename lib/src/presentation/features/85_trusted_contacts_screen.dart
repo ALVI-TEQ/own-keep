@@ -97,7 +97,9 @@ class TrustedContactsScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Adding trusted contact')));
+                  },
                   icon: Icon(Icons.add, color: colors.primaryBlue),
                   label: Text(l10n.s85_add, style: TextStyle(color: colors.primaryBlue, fontSize: 16)),
                   style: TextButton.styleFrom(
@@ -115,7 +117,9 @@ class TrustedContactsScreen extends StatelessWidget {
                 children: [
                   Text(l10n.s85_rules, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Editing emergency rules')));
+                    },
                     child: Text('Edit', style: TextStyle(color: colors.primaryBlue, fontSize: 14)),
                   ),
                 ],

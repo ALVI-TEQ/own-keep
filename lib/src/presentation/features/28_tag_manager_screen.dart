@@ -111,16 +111,17 @@ class TagManagerScreen extends ConsumerWidget {
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, st) => const Text('Error loading tags'),
               data: (tags) {
-                if (tags.isEmpty) {
+                final typedTags = tags as List;
+                if (typedTags.isEmpty) {
                   return Padding(
                     padding: const EdgeInsets.all(OwnKeepSpacing.md),
                     child: Text('No custom tags yet.', style: TextStyle(color: colors.textSecondary)),
                   );
                 }
                 return Column(
-                  children: tags.map((tag) => Padding(
+                  children: typedTags.map((tag) => Padding(
                     padding: const EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-                    child: _buildTagRow(colors, OwnKeepMainIcons.tag, tag.name, '0'),
+                    child: _buildTagRow(colors, OwnKeepMainIcons.tag, (tag as dynamic).name, '0'),
                   )).toList(),
                 );
               },

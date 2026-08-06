@@ -5,8 +5,24 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 
-class GlobalSearchScreen extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
+
+class GlobalSearchScreen extends ConsumerStatefulWidget {
   const GlobalSearchScreen({super.key});
+
+  @override
+  ConsumerState<GlobalSearchScreen> createState() => _GlobalSearchScreenState();
+}
+
+class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,20 +102,34 @@ class GlobalSearchScreen extends StatelessWidget {
                         colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn),
                         width: 20,
                       ),
-                      const SizedBox(width: 12),
-                      Text(
-                        l10n.s18_query,
-                        style: TextStyle(color: colors.textPrimary, fontSize: 16),
-                      ),
-                      const Spacer(),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: colors.borderSoft,
-                          shape: BoxShape.circle,
+                      Expanded(
+                        child: TextField(
+                          controller: _searchController,
+                          autofocus: true,
+                          decoration: InputDecoration(
+                            hintText: l10n.s18_query,
+                            border: InputBorder.none,
+                            hintStyle: TextStyle(color: colors.textMuted, fontSize: 16),
+                          ),
+                          style: TextStyle(color: colors.textPrimary, fontSize: 16),
+                          onChanged: (value) => setState(() {}),
                         ),
-                        child: Icon(Icons.close, color: colors.textPrimary, size: 12),
                       ),
+                      if (_searchController.text.isNotEmpty)
+                        GestureDetector(
+                          onTap: () {
+                            _searchController.clear();
+                            setState(() {});
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: colors.borderSoft,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(Icons.close, color: colors.textPrimary, size: 12),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -124,37 +154,38 @@ class GlobalSearchScreen extends StatelessWidget {
               const SizedBox(height: 24),
 
               Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  children: [
-                    // Documents Section
-                    Text(l10n.filter_documents, style: TextStyle(color: colors.textMuted, fontSize: 14, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 12),
-                    _buildResultItem(context, l10n.s18_passport_title, l10n.s18_passport_meta, OwnKeepMainIcons.filePdf, colors.dangerRed),
-                    _buildResultItem(context, l10n.s18_passport_copy_title, l10n.s18_passport_copy_meta, OwnKeepMainIcons.filePdf, colors.dangerRed),
-                    const SizedBox(height: 16),
-
-                    // Notes Section
-                    Text(l10n.filter_notes, style: TextStyle(color: colors.textMuted, fontSize: 14, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 12),
-                    _buildResultItem(context, l10n.s18_note_title, l10n.s18_note_meta, OwnKeepMainIcons.note, colors.warningOrange),
-                    const SizedBox(height: 16),
-
-                    // Tags Section
-                    Text(l10n.filter_tags, style: TextStyle(color: colors.textMuted, fontSize: 14, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 12),
-                    _buildResultItem(context, l10n.s18_tag_passport, l10n.s18_tag_passport_meta, OwnKeepMainIcons.tag, colors.aiPurple),
-                    _buildResultItem(context, l10n.s18_tag_identity, l10n.s18_tag_identity_meta, OwnKeepMainIcons.tag, colors.aiPurple),
-                    const SizedBox(height: 16),
-
-                    // Reminders Section
-                    Text(l10n.filter_reminders, style: TextStyle(color: colors.textMuted, fontSize: 14, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 12),
-                    _buildResultItem(context, l10n.s18_reminder_title, l10n.s18_reminder_date, OwnKeepMainIcons.reminder, colors.primaryBlue),
-                    
-                    const SizedBox(height: 32),
-                  ],
-                ),
+                child: _searchController.text.isEmpty
+                    ? Center(
+                        child: Text(
+                          'Type to search globally',
+                          style: TextStyle(color: colors.textSecondary),
+                        ),
+                      )
+                    : ref.watch(searchDocumentsProvider(_searchController.text)).when(
+                        loading: () => const Center(child: CircularProgressIndicator()),
+                        error: (error, stack) => Center(child: Text('Search failed', style: TextStyle(color: colors.textSecondary))),
+                        data: (docs) {
+                          if (docs.isEmpty) {
+                            return Center(
+                              child: Text('No results found', style: TextStyle(color: colors.textSecondary)),
+                            );
+                          }
+                          return ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                            itemCount: docs.length,
+                            itemBuilder: (context, index) {
+                              final doc = docs[index];
+                              return _buildResultItem(
+                                context,
+                                doc.logicalFilename.isNotEmpty ? doc.logicalFilename : 'Untitled',
+                                'Document', // Temporary mapping
+                                OwnKeepMainIcons.filePdf,
+                                colors.primaryBlue,
+                              );
+                            },
+                          );
+                        },
+                      ),
               ),
             ],
           ),

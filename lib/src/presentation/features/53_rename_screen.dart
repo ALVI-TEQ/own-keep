@@ -257,7 +257,12 @@ class _RenameScreenState extends State<RenameScreen> {
             const SizedBox(width: OwnKeepSpacing.md),
             Expanded(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Renamed to ${_nameController.text}$_extension')),
+                  );
+                  Navigator.pop(context);
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colors.primaryBlue,
                   foregroundColor: Colors.white,

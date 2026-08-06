@@ -94,14 +94,16 @@ class EmergencyAccessScreen extends StatelessWidget {
                 children: [
                   Text(l10n.s86_included, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Editing emergency items')));
+                    },
                     child: Text('Edit', style: TextStyle(color: colors.primaryBlue, fontSize: 14)),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
               
-              ...includedItems.map((item) => _buildItemCard(item, colors)),
+              ...includedItems.map((item) => _buildItemCard(context, item, colors)),
               
               const SizedBox(height: 32),
 
@@ -160,8 +162,12 @@ class EmergencyAccessScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildItemCard(Map<String, dynamic> item, OwnKeepMainColorsTheme colors) {
-    return Container(
+  Widget _buildItemCard(BuildContext context, Map<String, dynamic> item, OwnKeepMainColorsTheme colors) {
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Toggled ${item['title']}')));
+      },
+      child: Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -184,6 +190,7 @@ class EmergencyAccessScreen extends StatelessWidget {
             child: Text(item['title'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500)),
           ),
         ],
+      ),
       ),
     );
   }

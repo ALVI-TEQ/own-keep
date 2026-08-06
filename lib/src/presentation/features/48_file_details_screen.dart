@@ -7,47 +7,22 @@ import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/vault_provider.dart';
+import '../../providers/document_provider.dart';
 
-class FileDetailsScreen extends ConsumerStatefulWidget {
+class FileDetailsScreen extends ConsumerWidget {
   final String? documentId;
   const FileDetailsScreen({super.key, this.documentId});
 
   @override
-  ConsumerState<FileDetailsScreen> createState() => _FileDetailsScreenState();
-}
-
-class _FileDetailsScreenState extends ConsumerState<FileDetailsScreen> {
-  bool _isLoading = true;
-  dynamic _document;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadDocument();
-  }
-
-  Future<void> _loadDocument() async {
-    if (widget.documentId == null) {
-      if (mounted) setState(() => _isLoading = false);
-      return;
-    }
-    try {
-      final controller = ref.read(ingestionControllerProvider);
-      if (controller != null) {
-        final doc = await controller.document(widget.documentId!);
-        if (mounted) setState(() { _document = doc; _isLoading = false; });
-      } else {
-        if (mounted) setState(() => _isLoading = false);
-      }
-    } catch (e) {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
+
+    final documentAsyncValue = documentId != null 
+        ? ref.watch(documentDetailProvider(documentId!))
+        : null;
+
+    final _document = documentAsyncValue?.value;
 
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -87,11 +62,13 @@ class _FileDetailsScreenState extends ConsumerState<FileDetailsScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: documentAsyncValue?.isLoading ?? false
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
             // Preview Image
             Container(
               height: 200,
@@ -142,7 +119,7 @@ class _FileDetailsScreenState extends ConsumerState<FileDetailsScreen> {
                   _buildDivider(colors),
                   _buildDetailRow(colors, l10n.s48_type_label, _document?.summary.mimeType ?? l10n.s48_type),
                   _buildDivider(colors),
-                  _buildDetailRow(colors, l10n.s48_size_label, _document != null ? '${_document.byteLength} bytes' : l10n.s48_size),
+                  _buildDetailRow(colors, l10n.s48_size_label, _document != null ? '${_document.summary.byteLength} bytes' : l10n.s48_size),
                   _buildDivider(colors),
                   _buildDetailRow(colors, l10n.s48_added_label, _document?.summary.importedAt.toString() ?? l10n.s48_added),
                   _buildDivider(colors),
@@ -241,9 +218,9 @@ class _FileDetailsScreenState extends ConsumerState<FileDetailsScreen> {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.xxl),
-          ],
-        ),
-      ),
+                ],
+              ),
+            ),
     );
   }
 

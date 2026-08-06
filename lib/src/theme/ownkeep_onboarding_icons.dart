@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 abstract final class OwnKeepOnboardingIcons {
   static const ai_powered = 'assets/onboarding/icons/ai_powered.svg';
   static const back_arrow = 'assets/onboarding/icons/back_arrow.svg';

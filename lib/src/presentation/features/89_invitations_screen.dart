@@ -78,14 +78,14 @@ class InvitationsScreen extends StatelessWidget {
               // Pending Section
               Text(l10n.s89_pending, style: TextStyle(color: colors.warningOrange, fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-              ...pending.map((inv) => _buildInvitationCard(inv, true, colors)),
+              ...pending.map((inv) => _buildInvitationCard(context, inv, true, colors)),
               
               const SizedBox(height: 32),
 
               // Completed Section
               Text(l10n.s89_completed, style: TextStyle(color: colors.successGreen, fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-              ...completed.map((inv) => _buildInvitationCard(inv, false, colors)),
+              ...completed.map((inv) => _buildInvitationCard(context, inv, false, colors)),
 
               const SizedBox(height: 40),
 
@@ -123,8 +123,12 @@ class InvitationsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInvitationCard(Map<String, dynamic> inv, bool isPending, OwnKeepMainColorsTheme colors) {
-    return Container(
+  Widget _buildInvitationCard(BuildContext context, Map<String, dynamic> inv, bool isPending, OwnKeepMainColorsTheme colors) {
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Viewing invitation for ${inv['name']}')));
+      },
+      child: Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -170,9 +174,12 @@ class InvitationsScreen extends StatelessWidget {
           if (isPending)
             IconButton(
               icon: Icon(Icons.close, color: colors.textMuted),
-              onPressed: () {},
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Revoked invitation for ${inv['name']}')));
+              },
             ),
         ],
+      ),
       ),
     );
   }

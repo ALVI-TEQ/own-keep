@@ -7,6 +7,7 @@ import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/vault_provider.dart';
+import '../../providers/document_provider.dart';
 import 'dart:typed_data';
 
 class DocumentPreviewScreen extends ConsumerStatefulWidget {

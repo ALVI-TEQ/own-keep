@@ -118,39 +118,44 @@ class AiHistoryScreen extends StatelessWidget {
                 itemCount: history.length,
                 itemBuilder: (context, index) {
                   final item = history[index];
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: colors.surfacePrimary,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: colors.borderSoft),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: (item['color'] as Color).withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
+                  return GestureDetector(
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Viewing ${item['title']}')));
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: colors.surfacePrimary,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: colors.borderSoft),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: (item['color'] as Color).withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: SvgPicture.asset(item['icon'] as String, colorFilter: ColorFilter.mode(item['color'] as Color, BlendMode.srcIn), width: 24),
                           ),
-                          child: SvgPicture.asset(item['icon'] as String, colorFilter: ColorFilter.mode(item['color'] as Color, BlendMode.srcIn), width: 24),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(item['title'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
-                              const SizedBox(height: 4),
-                              Text(item['body'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
-                              const SizedBox(height: 8),
-                              Text(item['time'] as String, style: TextStyle(color: colors.textMuted, fontSize: 12)),
-                            ],
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(item['title'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                                const SizedBox(height: 4),
+                                Text(item['body'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                                const SizedBox(height: 8),
+                                Text(item['time'] as String, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },

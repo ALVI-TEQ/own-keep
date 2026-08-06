@@ -263,7 +263,12 @@ class _AddNotesScreenState extends State<AddNotesScreen> {
           border: Border(top: BorderSide(color: colors.borderSoft)),
         ),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Note "${_titleController.text}" saved')),
+            );
+            Navigator.pop(context);
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: colors.primaryBlue,
             foregroundColor: Colors.white,

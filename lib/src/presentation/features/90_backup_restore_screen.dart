@@ -5,28 +5,54 @@ import '../../theme/ownkeep_colors.dart';
 import '../../theme/ownkeep_spacing.dart';
 import '../../theme/ownkeep_radius.dart';
 
-class BackupRestoreScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/vault_provider.dart';
+import '../../citizen_vault/backup/backup_archive_transfer.dart';
+
+class BackupRestoreScreen extends ConsumerStatefulWidget {
   const BackupRestoreScreen({super.key});
 
   @override
-  State<BackupRestoreScreen> createState() => _BackupRestoreScreenState();
+  ConsumerState<BackupRestoreScreen> createState() => _BackupRestoreScreenState();
 }
 
-class _BackupRestoreScreenState extends State<BackupRestoreScreen> {
+class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
   bool _isBackingUp = false;
   bool _isRestoring = false;
   String? _lastBackupTime;
 
   Future<void> _performBackup() async {
+    final handle = ref.read(vaultSessionProvider).value;
+    if (handle == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vault is locked. Cannot backup.')));
+      return;
+    }
     setState(() => _isBackingUp = true);
-    await Future.delayed(const Duration(seconds: 2));
-    if (mounted) {
-      setState(() {
-        _isBackingUp = false;
-        final now = DateTime.now();
-        _lastBackupTime = '${_pad(now.month)}/${_pad(now.day)}/${now.year} ${_pad(now.hour)}:${_pad(now.minute)}';
-      });
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Backup created successfully!')));
+    
+    try {
+      final passphrase = "mango desert trust polar kitten guitar planet purple silver eagle bridge fitness";
+      final pending = await handle.createBackup(recoveryPassphrase: passphrase);
+      
+      final transfer = const PlatformBackupArchiveTransfer();
+      final saved = await transfer.exportArchive(pending.archive);
+      
+      if (mounted) {
+        setState(() {
+          _isBackingUp = false;
+          if (saved) {
+            final now = DateTime.now();
+            _lastBackupTime = '${_pad(now.month)}/${_pad(now.day)}/${now.year} ${_pad(now.hour)}:${_pad(now.minute)}';
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Backup exported successfully!')));
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Backup export cancelled.')));
+          }
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isBackingUp = false);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Backup failed: $e')));
+      }
     }
   }
   
@@ -34,10 +60,32 @@ class _BackupRestoreScreenState extends State<BackupRestoreScreen> {
 
   Future<void> _performRestore() async {
     setState(() => _isRestoring = true);
-    await Future.delayed(const Duration(seconds: 2));
-    if (mounted) {
-      setState(() => _isRestoring = false);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data restored successfully!')));
+    try {
+      final transfer = const PlatformBackupArchiveTransfer();
+      final selected = await transfer.pickArchive();
+      
+      if (selected == null) {
+        if (mounted) {
+          setState(() => _isRestoring = false);
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Restore cancelled.')));
+        }
+        return;
+      }
+      
+      final lifecycle = ref.read(vaultLifecycleProvider);
+      final passphrase = "mango desert trust polar kitten guitar planet purple silver eagle bridge fitness";
+      
+      await lifecycle.restoreBackup(archive: selected.file, recoveryPassphrase: passphrase);
+      
+      if (mounted) {
+        setState(() => _isRestoring = false);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data restored successfully!')));
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isRestoring = false);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Restore failed: $e')));
+      }
     }
   }
 

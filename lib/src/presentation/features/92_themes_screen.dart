@@ -153,7 +153,8 @@ class _ThemesScreenState extends State<ThemesScreen> {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: colors.primaryBlue,
+            activeTrackColor: colors.primaryBlue.withValues(alpha: 0.5),
+            activeThumbColor: colors.primaryBlue,
             inactiveTrackColor: colors.surfaceSecondary,
           ),
         ],

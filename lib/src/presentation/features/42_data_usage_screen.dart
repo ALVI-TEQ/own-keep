@@ -5,14 +5,17 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
 
-class DataUsageScreen extends StatelessWidget {
+class DataUsageScreen extends ConsumerWidget {
   const DataUsageScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
+    final storageStats = ref.watch(storageStatsProvider);
 
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -52,14 +55,18 @@ class DataUsageScreen extends StatelessWidget {
                     fontFamily: 'Inter',
                   ),
                 ),
-                Text(
-                  l10n.s42_total,
-                  style: TextStyle(
-                    color: colors.textSecondary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Inter',
+                storageStats.when(
+                  data: (data) => Text(
+                    _formatBytes(data['totalSize'] as int? ?? 0),
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Inter',
+                    ),
                   ),
+                  loading: () => const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+                  error: (_, __) => const Text('Error'),
                 ),
               ],
             ),
@@ -83,28 +90,37 @@ class DataUsageScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: OwnKeepSpacing.xl),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        l10n.s42_used,
-                        style: TextStyle(
-                          color: colors.textPrimary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                      Text(
-                        l10n.s42_free,
-                        style: TextStyle(
-                          color: colors.textSecondary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ],
+                  storageStats.when(
+                    data: (data) {
+                      final used = data['totalSize'] as int? ?? 0;
+                      final capacity = 5 * 1024 * 1024 * 1024; // Mock 5GB capacity
+                      final free = capacity - used;
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            l10n.s42_used.replaceAll('850 MB', _formatBytes(used)),
+                            style: TextStyle(
+                              color: colors.textPrimary,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                          Text(
+                            l10n.s42_free.replaceAll('4.15 GB', _formatBytes(free)),
+                            style: TextStyle(
+                              color: colors.textSecondary,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                    loading: () => const SizedBox.shrink(),
+                    error: (_, __) => const SizedBox.shrink(),
                   ),
                 ],
               ),
@@ -122,28 +138,47 @@ class DataUsageScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.md),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildTypeCard(colors, OwnKeepMainIcons.document, l10n.s42_documents, l10n.s42_documents_percent, l10n.s42_documents_size, const Color(0xFF27C5E8)),
-                ),
-                const SizedBox(width: OwnKeepSpacing.sm),
-                Expanded(
-                  child: _buildTypeCard(colors, OwnKeepMainIcons.image, l10n.s42_images, l10n.s42_images_percent, l10n.s42_images_size, colors.primaryBlue),
-                ),
-              ],
-            ),
-            const SizedBox(height: OwnKeepSpacing.sm),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildTypeCard(colors, OwnKeepMainIcons.video, l10n.s42_videos, l10n.s42_videos_percent, l10n.s42_videos_size, colors.aiPurple),
-                ),
-                const SizedBox(width: OwnKeepSpacing.sm),
-                Expanded(
-                  child: _buildTypeCard(colors, OwnKeepMainIcons.others, l10n.s42_others, l10n.s42_others_percent, l10n.s42_others_size, colors.warningOrange),
-                ),
-              ],
+            storageStats.when(
+              data: (data) {
+                final byType = data['sizeByType'] as Map<String, int>? ?? {};
+                final total = data['totalSize'] as int? ?? 1; // Prevent division by zero
+                final docSize = byType['DOCUMENT'] ?? byType['GENERAL_DOCUMENT'] ?? 0;
+                final imgSize = byType['IMAGE'] ?? 0;
+                final vidSize = byType['VIDEO'] ?? 0;
+                final otherSize = total - (docSize + imgSize + vidSize);
+
+                String pct(int val) => '${(val / total * 100).toStringAsFixed(1)}%';
+
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildTypeCard(colors, OwnKeepMainIcons.document, l10n.s42_documents, pct(docSize), _formatBytes(docSize), const Color(0xFF27C5E8)),
+                        ),
+                        const SizedBox(width: OwnKeepSpacing.sm),
+                        Expanded(
+                          child: _buildTypeCard(colors, OwnKeepMainIcons.image, l10n.s42_images, pct(imgSize), _formatBytes(imgSize), colors.primaryBlue),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: OwnKeepSpacing.sm),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildTypeCard(colors, OwnKeepMainIcons.video, l10n.s42_videos, pct(vidSize), _formatBytes(vidSize), colors.aiPurple),
+                        ),
+                        const SizedBox(width: OwnKeepSpacing.sm),
+                        Expanded(
+                          child: _buildTypeCard(colors, OwnKeepMainIcons.others, l10n.s42_others, pct(otherSize > 0 ? otherSize : 0), _formatBytes(otherSize > 0 ? otherSize : 0), colors.warningOrange),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (_, __) => const SizedBox.shrink(),
             ),
 
             const SizedBox(height: OwnKeepSpacing.xxl),
@@ -208,6 +243,18 @@ class DataUsageScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _formatBytes(int bytes) {
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB"];
+    var i = 0;
+    double size = bytes.toDouble();
+    while (size > 1024 && i < suffixes.length - 1) {
+      size /= 1024;
+      i++;
+    }
+    return '${size.toStringAsFixed(1)} ${suffixes[i]}';
   }
 
   Widget _buildTypeCard(OwnKeepMainColorsTheme colors, String icon, String title, String percent, String size, Color iconColor) {

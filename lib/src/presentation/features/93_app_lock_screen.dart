@@ -5,14 +5,17 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 
-class AppLockScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/vault_provider.dart';
+
+class AppLockScreen extends ConsumerStatefulWidget {
   const AppLockScreen({super.key});
 
   @override
-  State<AppLockScreen> createState() => _AppLockScreenState();
+  ConsumerState<AppLockScreen> createState() => _AppLockScreenState();
 }
 
-class _AppLockScreenState extends State<AppLockScreen> {
+class _AppLockScreenState extends ConsumerState<AppLockScreen> {
   int _autoLockIndex = 0; // 0=Immediately, 1=30s, 2=2m
 
   @override
@@ -89,9 +92,9 @@ class _AppLockScreenState extends State<AppLockScreen> {
               // Lock Methods
               Text(l10n.s93_methods, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-              _buildMethodItem(l10n.s93_biometric, l10n.s93_biometric_body, OwnKeepMainIcons.fingerprint, true, colors),
-              _buildMethodItem(l10n.s93_pin, l10n.s93_pin_body, OwnKeepMainIcons.pin, true, colors),
-              _buildMethodItem(l10n.s93_recovery, l10n.s93_recovery_body, OwnKeepMainIcons.key, false, colors),
+              _buildMethodItem(context, l10n.s93_biometric, l10n.s93_biometric_body, OwnKeepMainIcons.fingerprint, true, colors),
+              _buildMethodItem(context, l10n.s93_pin, l10n.s93_pin_body, OwnKeepMainIcons.pin, true, colors),
+              _buildMethodItem(context, l10n.s93_recovery, l10n.s93_recovery_body, OwnKeepMainIcons.key, false, colors),
               
               const SizedBox(height: 32),
 
@@ -135,8 +138,11 @@ class _AppLockScreenState extends State<AppLockScreen> {
             width: double.infinity,
             height: 56,
             child: ElevatedButton.icon(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vault locked.')));
+              onPressed: () async {
+                await ref.read(vaultSessionProvider.notifier).lockVault();
+                if (context.mounted) {
+                  context.go('/lock');
+                }
               },
               icon: const Icon(Icons.lock_outline, color: Colors.white),
               style: ElevatedButton.styleFrom(
@@ -157,8 +163,12 @@ class _AppLockScreenState extends State<AppLockScreen> {
     );
   }
 
-  Widget _buildMethodItem(String title, String body, String iconPath, bool isActive, OwnKeepMainColorsTheme colors) {
-    return Container(
+  Widget _buildMethodItem(BuildContext context, String title, String body, String iconPath, bool isActive, OwnKeepMainColorsTheme colors) {
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Toggled $title')));
+      },
+      child: Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -192,6 +202,7 @@ class _AppLockScreenState extends State<AppLockScreen> {
           else
             Icon(Icons.circle_outlined, color: colors.textMuted, size: 24),
         ],
+      ),
       ),
     );
   }

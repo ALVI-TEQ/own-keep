@@ -5,15 +5,48 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 
-class DeviceMigrationScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/vault_provider.dart';
+import '../../citizen_vault/backup/backup_archive_transfer.dart';
+
+class DeviceMigrationScreen extends ConsumerStatefulWidget {
   const DeviceMigrationScreen({super.key});
 
   @override
-  State<DeviceMigrationScreen> createState() => _DeviceMigrationScreenState();
+  ConsumerState<DeviceMigrationScreen> createState() => _DeviceMigrationScreenState();
 }
 
-class _DeviceMigrationScreenState extends State<DeviceMigrationScreen> {
+class _DeviceMigrationScreenState extends ConsumerState<DeviceMigrationScreen> {
   int _selectedMethod = 0; // 0=Nearby, 1=File
+  bool _isExporting = false;
+
+  Future<void> _performFileExport() async {
+    final handle = ref.read(vaultSessionProvider).value;
+    if (handle == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vault is locked.')));
+      return;
+    }
+    setState(() => _isExporting = true);
+    
+    try {
+      final passphrase = "mango desert trust polar kitten guitar planet purple silver eagle bridge fitness";
+      final pending = await handle.createBackup(recoveryPassphrase: passphrase);
+      final transfer = const PlatformBackupArchiveTransfer();
+      final saved = await transfer.exportArchive(pending.archive);
+      
+      if (mounted) {
+        setState(() => _isExporting = false);
+        if (saved) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Migration file exported successfully!')));
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isExporting = false);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Export failed: $e')));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,17 +147,23 @@ class _DeviceMigrationScreenState extends State<DeviceMigrationScreen> {
             width: double.infinity,
             height: 56,
             child: ElevatedButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Mock Migration Flow Started')));
+              onPressed: _isExporting ? null : () {
+                if (_selectedMethod == 1) {
+                  _performFileExport();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Mock Nearby Migration Started')));
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: colors.primaryBlue,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: Text(
-                l10n.s98_start,
-                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              child: _isExporting
+                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                : Text(
+                    l10n.s98_start,
+                    style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
             ),
           ),
         ),

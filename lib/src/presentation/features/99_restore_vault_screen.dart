@@ -5,15 +5,55 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 
-class RestoreVaultScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/vault_provider.dart';
+import '../../citizen_vault/backup/backup_archive_transfer.dart';
+
+class RestoreVaultScreen extends ConsumerStatefulWidget {
   const RestoreVaultScreen({super.key});
 
   @override
-  State<RestoreVaultScreen> createState() => _RestoreVaultScreenState();
+  ConsumerState<RestoreVaultScreen> createState() => _RestoreVaultScreenState();
 }
 
-class _RestoreVaultScreenState extends State<RestoreVaultScreen> {
+class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
   int _restoreOption = 0; // 0=Everything, 1=Docs only, 2=Choose
+  SelectedBackupArchive? _selectedArchive;
+  bool _isRestoring = false;
+
+  Future<void> _pickArchive() async {
+    final transfer = const PlatformBackupArchiveTransfer();
+    final selected = await transfer.pickArchive();
+    if (selected != null && mounted) {
+      setState(() => _selectedArchive = selected);
+    }
+  }
+
+  Future<void> _performRestore() async {
+    if (_selectedArchive == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a backup file first.')));
+      return;
+    }
+    
+    setState(() => _isRestoring = true);
+    
+    try {
+      final lifecycle = ref.read(vaultLifecycleProvider);
+      final passphrase = "mango desert trust polar kitten guitar planet purple silver eagle bridge fitness";
+      
+      await lifecycle.restoreBackup(archive: _selectedArchive!.file, recoveryPassphrase: passphrase);
+      
+      if (mounted) {
+        setState(() => _isRestoring = false);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vault restored successfully!')));
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isRestoring = false);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Restore failed: $e')));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,14 +122,14 @@ class _RestoreVaultScreenState extends State<RestoreVaultScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(l10n.s99_file, style: TextStyle(color: colors.textPrimary, fontSize: 14, fontWeight: FontWeight.bold, fontFamily: 'monospace')),
+                          Text(_selectedArchive?.displayName ?? l10n.s99_file, style: TextStyle(color: colors.textPrimary, fontSize: 14, fontWeight: FontWeight.bold, fontFamily: 'monospace')),
                           const SizedBox(height: 4),
-                          Text(l10n.s99_file_meta, style: TextStyle(color: colors.successGreen, fontSize: 12)),
+                          Text(_selectedArchive != null ? 'Ready to restore' : l10n.s99_file_meta, style: TextStyle(color: _selectedArchive != null ? colors.primaryBlue : colors.successGreen, fontSize: 12)),
                         ],
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: _isRestoring ? null : _pickArchive,
                       child: Text(l10n.s99_change, style: TextStyle(color: colors.primaryBlue, fontSize: 14)),
                     ),
                   ],
@@ -132,17 +172,17 @@ class _RestoreVaultScreenState extends State<RestoreVaultScreen> {
             width: double.infinity,
             height: 56,
             child: ElevatedButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Mock Restore Process Started')));
-              },
+              onPressed: _isRestoring ? null : _performRestore,
               style: ElevatedButton.styleFrom(
                 backgroundColor: colors.primaryBlue,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: Text(
-                l10n.s99_restore,
-                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              child: _isRestoring 
+                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                : Text(
+                    l10n.s99_restore,
+                    style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
             ),
           ),
         ),

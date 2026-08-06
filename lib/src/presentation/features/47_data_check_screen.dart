@@ -6,8 +6,21 @@ import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 
-class DataCheckScreen extends StatelessWidget {
+class DataCheckScreen extends StatefulWidget {
   const DataCheckScreen({super.key});
+
+  @override
+  State<DataCheckScreen> createState() => _DataCheckScreenState();
+}
+
+class _DataCheckScreenState extends State<DataCheckScreen> {
+  bool _isChecking = false;
+
+  void _runCheck() async {
+    setState(() => _isChecking = true);
+    await Future.delayed(const Duration(seconds: 2));
+    if (mounted) setState(() => _isChecking = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +60,10 @@ class DataCheckScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: SvgPicture.asset(OwnKeepMainIcons.refresh, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
-            onPressed: () {},
+            icon: _isChecking 
+              ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+              : SvgPicture.asset(OwnKeepMainIcons.refresh, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+            onPressed: _isChecking ? null : _runCheck,
           ),
         ],
       ),
@@ -69,11 +84,13 @@ class DataCheckScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Assuming success_check might be a generic check or success_check_circle
-                      SvgPicture.asset(OwnKeepMainIcons.check_badge, colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn)),
+                      if (_isChecking)
+                        const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
+                      else
+                        SvgPicture.asset(OwnKeepMainIcons.check_badge, colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn)),
                       const SizedBox(width: 8),
                       Text(
-                        l10n.s47_status,
+                        _isChecking ? 'Checking Data...' : l10n.s47_status,
                         style: TextStyle(
                           color: colors.textPrimary,
                           fontSize: 20,
@@ -157,7 +174,7 @@ class DataCheckScreen extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () {},
+                onPressed: _isChecking ? null : _runCheck,
                 style: OutlinedButton.styleFrom(
                   foregroundColor: colors.primaryBlue,
                   side: BorderSide(color: colors.primaryBlue),

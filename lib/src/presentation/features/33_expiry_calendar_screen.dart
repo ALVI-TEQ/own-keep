@@ -5,12 +5,13 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
 
-class ExpiryCalendarScreen extends StatelessWidget {
+class ExpiryCalendarScreen extends ConsumerWidget {
   const ExpiryCalendarScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
 
@@ -138,52 +139,33 @@ class ExpiryCalendarScreen extends StatelessWidget {
             // Expiry List
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
-              child: Column(
-                children: [
-                  _buildExpiryCard(
-                    context: context,
-                    colors: colors,
-                    icon: OwnKeepMainIcons.identity,
-                    iconColor: colors.primaryBlue,
-                    title: l10n.s33_driving_licence,
-                    subtitle: l10n.s33_driving_expiry,
-                    date: l10n.s33_driving_days,
-                    isCritical: true,
-                  ),
-                  const SizedBox(height: OwnKeepSpacing.sm),
-                  _buildExpiryCard(
-                    context: context,
-                    colors: colors,
-                    icon: OwnKeepMainIcons.file_pdf,
-                    iconColor: const Color(0xFF27C5E8),
-                    title: l10n.s33_health_policy,
-                    subtitle: l10n.s33_health_expiry,
-                    date: l10n.s33_health_days,
-                    isCritical: false,
-                  ),
-                  const SizedBox(height: OwnKeepSpacing.sm),
-                  _buildExpiryCard(
-                    context: context,
-                    colors: colors,
-                    icon: OwnKeepMainIcons.identity,
-                    iconColor: colors.aiPurple,
-                    title: l10n.s33_passport,
-                    subtitle: l10n.s33_passport_expiry,
-                    date: l10n.s33_passport_days,
-                    isCritical: false,
-                  ),
-                  const SizedBox(height: OwnKeepSpacing.sm),
-                  _buildExpiryCard(
-                    context: context,
-                    colors: colors,
-                    icon: OwnKeepMainIcons.vehicle,
-                    iconColor: colors.warningOrange,
-                    title: l10n.s33_car,
-                    subtitle: l10n.s33_car_expiry,
-                    date: l10n.s33_car_days,
-                    isCritical: false,
-                  ),
-                ],
+              child: ref.watch(allDocumentsProvider).when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, st) => const Center(child: Text('Error loading documents')),
+                data: (docs) {
+                  if (docs.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.all(OwnKeepSpacing.md),
+                      child: Text('No expiring documents found.', style: TextStyle(color: colors.textSecondary)),
+                    );
+                  }
+                  // For now, mock expiries on real documents
+                  return Column(
+                    children: docs.take(4).map((doc) => Padding(
+                      padding: const EdgeInsets.only(bottom: OwnKeepSpacing.sm),
+                      child: _buildExpiryCard(
+                        context: context,
+                        colors: colors,
+                        icon: OwnKeepMainIcons.file_pdf,
+                        iconColor: colors.primaryBlue,
+                        title: doc.logicalFilename.isNotEmpty ? doc.logicalFilename : 'Document',
+                        subtitle: 'Expires soon',
+                        date: 'In 5 days',
+                        isCritical: false,
+                      ),
+                    )).toList(),
+                  );
+                },
               ),
             ),
             const SizedBox(height: 100), // padding for floating action button

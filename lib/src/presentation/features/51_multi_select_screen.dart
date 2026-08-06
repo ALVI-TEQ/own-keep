@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
@@ -140,7 +141,12 @@ class _MultiSelectScreenState extends State<MultiSelectScreen> {
         actions: [
           IconButton(
             icon: SvgPicture.asset(OwnKeepMainIcons.confirm, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
-            onPressed: () {},
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Selection confirmed')),
+              );
+              context.pop();
+            },
           ),
         ],
       ),
@@ -264,7 +270,11 @@ class _MultiSelectScreenState extends State<MultiSelectScreen> {
     }
 
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Action $label executed on selected items')),
+        );
+      },
       borderRadius: BorderRadius.circular(8),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),

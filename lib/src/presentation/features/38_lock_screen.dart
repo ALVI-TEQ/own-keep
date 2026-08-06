@@ -65,6 +65,28 @@ class _LockScreenState extends ConsumerState<LockScreen> {
     }
   }
 
+  Future<void> _authenticateBiometric() async {
+    setState(() {
+      _isAuthenticating = true;
+    });
+
+    try {
+      // Mock biometric success after 1 second
+      await Future.delayed(const Duration(seconds: 1));
+      await ref.read(vaultSessionProvider.notifier).unlockVault('1234'); // Assume 1234 is the setup PIN
+      if (mounted) {
+        context.go('/dashboard/home');
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = 'Biometric failed';
+          _isAuthenticating = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
@@ -146,7 +168,7 @@ class _LockScreenState extends ConsumerState<LockScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildIconButton(OwnKeepOnboardingIcons.face_id, colors, () {}),
+                      _buildIconButton(OwnKeepOnboardingIcons.face_id, colors, _authenticateBiometric),
                       _buildNumberKey('0', '', colors),
                       _buildIconButton(OwnKeepMainIcons.keypad_backspace, colors, _onBackspaceTap),
                     ],

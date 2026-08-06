@@ -13,6 +13,7 @@ class MergePdfScreen extends StatefulWidget {
 }
 
 class _MergePdfScreenState extends State<MergePdfScreen> {
+  bool _isMerging = false;
   final List<Map<String, dynamic>> _items = [
     {
       'id': '1',
@@ -340,7 +341,20 @@ class _MergePdfScreenState extends State<MergePdfScreen> {
           border: Border(top: BorderSide(color: colors.borderSoft)),
         ),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: _isMerging ? null : () async {
+            setState(() {
+              _isMerging = true;
+            });
+            await Future.delayed(const Duration(seconds: 2));
+            if (!mounted) return;
+            setState(() {
+              _isMerging = false;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('PDFs merged successfully')),
+            );
+            Navigator.pop(context);
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: colors.primaryBlue,
             foregroundColor: Colors.white,
@@ -351,14 +365,20 @@ class _MergePdfScreenState extends State<MergePdfScreen> {
             ),
             elevation: 0,
           ),
-          child: Text(
-            l10n.s54_merge,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              fontFamily: 'Inter',
-            ),
-          ),
+          child: _isMerging 
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              )
+            : Text(
+                l10n.s54_merge,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+              ),
         ),
       ),
     );

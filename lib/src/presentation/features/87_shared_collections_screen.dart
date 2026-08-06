@@ -116,7 +116,7 @@ class SharedCollectionsScreen extends StatelessWidget {
               const SizedBox(height: 32),
 
               // Collections List
-              ...collections.map((col) => _buildCollectionCard(col, colors)),
+              ...collections.map((col) => _buildCollectionCard(context, col, colors)),
             ],
           ),
         ),
@@ -128,7 +128,9 @@ class SharedCollectionsScreen extends StatelessWidget {
             width: double.infinity,
             height: 56,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Creating shared collection')));
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: colors.primaryBlue,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -144,9 +146,13 @@ class SharedCollectionsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCollectionCard(Map<String, dynamic> col, OwnKeepMainColorsTheme colors) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+  Widget _buildCollectionCard(BuildContext context, Map<String, dynamic> col, OwnKeepMainColorsTheme colors) {
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Viewing collection ${col['title']}')));
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colors.surfacePrimary,
@@ -197,6 +203,7 @@ class SharedCollectionsScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }

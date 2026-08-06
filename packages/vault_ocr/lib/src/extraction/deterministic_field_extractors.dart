@@ -142,8 +142,9 @@ final class DeterministicExtractionPipeline {
     };
 
     var cursor = epicIndex + 1;
-    if (cursor < lines.length)
+    if (cursor < lines.length) {
       values[ExtractedFieldType.state] = lines[cursor++];
+    }
     if (cursor < lines.length) {
       values[ExtractedFieldType.parliamentaryConstituency] = lines[cursor++];
     }

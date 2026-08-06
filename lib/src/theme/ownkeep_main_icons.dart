@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 abstract final class OwnKeepMainIcons {
   static const String activity = 'assets/main/icons/activity.svg';
   static const String add = 'assets/main/icons/add.svg';

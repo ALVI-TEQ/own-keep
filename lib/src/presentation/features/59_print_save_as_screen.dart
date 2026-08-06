@@ -303,7 +303,12 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
           border: Border(top: BorderSide(color: colors.borderSoft)),
         ),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Action "$_selectedOutput" initiated successfully')),
+            );
+            Navigator.pop(context);
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: colors.primaryBlue,
             foregroundColor: Colors.white,

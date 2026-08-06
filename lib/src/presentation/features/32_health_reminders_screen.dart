@@ -5,15 +5,17 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
 
-class HealthRemindersScreen extends StatefulWidget {
+class HealthRemindersScreen extends ConsumerStatefulWidget {
   const HealthRemindersScreen({super.key});
 
   @override
-  State<HealthRemindersScreen> createState() => _HealthRemindersScreenState();
+  ConsumerState<HealthRemindersScreen> createState() => _HealthRemindersScreenState();
 }
 
-class _HealthRemindersScreenState extends State<HealthRemindersScreen> {
+class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
   int _selectedFilter = 0;
 
   @override
@@ -160,34 +162,31 @@ class _HealthRemindersScreenState extends State<HealthRemindersScreen> {
               padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
               child: Column(
                 children: [
-                  _buildUpcomingCard(
-                    context: context,
-                    colors: colors,
-                    icon: OwnKeepMainIcons.doctor_appointment,
-                    iconColor: colors.warningOrange,
-                    title: l10n.s32_doctor,
-                    subtitle: l10n.s32_doctor_name,
-                    time: l10n.s32_doctor_time,
-                  ),
-                  const SizedBox(height: OwnKeepSpacing.sm),
-                  _buildUpcomingCard(
-                    context: context,
-                    colors: colors,
-                    icon: OwnKeepMainIcons.blood_test,
-                    iconColor: colors.dangerRed,
-                    title: l10n.s32_blood,
-                    subtitle: l10n.s32_blood_body,
-                    time: l10n.s32_blood_time,
-                  ),
-                  const SizedBox(height: OwnKeepSpacing.sm),
-                  _buildUpcomingCard(
-                    context: context,
-                    colors: colors,
-                    icon: OwnKeepMainIcons.medicine_bottle,
-                    iconColor: colors.successGreen,
-                    title: l10n.s32_refill,
-                    subtitle: l10n.s32_refill_body,
-                    time: l10n.s32_refill_time,
+                  ref.watch(healthDocumentsProvider).when(
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (err, st) => const Center(child: Text('Error loading health documents')),
+                    data: (docs) {
+                      if (docs.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.all(OwnKeepSpacing.md),
+                          child: Text('No health records found.', style: TextStyle(color: colors.textSecondary)),
+                        );
+                      }
+                      return Column(
+                        children: docs.map((doc) => Padding(
+                          padding: const EdgeInsets.only(bottom: OwnKeepSpacing.sm),
+                          child: _buildUpcomingCard(
+                            context: context,
+                            colors: colors,
+                            icon: OwnKeepMainIcons.file_pdf,
+                            iconColor: colors.primaryBlue,
+                            title: doc.logicalFilename.isNotEmpty ? doc.logicalFilename : 'Health Record',
+                            subtitle: 'Stored on ${doc.importedAt.toString().split(' ')[0]}',
+                            time: 'Active',
+                          ),
+                        )).toList(),
+                      );
+                    },
                   ),
                 ],
               ),

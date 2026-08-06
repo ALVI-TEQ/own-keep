@@ -77,49 +77,54 @@ class SharedActivityScreen extends StatelessWidget {
                   final item = activities[index];
                   final showLine = index != activities.length - 1;
 
-                  return IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          children: [
-                            Container(
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                color: item['color'] as Color,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Center(
-                                child: Text(item['initial'] as String, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
-                              ),
-                            ),
-                            if (showLine)
-                              Expanded(
-                                child: Container(
-                                  width: 2,
-                                  color: colors.borderSoft,
+                  return GestureDetector(
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Viewing detail for ${item['event']}')));
+                    },
+                    child: IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            children: [
+                              Container(
+                                width: 32,
+                                height: 32,
+                                decoration: BoxDecoration(
+                                  color: item['color'] as Color,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: Text(item['initial'] as String, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
                                 ),
                               ),
-                          ],
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 24.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(item['event'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500)),
-                                const SizedBox(height: 4),
-                                Text(item['collection'] as String, style: TextStyle(color: colors.primaryBlue, fontSize: 14)),
-                                const SizedBox(height: 8),
-                                Text(item['time'] as String, style: TextStyle(color: colors.textMuted, fontSize: 12)),
-                              ],
+                              if (showLine)
+                                Expanded(
+                                  child: Container(
+                                    width: 2,
+                                    color: colors.borderSoft,
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 24.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(item['event'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500)),
+                                  const SizedBox(height: 4),
+                                  Text(item['collection'] as String, style: TextStyle(color: colors.primaryBlue, fontSize: 14)),
+                                  const SizedBox(height: 8),
+                                  Text(item['time'] as String, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },

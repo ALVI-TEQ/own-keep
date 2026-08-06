@@ -140,7 +140,13 @@ class SimilarDocumentsScreen extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 16),
-                          Container(
+                          GestureDetector(
+                            onTap: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Viewing all similar documents for ${group['title']}')),
+                              );
+                            },
+                            child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 8),
                             decoration: BoxDecoration(
                               border: Border(top: BorderSide(color: colors.borderSoft)),
@@ -152,6 +158,7 @@ class SimilarDocumentsScreen extends StatelessWidget {
                                 SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
                               ],
                             ),
+                          ),
                           ),
                         ],
                       ),

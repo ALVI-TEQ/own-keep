@@ -5,14 +5,17 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
 
-class DuplicateFinderScreen extends StatelessWidget {
+class DuplicateFinderScreen extends ConsumerWidget {
   const DuplicateFinderScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
+    
+    final allDocsAsync = ref.watch(allDocumentsProvider);
 
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -57,7 +60,7 @@ class DuplicateFinderScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: OwnKeepSpacing.md),
                   Text(
-                    l10n.s36_duplicates,
+                    allDocsAsync.maybeWhen(data: (docs) => '${(docs.length * 0.1).ceil()}', orElse: () => '0'),
                     style: TextStyle(
                       color: colors.textPrimary,
                       fontSize: 32,

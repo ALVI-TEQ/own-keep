@@ -191,7 +191,11 @@ class OcrScanTextScreen extends StatelessWidget {
           children: [
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Text copied to clipboard')),
+                  );
+                },
                 icon: SvgPicture.asset(
                   OwnKeepMainIcons.copy_text,
                   colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
@@ -220,7 +224,12 @@ class OcrScanTextScreen extends StatelessWidget {
             const SizedBox(width: OwnKeepSpacing.md),
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Saved as a new note')),
+                  );
+                  Navigator.pop(context);
+                },
                 icon: SvgPicture.asset(
                   OwnKeepMainIcons.save_note,
                   colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),

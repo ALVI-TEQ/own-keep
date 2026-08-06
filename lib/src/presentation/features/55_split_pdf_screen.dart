@@ -15,6 +15,7 @@ class SplitPdfScreen extends StatefulWidget {
 class _SplitPdfScreenState extends State<SplitPdfScreen> {
   final List<bool> _selectedPages = [false, true, true, false];
   String _selectedOption = 'extract'; // 'extract', 'separate', 'remove'
+  bool _isSplitting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -290,7 +291,20 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
           border: Border(top: BorderSide(color: colors.borderSoft)),
         ),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: _isSplitting ? null : () async {
+            setState(() {
+              _isSplitting = true;
+            });
+            await Future.delayed(const Duration(seconds: 2));
+            if (!mounted) return;
+            setState(() {
+              _isSplitting = false;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('PDF split successfully')),
+            );
+            Navigator.pop(context);
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: colors.primaryBlue,
             foregroundColor: Colors.white,
@@ -301,14 +315,20 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
             ),
             elevation: 0,
           ),
-          child: Text(
-            l10n.s55_action,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              fontFamily: 'Inter',
-            ),
-          ),
+          child: _isSplitting
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              )
+            : Text(
+                l10n.s55_action,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+              ),
         ),
       ),
     );

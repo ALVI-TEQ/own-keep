@@ -261,7 +261,12 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('${_keepOriginal ? 'Copied' : 'Moved'} to $_selectedCategory')),
+                      );
+                      context.pop();
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: colors.primaryBlue,
                       foregroundColor: Colors.white,

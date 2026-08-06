@@ -79,41 +79,46 @@ class AccessHistoryScreen extends StatelessWidget {
                   final log = historyLogs[index];
                   final isAlert = log['isAlert'] == true;
 
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: isAlert ? colors.warningOrange.withValues(alpha: 0.1) : colors.surfacePrimary,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: isAlert ? colors.warningOrange.withValues(alpha: 0.3) : colors.borderSoft),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: log['color'] as Color,
-                            shape: BoxShape.circle,
+                  return GestureDetector(
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Viewing log for ${log['event']}')));
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: isAlert ? colors.warningOrange.withValues(alpha: 0.1) : colors.surfacePrimary,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: isAlert ? colors.warningOrange.withValues(alpha: 0.3) : colors.borderSoft),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: log['color'] as Color,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Text(log['initial'] as String, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                            ),
                           ),
-                          child: Center(
-                            child: Text(log['initial'] as String, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(log['event'] as String, style: TextStyle(color: isAlert ? colors.warningOrange : colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500)),
+                                const SizedBox(height: 4),
+                                Text(log['time'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(log['event'] as String, style: TextStyle(color: isAlert ? colors.warningOrange : colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500)),
-                              const SizedBox(height: 4),
-                              Text(log['time'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
-                            ],
-                          ),
-                        ),
-                        if (isAlert)
-                          Icon(Icons.warning_amber_rounded, color: colors.warningOrange, size: 24),
-                      ],
+                          if (isAlert)
+                            Icon(Icons.warning_amber_rounded, color: colors.warningOrange, size: 24),
+                        ],
+                      ),
                     ),
                   );
                 },

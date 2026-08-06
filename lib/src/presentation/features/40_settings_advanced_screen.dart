@@ -7,8 +7,18 @@ import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_onboarding_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 
-class SettingsAdvancedScreen extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class SettingsAdvancedScreen extends ConsumerStatefulWidget {
   const SettingsAdvancedScreen({super.key});
+
+  @override
+  ConsumerState<SettingsAdvancedScreen> createState() => _SettingsAdvancedScreenState();
+}
+
+class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen> {
+  bool _biometricEnabled = true;
+  bool _backupEnabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +76,11 @@ class SettingsAdvancedScreen extends StatelessWidget {
                   _buildDivider(colors),
                   _buildSettingItem(colors, OwnKeepMainIcons.decoy_vault, l10n.s40_decoy, value: l10n.s40_not_set),
                   _buildDivider(colors),
-                  _buildSettingItem(colors, OwnKeepMainIcons.biometric, l10n.s40_biometric, isToggle: true, isToggleOn: true),
+                  _buildSettingItem(colors, OwnKeepMainIcons.biometric, l10n.s40_biometric, isToggle: true, isToggleOn: _biometricEnabled, onTap: () {
+                    setState(() {
+                      _biometricEnabled = !_biometricEnabled;
+                    });
+                  }),
                   _buildDivider(colors),
                   _buildSettingItem(colors, OwnKeepMainIcons.pin_protection, l10n.s40_pin, value: l10n.s40_on),
                   _buildDivider(colors),
@@ -97,7 +111,11 @@ class SettingsAdvancedScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildSettingItem(colors, OwnKeepMainIcons.backup_reminder, l10n.s40_backup, isToggle: true, isToggleOn: false),
+                  _buildSettingItem(colors, OwnKeepMainIcons.backup_reminder, l10n.s40_backup, isToggle: true, isToggleOn: _backupEnabled, onTap: () {
+                    setState(() {
+                      _backupEnabled = !_backupEnabled;
+                    });
+                  }),
                   _buildDivider(colors),
                   _buildSettingItem(colors, OwnKeepMainIcons.data_check, l10n.s40_data_check, value: l10n.s40_last_check),
                   _buildDivider(colors),
@@ -158,9 +176,10 @@ class SettingsAdvancedScreen extends StatelessWidget {
     bool isToggle = false,
     bool isToggleOn = false,
     bool isDanger = false,
+    VoidCallback? onTap,
   }) {
     return InkWell(
-      onTap: () {},
+      onTap: onTap ?? () {},
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(

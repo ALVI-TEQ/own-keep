@@ -6,16 +6,26 @@ import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_onboarding_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
 
-class AdvancedSearchScreen extends StatefulWidget {
+class AdvancedSearchScreen extends ConsumerStatefulWidget {
   const AdvancedSearchScreen({super.key});
 
   @override
-  State<AdvancedSearchScreen> createState() => _AdvancedSearchScreenState();
+  ConsumerState<AdvancedSearchScreen> createState() => _AdvancedSearchScreenState();
 }
 
-class _AdvancedSearchScreenState extends State<AdvancedSearchScreen> {
+class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
   int _selectedFilter = 0;
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,16 +67,30 @@ class _AdvancedSearchScreenState extends State<AdvancedSearchScreen> {
                           SvgPicture.asset(OwnKeepMainIcons.search, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: Text(
-                              l10n.s34_query,
+                            child: TextField(
+                              controller: _searchController,
                               style: TextStyle(
                                 color: colors.textPrimary,
                                 fontSize: 15,
                                 fontFamily: 'Inter',
                               ),
+                              decoration: InputDecoration(
+                                hintText: l10n.s34_query,
+                                hintStyle: TextStyle(
+                                  color: colors.textSecondary,
+                                  fontSize: 15,
+                                  fontFamily: 'Inter',
+                                ),
+                                border: InputBorder.none,
+                                isDense: true,
+                              ),
                             ),
                           ),
-                          SvgPicture.asset(OwnKeepMainIcons.close, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+                          if (_searchQuery.isNotEmpty)
+                            GestureDetector(
+                              onTap: () => _searchController.clear(),
+                              child: SvgPicture.asset(OwnKeepMainIcons.close, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+                            ),
                         ],
                       ),
                     ),
@@ -132,78 +156,52 @@ class _AdvancedSearchScreenState extends State<AdvancedSearchScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      l10n.s34_top_results,
-                      style: TextStyle(
-                        color: colors.textSecondary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Inter',
+                    if (_searchQuery.isEmpty)
+                      Center(
+                        child: Text(
+                          'Type to search...',
+                          style: TextStyle(color: colors.textSecondary),
+                        ),
+                      )
+                    else
+                      ref.watch(searchDocumentsProvider(_searchQuery)).when(
+                        loading: () => const Center(child: CircularProgressIndicator()),
+                        error: (err, st) => const Center(child: Text('Error searching documents')),
+                        data: (results) {
+                          if (results.isEmpty) {
+                            return Center(
+                              child: Text(
+                                'No results found',
+                                style: TextStyle(color: colors.textSecondary),
+                              ),
+                            );
+                          }
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${results.length} results',
+                                style: TextStyle(
+                                  color: colors.textSecondary,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Inter',
+                                ),
+                              ),
+                              const SizedBox(height: OwnKeepSpacing.sm),
+                              ...results.map((doc) => _buildResultItem(
+                                colors: colors,
+                                icon: OwnKeepMainIcons.file_pdf,
+                                iconColor: colors.primaryBlue,
+                                title: doc.logicalFilename.isNotEmpty ? doc.logicalFilename : 'Untitled',
+                                meta: doc.importedAt.toString().split(' ')[0],
+                              )),
+                            ],
+                          );
+                        },
                       ),
-                    ),
-                    const SizedBox(height: OwnKeepSpacing.sm),
-                    _buildResultItem(
-                      colors: colors,
-                      icon: OwnKeepMainIcons.file_pdf,
-                      iconColor: const Color(0xFF27C5E8),
-                      title: l10n.s34_health,
-                      meta: l10n.s34_health_meta,
-                    ),
-                    _buildResultItem(
-                      colors: colors,
-                      icon: OwnKeepMainIcons.file_pdf,
-                      iconColor: const Color(0xFF27C5E8),
-                      title: l10n.s34_car,
-                      meta: l10n.s34_car_meta,
-                    ),
-                    _buildResultItem(
-                      colors: colors,
-                      icon: OwnKeepMainIcons.file_pdf,
-                      iconColor: const Color(0xFF27C5E8),
-                      title: l10n.s34_life,
-                      meta: l10n.s34_life_meta,
-                    ),
 
                     const SizedBox(height: OwnKeepSpacing.xl),
-
-                    Text(
-                      l10n.s34_other_results,
-                      style: TextStyle(
-                        color: colors.textSecondary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Inter',
-                      ),
-                    ),
-                    const SizedBox(height: OwnKeepSpacing.sm),
-                    _buildResultItem(
-                      colors: colors,
-                      icon: OwnKeepMainIcons.image,
-                      iconColor: colors.primaryBlue,
-                      title: l10n.s34_receipt,
-                      meta: l10n.s34_receipt_meta,
-                    ),
-                    _buildResultItem(
-                      colors: colors,
-                      icon: OwnKeepMainIcons.file_pdf,
-                      iconColor: const Color(0xFF27C5E8),
-                      title: l10n.s34_claim,
-                      meta: l10n.s34_claim_meta,
-                    ),
-                    _buildResultItem(
-                      colors: colors,
-                      icon: OwnKeepMainIcons.folder,
-                      iconColor: colors.warningOrange,
-                      title: l10n.s34_folder,
-                      meta: l10n.s34_folder_meta,
-                    ),
-                    _buildResultItem(
-                      colors: colors,
-                      icon: OwnKeepMainIcons.file_pdf,
-                      iconColor: const Color(0xFF27C5E8),
-                      title: l10n.s34_copy,
-                      meta: l10n.s34_copy_meta,
-                    ),
 
                     const SizedBox(height: OwnKeepSpacing.xxl),
 

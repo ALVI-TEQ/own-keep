@@ -109,6 +109,29 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
           ),
         ),
       ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: ElevatedButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Permissions updated locally')));
+                context.pop();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colors.primaryBlue,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              ),
+              child: Text(
+                'Save', // Using save from previous screen or hardcode
+                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -136,7 +159,7 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: colors.primaryBlue,
+            activeThumbColor: colors.primaryBlue,
             inactiveTrackColor: colors.surfaceSecondary,
           ),
         ],

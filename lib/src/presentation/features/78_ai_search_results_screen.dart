@@ -83,21 +83,21 @@ class AiSearchResultsScreen extends StatelessWidget {
               const SizedBox(height: 32),
 
               // Result Cards
-              _buildResultCard(l10n.s78_vehicle, l10n.s78_vehicle_meta, l10n.s78_vehicle_days, OwnKeepMainIcons.vehicle, colors.accentCyan, colors),
+              _buildResultCard(context, l10n.s78_vehicle, l10n.s78_vehicle_meta, l10n.s78_vehicle_days, OwnKeepMainIcons.vehicle, colors.accentCyan, colors),
               const SizedBox(height: 16),
-              _buildResultCard(l10n.s78_health, l10n.s78_health_meta, l10n.s78_health_days, OwnKeepMainIcons.health, colors.healthPink, colors),
+              _buildResultCard(context, l10n.s78_health, l10n.s78_health_meta, l10n.s78_health_days, OwnKeepMainIcons.health, colors.healthPink, colors),
               const SizedBox(height: 16),
-              _buildResultCard(l10n.s78_licence, l10n.s78_licence_meta, l10n.s78_licence_days, OwnKeepMainIcons.profile, colors.primaryBlue, colors),
+              _buildResultCard(context, l10n.s78_licence, l10n.s78_licence_meta, l10n.s78_licence_days, OwnKeepMainIcons.profile, colors.primaryBlue, colors),
               const SizedBox(height: 40),
 
               // Suggested Actions
               Text(l10n.s78_suggested, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
               const SizedBox(height: 16),
-              _buildActionCard(l10n.s78_create_title, l10n.s78_create_body, OwnKeepMainIcons.reminder, colors),
+              _buildActionCard(context, l10n.s78_create_title, l10n.s78_create_body, OwnKeepMainIcons.reminder, colors),
               const SizedBox(height: 12),
-              _buildActionCard(l10n.s78_open_title, l10n.s78_open_body, OwnKeepMainIcons.open, colors),
+              _buildActionCard(context, l10n.s78_open_title, l10n.s78_open_body, OwnKeepMainIcons.open, colors),
               const SizedBox(height: 12),
-              _buildActionCard(l10n.s78_compare_title, l10n.s78_compare_body, OwnKeepMainIcons.compare, colors),
+              _buildActionCard(context, l10n.s78_compare_title, l10n.s78_compare_body, OwnKeepMainIcons.compare, colors),
             ],
           ),
         ),
@@ -105,8 +105,12 @@ class AiSearchResultsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildResultCard(String title, String meta, String badge, String iconPath, Color iconColor, OwnKeepMainColorsTheme colors) {
-    return Container(
+  Widget _buildResultCard(BuildContext context, String title, String meta, String badge, String iconPath, Color iconColor, OwnKeepMainColorsTheme colors) {
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Opening $title')));
+      },
+      child: Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colors.surfacePrimary,
@@ -147,11 +151,16 @@ class AiSearchResultsScreen extends StatelessWidget {
           ),
         ],
       ),
+      ),
     );
   }
 
-  Widget _buildActionCard(String title, String body, String iconPath, OwnKeepMainColorsTheme colors) {
-    return Container(
+  Widget _buildActionCard(BuildContext context, String title, String body, String iconPath, OwnKeepMainColorsTheme colors) {
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Action: $title')));
+      },
+      child: Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colors.surfacePrimary,
@@ -174,6 +183,7 @@ class AiSearchResultsScreen extends StatelessWidget {
           ),
           SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn)),
         ],
+      ),
       ),
     );
   }
