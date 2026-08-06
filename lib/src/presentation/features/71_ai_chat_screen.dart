@@ -179,7 +179,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
                           color: colors.primaryBlue,
                           shape: BoxShape.circle,
                         ),
-                        child: SvgPicture.asset(OwnKeepMainIcons.send, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+                        child: SvgPicture.asset(OwnKeepMainIcons.send, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn), width: 24, height: 24),
                       ),
                     ),
                   ],

@@ -175,7 +175,7 @@ class HelpSupportScreen extends StatelessWidget {
                 color: colors.surfaceSelected,
                 shape: BoxShape.circle,
               ),
-              child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+              child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn), width: 24, height: 24),
             ),
             const SizedBox(width: OwnKeepSpacing.md),
             Expanded(

@@ -266,6 +266,7 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
                 padding: const EdgeInsets.only(left: 8),
                 child: SvgPicture.asset(
                   isToggleOn ? OwnKeepOnboardingIcons.toggle_on : OwnKeepOnboardingIcons.toggle_off,
+                  width: 40,
                 ),
               )
             else if (value != null || (!isToggle && !isDanger))
@@ -274,6 +275,7 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
                 child: SvgPicture.asset(
                   OwnKeepMainIcons.chevron_right, 
                   colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
+                  width: 20,
                 ),
               ),
           ],

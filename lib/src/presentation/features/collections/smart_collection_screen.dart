@@ -244,7 +244,7 @@ class SmartCollectionScreen extends ConsumerWidget {
                 color: category.color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: SvgPicture.asset(OwnKeepMainIcons.file_pdf, colorFilter: ColorFilter.mode(category.color, BlendMode.srcIn)),
+              child: SvgPicture.asset(OwnKeepMainIcons.file_pdf, colorFilter: ColorFilter.mode(category.color, BlendMode.srcIn), width: 24, height: 24),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -257,7 +257,7 @@ class SmartCollectionScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn)),
+            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn), width: 20),
           ],
         ),
       ),
