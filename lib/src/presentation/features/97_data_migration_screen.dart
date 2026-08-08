@@ -19,21 +19,36 @@ class DataMigrationScreen extends StatelessWidget {
             decoration: BoxDecoration(
               color: OwnKeepColors.darkSurfaceElevated,
               borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.25)),
+              border: Border.all(
+                color: OwnKeepColors.darkBorder.withValues(alpha: 0.25),
+              ),
             ),
             child: Column(
               children: [
-                const Icon(Icons.settings_suggest_rounded, color: OwnKeepColors.primary, size: 48),
+                const Icon(
+                  Icons.settings_suggest_rounded,
+                  color: OwnKeepColors.primary,
+                  size: 48,
+                ),
                 const SizedBox(height: OwnKeepSpacing.md),
                 const Text(
                   'Data Migration Features',
-                  style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Inter'),
+                  style: TextStyle(
+                    color: OwnKeepColors.darkTextPrimary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: OwnKeepSpacing.sm),
                 const Text(
                   'Configure settings and preferences for Data Migration.',
-                  style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 14, fontFamily: 'Inter'),
+                  style: TextStyle(
+                    color: OwnKeepColors.darkTextSecondary,
+                    fontSize: 14,
+                    fontFamily: 'Inter',
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: OwnKeepSpacing.xl),
@@ -41,7 +56,10 @@ class DataMigrationScreen extends StatelessWidget {
                 const Divider(color: OwnKeepColors.darkBorder, height: 1),
                 _buildMockOption('Option 2', Icons.settings_suggest),
                 const Divider(color: OwnKeepColors.darkBorder, height: 1),
-                _buildMockOption('Advanced Configuration', Icons.miscellaneous_services),
+                _buildMockOption(
+                  'Advanced Configuration',
+                  Icons.miscellaneous_services,
+                ),
               ],
             ),
           ),
@@ -58,9 +76,20 @@ class DataMigrationScreen extends StatelessWidget {
           Icon(icon, color: OwnKeepColors.darkTextMuted, size: 24),
           const SizedBox(width: OwnKeepSpacing.md),
           Expanded(
-            child: Text(label, style: const TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontFamily: 'Inter')),
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: OwnKeepColors.darkTextPrimary,
+                fontSize: 15,
+                fontFamily: 'Inter',
+              ),
+            ),
           ),
-          const Icon(Icons.chevron_right, color: OwnKeepColors.darkTextMuted, size: 20),
+          const Icon(
+            Icons.chevron_right,
+            color: OwnKeepColors.darkTextMuted,
+            size: 20,
+          ),
         ],
       ),
     );

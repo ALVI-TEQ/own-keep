@@ -61,33 +61,53 @@ enum SmartCollectionCategory {
 
   String getTitle(AppLocalizations l10n) {
     switch (this) {
-      case SmartCollectionCategory.health: return l10n.s61_title;
-      case SmartCollectionCategory.finance: return l10n.s62_title;
-      case SmartCollectionCategory.property: return l10n.s63_title;
-      case SmartCollectionCategory.vehicle: return l10n.s64_title;
-      case SmartCollectionCategory.education: return l10n.s65_title;
-      case SmartCollectionCategory.identity: return l10n.s66_title;
-      case SmartCollectionCategory.insurance: return l10n.s67_title;
-      case SmartCollectionCategory.travel: return l10n.s68_title;
-      case SmartCollectionCategory.work: return l10n.s69_title;
+      case SmartCollectionCategory.health:
+        return l10n.s61_title;
+      case SmartCollectionCategory.finance:
+        return l10n.s62_title;
+      case SmartCollectionCategory.property:
+        return l10n.s63_title;
+      case SmartCollectionCategory.vehicle:
+        return l10n.s64_title;
+      case SmartCollectionCategory.education:
+        return l10n.s65_title;
+      case SmartCollectionCategory.identity:
+        return l10n.s66_title;
+      case SmartCollectionCategory.insurance:
+        return l10n.s67_title;
+      case SmartCollectionCategory.travel:
+        return l10n.s68_title;
+      case SmartCollectionCategory.work:
+        return l10n.s69_title;
     }
   }
 
   String getSubtitle(AppLocalizations l10n) {
     switch (this) {
-      case SmartCollectionCategory.health: return l10n.s61_subtitle;
-      case SmartCollectionCategory.finance: return l10n.s62_subtitle;
-      case SmartCollectionCategory.property: return l10n.s63_subtitle;
-      case SmartCollectionCategory.vehicle: return l10n.s64_subtitle;
-      case SmartCollectionCategory.education: return l10n.s65_subtitle;
-      case SmartCollectionCategory.identity: return l10n.s66_subtitle;
-      case SmartCollectionCategory.insurance: return l10n.s67_subtitle;
-      case SmartCollectionCategory.travel: return l10n.s68_subtitle;
-      case SmartCollectionCategory.work: return l10n.s69_subtitle;
+      case SmartCollectionCategory.health:
+        return l10n.s61_subtitle;
+      case SmartCollectionCategory.finance:
+        return l10n.s62_subtitle;
+      case SmartCollectionCategory.property:
+        return l10n.s63_subtitle;
+      case SmartCollectionCategory.vehicle:
+        return l10n.s64_subtitle;
+      case SmartCollectionCategory.education:
+        return l10n.s65_subtitle;
+      case SmartCollectionCategory.identity:
+        return l10n.s66_subtitle;
+      case SmartCollectionCategory.insurance:
+        return l10n.s67_subtitle;
+      case SmartCollectionCategory.travel:
+        return l10n.s68_subtitle;
+      case SmartCollectionCategory.work:
+        return l10n.s69_subtitle;
     }
   }
 
   static SmartCollectionCategory? fromName(String name) {
-    return SmartCollectionCategory.values.where((c) => c.name == name).firstOrNull;
+    return SmartCollectionCategory.values
+        .where((c) => c.name == name)
+        .firstOrNull;
   }
 }

@@ -26,6 +26,7 @@ import '../presentation/dashboard/19_filter_and_sort_screen.dart';
 import '../presentation/dashboard/20_navigation_menu.dart';
 
 import '../theme/app_theme.dart';
+import '../providers/vault_provider.dart';
 
 import '../presentation/features/21_share_export_screen.dart';
 import '../presentation/features/22_favorites_list_screen.dart';
@@ -68,14 +69,6 @@ import '../presentation/features/58_add_notes_screen.dart';
 import '../presentation/features/59_print_save_as_screen.dart';
 import '../presentation/features/60_scan_securely_screen.dart';
 
-
-
-
-
-
-
-
-
 import '../presentation/features/collections/smart_collection_category.dart';
 import '../presentation/features/collections/smart_collection_screen.dart';
 import '../presentation/features/collections/70_custom_collection_screen.dart';
@@ -113,70 +106,332 @@ import '../presentation/features/99_restore_vault_screen.dart';
 import '../presentation/features/100_security_audit_screen.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
+  const protectedFeaturePaths = <String>{
+    '/features/share-export',
+    '/features/favorites-list',
+    '/features/recently-deleted',
+    '/features/storage-overview',
+    '/features/add-item-menu',
+    '/features/document-preview',
+    '/features/ai-organize',
+    '/features/tag-manager',
+    '/features/vault-info',
+    '/features/help-support',
+    '/features/recovery-center',
+    '/features/health-reminders',
+    '/features/expiry-calendar',
+    '/features/advanced-search',
+    '/features/duplicate-finder',
+    '/features/statistics',
+    '/features/quick-actions',
+    '/features/settings-advanced',
+    '/features/import-export',
+    '/features/data-usage',
+    '/features/wipe-data',
+    '/features/data-check',
+    '/features/file-details',
+    '/features/version-history',
+    '/features/move-or-copy',
+    '/features/multi-select',
+    '/features/move-to',
+    '/features/rename',
+    '/features/merge-pdf',
+    '/features/split-pdf',
+    '/features/ocr-scan-text',
+    '/features/document-compare',
+    '/features/add-notes',
+    '/features/print-save-as',
+    '/features/scan-securely',
+    '/features/ai-chat',
+    '/features/ai-insights',
+    '/features/smart-suggestions',
+    '/features/similar-documents',
+    '/features/duplicate-resolution',
+    '/features/ai-timeline',
+    '/features/auto-tagging',
+    '/features/ai-search-results',
+    '/features/ai-settings',
+    '/features/ai-history',
+    '/features/family-sharing',
+    '/features/members',
+    '/features/invite-members',
+    '/features/permissions',
+    '/features/trusted-contacts',
+    '/features/emergency-access',
+    '/features/shared-collections',
+    '/features/shared-activity',
+    '/features/invitations',
+    '/features/access-history',
+    '/features/backup-restore',
+    '/features/pro',
+    '/features/themes',
+    '/features/app-lock',
+    '/features/hidden-vault',
+    '/features/decoy-vault',
+    '/features/recovery-verification',
+    '/features/encryption-details',
+    '/features/device-migration',
+    '/features/restore-vault',
+    '/features/security-audit',
+  };
   return GoRouter(
     initialLocation: '/splash',
+    redirect: (context, state) {
+      if ((protectedFeaturePaths.contains(state.uri.path) ||
+              state.uri.path.startsWith('/collections/')) &&
+          ref.read(vaultSessionProvider).value == null) {
+        return '/lock';
+      }
+      return null;
+    },
     routes: [
       // Onboarding Routes
-      GoRoute(path: '/splash', builder: (context, state) => const SplashScreen()),
-      GoRoute(path: '/welcome', builder: (context, state) => const WelcomeScreen()),
-      GoRoute(path: '/features', builder: (context, state) => const FeaturesScreen()),
-      GoRoute(path: '/create-vault', builder: (context, state) => const CreateVaultScreen()),
-      GoRoute(path: '/set-pin', builder: (context, state) => const SetPinScreen()),
       GoRoute(
-        path: '/confirm-pin', 
-        builder: (context, state) {
-          final originalPin = state.extra as String;
-          return ConfirmPinScreen(originalPin: originalPin);
-        }
+        path: '/splash',
+        builder: (context, state) => const SplashScreen(),
       ),
-      GoRoute(path: '/recovery-phrase', builder: (context, state) => const RecoveryPhraseScreen()),
-      GoRoute(path: '/verify-phrase', builder: (context, state) => const VerifyPhraseScreen()),
-      GoRoute(path: '/enable-biometrics', builder: (context, state) => const EnableBiometricsScreen()),
-      GoRoute(path: '/setup-complete', builder: (context, state) => const SetupCompleteScreen()),
-      GoRoute(path: '/components', builder: (context, state) => const ComponentGalleryScreen()),
+      GoRoute(
+        path: '/welcome',
+        builder: (context, state) => const WelcomeScreen(),
+      ),
+      GoRoute(
+        path: '/features',
+        builder: (context, state) => const FeaturesScreen(),
+      ),
+      GoRoute(
+        path: '/create-vault',
+        builder: (context, state) => const CreateVaultScreen(),
+      ),
+      GoRoute(
+        path: '/set-pin',
+        builder: (context, state) => const SetPinScreen(),
+      ),
+      GoRoute(
+        path: '/confirm-pin',
+        redirect: (context, state) => state.extra is String ? null : '/set-pin',
+        builder: (context, state) {
+          final originalPin = state.extra! as String;
+          return ConfirmPinScreen(originalPin: originalPin);
+        },
+      ),
+      GoRoute(
+        path: '/recovery-phrase',
+        redirect: (context, state) =>
+            ref.read(onboardingPinProvider) == null ? '/set-pin' : null,
+        builder: (context, state) => const RecoveryPhraseScreen(),
+      ),
+      GoRoute(
+        path: '/verify-phrase',
+        redirect: (context, state) =>
+            ref.read(onboardingRecoveryCodeProvider) == null
+            ? '/recovery-phrase'
+            : null,
+        builder: (context, state) => const VerifyPhraseScreen(),
+      ),
+      GoRoute(
+        path: '/enable-biometrics',
+        redirect: (context, state) =>
+            ref.read(vaultSessionProvider).value == null
+            ? '/verify-phrase'
+            : null,
+        builder: (context, state) => const EnableBiometricsScreen(),
+      ),
+      GoRoute(
+        path: '/setup-complete',
+        redirect: (context, state) =>
+            ref.read(vaultSessionProvider).value == null ? '/splash' : null,
+        builder: (context, state) => const SetupCompleteScreen(),
+      ),
+      GoRoute(
+        path: '/components',
+        builder: (context, state) => const ComponentGalleryScreen(),
+      ),
 
       // Feature Routes (Screens 21-100)
-      GoRoute(path: '/features/share-export', builder: (context, state) => const ShareExportScreen()),
-      GoRoute(path: '/features/favorites-list', builder: (context, state) => const FavoritesListScreen()),
-      GoRoute(path: '/features/recently-deleted', builder: (context, state) => const RecentlyDeletedScreen()),
-      GoRoute(path: '/features/storage-overview', builder: (context, state) => const StorageOverviewScreen()),
-      GoRoute(path: '/features/add-item-menu', builder: (context, state) => const AddItemMenuScreen()),
-      GoRoute(path: '/features/document-preview', builder: (context, state) => const DocumentPreviewScreen()),
-      GoRoute(path: '/features/ai-organize', builder: (context, state) => const AiOrganizeScreen()),
-      GoRoute(path: '/features/tag-manager', builder: (context, state) => const TagManagerScreen()),
-      GoRoute(path: '/features/vault-info', builder: (context, state) => const VaultInfoScreen()),
-      GoRoute(path: '/features/help-support', builder: (context, state) => const HelpSupportScreen()),
-      GoRoute(path: '/features/recovery-center', builder: (context, state) => const RecoveryCenterScreen()),
-      GoRoute(path: '/features/health-reminders', builder: (context, state) => const HealthRemindersScreen()),
-      GoRoute(path: '/features/expiry-calendar', builder: (context, state) => const ExpiryCalendarScreen()),
-      GoRoute(path: '/features/advanced-search', builder: (context, state) => const AdvancedSearchScreen()),
-      GoRoute(path: '/features/onboarding-guide', builder: (context, state) => const OnboardingGuideScreen()),
-      GoRoute(path: '/features/duplicate-finder', builder: (context, state) => const DuplicateFinderScreen()),
-      GoRoute(path: '/features/statistics', builder: (context, state) => const StatisticsScreen()),
+      GoRoute(
+        path: '/features/share-export',
+        builder: (context, state) =>
+            ShareExportScreen(documentId: state.uri.queryParameters['id']),
+      ),
+      GoRoute(
+        path: '/features/favorites-list',
+        builder: (context, state) => const FavoritesListScreen(),
+      ),
+      GoRoute(
+        path: '/features/recently-deleted',
+        builder: (context, state) => const RecentlyDeletedScreen(),
+      ),
+      GoRoute(
+        path: '/features/storage-overview',
+        builder: (context, state) => const StorageOverviewScreen(),
+      ),
+      GoRoute(
+        path: '/features/add-item-menu',
+        builder: (context, state) => const AddItemMenuScreen(),
+      ),
+      GoRoute(
+        path: '/features/document-preview',
+        redirect: (context, state) => state.uri.queryParameters['id'] == null
+            ? '/dashboard/all-files'
+            : null,
+        builder: (context, state) =>
+            DocumentPreviewScreen(documentId: state.uri.queryParameters['id']),
+      ),
+      GoRoute(
+        path: '/features/ai-organize',
+        builder: (context, state) => const AiOrganizeScreen(),
+      ),
+      GoRoute(
+        path: '/features/tag-manager',
+        builder: (context, state) => const TagManagerScreen(),
+      ),
+      GoRoute(
+        path: '/features/vault-info',
+        builder: (context, state) => const VaultInfoScreen(),
+      ),
+      GoRoute(
+        path: '/features/help-support',
+        builder: (context, state) => const HelpSupportScreen(),
+      ),
+      GoRoute(
+        path: '/features/recovery-center',
+        builder: (context, state) => const RecoveryCenterScreen(),
+      ),
+      GoRoute(
+        path: '/features/health-reminders',
+        builder: (context, state) => const HealthRemindersScreen(),
+      ),
+      GoRoute(
+        path: '/features/expiry-calendar',
+        builder: (context, state) => const ExpiryCalendarScreen(),
+      ),
+      GoRoute(
+        path: '/features/advanced-search',
+        builder: (context, state) => const AdvancedSearchScreen(),
+      ),
+      GoRoute(
+        path: '/features/onboarding-guide',
+        builder: (context, state) => const OnboardingGuideScreen(),
+      ),
+      GoRoute(
+        path: '/features/duplicate-finder',
+        builder: (context, state) => const DuplicateFinderScreen(),
+      ),
+      GoRoute(
+        path: '/features/statistics',
+        builder: (context, state) => const StatisticsScreen(),
+      ),
       GoRoute(path: '/lock', builder: (context, state) => const LockScreen()),
-      GoRoute(path: '/features/quick-actions', builder: (context, state) => const QuickActionsScreen()),
-      GoRoute(path: '/features/settings-advanced', builder: (context, state) => const SettingsAdvancedScreen()),
-      GoRoute(path: '/features/profile', builder: (context, state) => const ProfileScreen()),
-      GoRoute(path: '/features/import-export', builder: (context, state) => const ImportExportScreen()),
-      GoRoute(path: '/features/data-usage', builder: (context, state) => const DataUsageScreen()),
-      GoRoute(path: '/features/about-ownkeep', builder: (context, state) => const AboutOwnKeepScreen()),
-      GoRoute(path: '/features/tutorials', builder: (context, state) => const TutorialsScreen()),
-      GoRoute(path: '/features/rate-ownkeep', builder: (context, state) => const RateOwnKeepScreen()),
-      GoRoute(path: '/features/wipe-data', builder: (context, state) => const WipeDataScreen()),
-      GoRoute(path: '/features/data-check', builder: (context, state) => const DataCheckScreen()),
-      GoRoute(path: '/features/file-details', builder: (context, state) => const FileDetailsScreen()),
-      GoRoute(path: '/features/version-history', builder: (context, state) => const VersionHistoryScreen()),
-      GoRoute(path: '/features/move-or-copy', builder: (context, state) => const MoveOrCopyScreen()),
-      GoRoute(path: '/features/multi-select', builder: (context, state) => const MultiSelectScreen()),
-      GoRoute(path: '/features/move-to', builder: (context, state) => const MoveToScreen()),
-      GoRoute(path: '/features/rename', builder: (context, state) => const RenameScreen()),
-      GoRoute(path: '/features/merge-pdf', builder: (context, state) => const MergePdfScreen()),
-      GoRoute(path: '/features/split-pdf', builder: (context, state) => const SplitPdfScreen()),
-      GoRoute(path: '/features/ocr-scan-text', builder: (context, state) => const OcrScanTextScreen()),
-      GoRoute(path: '/features/document-compare', builder: (context, state) => const DocumentCompareScreen()),
-      GoRoute(path: '/features/add-notes', builder: (context, state) => const AddNotesScreen()),
-      GoRoute(path: '/features/print-save-as', builder: (context, state) => const PrintSaveAsScreen()),
-      GoRoute(path: '/features/scan-securely', builder: (context, state) => const SecureScanScreen()),
+      GoRoute(
+        path: '/features/quick-actions',
+        builder: (context, state) => const QuickActionsScreen(),
+      ),
+      GoRoute(
+        path: '/features/settings-advanced',
+        builder: (context, state) => const SettingsAdvancedScreen(),
+      ),
+      GoRoute(
+        path: '/features/profile',
+        builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: '/features/import-export',
+        builder: (context, state) => const ImportExportScreen(),
+      ),
+      GoRoute(
+        path: '/features/data-usage',
+        builder: (context, state) => const DataUsageScreen(),
+      ),
+      GoRoute(
+        path: '/features/about-ownkeep',
+        builder: (context, state) => const AboutOwnKeepScreen(),
+      ),
+      GoRoute(
+        path: '/features/tutorials',
+        builder: (context, state) => const TutorialsScreen(),
+      ),
+      GoRoute(
+        path: '/features/rate-ownkeep',
+        builder: (context, state) => const RateOwnKeepScreen(),
+      ),
+      GoRoute(
+        path: '/features/wipe-data',
+        builder: (context, state) => const WipeDataScreen(),
+      ),
+      GoRoute(
+        path: '/features/data-check',
+        builder: (context, state) => const DataCheckScreen(),
+      ),
+      GoRoute(
+        path: '/features/file-details',
+        redirect: (context, state) => state.uri.queryParameters['id'] == null
+            ? '/dashboard/all-files'
+            : null,
+        builder: (context, state) =>
+            FileDetailsScreen(documentId: state.uri.queryParameters['id']),
+      ),
+      GoRoute(
+        path: '/features/version-history',
+        builder: (context, state) => const VersionHistoryScreen(),
+      ),
+      GoRoute(
+        path: '/features/move-or-copy',
+        redirect: (context, state) => state.uri.queryParameters['id'] == null
+            ? '/dashboard/all-files'
+            : null,
+        builder: (context, state) =>
+            MoveOrCopyScreen(documentId: state.uri.queryParameters['id']),
+      ),
+      GoRoute(
+        path: '/features/multi-select',
+        builder: (context, state) => MultiSelectScreen(
+          collectionName: state.uri.queryParameters['collection'],
+        ),
+      ),
+      GoRoute(
+        path: '/features/move-to',
+        builder: (context, state) => const MoveToScreen(),
+      ),
+      GoRoute(
+        path: '/features/rename',
+        redirect: (context, state) => state.uri.queryParameters['id'] == null
+            ? '/dashboard/all-files'
+            : null,
+        builder: (context, state) =>
+            RenameScreen(documentId: state.uri.queryParameters['id']),
+      ),
+      GoRoute(
+        path: '/features/merge-pdf',
+        builder: (context, state) => const MergePdfScreen(),
+      ),
+      GoRoute(
+        path: '/features/split-pdf',
+        builder: (context, state) => const SplitPdfScreen(),
+      ),
+      GoRoute(
+        path: '/features/ocr-scan-text',
+        redirect: (context, state) => state.uri.queryParameters['id'] == null
+            ? '/dashboard/all-files'
+            : null,
+        builder: (context, state) =>
+            OcrScanTextScreen(documentId: state.uri.queryParameters['id']),
+      ),
+      GoRoute(
+        path: '/features/document-compare',
+        builder: (context, state) => const DocumentCompareScreen(),
+      ),
+      GoRoute(
+        path: '/features/add-notes',
+        builder: (context, state) => const AddNotesScreen(),
+      ),
+      GoRoute(
+        path: '/features/print-save-as',
+        builder: (context, state) => const PrintSaveAsScreen(),
+      ),
+      GoRoute(
+        path: '/features/scan-securely',
+        builder: (context, state) => const SecureScanScreen(),
+      ),
       // GoRoute(path: '/features/health-collection', builder: (context, state) => const HealthCollectionScreen()),
       // GoRoute(path: '/features/finance-collection', builder: (context, state) => const FinanceCollectionScreen()),
       // GoRoute(path: '/features/property-collection', builder: (context, state) => const PropertyCollectionScreen()),
@@ -186,66 +441,213 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       // GoRoute(path: '/features/insurance-collection', builder: (context, state) => const InsuranceCollectionScreen()),
       // GoRoute(path: '/features/travel-collection', builder: (context, state) => const TravelCollectionScreen()),
       // GoRoute(path: '/features/work-collection', builder: (context, state) => const WorkCollectionScreen()),
-      GoRoute(path: '/features/custom-collection', builder: (context, state) => const CustomCollectionScreen()),
-      GoRoute(path: '/features/ai-chat', builder: (context, state) => const AiChatScreen()),
-      GoRoute(path: '/features/ai-insights', builder: (context, state) => const AiInsightsScreen()),
-      GoRoute(path: '/features/smart-suggestions', builder: (context, state) => const SmartSuggestionsScreen()),
-      GoRoute(path: '/features/similar-documents', builder: (context, state) => const SimilarDocumentsScreen()),
-      GoRoute(path: '/features/duplicate-resolution', builder: (context, state) => const DuplicateResolutionScreen()),
-      GoRoute(path: '/features/ai-timeline', builder: (context, state) => const AiTimelineScreen()),
-      GoRoute(path: '/features/auto-tagging', builder: (context, state) => const AutoTaggingScreen()),
-      GoRoute(path: '/features/ai-search-results', builder: (context, state) => const AiSearchResultsScreen()),
-      GoRoute(path: '/features/ai-settings', builder: (context, state) => const AiSettingsScreen()),
-      GoRoute(path: '/features/ai-history', builder: (context, state) => const AiHistoryScreen()),
-      GoRoute(path: '/features/family-sharing', builder: (context, state) => const FamilyVaultScreen()),
-      GoRoute(path: '/features/members', builder: (context, state) => const MembersScreen()),
-      GoRoute(path: '/features/invite-members', builder: (context, state) => const InviteMembersScreen()),
-      GoRoute(path: '/features/permissions', builder: (context, state) => const PermissionsScreen()),
-      GoRoute(path: '/features/trusted-contacts', builder: (context, state) => const TrustedContactsScreen()),
-      GoRoute(path: '/features/emergency-access', builder: (context, state) => const EmergencyAccessScreen()),
-      GoRoute(path: '/features/shared-collections', builder: (context, state) => const SharedCollectionsScreen()),
-      GoRoute(path: '/features/shared-activity', builder: (context, state) => const SharedActivityScreen()),
-      GoRoute(path: '/features/invitations', builder: (context, state) => const InvitationsScreen()),
-      GoRoute(path: '/features/access-history', builder: (context, state) => const AccessHistoryScreen()),
-      GoRoute(path: '/features/backup-restore', builder: (context, state) => const BackupRestoreScreen()),
-      GoRoute(path: '/features/pro', builder: (context, state) => const OwnKeepProScreen()),
-      GoRoute(path: '/features/themes', builder: (context, state) => const ThemesScreen()),
-      GoRoute(path: '/features/app-lock', builder: (context, state) => const AppLockScreen()),
-      GoRoute(path: '/features/hidden-vault', builder: (context, state) => const HiddenVaultScreen()),
-      GoRoute(path: '/features/decoy-vault', builder: (context, state) => const DecoyVaultScreen()),
-      GoRoute(path: '/features/recovery-verification', builder: (context, state) => const RecoveryVerificationScreen()),
-      GoRoute(path: '/features/encryption-details', builder: (context, state) => const EncryptionDetailsScreen()),
-      GoRoute(path: '/features/device-migration', builder: (context, state) => const DeviceMigrationScreen()),
-      GoRoute(path: '/features/restore-vault', builder: (context, state) => const RestoreVaultScreen()),
-      GoRoute(path: '/features/security-audit', builder: (context, state) => const SecurityAuditScreen()),
+      GoRoute(
+        path: '/features/custom-collection',
+        builder: (context, state) => const CustomCollectionScreen(),
+      ),
+      GoRoute(
+        path: '/features/ai-chat',
+        builder: (context, state) => const AiChatScreen(),
+      ),
+      GoRoute(
+        path: '/features/ai-insights',
+        builder: (context, state) => const AiInsightsScreen(),
+      ),
+      GoRoute(
+        path: '/features/smart-suggestions',
+        builder: (context, state) => const SmartSuggestionsScreen(),
+      ),
+      GoRoute(
+        path: '/features/similar-documents',
+        builder: (context, state) => const SimilarDocumentsScreen(),
+      ),
+      GoRoute(
+        path: '/features/duplicate-resolution',
+        builder: (context, state) => DuplicateResolutionScreen(
+          documentIds: [
+            if (state.uri.queryParameters['first'] case final id?) id,
+            if (state.uri.queryParameters['second'] case final id?) id,
+          ],
+        ),
+      ),
+      GoRoute(
+        path: '/features/ai-timeline',
+        builder: (context, state) => const AiTimelineScreen(),
+      ),
+      GoRoute(
+        path: '/features/auto-tagging',
+        builder: (context, state) => const AutoTaggingScreen(),
+      ),
+      GoRoute(
+        path: '/features/ai-search-results',
+        builder: (context, state) =>
+            AiSearchResultsScreen(query: state.uri.queryParameters['q'] ?? ''),
+      ),
+      GoRoute(
+        path: '/features/ai-settings',
+        builder: (context, state) => const AiSettingsScreen(),
+      ),
+      GoRoute(
+        path: '/features/ai-history',
+        builder: (context, state) => const AiHistoryScreen(),
+      ),
+      GoRoute(
+        path: '/features/family-sharing',
+        builder: (context, state) => const FamilyVaultScreen(),
+      ),
+      GoRoute(
+        path: '/features/members',
+        builder: (context, state) => const MembersScreen(),
+      ),
+      GoRoute(
+        path: '/features/invite-members',
+        builder: (context, state) => const InviteMembersScreen(),
+      ),
+      GoRoute(
+        path: '/features/permissions',
+        builder: (context, state) => const PermissionsScreen(),
+      ),
+      GoRoute(
+        path: '/features/trusted-contacts',
+        builder: (context, state) => const TrustedContactsScreen(),
+      ),
+      GoRoute(
+        path: '/features/emergency-access',
+        builder: (context, state) => const EmergencyAccessScreen(),
+      ),
+      GoRoute(
+        path: '/features/shared-collections',
+        builder: (context, state) => const SharedCollectionsScreen(),
+      ),
+      GoRoute(
+        path: '/features/shared-activity',
+        builder: (context, state) => const SharedActivityScreen(),
+      ),
+      GoRoute(
+        path: '/features/invitations',
+        builder: (context, state) => const InvitationsScreen(),
+      ),
+      GoRoute(
+        path: '/features/access-history',
+        builder: (context, state) => const AccessHistoryScreen(),
+      ),
+      GoRoute(
+        path: '/features/backup-restore',
+        builder: (context, state) => const BackupRestoreScreen(),
+      ),
+      GoRoute(
+        path: '/features/pro',
+        builder: (context, state) => const OwnKeepProScreen(),
+      ),
+      GoRoute(
+        path: '/features/themes',
+        builder: (context, state) => const ThemesScreen(),
+      ),
+      GoRoute(
+        path: '/features/app-lock',
+        builder: (context, state) => const AppLockScreen(),
+      ),
+      GoRoute(
+        path: '/features/hidden-vault',
+        builder: (context, state) => const HiddenVaultScreen(),
+      ),
+      GoRoute(
+        path: '/features/decoy-vault',
+        builder: (context, state) => const DecoyVaultScreen(),
+      ),
+      GoRoute(
+        path: '/features/recovery-verification',
+        builder: (context, state) => const RecoveryVerificationScreen(),
+      ),
+      GoRoute(
+        path: '/features/encryption-details',
+        builder: (context, state) => const EncryptionDetailsScreen(),
+      ),
+      GoRoute(
+        path: '/features/device-migration',
+        builder: (context, state) => const DeviceMigrationScreen(),
+      ),
+      GoRoute(
+        path: '/features/restore-vault',
+        builder: (context, state) => const RestoreVaultScreen(),
+      ),
+      GoRoute(
+        path: '/features/security-audit',
+        builder: (context, state) => const SecurityAuditScreen(),
+      ),
       // GoRoute(path: '/features/ownkeep-pro', builder: (context, state) => const OwnKeepProScreen()),
 
       // Collections Routes
-      GoRoute(path: '/collections/custom/new', builder: (context, state) => const CustomCollectionScreen()),
+      GoRoute(
+        path: '/collections/custom/new',
+        builder: (context, state) => const CustomCollectionScreen(),
+      ),
+      GoRoute(
+        path: '/collections/custom/:id',
+        builder: (context, state) => CustomCollectionDetailScreen(
+          collectionId: state.pathParameters['id']!,
+        ),
+      ),
       GoRoute(
         path: '/collections/:category',
+        redirect: (context, state) =>
+            SmartCollectionCategory.fromName(
+                  state.pathParameters['category'] ?? '',
+                ) ==
+                null
+            ? '/dashboard/collections'
+            : null,
         builder: (context, state) {
           final categoryName = state.pathParameters['category'] ?? '';
-          final category = SmartCollectionCategory.fromName(categoryName) ?? SmartCollectionCategory.health;
+          final category = SmartCollectionCategory.fromName(categoryName)!;
           return SmartCollectionScreen(category: category);
         },
       ),
 
       // Dashboard Shell Route
       ShellRoute(
+        redirect: (context, state) =>
+            ref.read(vaultSessionProvider).value == null ? '/lock' : null,
         builder: (context, state, child) {
           return DashboardScaffold(child: child);
         },
         routes: [
-          GoRoute(path: '/dashboard/home', builder: (context, state) => const HomeDashboardScreen()),
-          GoRoute(path: '/dashboard/collections', builder: (context, state) => const CollectionsScreen()),
-          GoRoute(path: '/dashboard/all-files', builder: (context, state) => const AllFilesScreen()),
-          GoRoute(path: '/dashboard/recent', builder: (context, state) => const RecentScreen()),
-          GoRoute(path: '/dashboard/favorites', builder: (context, state) => const FavoritesScreen()),
-          GoRoute(path: '/dashboard/categories', builder: (context, state) => const CategoriesScreen()),
-          GoRoute(path: '/dashboard/search', builder: (context, state) => const SearchScreen()),
-          GoRoute(path: '/dashboard/global-search', builder: (context, state) => const GlobalSearchScreen()),
-          GoRoute(path: '/dashboard/filter-sort', builder: (context, state) => const FilterAndSortScreen()),
+          GoRoute(
+            path: '/dashboard/home',
+            builder: (context, state) => const HomeDashboardScreen(),
+          ),
+          GoRoute(
+            path: '/dashboard/collections',
+            builder: (context, state) => const CollectionsScreen(),
+          ),
+          GoRoute(
+            path: '/dashboard/all-files',
+            builder: (context, state) => const AllFilesScreen(),
+          ),
+          GoRoute(
+            path: '/dashboard/recent',
+            builder: (context, state) => const RecentScreen(),
+          ),
+          GoRoute(
+            path: '/dashboard/favorites',
+            builder: (context, state) => const FavoritesScreen(),
+          ),
+          GoRoute(
+            path: '/dashboard/categories',
+            builder: (context, state) => const CategoriesScreen(),
+          ),
+          GoRoute(
+            path: '/dashboard/search',
+            builder: (context, state) => const SearchScreen(),
+          ),
+          GoRoute(
+            path: '/dashboard/global-search',
+            builder: (context, state) => const GlobalSearchScreen(),
+          ),
+          GoRoute(
+            path: '/dashboard/filter-and-sort',
+            builder: (context, state) => const FilterAndSortScreen(),
+          ),
         ],
       ),
     ],
@@ -265,6 +667,11 @@ class _DashboardScaffoldState extends State<DashboardScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    _currentIndex = switch (GoRouterState.of(context).uri.path) {
+      '/dashboard/collections' => 1,
+      '/dashboard/recent' => 2,
+      _ => 0,
+    };
     return Scaffold(
       extendBody: true,
       drawer: const NavigationMenuDrawer(),
@@ -307,13 +714,37 @@ class _DashboardScaffoldState extends State<DashboardScaffold> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildNavItem(0, Icons.home_outlined, Icons.home, 'Home', () => innerContext.go('/dashboard/home')),
-              _buildNavItem(1, Icons.folder_outlined, Icons.folder, 'Collections', () => innerContext.go('/dashboard/collections')),
+              _buildNavItem(
+                0,
+                Icons.home_outlined,
+                Icons.home,
+                'Home',
+                () => innerContext.go('/dashboard/home'),
+              ),
+              _buildNavItem(
+                1,
+                Icons.folder_outlined,
+                Icons.folder,
+                'Collections',
+                () => innerContext.go('/dashboard/collections'),
+              ),
               const SizedBox(width: 48), // Space for FAB
-              _buildNavItem(2, Icons.history, Icons.history, 'Activity', () => innerContext.go('/dashboard/recent')),
-              _buildNavItem(3, Icons.person_outline, Icons.person, 'Profile', () {
-                innerContext.push('/features/profile');
-              }),
+              _buildNavItem(
+                2,
+                Icons.history,
+                Icons.history,
+                'Activity',
+                () => innerContext.go('/dashboard/recent'),
+              ),
+              _buildNavItem(
+                3,
+                Icons.person_outline,
+                Icons.person,
+                'Profile',
+                () {
+                  innerContext.push('/features/profile');
+                },
+              ),
             ],
           ),
         ),
@@ -321,13 +752,16 @@ class _DashboardScaffoldState extends State<DashboardScaffold> {
     );
   }
 
-  Widget _buildNavItem(int index, IconData unselectedIcon, IconData selectedIcon, String label, VoidCallback onTap) {
+  Widget _buildNavItem(
+    int index,
+    IconData unselectedIcon,
+    IconData selectedIcon,
+    String label,
+    VoidCallback onTap,
+  ) {
     bool isSelected = _currentIndex == index;
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _currentIndex = index;
-        });
         onTap();
       },
       behavior: HitTestBehavior.opaque,
@@ -336,14 +770,18 @@ class _DashboardScaffoldState extends State<DashboardScaffold> {
         children: [
           Icon(
             isSelected ? selectedIcon : unselectedIcon,
-            color: isSelected ? OwnKeepColors.primaryBlue : OwnKeepColors.textSecondary,
+            color: isSelected
+                ? OwnKeepColors.primaryBlue
+                : OwnKeepColors.textSecondary,
             size: 24,
           ),
           const SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(
-              color: isSelected ? OwnKeepColors.primaryBlue : OwnKeepColors.textSecondary,
+              color: isSelected
+                  ? OwnKeepColors.primaryBlue
+                  : OwnKeepColors.textSecondary,
               fontSize: 10,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
             ),

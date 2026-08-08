@@ -11,7 +11,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Scaffold(
       backgroundColor: context.onboardingColors.backgroundDeep,
       body: SafeArea(
@@ -43,19 +43,22 @@ class WelcomeScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      _buildFeatureRow(context,
+                      _buildFeatureRow(
+                        context,
                         iconPath: OwnKeepOnboardingIcons.offline_wifi,
                         title: l10n.s02_offline_title,
                         description: l10n.s02_offline_body,
                       ),
                       const SizedBox(height: 32),
-                      _buildFeatureRow(context,
+                      _buildFeatureRow(
+                        context,
                         iconPath: OwnKeepOnboardingIcons.secure_lock,
                         title: l10n.s02_encrypted_title,
                         description: l10n.s02_encrypted_body,
                       ),
                       const SizedBox(height: 32),
-                      _buildFeatureRow(context,
+                      _buildFeatureRow(
+                        context,
                         iconPath: OwnKeepOnboardingIcons.forever_heart,
                         title: l10n.s02_forever_title,
                         description: l10n.s02_forever_body,
@@ -94,7 +97,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               TextButton(
-                onPressed: () {},
+                onPressed: () => context.push('/features'),
                 child: Text(
                   l10n.s02_action_learn_more,
                   style: TextStyle(
@@ -113,7 +116,8 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFeatureRow(BuildContext context, {
+  Widget _buildFeatureRow(
+    BuildContext context, {
     required String iconPath,
     required String title,
     required String description,

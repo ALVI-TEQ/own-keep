@@ -25,8 +25,13 @@ class OwnKeepOnboardingScaffold extends StatelessWidget {
               backgroundColor: Colors.transparent,
               elevation: 0,
               leading: IconButton(
-                icon: Icon(Icons.arrow_back_ios_new, color: context.appColors.textPrimary),
-                onPressed: onBack ?? () {
+                icon: Icon(
+                  Icons.arrow_back_ios_new,
+                  color: context.appColors.textPrimary,
+                ),
+                onPressed:
+                    onBack ??
+                    () {
                   if (context.canPop()) {
                     context.pop();
                   }
@@ -173,7 +178,9 @@ class OwnKeepGradientButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
         ),
         onPressed: onPressed,
         child: Text(
@@ -228,7 +235,11 @@ class OwnKeepSecurityWarning extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.warning_amber_rounded, color: context.appColors.red, size: 20),
+          Icon(
+            Icons.warning_amber_rounded,
+            color: context.appColors.red,
+            size: 20,
+          ),
           SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -273,10 +284,14 @@ class OwnKeepRecoveryWordGrid extends StatelessWidget {
             width: 130, // Fixed width for responsive wrap
             height: 48,  // Fixed height
             decoration: BoxDecoration(
-              color: isSelected ? context.appColors.brandPurple.withValues(alpha: 0.2) : context.appColors.surfaceSoft,
+              color: isSelected
+                  ? context.appColors.brandPurple.withValues(alpha: 0.2)
+                  : context.appColors.surfaceSoft,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isSelected ? context.appColors.brandPurple : context.appColors.borderSubtle,
+                color: isSelected
+                    ? context.appColors.brandPurple
+                    : context.appColors.borderSubtle,
                 width: 1.5,
               ),
             ),
@@ -285,7 +300,9 @@ class OwnKeepRecoveryWordGrid extends StatelessWidget {
                 Container(
                   width: 32,
                   decoration: BoxDecoration(
-                    color: isSelected ? context.appColors.brandPurple : context.appColors.bgSecondary,
+                    color: isSelected
+                        ? context.appColors.brandPurple
+                        : context.appColors.bgSecondary,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(14),
                       bottomLeft: Radius.circular(14),
@@ -295,7 +312,9 @@ class OwnKeepRecoveryWordGrid extends StatelessWidget {
                     child: Text(
                       '${index + 1}',
                       style: TextStyle(
-                        color: isSelected ? Colors.white : context.appColors.textSecondary,
+                        color: isSelected
+                            ? Colors.white
+                            : context.appColors.textSecondary,
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Inter',
@@ -308,7 +327,9 @@ class OwnKeepRecoveryWordGrid extends StatelessWidget {
                     child: Text(
                       words[index],
                       style: TextStyle(
-                        color: isSelected ? Colors.white : context.appColors.textPrimary,
+                        color: isSelected
+                            ? Colors.white
+                            : context.appColors.textPrimary,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         fontFamily: 'Inter',

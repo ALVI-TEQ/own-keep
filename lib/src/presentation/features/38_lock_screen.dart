@@ -19,17 +19,18 @@ class LockScreen extends ConsumerStatefulWidget {
 
 class _LockScreenState extends ConsumerState<LockScreen> {
   String _pin = '';
+  static const _pinLength = 6;
 
   String? _error;
   bool _isAuthenticating = false;
 
   void _onKeypadTap(String value) {
-    if (_pin.length < 4 && !_isAuthenticating) {
+    if (_pin.length < _pinLength && !_isAuthenticating) {
       setState(() {
         _pin += value;
         _error = null;
       });
-      if (_pin.length == 4) {
+      if (_pin.length == _pinLength) {
         _authenticate();
       }
     }
@@ -71,9 +72,7 @@ class _LockScreenState extends ConsumerState<LockScreen> {
     });
 
     try {
-      // Mock biometric success after 1 second
-      await Future.delayed(const Duration(seconds: 1));
-      await ref.read(vaultSessionProvider.notifier).unlockVault('1234'); // Assume 1234 is the setup PIN
+      await ref.read(vaultSessionProvider.notifier).unlockWithBiometrics();
       if (mounted) {
         context.go('/dashboard/home');
       }
@@ -125,29 +124,37 @@ class _LockScreenState extends ConsumerState<LockScreen> {
             // PIN Dots
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(4, (index) {
+              children: List.generate(_pinLength, (index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: SvgPicture.asset(
-                    index < _pin.length ? OwnKeepMainIcons.pin_dot_active : OwnKeepMainIcons.pin_dot_inactive,
+                    index < _pin.length
+                        ? OwnKeepMainIcons.pin_dot_active
+                        : OwnKeepMainIcons.pin_dot_inactive,
                     width: 16,
                     height: 16,
                     colorFilter: ColorFilter.mode(
-                      index < _pin.length ? colors.primaryBlue : colors.textMuted,
+                      index < _pin.length
+                          ? colors.primaryBlue
+                          : colors.textMuted,
                       BlendMode.srcIn,
                     ),
                   ),
                 );
               }),
             ),
-            
+
             const SizedBox(height: 16),
             if (_isAuthenticating)
               const CircularProgressIndicator()
             else if (_error != null)
               Text(
                 _error!,
-                style: TextStyle(color: colors.dangerRed, fontSize: 14, fontFamily: 'Inter'),
+                style: TextStyle(
+                  color: colors.dangerRed,
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                ),
               )
             else
               const SizedBox(height: 20),
@@ -159,18 +166,46 @@ class _LockScreenState extends ConsumerState<LockScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Column(
                 children: [
-                  _buildKeypadRow(['1', '2', '3'], ['', l10n.s38_key_2_letters, l10n.s38_key_3_letters], colors),
+                  _buildKeypadRow(
+                    ['1', '2', '3'],
+                    ['', l10n.s38_key_2_letters, l10n.s38_key_3_letters],
+                    colors,
+                  ),
                   const SizedBox(height: 20),
-                  _buildKeypadRow(['4', '5', '6'], [l10n.s38_key_4_letters, l10n.s38_key_5_letters, l10n.s38_key_6_letters], colors),
+                  _buildKeypadRow(
+                    ['4', '5', '6'],
+                    [
+                      l10n.s38_key_4_letters,
+                      l10n.s38_key_5_letters,
+                      l10n.s38_key_6_letters,
+                    ],
+                    colors,
+                  ),
                   const SizedBox(height: 20),
-                  _buildKeypadRow(['7', '8', '9'], [l10n.s38_key_7_letters, l10n.s38_key_8_letters, l10n.s38_key_9_letters], colors),
+                  _buildKeypadRow(
+                    ['7', '8', '9'],
+                    [
+                      l10n.s38_key_7_letters,
+                      l10n.s38_key_8_letters,
+                      l10n.s38_key_9_letters,
+                    ],
+                    colors,
+                  ),
                   const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildIconButton(OwnKeepOnboardingIcons.face_id, colors, _authenticateBiometric),
+                      _buildIconButton(
+                        OwnKeepOnboardingIcons.face_id,
+                        colors,
+                        _authenticateBiometric,
+                      ),
                       _buildNumberKey('0', '', colors),
-                      _buildIconButton(OwnKeepMainIcons.keypad_backspace, colors, _onBackspaceTap),
+                      _buildIconButton(
+                        OwnKeepMainIcons.keypad_backspace,
+                        colors,
+                        _onBackspaceTap,
+                      ),
                     ],
                   ),
                 ],
@@ -181,7 +216,7 @@ class _LockScreenState extends ConsumerState<LockScreen> {
 
             // Emergency Access
             TextButton(
-              onPressed: () {},
+              onPressed: () => context.push('/features/restore-vault'),
               child: Text(
                 l10n.s38_emergency,
                 style: TextStyle(
@@ -192,7 +227,7 @@ class _LockScreenState extends ConsumerState<LockScreen> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: OwnKeepSpacing.xl),
           ],
         ),
@@ -200,7 +235,11 @@ class _LockScreenState extends ConsumerState<LockScreen> {
     );
   }
 
-  Widget _buildKeypadRow(List<String> numbers, List<String> letters, OwnKeepMainColorsTheme colors) {
+  Widget _buildKeypadRow(
+    List<String> numbers,
+    List<String> letters,
+    OwnKeepMainColorsTheme colors,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(3, (index) {
@@ -209,7 +248,11 @@ class _LockScreenState extends ConsumerState<LockScreen> {
     );
   }
 
-  Widget _buildNumberKey(String number, String letters, OwnKeepMainColorsTheme colors) {
+  Widget _buildNumberKey(
+    String number,
+    String letters,
+    OwnKeepMainColorsTheme colors,
+  ) {
     return GestureDetector(
       onTap: () => _onKeypadTap(number),
       child: Container(
@@ -248,7 +291,11 @@ class _LockScreenState extends ConsumerState<LockScreen> {
     );
   }
 
-  Widget _buildIconButton(String icon, OwnKeepMainColorsTheme colors, VoidCallback onTap) {
+  Widget _buildIconButton(
+    String icon,
+    OwnKeepMainColorsTheme colors,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Container(

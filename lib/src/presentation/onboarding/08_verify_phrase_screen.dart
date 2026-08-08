@@ -19,20 +19,24 @@ class _VerifyPhraseScreenState extends ConsumerState<VerifyPhraseScreen> {
   List<String> _originalWords = [];
   List<String> _shuffledWords = [];
   final List<String> _selectedWords = [];
-  final Set<int> _selectedIndices = {};
+  final List<int> _selectedIndices = [];
   String? _error;
 
   @override
   void initState() {
     super.initState();
-    // In a real app we'd handle the case where it's null, but for onboarding flow it should be set
     final code = ref.read(onboardingRecoveryCodeProvider) ?? '';
     if (code.isNotEmpty) {
-      _originalWords = code.split(' ');
-    } else {
-      _originalWords = ['mango', 'desert', 'trust', 'polar', 'kitten', 'guitar', 'planet', 'purple', 'silver', 'eagle', 'bridge', 'fitness'];
+      final symbols = code.replaceAll('-', '');
+      var offset = 0;
+      _originalWords = List<String>.generate(12, (index) {
+        final length = index < 8 ? 3 : 2;
+        final part = symbols.substring(offset, offset + length);
+        offset += length;
+        return part;
+      });
     }
-    
+
     _shuffledWords = List.from(_originalWords)..shuffle();
   }
 
@@ -40,9 +44,9 @@ class _VerifyPhraseScreenState extends ConsumerState<VerifyPhraseScreen> {
     setState(() {
       _error = null;
       if (_selectedIndices.contains(index)) {
-        // Deselect
-        _selectedIndices.remove(index);
-        _selectedWords.remove(word);
+        final selectedPosition = _selectedIndices.indexOf(index);
+        _selectedIndices.removeAt(selectedPosition);
+        _selectedWords.removeAt(selectedPosition);
       } else {
         // Select
         _selectedIndices.add(index);
@@ -55,6 +59,15 @@ class _VerifyPhraseScreenState extends ConsumerState<VerifyPhraseScreen> {
 
   void _verify() async {
     if (_isCreating) return;
+
+    final recoveryCode = ref.read(onboardingRecoveryCodeProvider);
+    final pin = ref.read(onboardingPinProvider);
+    if (recoveryCode == null || pin == null || _originalWords.isEmpty) {
+      setState(
+        () => _error = 'Setup session expired. Please set your PIN again.',
+      );
+      return;
+    }
 
     if (_selectedWords.length != _originalWords.length) {
       setState(() {
@@ -78,11 +91,10 @@ class _VerifyPhraseScreenState extends ConsumerState<VerifyPhraseScreen> {
       });
 
       try {
-        final code = ref.read(onboardingRecoveryCodeProvider);
-        final String safeCode = code ?? "mango desert trust polar kitten guitar planet purple silver eagle bridge fitness";
+        await ref
+            .read(vaultSessionProvider.notifier)
+            .createVault(recoveryCode, pin: pin);
 
-        await ref.read(vaultSessionProvider.notifier).createVault(safeCode);
-        
         if (!mounted) return;
         context.push('/enable-biometrics');
       } on VaultLifecycleFailure catch (e) {
@@ -129,7 +141,11 @@ class _VerifyPhraseScreenState extends ConsumerState<VerifyPhraseScreen> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: IconButton(
-                  icon: SvgPicture.asset(OwnKeepOnboardingIcons.back_arrow, width: 24, height: 24),
+                  icon: SvgPicture.asset(
+                    OwnKeepOnboardingIcons.back_arrow,
+                    width: 24,
+                    height: 24,
+                  ),
                   onPressed: () {
                     if (context.canPop()) {
                       context.pop();
@@ -187,7 +203,10 @@ class _VerifyPhraseScreenState extends ConsumerState<VerifyPhraseScreen> {
                 decoration: BoxDecoration(
                   color: context.onboardingColors.surfaceElevated,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: context.onboardingColors.borderSubtle, width: 1.5),
+                  border: Border.all(
+                    color: context.onboardingColors.borderSubtle,
+                    width: 1.5,
+                  ),
                 ),
                 child: Wrap(
                   spacing: 8,
@@ -196,11 +215,18 @@ class _VerifyPhraseScreenState extends ConsumerState<VerifyPhraseScreen> {
                     final isFilled = index < _selectedWords.length;
                     return isFilled
                         ? Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
                             decoration: BoxDecoration(
-                              color: context.onboardingColors.brandBlue.withValues(alpha: 0.15),
+                              color: context.onboardingColors.brandBlue
+                                  .withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: context.onboardingColors.brandBlue.withValues(alpha: 0.5)),
+                              border: Border.all(
+                                color: context.onboardingColors.brandBlue
+                                    .withValues(alpha: 0.5),
+                              ),
                             ),
                             child: Text(
                               _selectedWords[index],
@@ -213,11 +239,17 @@ class _VerifyPhraseScreenState extends ConsumerState<VerifyPhraseScreen> {
                             ),
                           )
                         : Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
                             decoration: BoxDecoration(
                               color: context.onboardingColors.surfaceChip,
                               borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: context.onboardingColors.borderSubtle, style: BorderStyle.solid),
+                              border: Border.all(
+                                color: context.onboardingColors.borderSubtle,
+                                style: BorderStyle.solid,
+                              ),
                             ),
                             child: Text(
                               '${index + 1}',
@@ -246,15 +278,20 @@ class _VerifyPhraseScreenState extends ConsumerState<VerifyPhraseScreen> {
                         onTap: () => _onWordTap(index, word),
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 12,
+                          ),
                           decoration: BoxDecoration(
-                            color: isSelected 
-                                ? context.onboardingColors.brandBlue.withValues(alpha: 0.15)
+                            color: isSelected
+                                ? context.onboardingColors.brandBlue.withValues(
+                                    alpha: 0.15,
+                                  )
                                 : context.onboardingColors.surfaceElevated,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: isSelected 
-                                  ? context.onboardingColors.brandBlue 
+                              color: isSelected
+                                  ? context.onboardingColors.brandBlue
                                   : context.onboardingColors.borderSubtle,
                               width: 1.5,
                             ),
@@ -262,9 +299,13 @@ class _VerifyPhraseScreenState extends ConsumerState<VerifyPhraseScreen> {
                           child: Text(
                             word,
                             style: TextStyle(
-                              color: isSelected ? context.onboardingColors.brandBlue : context.onboardingColors.textPrimary,
+                              color: isSelected
+                                  ? context.onboardingColors.brandBlue
+                                  : context.onboardingColors.textPrimary,
                               fontSize: 15,
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.w500,
                               fontFamily: 'Inter',
                             ),
                           ),
@@ -282,7 +323,11 @@ class _VerifyPhraseScreenState extends ConsumerState<VerifyPhraseScreen> {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: ElevatedButton(
-                  onPressed: (_selectedWords.length == _originalWords.length && !_isCreating) ? _verify : () {},
+                  onPressed:
+                      (_selectedWords.length == _originalWords.length &&
+                          !_isCreating)
+                      ? _verify
+                      : () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
@@ -291,17 +336,24 @@ class _VerifyPhraseScreenState extends ConsumerState<VerifyPhraseScreen> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  child: _isCreating 
-                    ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                    : Text(
-                    l10n.s08_action_verify,
-                    style: TextStyle(
-                      color: context.onboardingColors.textPrimary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Inter',
-                    ),
-                  ),
+                  child: _isCreating
+                      ? const SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : Text(
+                          l10n.s08_action_verify,
+                          style: TextStyle(
+                            color: context.onboardingColors.textPrimary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 16),

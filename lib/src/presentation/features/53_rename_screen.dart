@@ -4,22 +4,28 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
+import '../../providers/vault_provider.dart';
 
-class RenameScreen extends StatefulWidget {
-  const RenameScreen({super.key});
+class RenameScreen extends ConsumerStatefulWidget {
+  const RenameScreen({super.key, required this.documentId});
+
+  final String? documentId;
 
   @override
-  State<RenameScreen> createState() => _RenameScreenState();
+  ConsumerState<RenameScreen> createState() => _RenameScreenState();
 }
 
-class _RenameScreenState extends State<RenameScreen> {
+class _RenameScreenState extends ConsumerState<RenameScreen> {
   late TextEditingController _nameController;
-  final String _extension = '.pdf';
+  String _extension = '';
+  bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: 'Insurance Policy 2025');
+    _nameController = TextEditingController();
   }
 
   @override
@@ -32,6 +38,16 @@ class _RenameScreenState extends State<RenameScreen> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
+    final document = widget.documentId == null
+        ? null
+        : ref.watch(documentDetailProvider(widget.documentId!)).value;
+    if (!_initialized && document != null) {
+      final filename = document.summary.logicalFilename;
+      final dot = filename.lastIndexOf('.');
+      _extension = dot > 0 ? filename.substring(dot) : '';
+      _nameController.text = dot > 0 ? filename.substring(0, dot) : filename;
+      _initialized = true;
+    }
 
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -39,7 +55,12 @@ class _RenameScreenState extends State<RenameScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
@@ -91,7 +112,10 @@ class _RenameScreenState extends State<RenameScreen> {
                 child: SvgPicture.asset(
                   'assets/main/illustrations/pdf_name_preview.svg',
                   fit: BoxFit.cover,
-                  placeholderBuilder: (context) => Container(color: colors.surfacePrimary),
+                  placeholderBuilder: (context) =>
+                      Container(color: colors.surfacePrimary),
+                  width: 24,
+                  height: 24,
                 ),
               ),
             ),
@@ -106,7 +130,7 @@ class _RenameScreenState extends State<RenameScreen> {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.xs),
-            
+
             // Text Field
             Container(
               decoration: BoxDecoration(
@@ -126,7 +150,10 @@ class _RenameScreenState extends State<RenameScreen> {
                       ),
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        ),
                         isDense: true,
                       ),
                     ),
@@ -144,7 +171,15 @@ class _RenameScreenState extends State<RenameScreen> {
                   ),
                   if (_nameController.text.isNotEmpty)
                     IconButton(
-                      icon: SvgPicture.asset(OwnKeepMainIcons.close, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+                      icon: SvgPicture.asset(
+                        OwnKeepMainIcons.close,
+                        colorFilter: ColorFilter.mode(
+                          colors.textMuted,
+                          BlendMode.srcIn,
+                        ),
+                        width: 24,
+                        height: 24,
+                      ),
                       onPressed: () {
                         setState(() {
                           _nameController.clear();
@@ -154,9 +189,9 @@ class _RenameScreenState extends State<RenameScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: OwnKeepSpacing.xl),
-            
+
             Text(
               l10n.s53_location,
               style: TextStyle(
@@ -186,7 +221,7 @@ class _RenameScreenState extends State<RenameScreen> {
             ),
 
             const SizedBox(height: OwnKeepSpacing.xl),
-            
+
             Text(
               l10n.s53_tips,
               style: TextStyle(
@@ -198,7 +233,7 @@ class _RenameScreenState extends State<RenameScreen> {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
-            
+
             Container(
               padding: const EdgeInsets.all(OwnKeepSpacing.md),
               decoration: BoxDecoration(
@@ -215,7 +250,7 @@ class _RenameScreenState extends State<RenameScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 100), // spacing for bottom bar
           ],
         ),
@@ -257,12 +292,22 @@ class _RenameScreenState extends State<RenameScreen> {
             const SizedBox(width: OwnKeepSpacing.md),
             Expanded(
               child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Renamed to ${_nameController.text}$_extension')),
-                  );
-                  Navigator.pop(context);
-                },
+                onPressed:
+                    document == null || _nameController.text.trim().isEmpty
+                    ? null
+                    : () async {
+                        await ref
+                            .read(ingestionControllerProvider)
+                            ?.renameDocument(
+                              document.summary.id,
+                              '${_nameController.text.trim()}$_extension',
+                            );
+                        ref.invalidate(
+                          documentDetailProvider(document.summary.id),
+                        );
+                        ref.invalidate(allDocumentsProvider);
+                        if (context.mounted) Navigator.pop(context);
+                      },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colors.primaryBlue,
                   foregroundColor: Colors.white,
@@ -288,7 +333,11 @@ class _RenameScreenState extends State<RenameScreen> {
     );
   }
 
-  Widget _buildTipItem(OwnKeepMainColorsTheme colors, String text, {bool isLast = false}) {
+  Widget _buildTipItem(
+    OwnKeepMainColorsTheme colors,
+    String text, {
+    bool isLast = false,
+  }) {
     return Padding(
       padding: EdgeInsets.only(bottom: isLast ? 0 : OwnKeepSpacing.md),
       child: Row(

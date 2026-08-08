@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
@@ -14,12 +15,36 @@ class EncryptionDetailsScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     final technicalSpecs = [
-      {'title': l10n.s97_content, 'value': l10n.s97_content_value, 'icon': OwnKeepMainIcons.security},
-      {'title': l10n.s97_kdf, 'value': l10n.s97_kdf_value, 'icon': OwnKeepMainIcons.key},
-      {'title': l10n.s97_manifest, 'value': l10n.s97_manifest_value, 'icon': OwnKeepMainIcons.document},
-      {'title': l10n.s97_integrity, 'value': l10n.s97_integrity_value, 'icon': OwnKeepMainIcons.check},
-      {'title': l10n.s97_container, 'value': l10n.s97_container_value, 'icon': OwnKeepMainIcons.database},
-      {'title': l10n.s97_envelope, 'value': l10n.s97_envelope_value, 'icon': OwnKeepMainIcons.email},
+      {
+        'title': l10n.s97_content,
+        'value': l10n.s97_content_value,
+        'icon': OwnKeepMainIcons.security,
+      },
+      {
+        'title': l10n.s97_kdf,
+        'value': l10n.s97_kdf_value,
+        'icon': OwnKeepMainIcons.key,
+      },
+      {
+        'title': l10n.s97_manifest,
+        'value': l10n.s97_manifest_value,
+        'icon': OwnKeepMainIcons.document,
+      },
+      {
+        'title': l10n.s97_integrity,
+        'value': l10n.s97_integrity_value,
+        'icon': OwnKeepMainIcons.check,
+      },
+      {
+        'title': l10n.s97_container,
+        'value': l10n.s97_container_value,
+        'icon': OwnKeepMainIcons.database,
+      },
+      {
+        'title': l10n.s97_envelope,
+        'value': l10n.s97_envelope_value,
+        'icon': OwnKeepMainIcons.email,
+      },
     ];
 
     return Scaffold(
@@ -28,13 +53,28 @@ class EncryptionDetailsScreen extends StatelessWidget {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Column(
           children: [
-            Text(l10n.s97_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
-            Text(l10n.s97_subtitle, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+            Text(
+              l10n.s97_title,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              l10n.s97_subtitle,
+              style: TextStyle(color: colors.textMuted, fontSize: 12),
+            ),
           ],
         ),
         centerTitle: true,
@@ -57,12 +97,17 @@ class EncryptionDetailsScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [colors.successGreen.withValues(alpha: 0.1), colors.backgroundTop],
+                    colors: [
+                      colors.successGreen.withValues(alpha: 0.1),
+                      colors.backgroundTop,
+                    ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: colors.successGreen.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: colors.successGreen.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -72,16 +117,33 @@ class EncryptionDetailsScreen extends StatelessWidget {
                         color: colors.successGreen,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.verified_user_outlined, color: Colors.white, size: 24),
+                      child: const Icon(
+                        Icons.verified_user_outlined,
+                        color: Colors.white,
+                        size: 24,
+                      ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(l10n.s97_status, style: TextStyle(color: colors.successGreen, fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text(
+                            l10n.s97_status,
+                            style: TextStyle(
+                              color: colors.successGreen,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           const SizedBox(height: 4),
-                          Text(l10n.s97_status_body, style: TextStyle(color: colors.textPrimary, fontSize: 14)),
+                          Text(
+                            l10n.s97_status_body,
+                            style: TextStyle(
+                              color: colors.textPrimary,
+                              fontSize: 14,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -91,10 +153,12 @@ class EncryptionDetailsScreen extends StatelessWidget {
               const SizedBox(height: 32),
 
               // Technical Specs
-              ...technicalSpecs.map((spec) => _buildSpecItem(context, spec, colors)),
-              
+              ...technicalSpecs.map(
+                (spec) => _buildSpecItem(context, spec, colors),
+              ),
+
               const SizedBox(height: 24),
-              
+
               // Security Model Note
               Container(
                 padding: const EdgeInsets.all(16),
@@ -106,15 +170,32 @@ class EncryptionDetailsScreen extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.privacy_tip_outlined, color: colors.primaryBlue, size: 24),
+                    Icon(
+                      Icons.privacy_tip_outlined,
+                      color: colors.primaryBlue,
+                      size: 24,
+                    ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(l10n.s97_security_model, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
+                          Text(
+                            l10n.s97_security_model,
+                            style: TextStyle(
+                              color: colors.textPrimary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           const SizedBox(height: 4),
-                          Text(l10n.s97_security_model_body, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                          Text(
+                            l10n.s97_security_model_body,
+                            style: TextStyle(
+                              color: colors.textSecondary,
+                              fontSize: 14,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -128,36 +209,68 @@ class EncryptionDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSpecItem(BuildContext context, Map<String, dynamic> spec, OwnKeepMainColorsTheme colors) {
+  Widget _buildSpecItem(
+    BuildContext context,
+    Map<String, dynamic> spec,
+    OwnKeepMainColorsTheme colors,
+  ) {
     return GestureDetector(
-      onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Copied ${spec['title']} details')));
+      onTap: () async {
+        await Clipboard.setData(
+          ClipboardData(text: '${spec['title']}: ${spec['value']}'),
+        );
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Copied ${spec['title']} details')),
+        );
       },
       child: Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colors.surfacePrimary,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colors.borderSoft),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: colors.surfaceSecondary,
-              borderRadius: BorderRadius.circular(10),
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: colors.borderSoft),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: colors.surfaceSecondary,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: SvgPicture.asset(
+                spec['icon'] as String,
+                colorFilter: ColorFilter.mode(
+                  colors.primaryBlue,
+                  BlendMode.srcIn,
+                ),
+                width: 20,
+              ),
             ),
-            child: SvgPicture.asset(spec['icon'] as String, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 20),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Text(spec['title'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
-          ),
-          Text(spec['value'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'monospace')),
-        ],
-      ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                spec['title'] as String,
+                style: TextStyle(color: colors.textSecondary, fontSize: 14),
+              ),
+            ),
+            Flexible(
+              child: Text(
+                spec['value'] as String,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.end,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'monospace',
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -18,7 +18,9 @@ class OwnKeepIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final resolvedColor =
-        color ?? IconTheme.of(context).color ?? Theme.of(context).colorScheme.onSurface;
+        color ??
+        IconTheme.of(context).color ??
+        Theme.of(context).colorScheme.onSurface;
 
     return SvgPicture.asset(
       asset,

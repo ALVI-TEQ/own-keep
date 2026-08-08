@@ -5,27 +5,46 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
 
-class DataCheckScreen extends StatefulWidget {
+class DataCheckScreen extends ConsumerStatefulWidget {
   const DataCheckScreen({super.key});
 
   @override
-  State<DataCheckScreen> createState() => _DataCheckScreenState();
+  ConsumerState<DataCheckScreen> createState() => _DataCheckScreenState();
 }
 
-class _DataCheckScreenState extends State<DataCheckScreen> {
+class _DataCheckScreenState extends ConsumerState<DataCheckScreen> {
   bool _isChecking = false;
+  DateTime? _lastCheckedAt;
 
-  void _runCheck() async {
+  Future<void> _runCheck() async {
     setState(() => _isChecking = true);
-    await Future.delayed(const Duration(seconds: 2));
-    if (mounted) setState(() => _isChecking = false);
+    ref.invalidate(allDocumentsProvider);
+    try {
+      await ref.read(allDocumentsProvider.future);
+      if (mounted) setState(() => _lastCheckedAt = DateTime.now());
+    } finally {
+      if (mounted) setState(() => _isChecking = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
+    final documentsAsync = ref.watch(allDocumentsProvider);
+    final documents = documentsAsync.value ?? const [];
+    final failed = documents
+        .where(
+          (document) => !{
+            'VERIFIED',
+            'VALID',
+            'OK',
+          }.contains(document.integrityStatus.toUpperCase()),
+        )
+        .length;
 
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -33,7 +52,12 @@ class _DataCheckScreenState extends State<DataCheckScreen> {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn), width: 24, height: 24),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Column(
@@ -60,15 +84,30 @@ class _DataCheckScreenState extends State<DataCheckScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: _isChecking 
-              ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-              : SvgPicture.asset(OwnKeepMainIcons.refresh, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 24, height: 24),
+            icon: _isChecking
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : SvgPicture.asset(
+                    OwnKeepMainIcons.refresh,
+                    colorFilter: ColorFilter.mode(
+                      colors.primaryBlue,
+                      BlendMode.srcIn,
+                    ),
+                    width: 24,
+                    height: 24,
+                  ),
             onPressed: _isChecking ? null : _runCheck,
           ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
+        padding: const EdgeInsets.symmetric(
+          horizontal: OwnKeepSpacing.lg,
+          vertical: OwnKeepSpacing.md,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -86,24 +125,41 @@ class _DataCheckScreenState extends State<DataCheckScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       if (_isChecking)
-                        const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
+                        const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
                       else
-                        SvgPicture.asset(OwnKeepMainIcons.check_badge, colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn), width: 24, height: 24),
+                        SvgPicture.asset(
+                          OwnKeepMainIcons.check_badge,
+                          colorFilter: ColorFilter.mode(
+                            colors.successGreen,
+                            BlendMode.srcIn,
+                          ),
+                          width: 24,
+                          height: 24,
+                        ),
                       const SizedBox(width: 8),
-                      Text(
-                        _isChecking ? 'Checking Data...' : l10n.s47_status,
-                        style: TextStyle(
-                          color: colors.textPrimary,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
+                      Flexible(
+                        child: Text(
+                          _isChecking ? 'Checking Data...' : l10n.s47_status,
+                          style: TextStyle(
+                            color: colors.textPrimary,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Inter',
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    l10n.s47_last_checked,
+                    _lastCheckedAt == null
+                        ? 'Not checked in this session'
+                        : 'Checked ${_lastCheckedAt!.toLocal()}',
                     style: TextStyle(
                       color: colors.textSecondary,
                       fontSize: 14,
@@ -119,9 +175,23 @@ class _DataCheckScreenState extends State<DataCheckScreen> {
             // Metrics Grid
             Row(
               children: [
-                Expanded(child: _buildMetric(colors, l10n.s47_items_value, l10n.s47_items_label)),
+                Expanded(
+                  child: _buildMetric(
+                    colors,
+                    '${documents.length}',
+                    l10n.s47_items_label,
+                  ),
+                ),
                 Container(width: 1, height: 40, color: colors.borderSoft),
-                Expanded(child: _buildMetric(colors, l10n.s47_corrupt_value, l10n.s47_corrupt_label, color: colors.dangerRed, valueColor: colors.textPrimary)), // 0 is okay, but if >0 it would be red. Assuming normal style for 0
+                Expanded(
+                  child: _buildMetric(
+                    colors,
+                    '$failed',
+                    l10n.s47_corrupt_label,
+                    color: colors.dangerRed,
+                    valueColor: colors.textPrimary,
+                  ),
+                ), // 0 is okay, but if >0 it would be red. Assuming normal style for 0
               ],
             ),
             const SizedBox(height: OwnKeepSpacing.md),
@@ -129,9 +199,26 @@ class _DataCheckScreenState extends State<DataCheckScreen> {
             const SizedBox(height: OwnKeepSpacing.md),
             Row(
               children: [
-                Expanded(child: _buildMetric(colors, l10n.s47_missing_value, l10n.s47_missing_label, color: colors.dangerRed, valueColor: colors.textPrimary)), // Same logic
+                Expanded(
+                  child: _buildMetric(
+                    colors,
+                    '0',
+                    l10n.s47_missing_label,
+                    color: colors.dangerRed,
+                    valueColor: colors.textPrimary,
+                  ),
+                ), // Same logic
                 Container(width: 1, height: 40, color: colors.borderSoft),
-                Expanded(child: _buildMetric(colors, l10n.s47_integrity_value, l10n.s47_integrity_label, valueColor: colors.successGreen)),
+                Expanded(
+                  child: _buildMetric(
+                    colors,
+                    documents.isEmpty
+                        ? '—'
+                        : '${((documents.length - failed) / documents.length * 100).toStringAsFixed(0)}%',
+                    l10n.s47_integrity_label,
+                    valueColor: colors.successGreen,
+                  ),
+                ),
               ],
             ),
 
@@ -156,15 +243,45 @@ class _DataCheckScreenState extends State<DataCheckScreen> {
               ),
               child: Column(
                 children: [
-                  _buildCheckItem(colors, OwnKeepMainIcons.file_integrity, l10n.s47_file_integrity, l10n.s47_file_integrity_body, const Color(0xFF27C5E8)),
+                  _buildCheckItem(
+                    colors,
+                    OwnKeepMainIcons.file_integrity,
+                    l10n.s47_file_integrity,
+                    l10n.s47_file_integrity_body,
+                    const Color(0xFF27C5E8),
+                  ),
                   _buildDivider(colors),
-                  _buildCheckItem(colors, OwnKeepMainIcons.encrypted_manifest, l10n.s47_manifests, l10n.s47_manifests_body, colors.aiPurple),
+                  _buildCheckItem(
+                    colors,
+                    OwnKeepMainIcons.encrypted_manifest,
+                    l10n.s47_manifests,
+                    l10n.s47_manifests_body,
+                    colors.aiPurple,
+                  ),
                   _buildDivider(colors),
-                  _buildCheckItem(colors, OwnKeepMainIcons.document_index, l10n.s47_document_index, l10n.s47_document_index_body, colors.primaryBlue),
+                  _buildCheckItem(
+                    colors,
+                    OwnKeepMainIcons.document_index,
+                    l10n.s47_document_index,
+                    l10n.s47_document_index_body,
+                    colors.primaryBlue,
+                  ),
                   _buildDivider(colors),
-                  _buildCheckItem(colors, OwnKeepMainIcons.recovery_metadata, l10n.s47_recovery_metadata, l10n.s47_recovery_metadata_body, colors.warningOrange),
+                  _buildCheckItem(
+                    colors,
+                    OwnKeepMainIcons.recovery_metadata,
+                    l10n.s47_recovery_metadata,
+                    l10n.s47_recovery_metadata_body,
+                    colors.warningOrange,
+                  ),
                   _buildDivider(colors),
-                  _buildCheckItem(colors, OwnKeepMainIcons.storage_consistency, l10n.s47_storage_consistency, l10n.s47_storage_consistency_body, colors.successGreen),
+                  _buildCheckItem(
+                    colors,
+                    OwnKeepMainIcons.storage_consistency,
+                    l10n.s47_storage_consistency,
+                    l10n.s47_storage_consistency_body,
+                    colors.successGreen,
+                  ),
                 ],
               ),
             ),
@@ -201,7 +318,13 @@ class _DataCheckScreenState extends State<DataCheckScreen> {
     );
   }
 
-  Widget _buildMetric(OwnKeepMainColorsTheme colors, String value, String label, {Color? color, Color? valueColor}) {
+  Widget _buildMetric(
+    OwnKeepMainColorsTheme colors,
+    String value,
+    String label, {
+    Color? color,
+    Color? valueColor,
+  }) {
     return Column(
       children: [
         Text(
@@ -227,8 +350,8 @@ class _DataCheckScreenState extends State<DataCheckScreen> {
   }
 
   Widget _buildCheckItem(
-    OwnKeepMainColorsTheme colors, 
-    String icon, 
+    OwnKeepMainColorsTheme colors,
+    String icon,
     String title,
     String subtitle,
     Color iconColor,
@@ -244,7 +367,7 @@ class _DataCheckScreenState extends State<DataCheckScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: SvgPicture.asset(
-              icon, 
+              icon,
               colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
               width: 24,
               height: 24,
@@ -277,7 +400,8 @@ class _DataCheckScreenState extends State<DataCheckScreen> {
             ),
           ),
           SvgPicture.asset(
-            OwnKeepMainIcons.success_check, // Assume we have a success check icon for these passed checks
+            OwnKeepMainIcons
+                .success_check, // Assume we have a success check icon for these passed checks
             colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn),
             width: 24,
             height: 24,

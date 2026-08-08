@@ -56,7 +56,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       return Scaffold(
         backgroundColor: context.onboardingColors.backgroundDeep,
         body: Center(
-          child: CircularProgressIndicator(color: context.onboardingColors.brandPurple),
+          child: CircularProgressIndicator(
+            color: context.onboardingColors.brandPurple,
+          ),
         ),
       );
     }
@@ -81,10 +83,24 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, fontFamily: 'Inter'),
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                  ),
                   children: [
-                    TextSpan(text: 'Own', style: TextStyle(color: context.onboardingColors.brandPurpleBright)),
-                    TextSpan(text: 'Keep', style: TextStyle(color: context.onboardingColors.textPrimary)),
+                    TextSpan(
+                      text: 'Own',
+                      style: TextStyle(
+                        color: context.onboardingColors.brandPurpleBright,
+                      ),
+                    ),
+                    TextSpan(
+                      text: 'Keep',
+                      style: TextStyle(
+                        color: context.onboardingColors.textPrimary,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -101,11 +117,16 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               ),
               const SizedBox(height: 32),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: context.onboardingColors.surfaceElevated,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: context.onboardingColors.borderSubtle),
+                  border: Border.all(
+                    color: context.onboardingColors.borderSubtle,
+                  ),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,

@@ -20,7 +20,12 @@ class AboutOwnKeepScreen extends StatelessWidget {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -35,7 +40,10 @@ class AboutOwnKeepScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.xl),
+        padding: const EdgeInsets.symmetric(
+          horizontal: OwnKeepSpacing.lg,
+          vertical: OwnKeepSpacing.xl,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -82,7 +90,7 @@ class AboutOwnKeepScreen extends StatelessWidget {
                 fontFamily: 'Inter',
               ),
             ),
-            
+
             const SizedBox(height: 48),
 
             // Main Info List
@@ -94,13 +102,41 @@ class AboutOwnKeepScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildListItem(colors, OwnKeepMainIcons.whats_new, l10n.s43_whats_new, l10n.s43_whats_new_body, const Color(0xFF27C5E8)),
+                  _buildListItem(
+                    context,
+                    colors,
+                    OwnKeepMainIcons.whats_new,
+                    l10n.s43_whats_new,
+                    l10n.s43_whats_new_body,
+                    const Color(0xFF27C5E8),
+                  ),
                   _buildDivider(colors),
-                  _buildListItem(colors, OwnKeepMainIcons.privacy_first, l10n.s43_privacy, l10n.s43_privacy_body, colors.successGreen),
+                  _buildListItem(
+                    context,
+                    colors,
+                    OwnKeepMainIcons.privacy_first,
+                    l10n.s43_privacy,
+                    l10n.s43_privacy_body,
+                    colors.successGreen,
+                  ),
                   _buildDivider(colors),
-                  _buildListItem(colors, OwnKeepMainIcons.legal, l10n.s43_legal, l10n.s43_legal_body, colors.warningOrange),
+                  _buildListItem(
+                    context,
+                    colors,
+                    OwnKeepMainIcons.legal,
+                    l10n.s43_legal,
+                    l10n.s43_legal_body,
+                    colors.warningOrange,
+                  ),
                   _buildDivider(colors),
-                  _buildListItem(colors, OwnKeepMainIcons.acknowledgements, l10n.s43_acknowledgements, l10n.s43_acknowledgements_body, colors.aiPurple),
+                  _buildListItem(
+                    context,
+                    colors,
+                    OwnKeepMainIcons.acknowledgements,
+                    l10n.s43_acknowledgements,
+                    l10n.s43_acknowledgements_body,
+                    colors.aiPurple,
+                  ),
                 ],
               ),
             ),
@@ -116,9 +152,21 @@ class AboutOwnKeepScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildLinkItem(colors, OwnKeepMainIcons.website, l10n.s43_website, l10n.s43_website_value),
+                  _buildLinkItem(
+                    context,
+                    colors,
+                    OwnKeepMainIcons.website,
+                    l10n.s43_website,
+                    l10n.s43_website_value,
+                  ),
                   _buildDivider(colors),
-                  _buildLinkItem(colors, OwnKeepMainIcons.contact_email, l10n.s43_contact, l10n.s43_contact_value),
+                  _buildLinkItem(
+                    context,
+                    colors,
+                    OwnKeepMainIcons.contact_email,
+                    l10n.s43_contact,
+                    l10n.s43_contact_value,
+                  ),
                 ],
               ),
             ),
@@ -151,14 +199,15 @@ class AboutOwnKeepScreen extends StatelessWidget {
   }
 
   Widget _buildListItem(
-    OwnKeepMainColorsTheme colors, 
-    String icon, 
+    BuildContext context,
+    OwnKeepMainColorsTheme colors,
+    String icon,
     String title,
     String subtitle,
     Color iconColor,
   ) {
     return InkWell(
-      onTap: () {},
+      onTap: () => context.push('/features/help-support'),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -170,8 +219,10 @@ class AboutOwnKeepScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: SvgPicture.asset(
-                icon, 
+                icon,
                 colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                width: 24,
+                height: 24,
               ),
             ),
             const SizedBox(width: OwnKeepSpacing.md),
@@ -201,8 +252,10 @@ class AboutOwnKeepScreen extends StatelessWidget {
               ),
             ),
             SvgPicture.asset(
-              OwnKeepMainIcons.chevron_right, 
+              OwnKeepMainIcons.chevron_right,
               colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
+              width: 24,
+              height: 24,
             ),
           ],
         ),
@@ -211,20 +264,26 @@ class AboutOwnKeepScreen extends StatelessWidget {
   }
 
   Widget _buildLinkItem(
-    OwnKeepMainColorsTheme colors, 
-    String icon, 
+    BuildContext context,
+    OwnKeepMainColorsTheme colors,
+    String icon,
     String title,
     String value,
   ) {
     return InkWell(
-      onTap: () {},
+      onTap: () => context.push('/features/help-support'),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
             SvgPicture.asset(
-              icon, 
-              colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn),
+              icon,
+              colorFilter: ColorFilter.mode(
+                colors.primaryBlue,
+                BlendMode.srcIn,
+              ),
+              width: 24,
+              height: 24,
             ),
             const SizedBox(width: OwnKeepSpacing.md),
             Expanded(

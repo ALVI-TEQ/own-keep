@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
@@ -62,19 +63,32 @@ class _MoveToScreenState extends State<MoveToScreen> {
 
   String _getLocalizedString(AppLocalizations l10n, String key) {
     switch (key) {
-      case 'collection_personal': return l10n.collection_personal;
-      case 's52_personal_count': return l10n.s52_personal_count;
-      case 'collection_finance': return l10n.collection_finance;
-      case 's52_finance_count': return l10n.s52_finance_count;
-      case 'collection_health': return l10n.collection_health;
-      case 's52_health_count': return l10n.s52_health_count;
-      case 'collection_property': return l10n.collection_property;
-      case 's52_property_count': return l10n.s52_property_count;
-      case 'collection_vehicle': return l10n.collection_vehicle;
-      case 's52_vehicle_count': return l10n.s52_vehicle_count;
-      case 'collection_education': return l10n.collection_education;
-      case 's52_education_count': return l10n.s52_education_count;
-      default: return key;
+      case 'collection_personal':
+        return l10n.collection_personal;
+      case 's52_personal_count':
+        return l10n.s52_personal_count;
+      case 'collection_finance':
+        return l10n.collection_finance;
+      case 's52_finance_count':
+        return l10n.s52_finance_count;
+      case 'collection_health':
+        return l10n.collection_health;
+      case 's52_health_count':
+        return l10n.s52_health_count;
+      case 'collection_property':
+        return l10n.collection_property;
+      case 's52_property_count':
+        return l10n.s52_property_count;
+      case 'collection_vehicle':
+        return l10n.collection_vehicle;
+      case 's52_vehicle_count':
+        return l10n.s52_vehicle_count;
+      case 'collection_education':
+        return l10n.collection_education;
+      case 's52_education_count':
+        return l10n.s52_education_count;
+      default:
+        return key;
     }
   }
 
@@ -89,7 +103,12 @@ class _MoveToScreenState extends State<MoveToScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
@@ -118,7 +137,9 @@ class _MoveToScreenState extends State<MoveToScreen> {
       body: Stack(
         children: [
           ListView(
-            padding: const EdgeInsets.all(OwnKeepSpacing.md).copyWith(bottom: 100),
+            padding: const EdgeInsets.all(
+              OwnKeepSpacing.md,
+            ).copyWith(bottom: 100),
             children: [
               _buildSectionTitle(l10n.s52_selected, colors),
               const SizedBox(height: OwnKeepSpacing.sm),
@@ -139,7 +160,10 @@ class _MoveToScreenState extends State<MoveToScreen> {
                       ),
                       child: SvgPicture.asset(
                         OwnKeepMainIcons.selection_checked,
-                        colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(
+                          colors.primaryBlue,
+                          BlendMode.srcIn,
+                        ),
                         width: 24,
                         height: 24,
                       ),
@@ -166,7 +190,10 @@ class _MoveToScreenState extends State<MoveToScreen> {
                   colors,
                   icon: item['icon'] as String,
                   title: _getLocalizedString(l10n, item['titleKey'] as String),
-                  subtitle: _getLocalizedString(l10n, item['subtitleKey'] as String),
+                  subtitle: _getLocalizedString(
+                    l10n,
+                    item['subtitleKey'] as String,
+                  ),
                   iconColor: item['color'] as Color,
                   isSelected: isSelected,
                   onTap: () {
@@ -185,11 +212,11 @@ class _MoveToScreenState extends State<MoveToScreen> {
                 iconColor: colors.textPrimary,
                 isSelected: false,
                 isDashed: true,
-                onTap: () {},
+                onTap: () => context.push('/features/tag-manager'),
               ),
             ],
           ),
-          
+
           if (_selectedFolderId.isNotEmpty)
             Positioned(
               bottom: 0,
@@ -200,19 +227,15 @@ class _MoveToScreenState extends State<MoveToScreen> {
                   left: OwnKeepSpacing.md,
                   right: OwnKeepSpacing.md,
                   top: OwnKeepSpacing.md,
-                  bottom: MediaQuery.of(context).padding.bottom + OwnKeepSpacing.md,
+                  bottom:
+                      MediaQuery.of(context).padding.bottom + OwnKeepSpacing.md,
                 ),
                 decoration: BoxDecoration(
                   color: colors.navigationBackground,
                   border: Border(top: BorderSide(color: colors.borderSoft)),
                 ),
                 child: ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Moved to $_selectedFolderId')),
-                    );
-                    Navigator.pop(context);
-                  },
+                  onPressed: () => context.push('/features/multi-select'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colors.primaryBlue,
                     foregroundColor: Colors.white,
@@ -321,14 +344,20 @@ class _MoveToScreenState extends State<MoveToScreen> {
             if (isSelected)
               SvgPicture.asset(
                 OwnKeepMainIcons.selection_checked,
-                colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                  colors.primaryBlue,
+                  BlendMode.srcIn,
+                ),
                 width: 24,
                 height: 24,
               )
             else
               SvgPicture.asset(
                 OwnKeepMainIcons.chevron_right,
-                colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                  colors.textMuted,
+                  BlendMode.srcIn,
+                ),
                 width: 20,
                 height: 20,
               ),

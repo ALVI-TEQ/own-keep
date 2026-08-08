@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
@@ -26,7 +27,12 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
@@ -75,7 +81,10 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
                     ),
                     child: SvgPicture.asset(
                       OwnKeepMainIcons.file_pdf,
-                      colorFilter: ColorFilter.mode(colors.dangerRed, BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(
+                        colors.dangerRed,
+                        BlendMode.srcIn,
+                      ),
                       width: 24,
                       height: 24,
                     ),
@@ -97,27 +106,38 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
                         const SizedBox(height: 2),
                         Row(
                           children: [
-                            Text(
-                              l10n.s59_file_meta,
-                              style: TextStyle(
-                                color: colors.textSecondary,
-                                fontSize: 13,
-                                fontFamily: 'Inter',
+                            Expanded(
+                              child: Text(
+                                l10n.s59_file_meta,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: colors.textSecondary,
+                                  fontSize: 13,
+                                  fontFamily: 'Inter',
+                                ),
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 6),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                              ),
                               child: Text(
                                 '•',
-                                style: TextStyle(color: colors.textMuted, fontSize: 13),
+                                style: TextStyle(
+                                  color: colors.textMuted,
+                                  fontSize: 13,
+                                ),
                               ),
                             ),
-                            Text(
-                              l10n.s59_location,
-                              style: TextStyle(
-                                color: colors.textSecondary,
-                                fontSize: 13,
-                                fontFamily: 'Inter',
+                            Flexible(
+                              child: Text(
+                                l10n.s59_location,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: colors.textSecondary,
+                                  fontSize: 13,
+                                  fontFamily: 'Inter',
+                                ),
                               ),
                             ),
                           ],
@@ -128,9 +148,9 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: OwnKeepSpacing.xl),
-            
+
             Text(
               l10n.s59_output,
               style: TextStyle(
@@ -142,7 +162,7 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
-            
+
             Container(
               decoration: BoxDecoration(
                 color: colors.surfacePrimary,
@@ -185,9 +205,9 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: OwnKeepSpacing.xl),
-            
+
             Text(
               l10n.s59_page_range,
               style: TextStyle(
@@ -199,7 +219,7 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
-            
+
             Container(
               padding: const EdgeInsets.all(OwnKeepSpacing.md),
               decoration: BoxDecoration(
@@ -231,7 +251,10 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
                       const SizedBox(width: OwnKeepSpacing.xs),
                       SvgPicture.asset(
                         OwnKeepMainIcons.chevron_right,
-                        colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(
+                          colors.textMuted,
+                          BlendMode.srcIn,
+                        ),
                         width: 20,
                         height: 20,
                       ),
@@ -240,9 +263,9 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: OwnKeepSpacing.xl),
-            
+
             Text(
               l10n.s59_privacy,
               style: TextStyle(
@@ -254,7 +277,7 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
-            
+
             Container(
               padding: const EdgeInsets.all(OwnKeepSpacing.md),
               decoration: BoxDecoration(
@@ -266,8 +289,12 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SvgPicture.asset(
-                    OwnKeepMainIcons.info, // Assuming info or warning icon exists
-                    colorFilter: ColorFilter.mode(colors.dangerRed, BlendMode.srcIn),
+                    OwnKeepMainIcons
+                        .info, // Assuming info or warning icon exists
+                    colorFilter: ColorFilter.mode(
+                      colors.dangerRed,
+                      BlendMode.srcIn,
+                    ),
                     width: 20,
                     height: 20,
                   ),
@@ -286,7 +313,7 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 100),
           ],
         ),
@@ -304,10 +331,24 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
         ),
         child: ElevatedButton(
           onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Action "$_selectedOutput" initiated successfully')),
+            showDialog<void>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text(_selectedOutput),
+                content: const Text(
+                  'Use Export to save an authenticated decrypted copy through the system picker.',
+                ),
+                actions: [
+                  FilledButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      context.push('/features/share-export');
+                    },
+                    child: const Text('Open Export'),
+                  ),
+                ],
+              ),
             );
-            Navigator.pop(context);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: colors.primaryBlue,
@@ -332,7 +373,13 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
     );
   }
 
-  Widget _buildOptionItem(OwnKeepMainColorsTheme colors, {required String id, required String icon, required String title, required String subtitle}) {
+  Widget _buildOptionItem(
+    OwnKeepMainColorsTheme colors, {
+    required String id,
+    required String icon,
+    required String title,
+    required String subtitle,
+  }) {
     final isSelected = _selectedOutput == id;
 
     return InkWell(
@@ -348,12 +395,17 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: isSelected ? colors.primaryBlue.withOpacity(0.1) : colors.backgroundTop,
+                color: isSelected
+                    ? colors.primaryBlue.withOpacity(0.1)
+                    : colors.backgroundTop,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: SvgPicture.asset(
                 icon,
-                colorFilter: ColorFilter.mode(isSelected ? colors.primaryBlue : colors.textSecondary, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                  isSelected ? colors.primaryBlue : colors.textSecondary,
+                  BlendMode.srcIn,
+                ),
                 width: 24,
                 height: 24,
               ),
@@ -387,7 +439,10 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
             if (isSelected)
               SvgPicture.asset(
                 OwnKeepMainIcons.selection_checked,
-                colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                  colors.primaryBlue,
+                  BlendMode.srcIn,
+                ),
                 width: 24,
                 height: 24,
               )

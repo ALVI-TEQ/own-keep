@@ -14,13 +14,14 @@ class StatisticsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
-    
+
     final storageStats = ref.watch(storageStatsProvider);
-    
+
     String formatBytes(int bytes) {
       if (bytes < 1024) return '$bytes B';
       if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-      if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+      if (bytes < 1024 * 1024 * 1024)
+        return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
       return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
     }
 
@@ -30,7 +31,12 @@ class StatisticsScreen extends ConsumerWidget {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -45,8 +51,16 @@ class StatisticsScreen extends ConsumerWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: SvgPicture.asset(OwnKeepMainIcons.share_export, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
-            onPressed: () {},
+            icon: SvgPicture.asset(
+              OwnKeepMainIcons.share_export,
+              colorFilter: ColorFilter.mode(
+                colors.textPrimary,
+                BlendMode.srcIn,
+              ),
+              width: 24,
+              height: 24,
+            ),
+            onPressed: () => context.push('/features/import-export'),
           ),
         ],
       ),
@@ -59,17 +73,24 @@ class StatisticsScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  l10n.s37_overview,
-                  style: TextStyle(
-                    color: colors.textPrimary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
+                Expanded(
+                  child: Text(
+                    l10n.s37_overview,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                    ),
                   ),
                 ),
+                const SizedBox(width: 12),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: colors.surfacePrimary,
                     borderRadius: BorderRadius.circular(16),
@@ -109,15 +130,24 @@ class StatisticsScreen extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        l10n.s37_used + ' ' + storageStats.maybeWhen(data: (s) => formatBytes(s['totalSize'] as int), orElse: () => '-'),
-                        style: TextStyle(
-                          color: colors.textPrimary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
+                      Expanded(
+                        child: Text(
+                          l10n.s37_used +
+                              ' ' +
+                              storageStats.maybeWhen(
+                                data: (s) => formatBytes(s['totalSize'] as int),
+                                orElse: () => '-',
+                              ),
+                          style: TextStyle(
+                            color: colors.textPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Inter',
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
+                      const SizedBox(width: 12),
                       Text(
                         l10n.s37_free,
                         style: TextStyle(
@@ -130,17 +160,37 @@ class StatisticsScreen extends ConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: OwnKeepSpacing.md),
-                  _buildLegendRow(colors, l10n.s37_documents, l10n.s37_documents_size, const Color(0xFF27C5E8)),
+                  _buildLegendRow(
+                    colors,
+                    l10n.s37_documents,
+                    l10n.s37_documents_size,
+                    const Color(0xFF27C5E8),
+                  ),
                   const SizedBox(height: 8),
-                  _buildLegendRow(colors, l10n.s37_images, l10n.s37_images_size, colors.primaryBlue),
+                  _buildLegendRow(
+                    colors,
+                    l10n.s37_images,
+                    l10n.s37_images_size,
+                    colors.primaryBlue,
+                  ),
                   const SizedBox(height: 8),
-                  _buildLegendRow(colors, l10n.s37_videos, l10n.s37_videos_size, colors.aiPurple),
+                  _buildLegendRow(
+                    colors,
+                    l10n.s37_videos,
+                    l10n.s37_videos_size,
+                    colors.aiPurple,
+                  ),
                   const SizedBox(height: 8),
-                  _buildLegendRow(colors, l10n.s37_others, l10n.s37_others_size, colors.warningOrange),
+                  _buildLegendRow(
+                    colors,
+                    l10n.s37_others,
+                    l10n.s37_others_size,
+                    colors.warningOrange,
+                  ),
                 ],
               ),
             ),
-            
+
             const SizedBox(height: OwnKeepSpacing.xxl),
 
             // Vault Items
@@ -172,7 +222,10 @@ class StatisticsScreen extends ConsumerWidget {
                     icon: OwnKeepMainIcons.files,
                     iconColor: const Color(0xFF27C5E8),
                     title: l10n.s37_files,
-                    value: storageStats.maybeWhen(data: (s) => '${s['documentCount']}', orElse: () => '-'),
+                    value: storageStats.maybeWhen(
+                      data: (s) => '${s['documentCount']}',
+                      orElse: () => '-',
+                    ),
                   ),
                 ),
               ],
@@ -240,9 +293,9 @@ class StatisticsScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: OwnKeepSpacing.xl),
-            
+
             // Sparklines Illustration
             Container(
               width: double.infinity,
@@ -265,7 +318,12 @@ class StatisticsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLegendRow(OwnKeepMainColorsTheme colors, String label, String size, Color dotColor) {
+  Widget _buildLegendRow(
+    OwnKeepMainColorsTheme colors,
+    String label,
+    String size,
+    Color dotColor,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -325,7 +383,12 @@ class StatisticsScreen extends ConsumerWidget {
               color: colors.surfaceSelected,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+            child: SvgPicture.asset(
+              icon,
+              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              width: 24,
+              height: 24,
+            ),
           ),
           const SizedBox(width: OwnKeepSpacing.md),
           Expanded(
@@ -377,14 +440,23 @@ class StatisticsScreen extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
-              Text(
-                value,
-                style: TextStyle(
-                  color: iconColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Inter',
+              SvgPicture.asset(
+                icon,
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                width: 24,
+                height: 24,
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  value,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: iconColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Inter',
+                  ),
                 ),
               ),
             ],

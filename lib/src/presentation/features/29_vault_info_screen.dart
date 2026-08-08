@@ -11,16 +11,18 @@ import '../../providers/document_provider.dart';
 class VaultInfoScreen extends ConsumerWidget {
   const VaultInfoScreen({super.key});
 
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
-    
+
     final storageStats = ref.watch(storageStatsProvider);
-    
+
     String formatBytes(int bytes) {
       if (bytes < 1024) return '$bytes B';
       if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-      if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+      if (bytes < 1024 * 1024 * 1024)
+        return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
       return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
     }
 
@@ -30,7 +32,12 @@ class VaultInfoScreen extends ConsumerWidget {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -45,8 +52,16 @@ class VaultInfoScreen extends ConsumerWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: SvgPicture.asset(OwnKeepMainIcons.edit, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
-            onPressed: () {},
+            icon: SvgPicture.asset(
+              OwnKeepMainIcons.edit,
+              colorFilter: ColorFilter.mode(
+                colors.textPrimary,
+                BlendMode.srcIn,
+              ),
+              width: 24,
+              height: 24,
+            ),
+            onPressed: () => context.push('/features/profile'),
           ),
         ],
       ),
@@ -62,7 +77,7 @@ class VaultInfoScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.xl),
-            
+
             // Vault Name
             Text(
               l10n.s29_vault_name,
@@ -94,14 +109,60 @@ class VaultInfoScreen extends ConsumerWidget {
               ),
               child: Column(
                 children: [
-                  _buildDetailRow(colors, l10n.s29_vault_id_label, l10n.s29_vault_id, true),
-                  _buildDetailRow(colors, l10n.s29_version_label, l10n.s29_version, true),
-                  _buildDetailRow(colors, l10n.s29_encryption_label, l10n.s29_encryption, true),
-                  _buildDetailRow(colors, l10n.s29_kdf_label, l10n.s29_kdf, true),
-                  _buildDetailRow(colors, l10n.s29_created_label, l10n.s29_created, true),
-                  _buildDetailRow(colors, l10n.s29_modified_label, l10n.s29_modified, true),
-                  _buildDetailRow(colors, l10n.s29_items_label, storageStats.maybeWhen(data: (s) => '${s['documentCount']}', orElse: () => '-'), true),
-                  _buildDetailRow(colors, l10n.s29_size_label, storageStats.maybeWhen(data: (s) => formatBytes(s['totalSize'] as int), orElse: () => '-'), false),
+                  _buildDetailRow(
+                    colors,
+                    l10n.s29_vault_id_label,
+                    l10n.s29_vault_id,
+                    true,
+                  ),
+                  _buildDetailRow(
+                    colors,
+                    l10n.s29_version_label,
+                    l10n.s29_version,
+                    true,
+                  ),
+                  _buildDetailRow(
+                    colors,
+                    l10n.s29_encryption_label,
+                    l10n.s29_encryption,
+                    true,
+                  ),
+                  _buildDetailRow(
+                    colors,
+                    l10n.s29_kdf_label,
+                    l10n.s29_kdf,
+                    true,
+                  ),
+                  _buildDetailRow(
+                    colors,
+                    l10n.s29_created_label,
+                    l10n.s29_created,
+                    true,
+                  ),
+                  _buildDetailRow(
+                    colors,
+                    l10n.s29_modified_label,
+                    l10n.s29_modified,
+                    true,
+                  ),
+                  _buildDetailRow(
+                    colors,
+                    l10n.s29_items_label,
+                    storageStats.maybeWhen(
+                      data: (s) => '${s['documentCount']}',
+                      orElse: () => '-',
+                    ),
+                    true,
+                  ),
+                  _buildDetailRow(
+                    colors,
+                    l10n.s29_size_label,
+                    storageStats.maybeWhen(
+                      data: (s) => formatBytes(s['totalSize'] as int),
+                      orElse: () => '-',
+                    ),
+                    false,
+                  ),
                 ],
               ),
             ),
@@ -117,7 +178,15 @@ class VaultInfoScreen extends ConsumerWidget {
               ),
               child: Row(
                 children: [
-                  SvgPicture.asset(OwnKeepMainIcons.warning, colorFilter: ColorFilter.mode(colors.warningOrange, BlendMode.srcIn)),
+                  SvgPicture.asset(
+                    OwnKeepMainIcons.warning,
+                    colorFilter: ColorFilter.mode(
+                      colors.warningOrange,
+                      BlendMode.srcIn,
+                    ),
+                    width: 24,
+                    height: 24,
+                  ),
                   const SizedBox(width: OwnKeepSpacing.md),
                   Expanded(
                     child: Column(
@@ -144,7 +213,7 @@ class VaultInfoScreen extends ConsumerWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () => context.push('/features/backup-restore'),
                     child: Text(
                       "Setup",
                       style: TextStyle(
@@ -165,8 +234,16 @@ class VaultInfoScreen extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () {},
-                icon: SvgPicture.asset(OwnKeepMainIcons.share_export, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+                onPressed: () => context.push('/features/backup-restore'),
+                icon: SvgPicture.asset(
+                  OwnKeepMainIcons.share_export,
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
+                  width: 24,
+                  height: 24,
+                ),
                 label: Text(
                   l10n.s29_export,
                   style: const TextStyle(
@@ -192,27 +269,40 @@ class VaultInfoScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDetailRow(OwnKeepMainColorsTheme colors, String label, String value, bool showDivider) {
+  Widget _buildDetailRow(
+    OwnKeepMainColorsTheme colors,
+    String label,
+    String value,
+    bool showDivider,
+  ) {
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              label,
-              style: TextStyle(
-                color: colors.textSecondary,
-                fontSize: 14,
-                fontFamily: 'Inter',
+            Expanded(
+              child: Text(
+                label,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: colors.textSecondary,
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                ),
               ),
             ),
-            Text(
-              value,
-              style: TextStyle(
-                color: colors.textPrimary,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Inter',
+            const SizedBox(width: 16),
+            Flexible(
+              child: Text(
+                value,
+                textAlign: TextAlign.end,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Inter',
+                ),
               ),
             ),
           ],

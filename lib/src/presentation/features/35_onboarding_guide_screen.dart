@@ -40,7 +40,9 @@ class OnboardingGuideScreen extends StatelessWidget {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: OwnKeepSpacing.lg,
+                ),
                 child: Column(
                   children: [
                     // Hero Illustration
@@ -51,7 +53,7 @@ class OnboardingGuideScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: OwnKeepSpacing.xl),
-                    
+
                     // Hero Text
                     Text(
                       l10n.s35_hero_title,
@@ -112,7 +114,7 @@ class OnboardingGuideScreen extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Bottom Section
             Container(
               padding: const EdgeInsets.all(OwnKeepSpacing.lg),
@@ -126,18 +128,39 @@ class OnboardingGuideScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(OwnKeepMainIcons.page_dot_active, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 8),
+                      SvgPicture.asset(
+                        OwnKeepMainIcons.page_dot_active,
+                        colorFilter: ColorFilter.mode(
+                          colors.primaryBlue,
+                          BlendMode.srcIn,
+                        ),
+                        width: 8,
+                      ),
                       const SizedBox(width: 8),
-                      SvgPicture.asset(OwnKeepMainIcons.page_dot_inactive, colorFilter: ColorFilter.mode(colors.surfaceSelected, BlendMode.srcIn), width: 8),
+                      SvgPicture.asset(
+                        OwnKeepMainIcons.page_dot_inactive,
+                        colorFilter: ColorFilter.mode(
+                          colors.surfaceSelected,
+                          BlendMode.srcIn,
+                        ),
+                        width: 8,
+                      ),
                       const SizedBox(width: 8),
-                      SvgPicture.asset(OwnKeepMainIcons.page_dot_inactive, colorFilter: ColorFilter.mode(colors.surfaceSelected, BlendMode.srcIn), width: 8),
+                      SvgPicture.asset(
+                        OwnKeepMainIcons.page_dot_inactive,
+                        colorFilter: ColorFilter.mode(
+                          colors.surfaceSelected,
+                          BlendMode.srcIn,
+                        ),
+                        width: 8,
+                      ),
                     ],
                   ),
                   const SizedBox(height: OwnKeepSpacing.lg),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => context.go('/dashboard'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: colors.primaryBlue,
                         foregroundColor: Colors.white,
@@ -182,7 +205,12 @@ class OnboardingGuideScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: colors.borderSoft),
           ),
-          child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+          child: SvgPicture.asset(
+            icon,
+            colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
         ),
         const SizedBox(width: OwnKeepSpacing.md),
         Expanded(

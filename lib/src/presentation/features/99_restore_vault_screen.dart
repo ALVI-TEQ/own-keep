@@ -21,6 +21,39 @@ class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
   SelectedBackupArchive? _selectedArchive;
   bool _isRestoring = false;
 
+  Future<String?> _requestRecoveryPhrase() async {
+    final phrase = TextEditingController();
+    final result = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Unlock backup'),
+        content: TextField(
+          controller: phrase,
+          obscureText: true,
+          autocorrect: false,
+          enableSuggestions: false,
+          decoration: const InputDecoration(labelText: 'Recovery phrase'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              final value = phrase.text.trim();
+              if (value.isNotEmpty) Navigator.pop(dialogContext, value);
+            },
+            child: const Text('Restore'),
+          ),
+        ],
+      ),
+    );
+    phrase.dispose();
+    return result;
+  }
+
   Future<void> _pickArchive() async {
     final transfer = const PlatformBackupArchiveTransfer();
     final selected = await transfer.pickArchive();
@@ -31,26 +64,43 @@ class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
 
   Future<void> _performRestore() async {
     if (_selectedArchive == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a backup file first.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a backup file first.')),
+      );
       return;
     }
-    
+
+    if (_restoreOption != 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Selective restore is not supported by this archive format. Choose Everything.',
+          ),
+        ),
+      );
+      return;
+    }
+    final passphrase = await _requestRecoveryPhrase();
+    if (passphrase == null || !mounted) return;
     setState(() => _isRestoring = true);
-    
+
     try {
-      final lifecycle = ref.read(vaultLifecycleProvider);
-      final passphrase = "mango desert trust polar kitten guitar planet purple silver eagle bridge fitness";
-      
-      await lifecycle.restoreBackup(archive: _selectedArchive!.file, recoveryPassphrase: passphrase);
-      
+      await ref
+          .read(vaultSessionProvider.notifier)
+          .restoreVault(_selectedArchive!.file, passphrase);
+
       if (mounted) {
         setState(() => _isRestoring = false);
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vault restored successfully!')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Vault restored successfully!')),
+        );
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isRestoring = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Restore failed: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Restore failed: $e')));
       }
     }
   }
@@ -60,11 +110,28 @@ class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
     final colors = context.mainColors;
     final l10n = AppLocalizations.of(context)!;
 
+    final selected = _selectedArchive != null;
     final validations = [
-      {'title': l10n.s99_integrity, 'value': l10n.s99_integrity_value, 'ok': true},
-      {'title': l10n.s99_envelope, 'value': l10n.s99_envelope_value, 'ok': true},
-      {'title': l10n.s99_storage, 'value': l10n.s99_storage_value, 'ok': true},
-      {'title': l10n.s99_version, 'value': l10n.s99_version_value, 'ok': true},
+      {
+        'title': l10n.s99_integrity,
+        'value': selected ? 'Verified during restore' : 'Not checked',
+        'ok': false,
+      },
+      {
+        'title': l10n.s99_envelope,
+        'value': selected ? 'Authenticated during restore' : 'Not checked',
+        'ok': false,
+      },
+      {
+        'title': l10n.s99_storage,
+        'value': selected ? 'Checked during restore' : 'Not checked',
+        'ok': false,
+      },
+      {
+        'title': l10n.s99_version,
+        'value': selected ? 'Checked during restore' : 'Not checked',
+        'ok': false,
+      },
     ];
 
     return Scaffold(
@@ -73,13 +140,28 @@ class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Column(
           children: [
-            Text(l10n.s99_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
-            Text(l10n.s99_subtitle, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+            Text(
+              l10n.s99_title,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              l10n.s99_subtitle,
+              style: TextStyle(color: colors.textMuted, fontSize: 12),
+            ),
           ],
         ),
         centerTitle: true,
@@ -98,7 +180,14 @@ class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Selected File Banner
-              Text(l10n.s99_backup_file, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(
+                l10n.s99_backup_file,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(16),
@@ -115,22 +204,53 @@ class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
                         color: colors.surfaceSecondary,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: SvgPicture.asset(OwnKeepMainIcons.database, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 24),
+                      child: SvgPicture.asset(
+                        OwnKeepMainIcons.database,
+                        colorFilter: ColorFilter.mode(
+                          colors.primaryBlue,
+                          BlendMode.srcIn,
+                        ),
+                        width: 24,
+                      ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(_selectedArchive?.displayName ?? l10n.s99_file, style: TextStyle(color: colors.textPrimary, fontSize: 14, fontWeight: FontWeight.bold, fontFamily: 'monospace')),
+                          Text(
+                            _selectedArchive?.displayName ?? l10n.s99_file,
+                            style: TextStyle(
+                              color: colors.textPrimary,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'monospace',
+                            ),
+                          ),
                           const SizedBox(height: 4),
-                          Text(_selectedArchive != null ? 'Ready to restore' : l10n.s99_file_meta, style: TextStyle(color: _selectedArchive != null ? colors.primaryBlue : colors.successGreen, fontSize: 12)),
+                          Text(
+                            _selectedArchive != null
+                                ? 'Ready to restore'
+                                : l10n.s99_file_meta,
+                            style: TextStyle(
+                              color: _selectedArchive != null
+                                  ? colors.primaryBlue
+                                  : colors.successGreen,
+                              fontSize: 12,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                     TextButton(
                       onPressed: _isRestoring ? null : _pickArchive,
-                      child: Text(l10n.s99_change, style: TextStyle(color: colors.primaryBlue, fontSize: 14)),
+                      child: Text(
+                        l10n.s99_change,
+                        style: TextStyle(
+                          color: colors.primaryBlue,
+                          fontSize: 14,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -138,19 +258,48 @@ class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
               const SizedBox(height: 32),
 
               // Restore Options
-              Text(l10n.s99_options, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(
+                l10n.s99_options,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 16),
-              
-              _buildRadioOption(l10n.s99_everything, l10n.s99_everything_body, 0, colors),
-              _buildRadioOption(l10n.s99_documents, l10n.s99_documents_body, 1, colors),
-              _buildRadioOption(l10n.s99_collections, l10n.s99_collections_body, 2, colors),
+
+              _buildRadioOption(
+                l10n.s99_everything,
+                l10n.s99_everything_body,
+                0,
+                colors,
+              ),
+              _buildRadioOption(
+                l10n.s99_documents,
+                l10n.s99_documents_body,
+                1,
+                colors,
+              ),
+              _buildRadioOption(
+                l10n.s99_collections,
+                l10n.s99_collections_body,
+                2,
+                colors,
+              ),
 
               const SizedBox(height: 32),
 
               // Verification
-              Text(l10n.s99_verification, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(
+                l10n.s99_verification,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 16),
-              
+
               Container(
                 decoration: BoxDecoration(
                   color: colors.surfacePrimary,
@@ -158,7 +307,9 @@ class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
                   border: Border.all(color: colors.borderSoft),
                 ),
                 child: Column(
-                  children: validations.map((v) => _buildValidationRow(v, colors)).toList(),
+                  children: validations
+                      .map((v) => _buildValidationRow(v, colors))
+                      .toList(),
                 ),
               ),
             ],
@@ -175,14 +326,27 @@ class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
               onPressed: _isRestoring ? null : _performRestore,
               style: ElevatedButton.styleFrom(
                 backgroundColor: colors.primaryBlue,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
-              child: _isRestoring 
-                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                : Text(
-                    l10n.s99_restore,
-                    style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
+              child: _isRestoring
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(
+                      l10n.s99_restore,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
             ),
           ),
         ),
@@ -190,7 +354,12 @@ class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
     );
   }
 
-  Widget _buildRadioOption(String title, String body, int index, OwnKeepMainColorsTheme colors) {
+  Widget _buildRadioOption(
+    String title,
+    String body,
+    int index,
+    OwnKeepMainColorsTheme colors,
+  ) {
     bool isSelected = _restoreOption == index;
     return GestureDetector(
       onTap: () => setState(() => _restoreOption = index),
@@ -198,9 +367,15 @@ class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? colors.primaryBlue.withValues(alpha: 0.05) : Colors.transparent,
+          color: isSelected
+              ? colors.primaryBlue.withValues(alpha: 0.05)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: isSelected ? colors.primaryBlue.withValues(alpha: 0.5) : Colors.transparent),
+          border: Border.all(
+            color: isSelected
+                ? colors.primaryBlue.withValues(alpha: 0.5)
+                : Colors.transparent,
+          ),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,9 +393,22 @@ class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500)),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: colors.textPrimary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                     const SizedBox(height: 4),
-                    Text(body, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                    Text(
+                      body,
+                      style: TextStyle(
+                        color: colors.textSecondary,
+                        fontSize: 14,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -231,20 +419,47 @@ class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
     );
   }
 
-  Widget _buildValidationRow(Map<String, dynamic> v, OwnKeepMainColorsTheme colors) {
+  Widget _buildValidationRow(
+    Map<String, dynamic> v,
+    OwnKeepMainColorsTheme colors,
+  ) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(v['title'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
-          Row(
-            children: [
-              Text(v['value'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
-              const SizedBox(width: 8),
-              if (v['ok'] == true)
-                Icon(Icons.check_circle, color: colors.successGreen, size: 16),
-            ],
+          Expanded(
+            child: Text(
+              v['title'] as String,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: colors.textSecondary, fontSize: 14),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Flexible(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: Text(
+                    v['value'] as String,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                if (v['ok'] == true)
+                  Icon(
+                    Icons.check_circle,
+                    color: colors.successGreen,
+                    size: 16,
+                  ),
+              ],
+            ),
           ),
         ],
       ),

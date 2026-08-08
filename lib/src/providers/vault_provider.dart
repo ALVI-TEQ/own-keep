@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ownkeep/src/citizen_vault/vault/vault_lifecycle.dart';
 import 'package:ownkeep/src/citizen_vault/ingestion/ingestion_ui_controller.dart';
+import 'package:ownkeep/src/citizen_vault/vault/pin_credential_store.dart';
 
 class AppDarkModeNotifier extends Notifier<bool> {
   final bool initialValue;
@@ -11,7 +14,10 @@ class AppDarkModeNotifier extends Notifier<bool> {
   @override
   set state(bool value) => super.state = value;
 }
-final appDarkModeProvider = NotifierProvider<AppDarkModeNotifier, bool>(AppDarkModeNotifier.new);
+
+final appDarkModeProvider = NotifierProvider<AppDarkModeNotifier, bool>(
+  AppDarkModeNotifier.new,
+);
 
 class AppThemeColorNotifier extends Notifier<String> {
   final String initialValue;
@@ -22,7 +28,10 @@ class AppThemeColorNotifier extends Notifier<String> {
   @override
   set state(String value) => super.state = value;
 }
-final appThemeColorProvider = NotifierProvider<AppThemeColorNotifier, String>(AppThemeColorNotifier.new);
+
+final appThemeColorProvider = NotifierProvider<AppThemeColorNotifier, String>(
+  AppThemeColorNotifier.new,
+);
 
 class AppLanguageNotifier extends Notifier<String> {
   final String initialValue;
@@ -33,24 +42,38 @@ class AppLanguageNotifier extends Notifier<String> {
   @override
   set state(String value) => super.state = value;
 }
-final appLanguageProvider = NotifierProvider<AppLanguageNotifier, String>(AppLanguageNotifier.new);
 
+final appLanguageProvider = NotifierProvider<AppLanguageNotifier, String>(
+  AppLanguageNotifier.new,
+);
 
 final vaultLifecycleProvider = Provider<VaultLifecycle>((ref) {
   throw UnimplementedError('vaultLifecycleProvider not initialized');
 });
 
+final pinCredentialStoreProvider = Provider<PinCredentialStore>(
+  (ref) => EncryptedPreferencesPinCredentialStore(),
+);
+
 class VaultSessionNotifier extends AsyncNotifier<UnlockedVaultHandle?> {
   @override
   Future<UnlockedVaultHandle?> build() async => null;
 
-  Future<void> createVault(String passphrase) async {
+  Future<void> createVault(String passphrase, {required String pin}) async {
     state = const AsyncLoading();
+    final pinStore = ref.read(pinCredentialStoreProvider);
+    var pinEnrolled = false;
     try {
       final lifecycle = ref.read(vaultLifecycleProvider);
+      if (await lifecycle.exists()) {
+        throw const VaultLifecycleFailure('vault_already_exists');
+      }
+      await pinStore.enroll(pin: pin, recoveryCredential: passphrase);
+      pinEnrolled = true;
       final handle = await lifecycle.create(recoveryPassphrase: passphrase);
       state = AsyncData(handle);
     } catch (e, st) {
+      if (pinEnrolled) await pinStore.clear();
       state = AsyncError(e, st);
       rethrow;
     }
@@ -60,13 +83,9 @@ class VaultSessionNotifier extends AsyncNotifier<UnlockedVaultHandle?> {
     state = const AsyncLoading();
     try {
       final lifecycle = ref.read(vaultLifecycleProvider);
-      // For MVP UI flow: if the credential is a PIN (not 12 words), 
-      // map it to the hardcoded safe phrase because VaultCryptography 
-      // strictly rejects low-entropy passphrases.
-      final passphrase = credential.split(' ').length >= 12 
-          ? credential 
-          : "mango desert trust polar kitten guitar planet purple silver eagle bridge fitness";
-          
+      final passphrase = await ref
+          .read(pinCredentialStoreProvider)
+          .recover(credential);
       final handle = await lifecycle.unlock(recoveryPassphrase: passphrase);
       state = AsyncData(handle);
     } catch (e, st) {
@@ -92,6 +111,22 @@ class VaultSessionNotifier extends AsyncNotifier<UnlockedVaultHandle?> {
     await lifecycle.enableBiometrics(recoveryPassphrase: passphrase);
   }
 
+  Future<void> restoreVault(File archive, String recoveryPassphrase) async {
+    state = const AsyncLoading();
+    try {
+      final handle = await ref
+          .read(vaultLifecycleProvider)
+          .restoreBackup(
+            archive: archive,
+            recoveryPassphrase: recoveryPassphrase,
+          );
+      state = AsyncData(handle);
+    } catch (error, stackTrace) {
+      state = AsyncError(error, stackTrace);
+      rethrow;
+    }
+  }
+
   Future<void> lockVault() async {
     final handle = state.value;
     if (handle != null) {
@@ -104,13 +139,19 @@ class VaultSessionNotifier extends AsyncNotifier<UnlockedVaultHandle?> {
     await lockVault();
     final lifecycle = ref.read(vaultLifecycleProvider);
     await lifecycle.destroyVault();
+    await ref.read(pinCredentialStoreProvider).clear();
   }
 }
 
-final vaultSessionProvider = AsyncNotifierProvider<VaultSessionNotifier, UnlockedVaultHandle?>(VaultSessionNotifier.new);
+final vaultSessionProvider =
+    AsyncNotifierProvider<VaultSessionNotifier, UnlockedVaultHandle?>(
+      VaultSessionNotifier.new,
+    );
 
 // Keep the old name temporarily acting as a proxy so we don't break existing files that read it, or we can just replace it entirely.
-final unlockedVaultProvider = Provider<UnlockedVaultHandle?>((ref) => ref.watch(vaultSessionProvider).value);
+final unlockedVaultProvider = Provider<UnlockedVaultHandle?>(
+  (ref) => ref.watch(vaultSessionProvider).value,
+);
 
 class OnboardingRecoveryCodeNotifier extends Notifier<String?> {
   @override
@@ -118,7 +159,11 @@ class OnboardingRecoveryCodeNotifier extends Notifier<String?> {
   @override
   set state(String? value) => super.state = value;
 }
-final onboardingRecoveryCodeProvider = NotifierProvider<OnboardingRecoveryCodeNotifier, String?>(OnboardingRecoveryCodeNotifier.new);
+
+final onboardingRecoveryCodeProvider =
+    NotifierProvider<OnboardingRecoveryCodeNotifier, String?>(
+      OnboardingRecoveryCodeNotifier.new,
+    );
 
 class OnboardingPinNotifier extends Notifier<String?> {
   @override
@@ -126,7 +171,10 @@ class OnboardingPinNotifier extends Notifier<String?> {
   @override
   set state(String? value) => super.state = value;
 }
-final onboardingPinProvider = NotifierProvider<OnboardingPinNotifier, String?>(OnboardingPinNotifier.new);
+
+final onboardingPinProvider = NotifierProvider<OnboardingPinNotifier, String?>(
+  OnboardingPinNotifier.new,
+);
 
 // Exposes the IngestionUiController from the currently unlocked vault
 final ingestionControllerProvider = Provider<IngestionUiController?>((ref) {

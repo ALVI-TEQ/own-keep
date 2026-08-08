@@ -20,7 +20,12 @@ class VersionHistoryScreen extends StatelessWidget {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Column(
@@ -47,7 +52,10 @@ class VersionHistoryScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
+        padding: const EdgeInsets.symmetric(
+          horizontal: OwnKeepSpacing.lg,
+          vertical: OwnKeepSpacing.md,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -67,7 +75,10 @@ class VersionHistoryScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: colors.surfacePrimary,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: colors.primaryBlue.withOpacity(0.5), width: 1.5),
+                border: Border.all(
+                  color: colors.primaryBlue.withOpacity(0.5),
+                  width: 1.5,
+                ),
               ),
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -143,11 +154,35 @@ class VersionHistoryScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildVersionItem(colors, '3', l10n.s49_version_3, l10n.s49_version_3_body, l10n.s49_version_3_time, l10n.common_restore, colors.aiPurple),
+                  _buildVersionItem(
+                    colors,
+                    '3',
+                    l10n.s49_version_3,
+                    l10n.s49_version_3_body,
+                    l10n.s49_version_3_time,
+                    l10n.common_restore,
+                    colors.aiPurple,
+                  ),
                   _buildDivider(colors),
-                  _buildVersionItem(colors, '2', l10n.s49_version_2, l10n.s49_version_2_body, l10n.s49_version_2_time, l10n.common_restore, colors.primaryBlue),
+                  _buildVersionItem(
+                    colors,
+                    '2',
+                    l10n.s49_version_2,
+                    l10n.s49_version_2_body,
+                    l10n.s49_version_2_time,
+                    l10n.common_restore,
+                    colors.primaryBlue,
+                  ),
                   _buildDivider(colors),
-                  _buildVersionItem(colors, '1', l10n.s49_version_1, l10n.s49_version_1_body, l10n.s49_version_1_time, l10n.common_restore, colors.successGreen),
+                  _buildVersionItem(
+                    colors,
+                    '1',
+                    l10n.s49_version_1,
+                    l10n.s49_version_1_body,
+                    l10n.s49_version_1_time,
+                    l10n.common_restore,
+                    colors.successGreen,
+                  ),
                 ],
               ),
             ),
@@ -168,21 +203,29 @@ class VersionHistoryScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        l10n.s49_storage,
-                        style: TextStyle(
-                          color: colors.textPrimary,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
+                      Expanded(
+                        child: Text(
+                          l10n.s49_storage,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: colors.textPrimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Inter',
+                          ),
                         ),
                       ),
-                      Text(
-                        l10n.s49_storage_value,
-                        style: TextStyle(
-                          color: colors.textSecondary,
-                          fontSize: 14,
-                          fontFamily: 'Inter',
+                      const SizedBox(width: 12),
+                      Flexible(
+                        child: Text(
+                          l10n.s49_storage_value,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                            color: colors.textSecondary,
+                            fontSize: 14,
+                            fontFamily: 'Inter',
+                          ),
                         ),
                       ),
                     ],
@@ -218,8 +261,14 @@ class VersionHistoryScreen extends StatelessWidget {
               width: double.infinity,
               child: OutlinedButton(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Old versions deleted')),
+                  showDialog<void>(
+                    context: context,
+                    builder: (context) => const AlertDialog(
+                      title: Text('No stored versions'),
+                      content: Text(
+                        'OwnKeep currently preserves the encrypted current document only.',
+                      ),
+                    ),
                   );
                 },
                 style: OutlinedButton.styleFrom(
@@ -248,7 +297,7 @@ class VersionHistoryScreen extends StatelessWidget {
   }
 
   Widget _buildVersionItem(
-    OwnKeepMainColorsTheme colors, 
+    OwnKeepMainColorsTheme colors,
     String number,
     String title,
     String body,
@@ -260,8 +309,14 @@ class VersionHistoryScreen extends StatelessWidget {
       builder: (context) {
         return InkWell(
           onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Version restored')),
+            showDialog<void>(
+              context: context,
+              builder: (context) => const AlertDialog(
+                title: Text('Restore unavailable'),
+                content: Text(
+                  'This displayed design sample is not backed by a stored document snapshot.',
+                ),
+              ),
             );
           },
           child: Padding(
@@ -296,15 +351,19 @@ class VersionHistoryScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            title,
-                            style: TextStyle(
-                              color: colors.textPrimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'Inter',
+                          Expanded(
+                            child: Text(
+                              title,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: colors.textPrimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Inter',
+                              ),
                             ),
                           ),
+                          const SizedBox(width: 8),
                           Text(
                             time,
                             style: TextStyle(
@@ -353,10 +412,6 @@ class VersionHistoryScreen extends StatelessWidget {
   }
 
   Widget _buildDivider(OwnKeepMainColorsTheme colors) {
-    return Divider(
-      color: colors.borderSoft,
-      height: 1,
-      indent: 64, 
-    );
+    return Divider(color: colors.borderSoft, height: 1, indent: 64);
   }
 }

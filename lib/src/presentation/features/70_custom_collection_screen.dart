@@ -56,19 +56,48 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
         elevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: OwnKeepColors.darkTextPrimary),
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            size: 20,
+            color: OwnKeepColors.darkTextPrimary,
+          ),
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text('Custom Collection', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-          Text('Create your own category', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ]),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text(
+              'Custom Collection',
+              style: TextStyle(
+                color: OwnKeepColors.darkTextPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+            Text(
+              'Create your own category',
+              style: TextStyle(
+                color: OwnKeepColors.darkTextSecondary,
+                fontSize: 12,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ],
+        ),
         actions: [
           Container(
             margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(color: OwnKeepColors.primary.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(
+              color: OwnKeepColors.primary.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(10),
+            ),
             child: IconButton(
               onPressed: () {},
-              icon: Icon(Icons.check_rounded, color: OwnKeepColors.primary, size: 20),
+              icon: Icon(
+                Icons.check_rounded,
+                color: OwnKeepColors.primary,
+                size: 20,
+              ),
             ),
           ),
         ],
@@ -76,57 +105,138 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
       bottomNavigationBar: OwnKeepBottomNav(currentIndex: 1),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(OwnKeepSpacing.base),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           // Name
-          Text('Collection Name', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+            Text(
+              'Collection Name',
+              style: TextStyle(
+                color: OwnKeepColors.darkTextPrimary,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
           SizedBox(height: OwnKeepSpacing.sm),
           TextField(
             controller: _nameController,
-            style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w500, fontFamily: 'Inter'),
+              style: TextStyle(
+                color: OwnKeepColors.darkTextPrimary,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Inter',
+              ),
             decoration: InputDecoration(
-              filled: true, fillColor: OwnKeepColors.darkSurfaceElevated,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md), borderSide: const BorderSide(color: OwnKeepColors.primary)),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md), borderSide: BorderSide(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3))),
-              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md), borderSide: const BorderSide(color: OwnKeepColors.primary, width: 1.5)),
-              isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                filled: true,
+                fillColor: OwnKeepColors.darkSurfaceElevated,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(OwnKeepRadius.md),
+                  borderSide: const BorderSide(color: OwnKeepColors.primary),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(OwnKeepRadius.md),
+                  borderSide: BorderSide(
+                    color: OwnKeepColors.darkBorder.withValues(alpha: 0.3),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(OwnKeepRadius.md),
+                  borderSide: const BorderSide(
+                    color: OwnKeepColors.primary,
+                    width: 1.5,
+                  ),
+                ),
+                isDense: true,
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 14,
+                ),
             ),
           ),
           SizedBox(height: OwnKeepSpacing.xl),
           // Icon picker
-          Text('Choose Icon', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+            Text(
+              'Choose Icon',
+              style: TextStyle(
+                color: OwnKeepColors.darkTextPrimary,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
           SizedBox(height: OwnKeepSpacing.sm),
           Row(
-            children: _icons.asMap().entries.map((e) => GestureDetector(
+              children: _icons
+                  .asMap()
+                  .entries
+                  .map(
+                    (e) => GestureDetector(
               onTap: () => setState(() => _selectedIcon = e.key),
               child: Container(
-                margin: EdgeInsets.only(right: e.key < _icons.length - 1 ? 10 : 0),
-                width: 52, height: 52,
+                        margin: EdgeInsets.only(
+                          right: e.key < _icons.length - 1 ? 10 : 0,
+                        ),
+                        width: 52,
+                        height: 52,
                 decoration: BoxDecoration(
                   color: e.value.$2,
                   borderRadius: BorderRadius.circular(14),
-                  border: _selectedIcon == e.key ? Border.all(color: accentColor, width: 2.5) : null,
+                          border: _selectedIcon == e.key
+                              ? Border.all(color: accentColor, width: 2.5)
+                              : null,
+                        ),
+                        child: Stack(
+                          children: [
+                            Center(
+                              child: Icon(
+                                e.value.$1,
+                                color: Colors.white.withValues(alpha: 0.8),
+                                size: 24,
+                              ),
                 ),
-                child: Stack(children: [
-                  Center(child: Icon(e.value.$1, color: Colors.white.withValues(alpha: 0.8), size: 24)),
                   if (_selectedIcon == e.key)
                     const Positioned(
-                      top: 3, right: 3,
-                      child: Icon(Icons.check_circle_rounded, color: Colors.white, size: 14),
+                                top: 3,
+                                right: 3,
+                                child: Icon(
+                                  Icons.check_circle_rounded,
+                                  color: Colors.white,
+                                  size: 14,
                     ),
-                ]),
               ),
-            )).toList(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
           ),
           SizedBox(height: OwnKeepSpacing.xl),
           // Color picker
-          Text('Theme Color', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+            Text(
+              'Theme Color',
+              style: TextStyle(
+                color: OwnKeepColors.darkTextPrimary,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
           SizedBox(height: OwnKeepSpacing.sm),
           Row(
-            children: _colors.asMap().entries.map((e) => GestureDetector(
+              children: _colors
+                  .asMap()
+                  .entries
+                  .map(
+                    (e) => GestureDetector(
               onTap: () => setState(() => _selectedColor = e.key),
               child: Container(
-                margin: EdgeInsets.only(right: e.key < _colors.length - 1 ? 10 : 0),
-                width: 40, height: 40,
+                        margin: EdgeInsets.only(
+                          right: e.key < _colors.length - 1 ? 10 : 0,
+                        ),
+                        width: 40,
+                        height: 40,
                 decoration: BoxDecoration(
                   color: e.value,
                   shape: BoxShape.circle,
@@ -134,26 +244,69 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
                       ? Border.all(color: Colors.white, width: 3)
                       : null,
                   boxShadow: _selectedColor == e.key
-                      ? [BoxShadow(color: e.value.withValues(alpha: 0.5), blurRadius: 8)]
+                              ? [
+                                  BoxShadow(
+                                    color: e.value.withValues(alpha: 0.5),
+                                    blurRadius: 8,
+                                  ),
+                                ]
                       : null,
                 ),
               ),
-            )).toList(),
+                    ),
+                  )
+                  .toList(),
           ),
           SizedBox(height: OwnKeepSpacing.xl),
           // Smart Rules
-          Text('Smart Rules', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+            Text(
+              'Smart Rules',
+              style: TextStyle(
+                color: OwnKeepColors.darkTextPrimary,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
           SizedBox(height: OwnKeepSpacing.sm),
-          _ToggleRow(title: 'Auto-add by tag', subtitle: '#family', value: _autoAdd, onChanged: (v) => setState(() => _autoAdd = v)),
+            _ToggleRow(
+              title: 'Auto-add by tag',
+              subtitle: '#family',
+              value: _autoAdd,
+              onChanged: (v) => setState(() => _autoAdd = v),
+            ),
           SizedBox(height: OwnKeepSpacing.sm),
-          _ToggleRow(title: 'Suggest reminders', subtitle: 'From detected dates', value: _suggestReminders, onChanged: (v) => setState(() => _suggestReminders = v)),
+            _ToggleRow(
+              title: 'Suggest reminders',
+              subtitle: 'From detected dates',
+              value: _suggestReminders,
+              onChanged: (v) => setState(() => _suggestReminders = v),
+            ),
           SizedBox(height: OwnKeepSpacing.sm),
-          _ToggleRow(title: 'Allow AI organization', subtitle: 'Runs only on device', value: _aiOrg, onChanged: (v) => setState(() => _aiOrg = v)),
+            _ToggleRow(
+              title: 'Allow AI organization',
+              subtitle: 'Runs only on device',
+              value: _aiOrg,
+              onChanged: (v) => setState(() => _aiOrg = v),
+            ),
           SizedBox(height: OwnKeepSpacing.sm),
-          _ToggleRow(title: 'Show on Home', subtitle: 'Pin as smart collection', value: _showOnHome, onChanged: (v) => setState(() => _showOnHome = v)),
+            _ToggleRow(
+              title: 'Show on Home',
+              subtitle: 'Pin as smart collection',
+              value: _showOnHome,
+              onChanged: (v) => setState(() => _showOnHome = v),
+            ),
           SizedBox(height: OwnKeepSpacing.xl),
           // Live preview
-          Text('Preview', style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+            Text(
+              'Preview',
+              style: TextStyle(
+                color: OwnKeepColors.darkTextPrimary,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
           SizedBox(height: OwnKeepSpacing.sm),
           AnimatedContainer(
             duration: const Duration(milliseconds: 250),
@@ -163,20 +316,55 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
               borderRadius: BorderRadius.circular(OwnKeepRadius.md),
               border: Border.all(color: accentColor.withValues(alpha: 0.5)),
             ),
-            child: Row(children: [
+              child: Row(
+                children: [
               Container(
-                width: 36, height: 36,
-                decoration: BoxDecoration(color: _icons[_selectedIcon].$2, borderRadius: BorderRadius.circular(10)),
-                child: Icon(_icons[_selectedIcon].$1, color: Colors.white.withValues(alpha: 0.8), size: 18),
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: _icons[_selectedIcon].$2,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      _icons[_selectedIcon].$1,
+                      color: Colors.white.withValues(alpha: 0.8),
+                      size: 18,
+                    ),
               ),
               SizedBox(width: OwnKeepSpacing.md),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(_nameController.text.isEmpty ? 'Untitled' : _nameController.text,
-                    style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
-                Text('0 items  •  Ready to use', style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-              ])),
-              Icon(Icons.chevron_right_rounded, color: OwnKeepColors.darkTextMuted, size: 20),
-            ]),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _nameController.text.isEmpty
+                              ? 'Untitled'
+                              : _nameController.text,
+                          style: TextStyle(
+                            color: OwnKeepColors.darkTextPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        Text(
+                          '0 items  •  Ready to use',
+                          style: TextStyle(
+                            color: OwnKeepColors.darkTextSecondary,
+                            fontSize: 12,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: OwnKeepColors.darkTextMuted,
+                    size: 20,
+                  ),
+                ],
+              ),
           ),
           SizedBox(height: OwnKeepSpacing.xl),
           FilledButton(
@@ -184,18 +372,33 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
             style: FilledButton.styleFrom(
               backgroundColor: accentColor,
               minimumSize: const Size.fromHeight(52),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.md)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(OwnKeepRadius.md),
+                ),
+              ),
+              child: Text(
+                'Create Collection',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
             ),
-            child: Text('Create Collection', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
           ),
-        ]),
+          ],
+        ),
       ),
     );
   }
 }
 
 class _ToggleRow extends StatelessWidget {
-  const _ToggleRow({required this.title, required this.subtitle, required this.value, required this.onChanged});
+  const _ToggleRow({
+    required this.title,
+    required this.subtitle,
+    required this.value,
+    required this.onChanged,
+  });
   final String title, subtitle;
   final bool value;
   final ValueChanged<bool> onChanged;
@@ -207,15 +410,43 @@ class _ToggleRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: OwnKeepColors.darkSurfaceElevated,
         borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-        border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+        border: Border.all(
+          color: OwnKeepColors.darkBorder.withValues(alpha: 0.3),
+        ),
       ),
-      child: Row(children: [
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(title, style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Inter')),
-          Text(subtitle, style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 12, fontFamily: 'Inter')),
-        ])),
-        Switch(value: value, onChanged: onChanged, activeThumbColor: OwnKeepColors.primary),
-      ]),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: OwnKeepColors.darkTextPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: OwnKeepColors.darkTextSecondary,
+                    fontSize: 12,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Switch(
+            value: value,
+            onChanged: onChanged,
+            activeThumbColor: OwnKeepColors.primary,
+          ),
+        ],
+      ),
     );
   }
 }

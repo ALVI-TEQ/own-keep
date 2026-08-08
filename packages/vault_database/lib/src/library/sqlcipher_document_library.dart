@@ -68,8 +68,7 @@ final class SqlCipherDocumentLibrary {
       DocumentSort.upcomingReminder =>
         'next_reminder_at IS NULL, next_reminder_at ASC, d.imported_at DESC',
     };
-    final rows = await database.customSelect(
-      '''
+    final rows = await database.customSelect('''
           SELECT d.id, d.logical_filename, d.document_type, d.mime_type,
                  d.status, d.integrity_status, d.imported_at,
                  d.is_favourite, d.is_archived, d.deleted_at,
@@ -89,18 +88,17 @@ final class SqlCipherDocumentLibrary {
           WHERE ${where.join(' AND ')}
           ORDER BY $orderBy
           LIMIT 500
-          ''',
-      variables: variables,
-    ).get();
+          ''', variables: variables).get();
     return rows.map(_mapSummary).toList(growable: false);
   });
 
   /// Loads all reviewable metadata for one active document.
-  Future<DocumentDetailView?> document(String documentId) =>
-      _session.read((database) async {
-        final summaryRow = await database
-            .customSelect(
-              '''
+  Future<DocumentDetailView?> document(String documentId) => _session.read((
+    database,
+  ) async {
+    final summaryRow = await database
+        .customSelect(
+          '''
               SELECT d.id, d.logical_filename, d.document_type, d.mime_type,
                      d.status, d.integrity_status, d.imported_at,
                      d.is_favourite, d.is_archived, d.deleted_at,
@@ -118,52 +116,44 @@ final class SqlCipherDocumentLibrary {
                   WHERE link.document_id = d.id), '') AS tag_values
               FROM documents d WHERE d.id = ? AND d.deleted_at IS NULL
               ''',
-              variables: <Variable<Object>>[
-                Variable<String>(documentId),
-              ],
-            )
-            .getSingleOrNull();
-        if (summaryRow == null) return null;
-        final fields = await database
-            .customSelect(
-              '''
+          variables: <Variable<Object>>[Variable<String>(documentId)],
+        )
+        .getSingleOrNull();
+    if (summaryRow == null) return null;
+    final fields = await database
+        .customSelect(
+          '''
               SELECT id, field_type, raw_value, normalized_value, confidence,
                      source_page, source_block_id, extractor_id,
                      extractor_version, confirmed_by_user
               FROM extracted_fields WHERE document_id = ?
               ORDER BY field_type, id
               ''',
-              variables: <Variable<Object>>[
-                Variable<String>(documentId),
-              ],
-            )
-            .get();
-        final text = await database
-            .customSelect(
-              '''
+          variables: <Variable<Object>>[Variable<String>(documentId)],
+        )
+        .get();
+    final text = await database
+        .customSelect(
+          '''
               SELECT page_number, raw_text FROM document_text
               WHERE document_id = ? ORDER BY page_number, id
               ''',
-              variables: <Variable<Object>>[
-                Variable<String>(documentId),
-              ],
-            )
-            .get();
-        final assets = await database
-            .customSelect(
-              '''
+          variables: <Variable<Object>>[Variable<String>(documentId)],
+        )
+        .get();
+    final assets = await database
+        .customSelect(
+          '''
               SELECT asset_type, mime_type, created_at FROM document_assets
               WHERE document_id = ? AND deleted_at IS NULL
               ORDER BY created_at
               ''',
-              variables: <Variable<Object>>[
-                Variable<String>(documentId),
-              ],
-            )
-            .get();
-        final history = await database
-            .customSelect(
-              '''
+          variables: <Variable<Object>>[Variable<String>(documentId)],
+        )
+        .get();
+    final history = await database
+        .customSelect(
+          '''
               SELECT s.step_name, s.status, s.attempt_count, s.completed_at,
                      s.error_code
               FROM processing_job_steps s
@@ -171,51 +161,45 @@ final class SqlCipherDocumentLibrary {
               WHERE j.document_id = ?
               ORDER BY j.created_at, s.rowid
               ''',
-              variables: <Variable<Object>>[
-                Variable<String>(documentId),
-              ],
-            )
-            .get();
-        return DocumentDetailView(
-          summary: _mapSummary(summaryRow),
-          fields: fields
-              .map(_mapField)
-              .whereType<ExtractedFieldView>()
-              .toList(
-                growable: false,
-              ),
-          textPages: text
-              .map(
-                (row) => DocumentTextPageView(
-                  pageNumber: row.readNullable<int>('page_number'),
-                  text: row.read<String>('raw_text'),
-                ),
-              )
-              .toList(growable: false),
-          assets: assets
-              .map(
-                (row) => DocumentAssetView(
-                  assetType: row.read<String>('asset_type'),
-                  mimeType: row.read<String>('mime_type'),
-                  createdAt: _date(row.read<int>('created_at')),
-                ),
-              )
-              .toList(growable: false),
-          processingHistory: history
-              .map(
-                (row) => ProcessingHistoryView(
-                  stepName: row.read<String>('step_name'),
-                  status: row.read<String>('status'),
-                  attemptCount: row.read<int>('attempt_count'),
-                  completedAt: _optionalDate(
-                    row.readNullable<int>('completed_at'),
-                  ),
-                  errorCode: row.readNullable<String>('error_code'),
-                ),
-              )
-              .toList(growable: false),
-        );
-      });
+          variables: <Variable<Object>>[Variable<String>(documentId)],
+        )
+        .get();
+    return DocumentDetailView(
+      summary: _mapSummary(summaryRow),
+      fields: fields
+          .map(_mapField)
+          .whereType<ExtractedFieldView>()
+          .toList(growable: false),
+      textPages: text
+          .map(
+            (row) => DocumentTextPageView(
+              pageNumber: row.readNullable<int>('page_number'),
+              text: row.read<String>('raw_text'),
+            ),
+          )
+          .toList(growable: false),
+      assets: assets
+          .map(
+            (row) => DocumentAssetView(
+              assetType: row.read<String>('asset_type'),
+              mimeType: row.read<String>('mime_type'),
+              createdAt: _date(row.read<int>('created_at')),
+            ),
+          )
+          .toList(growable: false),
+      processingHistory: history
+          .map(
+            (row) => ProcessingHistoryView(
+              stepName: row.read<String>('step_name'),
+              status: row.read<String>('status'),
+              attemptCount: row.read<int>('attempt_count'),
+              completedAt: _optionalDate(row.readNullable<int>('completed_at')),
+              errorCode: row.readNullable<String>('error_code'),
+            ),
+          )
+          .toList(growable: false),
+    );
+  });
 
   /// Lists all tags in case-insensitive name order.
   Future<List<DocumentTagView>> listTags() => _session.read(
@@ -368,6 +352,122 @@ final class SqlCipherDocumentLibrary {
   Future<void> setFavourite(String documentId, bool value) =>
       _setBoolean(documentId, 'is_favourite', value);
 
+  Future<List<CustomCollectionView>> listCustomCollections() async {
+    await _session.write(_ensureCustomCollectionsTable);
+    return _session.read((database) async {
+      final rows = await database
+          .customSelect(
+            'SELECT id, name, icon_key, color_value, auto_tag_enabled, '
+            'ai_suggest_enabled, pin_home_enabled FROM custom_collections '
+            'ORDER BY normalized_name',
+          )
+          .get();
+      return rows
+          .map(
+            (row) => CustomCollectionView(
+              id: row.read<String>('id'),
+              name: row.read<String>('name'),
+              iconKey: row.read<String>('icon_key'),
+              colorValue: row.read<int>('color_value'),
+              autoTagEnabled: row.read<int>('auto_tag_enabled') == 1,
+              aiSuggestEnabled: row.read<int>('ai_suggest_enabled') == 1,
+              pinHomeEnabled: row.read<int>('pin_home_enabled') == 1,
+            ),
+          )
+          .toList(growable: false);
+    });
+  }
+
+  Future<void> createCustomCollection({
+    required String name,
+    required String iconKey,
+    required int colorValue,
+    required bool autoTagEnabled,
+    required bool aiSuggestEnabled,
+    required bool pinHomeEnabled,
+  }) async {
+    final trimmed = name.trim();
+    if (trimmed.isEmpty || trimmed.length > 80) {
+      throw ArgumentError.value(name, 'name');
+    }
+    final id = _hex(await _random.secureBytes(16));
+    await _session.write((database) async {
+      await _ensureCustomCollectionsTable(database);
+      await database.customStatement(
+        'INSERT INTO custom_collections(id, name, normalized_name, icon_key, '
+        'color_value, auto_tag_enabled, ai_suggest_enabled, pin_home_enabled, created_at) '
+        'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        <Object>[
+          id,
+          trimmed,
+          trimmed.toLowerCase(),
+          iconKey,
+          colorValue,
+          autoTagEnabled ? 1 : 0,
+          aiSuggestEnabled ? 1 : 0,
+          pinHomeEnabled ? 1 : 0,
+          DateTime.now().toUtc().millisecondsSinceEpoch,
+        ],
+      );
+    });
+  }
+
+  Future<Map<String, bool>> aiSettings() async {
+    await _session.write(_ensureAiSettingsTable);
+    return _session.read((database) async {
+      final rows = await database
+          .customSelect('SELECT setting_key, enabled FROM ai_settings')
+          .get();
+      return <String, bool>{
+        for (final row in rows)
+          row.read<String>('setting_key'): row.read<int>('enabled') == 1,
+      };
+    });
+  }
+
+  Future<void> setAiSetting(String key, bool enabled) async {
+    if (!RegExp(r'^[a-z_]{1,40}$').hasMatch(key)) {
+      throw ArgumentError.value(key, 'key');
+    }
+    await _session.write((database) async {
+      await _ensureAiSettingsTable(database);
+      await database.customStatement(
+        'INSERT INTO ai_settings(setting_key, enabled, updated_at) VALUES (?, ?, ?) '
+        'ON CONFLICT(setting_key) DO UPDATE SET enabled = excluded.enabled, '
+        'updated_at = excluded.updated_at',
+        <Object>[
+          key,
+          enabled ? 1 : 0,
+          DateTime.now().toUtc().millisecondsSinceEpoch,
+        ],
+      );
+    });
+  }
+
+  Future<void> _ensureAiSettingsTable(dynamic database) =>
+      database.customStatement('''
+        CREATE TABLE IF NOT EXISTS ai_settings(
+          setting_key TEXT PRIMARY KEY NOT NULL,
+          enabled INTEGER NOT NULL,
+          updated_at INTEGER NOT NULL
+        )
+      ''');
+
+  Future<void> _ensureCustomCollectionsTable(dynamic database) =>
+      database.customStatement('''
+        CREATE TABLE IF NOT EXISTS custom_collections(
+          id TEXT PRIMARY KEY NOT NULL,
+          name TEXT NOT NULL,
+          normalized_name TEXT NOT NULL UNIQUE,
+          icon_key TEXT NOT NULL,
+          color_value INTEGER NOT NULL,
+          auto_tag_enabled INTEGER NOT NULL DEFAULT 1,
+          ai_suggest_enabled INTEGER NOT NULL DEFAULT 1,
+          pin_home_enabled INTEGER NOT NULL DEFAULT 0,
+          created_at INTEGER NOT NULL
+        )
+      ''');
+
   /// Updates a document's archive state.
   Future<void> setArchived(String documentId, bool value) =>
       _setBoolean(documentId, 'is_archived', value);
@@ -433,10 +533,7 @@ final class SqlCipherDocumentLibrary {
       await database.customStatement(
         'UPDATE documents SET deleted_at = NULL, updated_at = ? '
         'WHERE id = ? AND deleted_at IS NOT NULL',
-        <Object>[
-          DateTime.now().toUtc().millisecondsSinceEpoch,
-          documentId,
-        ],
+        <Object>[DateTime.now().toUtc().millisecondsSinceEpoch, documentId],
       );
       await database.indexDocument(documentId);
     }),
@@ -514,21 +611,18 @@ final class SqlCipherDocumentLibrary {
     );
   }
 
-  Future<void> _setBoolean(
-    String documentId,
-    String column,
-    bool value,
-  ) => _session.write(
-    (database) => database.customStatement(
-      'UPDATE documents SET $column = ?, updated_at = ? '
-      'WHERE id = ? AND deleted_at IS NULL',
-      <Object>[
-        value ? 1 : 0,
-        DateTime.now().toUtc().millisecondsSinceEpoch,
-        documentId,
-      ],
-    ),
-  );
+  Future<void> _setBoolean(String documentId, String column, bool value) =>
+      _session.write(
+        (database) => database.customStatement(
+          'UPDATE documents SET $column = ?, updated_at = ? '
+          'WHERE id = ? AND deleted_at IS NULL',
+          <Object>[
+            value ? 1 : 0,
+            DateTime.now().toUtc().millisecondsSinceEpoch,
+            documentId,
+          ],
+        ),
+      );
 
   static DocumentListItemView _mapSummary(QueryRow row) => DocumentListItemView(
     id: row.read<String>('id'),
@@ -544,9 +638,7 @@ final class SqlCipherDocumentLibrary {
     isArchived: row.read<int>('is_archived') == 1,
     isDeleted: row.readNullable<int>('deleted_at') != null,
     tags: _decodeTags(row.read<String>('tag_values')),
-    nextReminderAt: _optionalDate(
-      row.readNullable<int>('next_reminder_at'),
-    ),
+    nextReminderAt: _optionalDate(row.readNullable<int>('next_reminder_at')),
     expiryAt: DateTime.tryParse(
       row.readNullable<String>('expiry_value') ?? '',
     )?.toUtc(),
@@ -586,10 +678,7 @@ final class SqlCipherDocumentLibrary {
   }
 
   static String _ftsQuery(String query) {
-    final terms = RegExp(
-      r'[\p{L}\p{N}]+',
-      unicode: true,
-    )
+    final terms = RegExp(r'[\p{L}\p{N}]+', unicode: true)
         .allMatches(query)
         .map((match) => match.group(0)!.toLowerCase())
         .take(16)

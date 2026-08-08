@@ -20,7 +20,12 @@ class TutorialsScreen extends StatelessWidget {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -42,7 +47,10 @@ class TutorialsScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(OwnKeepSpacing.lg),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: colors.surfacePrimary,
                   borderRadius: BorderRadius.circular(24),
@@ -50,7 +58,15 @@ class TutorialsScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    SvgPicture.asset(OwnKeepMainIcons.search, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn)),
+                    SvgPicture.asset(
+                      OwnKeepMainIcons.search,
+                      colorFilter: ColorFilter.mode(
+                        colors.textSecondary,
+                        BlendMode.srcIn,
+                      ),
+                      width: 24,
+                      height: 24,
+                    ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
@@ -66,22 +82,28 @@ class TutorialsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Getting Started Section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              padding: const EdgeInsets.symmetric(
+                horizontal: OwnKeepSpacing.lg,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    l10n.s44_getting_started,
-                    style: TextStyle(
-                      color: colors.textPrimary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Inter',
+                  Expanded(
+                    child: Text(
+                      l10n.s44_getting_started,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: colors.textPrimary,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                      ),
                     ),
                   ),
+                  const SizedBox(width: 12),
                   Text(
                     l10n.common_see_all,
                     style: TextStyle(
@@ -98,16 +120,46 @@ class TutorialsScreen extends StatelessWidget {
             SizedBox(
               height: 220,
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: OwnKeepSpacing.lg,
+                ),
                 scrollDirection: Axis.horizontal,
                 children: [
-                  _buildVideoCard(colors, l10n.s44_tutorial_01, l10n.s44_tutorial_01_duration, OwnKeepMainIcons.play, colors.primaryBlue),
+                  _buildVideoCard(
+                    context,
+                    colors,
+                    l10n.s44_tutorial_01,
+                    l10n.s44_tutorial_01_duration,
+                    OwnKeepMainIcons.play,
+                    colors.primaryBlue,
+                  ),
                   const SizedBox(width: OwnKeepSpacing.md),
-                  _buildVideoCard(colors, l10n.s44_tutorial_02, l10n.s44_tutorial_02_duration, OwnKeepMainIcons.tutorial_vault, const Color(0xFF27C5E8)),
+                  _buildVideoCard(
+                    context,
+                    colors,
+                    l10n.s44_tutorial_02,
+                    l10n.s44_tutorial_02_duration,
+                    OwnKeepMainIcons.tutorial_vault,
+                    const Color(0xFF27C5E8),
+                  ),
                   const SizedBox(width: OwnKeepSpacing.md),
-                  _buildVideoCard(colors, l10n.s44_tutorial_03, l10n.s44_tutorial_03_duration, OwnKeepMainIcons.tutorial_documents, colors.aiPurple),
+                  _buildVideoCard(
+                    context,
+                    colors,
+                    l10n.s44_tutorial_03,
+                    l10n.s44_tutorial_03_duration,
+                    OwnKeepMainIcons.tutorial_documents,
+                    colors.aiPurple,
+                  ),
                   const SizedBox(width: OwnKeepSpacing.md),
-                  _buildVideoCard(colors, l10n.s44_tutorial_04, l10n.s44_tutorial_04_duration, OwnKeepMainIcons.tutorial_reminder, colors.warningOrange),
+                  _buildVideoCard(
+                    context,
+                    colors,
+                    l10n.s44_tutorial_04,
+                    l10n.s44_tutorial_04_duration,
+                    OwnKeepMainIcons.tutorial_reminder,
+                    colors.warningOrange,
+                  ),
                 ],
               ),
             ),
@@ -116,7 +168,9 @@ class TutorialsScreen extends StatelessWidget {
 
             // Manage Vault Section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              padding: const EdgeInsets.symmetric(
+                horizontal: OwnKeepSpacing.lg,
+              ),
               child: Text(
                 l10n.s44_manage_vault,
                 style: TextStyle(
@@ -129,14 +183,37 @@ class TutorialsScreen extends StatelessWidget {
             ),
             const SizedBox(height: OwnKeepSpacing.md),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              padding: const EdgeInsets.symmetric(
+                horizontal: OwnKeepSpacing.lg,
+              ),
               child: Column(
                 children: [
-                  _buildListCard(colors, OwnKeepMainIcons.tutorial_tags, l10n.s44_tutorial_05, l10n.s44_tutorial_05_body, l10n.s44_tutorial_05_duration, colors.aiPurple),
+                  _buildListCard(
+                    colors,
+                    OwnKeepMainIcons.tutorial_tags,
+                    l10n.s44_tutorial_05,
+                    l10n.s44_tutorial_05_body,
+                    l10n.s44_tutorial_05_duration,
+                    colors.aiPurple,
+                  ),
                   const SizedBox(height: OwnKeepSpacing.sm),
-                  _buildListCard(colors, OwnKeepMainIcons.tutorial_backup, l10n.s44_tutorial_06, l10n.s44_tutorial_06_body, l10n.s44_tutorial_06_duration, colors.successGreen),
+                  _buildListCard(
+                    colors,
+                    OwnKeepMainIcons.tutorial_backup,
+                    l10n.s44_tutorial_06,
+                    l10n.s44_tutorial_06_body,
+                    l10n.s44_tutorial_06_duration,
+                    colors.successGreen,
+                  ),
                   const SizedBox(height: OwnKeepSpacing.sm),
-                  _buildListCard(colors, OwnKeepMainIcons.tutorial_share, l10n.s44_tutorial_07, l10n.s44_tutorial_07_body, l10n.s44_tutorial_07_duration, const Color(0xFF27C5E8)),
+                  _buildListCard(
+                    colors,
+                    OwnKeepMainIcons.tutorial_share,
+                    l10n.s44_tutorial_07,
+                    l10n.s44_tutorial_07_body,
+                    l10n.s44_tutorial_07_duration,
+                    const Color(0xFF27C5E8),
+                  ),
                 ],
               ),
             ),
@@ -145,7 +222,9 @@ class TutorialsScreen extends StatelessWidget {
 
             // Advanced Section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              padding: const EdgeInsets.symmetric(
+                horizontal: OwnKeepSpacing.lg,
+              ),
               child: Text(
                 l10n.s44_advanced,
                 style: TextStyle(
@@ -158,10 +237,19 @@ class TutorialsScreen extends StatelessWidget {
             ),
             const SizedBox(height: OwnKeepSpacing.md),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              padding: const EdgeInsets.symmetric(
+                horizontal: OwnKeepSpacing.lg,
+              ),
               child: Column(
                 children: [
-                  _buildListCard(colors, OwnKeepMainIcons.tutorial_security, l10n.s44_tutorial_08, l10n.s44_tutorial_08_body, l10n.s44_tutorial_08_duration, colors.primaryBlue),
+                  _buildListCard(
+                    colors,
+                    OwnKeepMainIcons.tutorial_security,
+                    l10n.s44_tutorial_08,
+                    l10n.s44_tutorial_08_body,
+                    l10n.s44_tutorial_08_duration,
+                    colors.primaryBlue,
+                  ),
                 ],
               ),
             ),
@@ -172,72 +260,123 @@ class TutorialsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildVideoCard(OwnKeepMainColorsTheme colors, String title, String duration, String icon, Color iconColor) {
-    return Container(
-      width: 240,
-      decoration: BoxDecoration(
-        color: colors.surfacePrimary,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colors.borderSoft),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Thumbnail placeholder
-          Container(
-            height: 140,
-            decoration: BoxDecoration(
-              color: colors.surfaceSelected,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+  Widget _buildVideoCard(
+    BuildContext context,
+    OwnKeepMainColorsTheme colors,
+    String title,
+    String duration,
+    String icon,
+    Color iconColor,
+  ) {
+    return InkWell(
+      onTap: () => showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(title),
+          content: const Text(
+            'Follow the guided walkthrough to practise this workflow using your vault.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
             ),
-            child: Stack(
-              children: [
-                Center(
-                  child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor.withOpacity(0.5), BlendMode.srcIn), width: 48),
+            FilledButton(
+              onPressed: () {
+                Navigator.pop(context);
+                context.push('/features/onboarding-guide');
+              },
+              child: const Text('Start guide'),
+            ),
+          ],
+        ),
+      ),
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        width: 240,
+        decoration: BoxDecoration(
+          color: colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: colors.borderSoft),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Thumbnail placeholder
+            Container(
+              height: 140,
+              decoration: BoxDecoration(
+                color: colors.surfaceSelected,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
                 ),
-                Positioned(
-                  bottom: 8,
-                  right: 8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.7),
-                      borderRadius: BorderRadius.circular(4),
+              ),
+              child: Stack(
+                children: [
+                  Center(
+                    child: SvgPicture.asset(
+                      icon,
+                      colorFilter: ColorFilter.mode(
+                        iconColor.withOpacity(0.5),
+                        BlendMode.srcIn,
+                      ),
+                      width: 48,
                     ),
-                    child: Text(
-                      duration,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Inter',
+                  ),
+                  Positioned(
+                    bottom: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        duration,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter',
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Text(
-              title,
-              style: TextStyle(
-                color: colors.textPrimary,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'Inter',
+                ],
               ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildListCard(OwnKeepMainColorsTheme colors, String icon, String title, String subtitle, String duration, Color iconColor) {
+  Widget _buildListCard(
+    OwnKeepMainColorsTheme colors,
+    String icon,
+    String title,
+    String subtitle,
+    String duration,
+    Color iconColor,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -255,7 +394,11 @@ class TutorialsScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Center(
-              child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn), width: 24),
+              child: SvgPicture.asset(
+                icon,
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                width: 24,
+              ),
             ),
           ),
           const SizedBox(width: OwnKeepSpacing.md),

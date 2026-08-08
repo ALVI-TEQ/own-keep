@@ -19,22 +19,37 @@ class HiddenVaultScreen extends StatelessWidget {
             decoration: BoxDecoration(
               color: OwnKeepColors.darkSurfaceElevated,
               borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.25)),
+              border: Border.all(
+                color: OwnKeepColors.darkBorder.withValues(alpha: 0.25),
+              ),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.star_outline_rounded, color: OwnKeepColors.primary, size: 64),
+                const Icon(
+                  Icons.star_outline_rounded,
+                  color: OwnKeepColors.primary,
+                  size: 64,
+                ),
                 const SizedBox(height: OwnKeepSpacing.md),
                 const Text(
                   'Hidden Vault',
-                  style: TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Inter'),
+                  style: TextStyle(
+                    color: OwnKeepColors.darkTextPrimary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: OwnKeepSpacing.sm),
                 const Text(
                   'This page is part of the Hidden Vault flow.',
-                  style: TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 14, fontFamily: 'Inter'),
+                  style: TextStyle(
+                    color: OwnKeepColors.darkTextSecondary,
+                    fontSize: 14,
+                    fontFamily: 'Inter',
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: OwnKeepSpacing.lg),
@@ -43,9 +58,14 @@ class HiddenVaultScreen extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: OwnKeepColors.primary,
                     foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.sm)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(OwnKeepRadius.sm),
+                    ),
                   ),
-                  child: const Text('Go Back', style: TextStyle(fontFamily: 'Inter')),
+                  child: const Text(
+                    'Go Back',
+                    style: TextStyle(fontFamily: 'Inter'),
+                  ),
                 ),
               ],
             ),

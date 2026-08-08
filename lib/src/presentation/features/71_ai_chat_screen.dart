@@ -4,15 +4,17 @@ import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/vault_provider.dart';
 
-class AiChatScreen extends StatefulWidget {
+class AiChatScreen extends ConsumerStatefulWidget {
   const AiChatScreen({super.key});
 
   @override
-  State<AiChatScreen> createState() => _AiChatScreenState();
+  ConsumerState<AiChatScreen> createState() => _AiChatScreenState();
 }
 
-class _AiChatScreenState extends State<AiChatScreen> {
+class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   final TextEditingController _controller = TextEditingController();
   final List<Map<String, dynamic>> _messages = [];
   bool _isTyping = false;
@@ -31,17 +33,15 @@ class _AiChatScreenState extends State<AiChatScreen> {
     });
     _controller.clear();
 
-    // Simulate AI response delay
-    Future.delayed(const Duration(seconds: 1), () {
-      if (mounted) {
-        setState(() {
-          _isTyping = false;
-          _messages.add({
-            'role': 'ai',
-            'text': 'This is a simulated on-device AI response based on your secure vault data.',
-          });
-        });
-      }
+    final response = ref.read(ingestionControllerProvider)?.askVault(text);
+    setState(() {
+      _isTyping = false;
+      _messages.add({
+        'role': 'ai',
+        'text':
+            response?.answerText ??
+            'Unlock your vault to query its local index.',
+      });
     });
   }
 
@@ -56,23 +56,54 @@ class _AiChatScreenState extends State<AiChatScreen> {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn), width: 24, height: 24),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Column(
           children: [
-            Text(l10n.s71_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
-            Text(l10n.s71_subtitle, style: TextStyle(color: colors.primaryBlue, fontSize: 12)),
+            Text(
+              l10n.s71_title,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              l10n.s71_subtitle,
+              style: TextStyle(color: colors.primaryBlue, fontSize: 12),
+            ),
           ],
         ),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: SvgPicture.asset(OwnKeepMainIcons.history, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn), width: 24, height: 24),
+            icon: SvgPicture.asset(
+              OwnKeepMainIcons.history,
+              colorFilter: ColorFilter.mode(
+                colors.textPrimary,
+                BlendMode.srcIn,
+              ),
+              width: 24,
+              height: 24,
+            ),
             onPressed: () => context.push('/features/ai-history'),
           ),
           IconButton(
-            icon: SvgPicture.asset(OwnKeepMainIcons.settings, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn), width: 24, height: 24),
+            icon: SvgPicture.asset(
+              OwnKeepMainIcons.settings,
+              colorFilter: ColorFilter.mode(
+                colors.textPrimary,
+                BlendMode.srcIn,
+              ),
+              width: 24,
+              height: 24,
+            ),
             onPressed: () => context.push('/features/ai-settings'),
           ),
         ],
@@ -99,14 +130,34 @@ class _AiChatScreenState extends State<AiChatScreen> {
                           color: colors.primaryBlue.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
-                        child: SvgPicture.asset(OwnKeepMainIcons.ai_sparkle, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 48),
+                        child: SvgPicture.asset(
+                          OwnKeepMainIcons.ai_sparkle,
+                          colorFilter: ColorFilter.mode(
+                            colors.primaryBlue,
+                            BlendMode.srcIn,
+                          ),
+                          width: 48,
+                        ),
                       ),
                       const SizedBox(height: 24),
-                      Text(l10n.s71_greeting, style: TextStyle(color: colors.textPrimary, fontSize: 24, fontWeight: FontWeight.bold)),
+                      Text(
+                        l10n.s71_greeting,
+                        style: TextStyle(
+                          color: colors.textPrimary,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       const SizedBox(height: 8),
-                      Text(l10n.s71_greeting_subtitle, style: TextStyle(color: colors.textSecondary, fontSize: 16)),
+                      Text(
+                        l10n.s71_greeting_subtitle,
+                        style: TextStyle(
+                          color: colors.textSecondary,
+                          fontSize: 16,
+                        ),
+                      ),
                       const SizedBox(height: 40),
-                      
+
                       // Prompt Suggestions
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -114,10 +165,22 @@ class _AiChatScreenState extends State<AiChatScreen> {
                           spacing: 12,
                           runSpacing: 12,
                           children: [
-                            _buildSuggestionChip(l10n.s71_prompt_insurance, colors),
-                            _buildSuggestionChip(l10n.s71_prompt_expenses, colors),
-                            _buildSuggestionChip(l10n.s71_prompt_expiry, colors),
-                            _buildSuggestionChip(l10n.s71_prompt_summarize, colors),
+                            _buildSuggestionChip(
+                              l10n.s71_prompt_insurance,
+                              colors,
+                            ),
+                            _buildSuggestionChip(
+                              l10n.s71_prompt_expenses,
+                              colors,
+                            ),
+                            _buildSuggestionChip(
+                              l10n.s71_prompt_expiry,
+                              colors,
+                            ),
+                            _buildSuggestionChip(
+                              l10n.s71_prompt_summarize,
+                              colors,
+                            ),
                           ],
                         ),
                       ),
@@ -165,7 +228,10 @@ class _AiChatScreenState extends State<AiChatScreen> {
                             borderRadius: BorderRadius.circular(24),
                             borderSide: BorderSide.none,
                           ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 12,
+                          ),
                         ),
                         onSubmitted: _sendMessage,
                       ),
@@ -179,7 +245,15 @@ class _AiChatScreenState extends State<AiChatScreen> {
                           color: colors.primaryBlue,
                           shape: BoxShape.circle,
                         ),
-                        child: SvgPicture.asset(OwnKeepMainIcons.send, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn), width: 24, height: 24),
+                        child: SvgPicture.asset(
+                          OwnKeepMainIcons.send,
+                          colorFilter: const ColorFilter.mode(
+                            Colors.white,
+                            BlendMode.srcIn,
+                          ),
+                          width: 24,
+                          height: 24,
+                        ),
                       ),
                     ),
                   ],
@@ -194,7 +268,10 @@ class _AiChatScreenState extends State<AiChatScreen> {
 
   Widget _buildSuggestionChip(String text, OwnKeepMainColorsTheme colors) {
     return ActionChip(
-      label: Text(text, style: TextStyle(color: colors.textPrimary, fontSize: 14)),
+      label: Text(
+        text,
+        style: TextStyle(color: colors.textPrimary, fontSize: 14),
+      ),
       backgroundColor: colors.surfacePrimary,
       side: BorderSide(color: colors.borderSoft),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -202,13 +279,19 @@ class _AiChatScreenState extends State<AiChatScreen> {
     );
   }
 
-  Widget _buildMessageBubble(String text, bool isUser, OwnKeepMainColorsTheme colors) {
+  Widget _buildMessageBubble(
+    String text,
+    bool isUser,
+    OwnKeepMainColorsTheme colors,
+  ) {
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(16),
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.75,
+        ),
         decoration: BoxDecoration(
           color: isUser ? colors.primaryBlue : colors.surfaceSecondary,
           borderRadius: BorderRadius.only(
@@ -220,7 +303,10 @@ class _AiChatScreenState extends State<AiChatScreen> {
         ),
         child: Text(
           text,
-          style: TextStyle(color: isUser ? Colors.white : colors.textPrimary, fontSize: 16),
+          style: TextStyle(
+            color: isUser ? Colors.white : colors.textPrimary,
+            fontSize: 16,
+          ),
         ),
       ),
     );

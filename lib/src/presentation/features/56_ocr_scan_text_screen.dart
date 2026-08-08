@@ -1,17 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import '../../providers/document_provider.dart';
 
-class OcrScanTextScreen extends StatelessWidget {
-  const OcrScanTextScreen({super.key});
+class OcrScanTextScreen extends ConsumerWidget {
+  const OcrScanTextScreen({super.key, required this.documentId});
+
+  final String? documentId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
+    final document = documentId == null
+        ? null
+        : ref.watch(documentDetailProvider(documentId!)).value;
+    final extractedText =
+        document?.textPages
+            .map((page) => page.text.trim())
+            .where((text) => text.isNotEmpty)
+            .join('\n\n') ??
+        '';
 
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -19,7 +34,12 @@ class OcrScanTextScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
@@ -70,7 +90,10 @@ class OcrScanTextScreen extends StatelessWidget {
                 child: SvgPicture.asset(
                   'assets/main/illustrations/ocr_insurance_policy.svg',
                   fit: BoxFit.cover,
-                  placeholderBuilder: (context) => Container(color: colors.surfacePrimary),
+                  placeholderBuilder: (context) =>
+                      Container(color: colors.surfacePrimary),
+                  width: 24,
+                  height: 24,
                 ),
               ),
             ),
@@ -86,7 +109,7 @@ class OcrScanTextScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
-            
+
             // Extracted Text Box
             Container(
               width: double.infinity,
@@ -100,7 +123,8 @@ class OcrScanTextScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    l10n.s56_document_title,
+                    document?.summary.logicalFilename ??
+                        l10n.s56_document_title,
                     style: TextStyle(
                       color: colors.textPrimary,
                       fontSize: 18,
@@ -110,34 +134,9 @@ class OcrScanTextScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: OwnKeepSpacing.md),
                   Text(
-                    l10n.s56_policy_number,
-                    style: TextStyle(
-                      color: colors.textSecondary,
-                      fontSize: 14,
-                      fontFamily: 'Inter',
-                      height: 1.5,
-                    ),
-                  ),
-                  Text(
-                    l10n.s56_policy_holder,
-                    style: TextStyle(
-                      color: colors.textSecondary,
-                      fontSize: 14,
-                      fontFamily: 'Inter',
-                      height: 1.5,
-                    ),
-                  ),
-                  Text(
-                    l10n.s56_policy_type,
-                    style: TextStyle(
-                      color: colors.textSecondary,
-                      fontSize: 14,
-                      fontFamily: 'Inter',
-                      height: 1.5,
-                    ),
-                  ),
-                  Text(
-                    l10n.s56_policy_period,
+                    extractedText.isEmpty
+                        ? 'No OCR text is available.'
+                        : extractedText,
                     style: TextStyle(
                       color: colors.textSecondary,
                       fontSize: 14,
@@ -148,30 +147,36 @@ class OcrScanTextScreen extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: OwnKeepSpacing.md),
-            
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SvgPicture.asset(
                   OwnKeepMainIcons.tip_check,
-                  colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn),
+                  colorFilter: ColorFilter.mode(
+                    colors.successGreen,
+                    BlendMode.srcIn,
+                  ),
                   width: 16,
                   height: 16,
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  l10n.s56_local_notice,
-                  style: TextStyle(
-                    color: colors.textMuted,
-                    fontSize: 12,
-                    fontFamily: 'Inter',
+                Flexible(
+                  child: Text(
+                    l10n.s56_local_notice,
+                    style: TextStyle(
+                      color: colors.textMuted,
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 100),
           ],
         ),
@@ -191,14 +196,24 @@ class OcrScanTextScreen extends StatelessWidget {
           children: [
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Text copied to clipboard')),
-                  );
-                },
+                onPressed: extractedText.isEmpty
+                    ? null
+                    : () async {
+                        await Clipboard.setData(
+                          ClipboardData(text: extractedText),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Text copied to clipboard'),
+                          ),
+                        );
+                      },
                 icon: SvgPicture.asset(
                   OwnKeepMainIcons.copy_text,
-                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
                   width: 20,
                   height: 20,
                 ),
@@ -224,15 +239,15 @@ class OcrScanTextScreen extends StatelessWidget {
             const SizedBox(width: OwnKeepSpacing.md),
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Saved as a new note')),
-                  );
-                  Navigator.pop(context);
-                },
+                onPressed: extractedText.isEmpty
+                    ? null
+                    : () => context.push('/features/add-notes'),
                 icon: SvgPicture.asset(
                   OwnKeepMainIcons.save_note,
-                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
                   width: 20,
                   height: 20,
                 ),

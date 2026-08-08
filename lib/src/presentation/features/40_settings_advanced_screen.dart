@@ -13,10 +13,12 @@ class SettingsAdvancedScreen extends ConsumerStatefulWidget {
   const SettingsAdvancedScreen({super.key});
 
   @override
-  ConsumerState<SettingsAdvancedScreen> createState() => _SettingsAdvancedScreenState();
+  ConsumerState<SettingsAdvancedScreen> createState() =>
+      _SettingsAdvancedScreenState();
 }
 
-class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen> {
+class _SettingsAdvancedScreenState
+    extends ConsumerState<SettingsAdvancedScreen> {
   bool _biometricEnabled = true;
   bool _backupEnabled = false;
 
@@ -31,7 +33,12 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -46,7 +53,10 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
+        padding: const EdgeInsets.symmetric(
+          horizontal: OwnKeepSpacing.lg,
+          vertical: OwnKeepSpacing.md,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -72,34 +82,63 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
                 borderRadius: BorderRadius.circular(16),
                 child: Column(
                   children: [
-                    _buildSettingItem(colors, OwnKeepMainIcons.auto_lock, l10n.s40_auto_lock, value: l10n.s40_auto_lock_value, onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Auto Lock Settings')));
-                    }),
-                  _buildDivider(colors),
-                  _buildSettingItem(colors, OwnKeepMainIcons.stealth, l10n.s40_stealth, value: l10n.s40_off, onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Stealth Mode Settings')));
-                  }),
-                  _buildDivider(colors),
-                  _buildSettingItem(colors, OwnKeepMainIcons.decoy_vault, l10n.s40_decoy, value: l10n.s40_not_set, onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Decoy Vault Settings')));
-                  }),
-                  _buildDivider(colors),
-                  _buildSettingItem(colors, OwnKeepMainIcons.biometric, l10n.s40_biometric, isToggle: true, isToggleOn: _biometricEnabled, onTap: () {
-                    setState(() {
-                      _biometricEnabled = !_biometricEnabled;
-                    });
-                  }),
-                  _buildDivider(colors),
-                  _buildSettingItem(colors, OwnKeepMainIcons.pin_protection, l10n.s40_pin, value: l10n.s40_on, onTap: () {
-                    context.push('/lock');
-                  }),
-                  _buildDivider(colors),
-                  _buildSettingItem(colors, OwnKeepMainIcons.vault_encryption, l10n.s40_encryption, value: l10n.s40_encryption_value, onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Encryption Details')));
-                  }),
-                ],
+                    _buildSettingItem(
+                      colors,
+                      OwnKeepMainIcons.auto_lock,
+                      l10n.s40_auto_lock,
+                      value: l10n.s40_auto_lock_value,
+                      onTap: () => context.push('/features/app-lock'),
+                    ),
+                    _buildDivider(colors),
+                    _buildSettingItem(
+                      colors,
+                      OwnKeepMainIcons.stealth,
+                      l10n.s40_stealth,
+                      value: l10n.s40_off,
+                      onTap: () => context.push('/features/hidden-vault'),
+                    ),
+                    _buildDivider(colors),
+                    _buildSettingItem(
+                      colors,
+                      OwnKeepMainIcons.decoy_vault,
+                      l10n.s40_decoy,
+                      value: l10n.s40_not_set,
+                      onTap: () => context.push('/features/decoy-vault'),
+                    ),
+                    _buildDivider(colors),
+                    _buildSettingItem(
+                      colors,
+                      OwnKeepMainIcons.biometric,
+                      l10n.s40_biometric,
+                      isToggle: true,
+                      isToggleOn: _biometricEnabled,
+                      onTap: () {
+                        setState(() {
+                          _biometricEnabled = !_biometricEnabled;
+                        });
+                      },
+                    ),
+                    _buildDivider(colors),
+                    _buildSettingItem(
+                      colors,
+                      OwnKeepMainIcons.pin_protection,
+                      l10n.s40_pin,
+                      value: l10n.s40_on,
+                      onTap: () {
+                        context.push('/lock');
+                      },
+                    ),
+                    _buildDivider(colors),
+                    _buildSettingItem(
+                      colors,
+                      OwnKeepMainIcons.vault_encryption,
+                      l10n.s40_encryption,
+                      value: l10n.s40_encryption_value,
+                      onTap: () => context.push('/features/encryption-details'),
+                    ),
+                  ],
+                ),
               ),
-            ),
             ),
 
             const SizedBox(height: OwnKeepSpacing.xl),
@@ -126,29 +165,42 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
                 borderRadius: BorderRadius.circular(16),
                 child: Column(
                   children: [
-                    _buildSettingItem(colors, OwnKeepMainIcons.backup_reminder, l10n.s40_backup, isToggle: true, isToggleOn: _backupEnabled, onTap: () {
-                    setState(() {
-                      _backupEnabled = !_backupEnabled;
-                    });
-                  }),
-                  _buildDivider(colors),
-                  _buildSettingItem(colors, OwnKeepMainIcons.data_check, l10n.s40_data_check, value: l10n.s40_last_check, onTap: () {
-                    context.push('/features/data-check');
-                  }),
-                  _buildDivider(colors),
-                  _buildSettingItem(
-                    colors, 
-                    OwnKeepMainIcons.wipe_data, 
-                    l10n.s40_wipe, 
-                    subtitle: l10n.s40_wipe_body,
-                    isDanger: true,
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wipe Data Request')));
-                    },
-                  ),
-                ],
+                    _buildSettingItem(
+                      colors,
+                      OwnKeepMainIcons.backup_reminder,
+                      l10n.s40_backup,
+                      isToggle: true,
+                      isToggleOn: _backupEnabled,
+                      onTap: () {
+                        setState(() {
+                          _backupEnabled = !_backupEnabled;
+                        });
+                      },
+                    ),
+                    _buildDivider(colors),
+                    _buildSettingItem(
+                      colors,
+                      OwnKeepMainIcons.data_check,
+                      l10n.s40_data_check,
+                      value: l10n.s40_last_check,
+                      onTap: () {
+                        context.push('/features/data-check');
+                      },
+                    ),
+                    _buildDivider(colors),
+                    _buildSettingItem(
+                      colors,
+                      OwnKeepMainIcons.wipe_data,
+                      l10n.s40_wipe,
+                      subtitle: l10n.s40_wipe_body,
+                      isDanger: true,
+                      onTap: () {
+                        context.push('/features/wipe-data');
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
             ),
 
             const SizedBox(height: OwnKeepSpacing.xl),
@@ -175,20 +227,45 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
                 borderRadius: BorderRadius.circular(16),
                 child: Column(
                   children: [
-                    _buildSettingItem(colors, OwnKeepMainIcons.developer, l10n.s40_developer, onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Developer Mode')));
-                    }),
+                    _buildSettingItem(
+                      colors,
+                      OwnKeepMainIcons.developer,
+                      l10n.s40_developer,
+                      onTap: () {
+                        showAboutDialog(
+                          context: context,
+                          applicationName: 'OwnKeep',
+                          applicationVersion: 'Developer diagnostics',
+                          children: const [
+                            Text(
+                              'Security and database diagnostics are available in Audit Logs.',
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                     _buildDivider(colors),
-                    _buildSettingItem(colors, OwnKeepMainIcons.logs, l10n.s40_logs, onTap: () {
-                      context.push('/features/security-audit');
-                    }),
+                    _buildSettingItem(
+                      colors,
+                      OwnKeepMainIcons.logs,
+                      l10n.s40_logs,
+                      onTap: () {
+                        context.push('/features/security-audit');
+                      },
+                    ),
                     _buildDivider(colors),
-                    _buildSettingItem(colors, OwnKeepMainIcons.reset, l10n.s40_reset, isDanger: true, onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Factory Reset')));
-                    }),
-                ],
+                    _buildSettingItem(
+                      colors,
+                      OwnKeepMainIcons.reset,
+                      l10n.s40_reset,
+                      isDanger: true,
+                      onTap: () {
+                        context.push('/features/wipe-data');
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
             ),
             const SizedBox(height: OwnKeepSpacing.xxl),
           ],
@@ -198,8 +275,8 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
   }
 
   Widget _buildSettingItem(
-    OwnKeepMainColorsTheme colors, 
-    String icon, 
+    OwnKeepMainColorsTheme colors,
+    String icon,
     String title, {
     String? subtitle,
     String? value,
@@ -215,8 +292,11 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
         child: Row(
           children: [
             SvgPicture.asset(
-              icon, 
-              colorFilter: ColorFilter.mode(isDanger ? colors.dangerRed : colors.textPrimary, BlendMode.srcIn),
+              icon,
+              colorFilter: ColorFilter.mode(
+                isDanger ? colors.dangerRed : colors.textPrimary,
+                BlendMode.srcIn,
+              ),
               width: 24,
             ),
             const SizedBox(width: OwnKeepSpacing.md),
@@ -265,7 +345,9 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
               Padding(
                 padding: const EdgeInsets.only(left: 8),
                 child: SvgPicture.asset(
-                  isToggleOn ? OwnKeepOnboardingIcons.toggle_on : OwnKeepOnboardingIcons.toggle_off,
+                  isToggleOn
+                      ? OwnKeepOnboardingIcons.toggle_on
+                      : OwnKeepOnboardingIcons.toggle_off,
                   width: 40,
                 ),
               )
@@ -273,8 +355,11 @@ class _SettingsAdvancedScreenState extends ConsumerState<SettingsAdvancedScreen>
               Padding(
                 padding: const EdgeInsets.only(left: 8),
                 child: SvgPicture.asset(
-                  OwnKeepMainIcons.chevron_right, 
-                  colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
+                  OwnKeepMainIcons.chevron_right,
+                  colorFilter: ColorFilter.mode(
+                    colors.textMuted,
+                    BlendMode.srcIn,
+                  ),
                   width: 20,
                 ),
               ),

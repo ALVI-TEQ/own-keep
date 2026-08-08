@@ -3,10 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
-import '../../theme/ownkeep_spacing.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/document_provider.dart';
+import 'dashboard_document_presentation.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -17,6 +17,7 @@ class SearchScreen extends ConsumerStatefulWidget {
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
+  DashboardFileKind _selectedKind = DashboardFileKind.all;
 
   @override
   void dispose() {
@@ -58,7 +59,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         ),
                         child: SvgPicture.asset(
                           OwnKeepMainIcons.backArrow,
-                          colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+                          colorFilter: ColorFilter.mode(
+                            colors.textPrimary,
+                            BlendMode.srcIn,
+                          ),
                           width: 24,
                         ),
                       ),
@@ -77,7 +81,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           children: [
                             SvgPicture.asset(
                               OwnKeepMainIcons.search,
-                              colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn),
+                              colorFilter: ColorFilter.mode(
+                                colors.primaryBlue,
+                                BlendMode.srcIn,
+                              ),
                               width: 20,
                             ),
                             Expanded(
@@ -85,11 +92,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                 controller: _searchController,
                                 autofocus: true,
                                 decoration: InputDecoration(
-                                  hintText: l10n.s17_subtitle, // Use hint text from translation if available or a generic one
+                                  hintText: l10n
+                                      .s17_subtitle, // Use hint text from translation if available or a generic one
                                   border: InputBorder.none,
-                                  hintStyle: TextStyle(color: colors.textMuted, fontSize: 16),
+                                  hintStyle: TextStyle(
+                                    color: colors.textMuted,
+                                    fontSize: 16,
+                                  ),
                                 ),
-                                style: TextStyle(color: colors.textPrimary, fontSize: 16),
+                                style: TextStyle(
+                                  color: colors.textPrimary,
+                                  fontSize: 16,
+                                ),
                                 onChanged: (value) => setState(() {}),
                               ),
                             ),
@@ -105,7 +119,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                     color: colors.borderSoft,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: Icon(Icons.close, color: colors.textPrimary, size: 12),
+                                  child: Icon(
+                                    Icons.close,
+                                    color: colors.textPrimary,
+                                    size: 12,
+                                  ),
                                 ),
                               ),
                           ],
@@ -123,10 +141,19 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   children: [
-                    _buildFilterChip(context, l10n.filter_all, true),
-                    _buildFilterChip(context, l10n.filter_documents, false),
-                    _buildFilterChip(context, l10n.filter_images, false),
-                    _buildFilterChip(context, l10n.filter_notes, false),
+                    _buildFilterChip(l10n.filter_all, DashboardFileKind.all),
+                    _buildFilterChip(
+                      l10n.filter_documents,
+                      DashboardFileKind.documents,
+                    ),
+                    _buildFilterChip(
+                      l10n.filter_images,
+                      DashboardFileKind.images,
+                    ),
+                    _buildFilterChip(
+                      l10n.filter_notes,
+                      DashboardFileKind.notes,
+                    ),
                   ],
                 ),
               ),
@@ -140,31 +167,59 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           style: TextStyle(color: colors.textSecondary),
                         ),
                       )
-                    : ref.watch(searchDocumentsProvider(_searchController.text)).when(
-                        loading: () => const Center(child: CircularProgressIndicator()),
-                        error: (error, stack) => Center(child: Text('Search failed', style: TextStyle(color: colors.textSecondary))),
-                        data: (docs) {
-                          if (docs.isEmpty) {
-                            return Center(
-                              child: Text('No results found', style: TextStyle(color: colors.textSecondary)),
-                            );
-                          }
-                          return ListView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-                            itemCount: docs.length,
-                            itemBuilder: (context, index) {
-                              final doc = docs[index];
-                              return _buildResultItem(
-                                context,
-                                doc.logicalFilename.isNotEmpty ? doc.logicalFilename : 'Untitled',
-                                'Document', // Temporary mapping
-                                OwnKeepMainIcons.filePdf,
-                                colors.primaryBlue,
+                    : ref
+                          .watch(
+                            searchDocumentsProvider(_searchController.text),
+                          )
+                          .when(
+                            loading: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            error: (error, stack) => Center(
+                              child: Text(
+                                'Search failed',
+                                style: TextStyle(color: colors.textSecondary),
+                              ),
+                            ),
+                            data: (allDocs) {
+                              final docs = allDocs
+                                  .where(
+                                    (doc) =>
+                                        documentMatchesKind(doc, _selectedKind),
+                                  )
+                                  .toList();
+                              if (docs.isEmpty) {
+                                return Center(
+                                  child: Text(
+                                    'No results found',
+                                    style: TextStyle(
+                                      color: colors.textSecondary,
+                                    ),
+                                  ),
+                                );
+                              }
+                              return ListView.builder(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24.0,
+                                  vertical: 16.0,
+                                ),
+                                itemCount: docs.length,
+                                itemBuilder: (context, index) {
+                                  final doc = docs[index];
+                                  return _buildResultItem(
+                                    context,
+                                    doc.id,
+                                    doc.logicalFilename.isNotEmpty
+                                        ? doc.logicalFilename
+                                        : 'Untitled',
+                                    doc.documentType.displayName,
+                                    dashboardDocumentIcon(doc),
+                                    colors.primaryBlue,
+                                  );
+                                },
                               );
                             },
-                          );
-                        },
-                      ),
+                          ),
               ),
             ],
           ),
@@ -173,76 +228,98 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     );
   }
 
-  Widget _buildFilterChip(BuildContext context, String label, bool isSelected) {
+  Widget _buildFilterChip(String label, DashboardFileKind kind) {
     final colors = context.mainColors;
-    return Container(
-      margin: const EdgeInsets.only(right: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: isSelected ? colors.primaryBlue : colors.surfacePrimary,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: isSelected ? colors.primaryBlue : colors.borderSoft),
-      ),
-      child: Center(
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.white : colors.textPrimary,
-            fontSize: 14,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+    final isSelected = _selectedKind == kind;
+    return GestureDetector(
+      onTap: () => setState(() => _selectedKind = kind),
+      child: Container(
+        margin: const EdgeInsets.only(right: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? colors.primaryBlue : colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected ? colors.primaryBlue : colors.borderSoft,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: TextStyle(
+              color: isSelected ? Colors.white : colors.textPrimary,
+              fontSize: 14,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildResultItem(BuildContext context, String title, String meta, String iconPath, Color iconColor) {
+  Widget _buildResultItem(
+    BuildContext context,
+    String documentId,
+    String title,
+    String meta,
+    String iconPath,
+    Color iconColor,
+  ) {
     final colors = context.mainColors;
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: colors.surfacePrimary,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: colors.borderSoft),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: iconColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
+    return GestureDetector(
+      onTap: () => context.push('/features/document-preview?id=$documentId'),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: colors.borderSoft),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: SvgPicture.asset(
+                iconPath,
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                width: 20,
+              ),
             ),
-            child: SvgPicture.asset(
-              iconPath,
-              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-              width: 20,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Highlight part of the string 'insurance'
-                RichText(
-                  text: TextSpan(
-                    style: TextStyle(color: colors.textPrimary, fontSize: 15, fontFamily: 'Inter'),
-                    children: [
-                      TextSpan(text: title), // Assuming simple text for now, could use sophisticated highlight based on query
-                    ],
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Highlight part of the string 'insurance'
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        color: colors.textPrimary,
+                        fontSize: 15,
+                        fontFamily: 'Inter',
+                      ),
+                      children: [
+                        TextSpan(
+                          text: title,
+                        ), // Assuming simple text for now, could use sophisticated highlight based on query
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  meta,
-                  style: TextStyle(color: colors.textMuted, fontSize: 12),
-                ),
-              ],
+                  const SizedBox(height: 4),
+                  Text(
+                    meta,
+                    style: TextStyle(color: colors.textMuted, fontSize: 12),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

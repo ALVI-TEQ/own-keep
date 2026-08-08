@@ -6,15 +6,20 @@ import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_onboarding_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
+import '../../providers/vault_provider.dart';
 
-class MoveOrCopyScreen extends StatefulWidget {
-  const MoveOrCopyScreen({super.key});
+class MoveOrCopyScreen extends ConsumerStatefulWidget {
+  const MoveOrCopyScreen({super.key, required this.documentId});
+
+  final String? documentId;
 
   @override
-  State<MoveOrCopyScreen> createState() => _MoveOrCopyScreenState();
+  ConsumerState<MoveOrCopyScreen> createState() => _MoveOrCopyScreenState();
 }
 
-class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
+class _MoveOrCopyScreenState extends ConsumerState<MoveOrCopyScreen> {
   bool _keepOriginal = false;
   String _selectedCategory = 'Personal';
 
@@ -22,6 +27,9 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
+    final document = widget.documentId == null
+        ? null
+        : ref.watch(documentDetailProvider(widget.documentId!)).value;
 
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -29,7 +37,12 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Column(
@@ -59,7 +72,10 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
+              padding: const EdgeInsets.symmetric(
+                horizontal: OwnKeepSpacing.lg,
+                vertical: OwnKeepSpacing.md,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -90,7 +106,15 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
                             color: colors.surfaceSelected,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: SvgPicture.asset(OwnKeepMainIcons.file_pdf, colorFilter: const ColorFilter.mode(Color(0xFF27C5E8), BlendMode.srcIn)),
+                          child: SvgPicture.asset(
+                            OwnKeepMainIcons.file_pdf,
+                            colorFilter: const ColorFilter.mode(
+                              Color(0xFF27C5E8),
+                              BlendMode.srcIn,
+                            ),
+                            width: 24,
+                            height: 24,
+                          ),
                         ),
                         const SizedBox(width: OwnKeepSpacing.md),
                         Expanded(
@@ -98,7 +122,8 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                l10n.s50_file_name,
+                                document?.summary.logicalFilename ??
+                                    l10n.s50_file_name,
                                 style: TextStyle(
                                   color: colors.textPrimary,
                                   fontSize: 16,
@@ -144,17 +169,53 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
                     ),
                     child: Column(
                       children: [
-                        _buildCategoryItem(colors, OwnKeepMainIcons.personal_category, l10n.s50_personal, l10n.s50_personal_count, const Color(0xFF27C5E8)),
+                        _buildCategoryItem(
+                          colors,
+                          OwnKeepMainIcons.personal_category,
+                          l10n.s50_personal,
+                          l10n.s50_personal_count,
+                          const Color(0xFF27C5E8),
+                        ),
                         _buildDivider(colors),
-                        _buildCategoryItem(colors, OwnKeepMainIcons.finance_category, l10n.s50_finance, l10n.s50_finance_count, colors.successGreen),
+                        _buildCategoryItem(
+                          colors,
+                          OwnKeepMainIcons.finance_category,
+                          l10n.s50_finance,
+                          l10n.s50_finance_count,
+                          colors.successGreen,
+                        ),
                         _buildDivider(colors),
-                        _buildCategoryItem(colors, OwnKeepMainIcons.health_category, l10n.s50_health, l10n.s50_health_count, colors.warningOrange),
+                        _buildCategoryItem(
+                          colors,
+                          OwnKeepMainIcons.health_category,
+                          l10n.s50_health,
+                          l10n.s50_health_count,
+                          colors.warningOrange,
+                        ),
                         _buildDivider(colors),
-                        _buildCategoryItem(colors, OwnKeepMainIcons.property_category, l10n.s50_property, l10n.s50_property_count, colors.aiPurple),
+                        _buildCategoryItem(
+                          colors,
+                          OwnKeepMainIcons.property_category,
+                          l10n.s50_property,
+                          l10n.s50_property_count,
+                          colors.aiPurple,
+                        ),
                         _buildDivider(colors),
-                        _buildCategoryItem(colors, OwnKeepMainIcons.vehicle, l10n.s50_vehicle, l10n.s50_vehicle_count, colors.primaryBlue),
+                        _buildCategoryItem(
+                          colors,
+                          OwnKeepMainIcons.vehicle,
+                          l10n.s50_vehicle,
+                          l10n.s50_vehicle_count,
+                          colors.primaryBlue,
+                        ),
                         _buildDivider(colors),
-                        _buildCategoryItem(colors, OwnKeepMainIcons.education, l10n.s50_education, l10n.s50_education_count, colors.aiPurple),
+                        _buildCategoryItem(
+                          colors,
+                          OwnKeepMainIcons.education,
+                          l10n.s50_education,
+                          l10n.s50_education_count,
+                          colors.aiPurple,
+                        ),
                       ],
                     ),
                   ),
@@ -163,7 +224,7 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
 
                   // New Folder
                   InkWell(
-                    onTap: () {},
+                    onTap: () => context.push('/features/tag-manager'),
                     child: Container(
                       decoration: BoxDecoration(
                         color: colors.surfacePrimary,
@@ -179,7 +240,15 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
                               color: colors.primaryBlue.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: SvgPicture.asset(OwnKeepMainIcons.new_folder, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+                            child: SvgPicture.asset(
+                              OwnKeepMainIcons.new_folder,
+                              colorFilter: ColorFilter.mode(
+                                colors.primaryBlue,
+                                BlendMode.srcIn,
+                              ),
+                              width: 24,
+                              height: 24,
+                            ),
                           ),
                           const SizedBox(width: OwnKeepSpacing.md),
                           Expanded(
@@ -207,7 +276,15 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
                               ],
                             ),
                           ),
-                          SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+                          SvgPicture.asset(
+                            OwnKeepMainIcons.chevron_right,
+                            colorFilter: ColorFilter.mode(
+                              colors.textMuted,
+                              BlendMode.srcIn,
+                            ),
+                            width: 24,
+                            height: 24,
+                          ),
                         ],
                       ),
                     ),
@@ -230,15 +307,19 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      l10n.s50_keep_original,
-                      style: TextStyle(
-                        color: colors.textPrimary,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Inter',
+                    Expanded(
+                      child: Text(
+                        l10n.s50_keep_original,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: colors.textPrimary,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Inter',
+                        ),
                       ),
                     ),
+                    const SizedBox(width: 12),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -246,7 +327,9 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
                         });
                       },
                       child: SvgPicture.asset(
-                        _keepOriginal ? OwnKeepOnboardingIcons.toggle_on : OwnKeepOnboardingIcons.toggle_off,
+                        _keepOriginal
+                            ? OwnKeepOnboardingIcons.toggle_on
+                            : OwnKeepOnboardingIcons.toggle_off,
                         height: 24,
                         colorFilter: ColorFilter.mode(
                           _keepOriginal ? colors.primaryBlue : colors.textMuted,
@@ -261,12 +344,27 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${_keepOriginal ? 'Copied' : 'Moved'} to $_selectedCategory')),
-                      );
-                      context.pop();
-                    },
+                    onPressed: document == null
+                        ? null
+                        : () async {
+                            final existing = document.summary.tags
+                                .map((tag) => tag.name)
+                                .toList();
+                            final tags = _keepOriginal
+                                ? <String>{
+                                    ...existing,
+                                    _selectedCategory,
+                                  }.toList()
+                                : <String>[_selectedCategory];
+                            await ref
+                                .read(ingestionControllerProvider)
+                                ?.replaceTags(document.summary.id, tags);
+                            ref.invalidate(
+                              documentDetailProvider(document.summary.id),
+                            );
+                            ref.invalidate(allDocumentsProvider);
+                            if (context.mounted) context.pop();
+                          },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: colors.primaryBlue,
                       foregroundColor: Colors.white,
@@ -295,8 +393,8 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
   }
 
   Widget _buildCategoryItem(
-    OwnKeepMainColorsTheme colors, 
-    String icon, 
+    OwnKeepMainColorsTheme colors,
+    String icon,
     String title,
     String count,
     Color iconColor,
@@ -320,8 +418,10 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: SvgPicture.asset(
-                icon, 
+                icon,
                 colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                width: 24,
+                height: 24,
               ),
             ),
             const SizedBox(width: OwnKeepSpacing.md),
@@ -359,10 +459,6 @@ class _MoveOrCopyScreenState extends State<MoveOrCopyScreen> {
   }
 
   Widget _buildDivider(OwnKeepMainColorsTheme colors) {
-    return Divider(
-      color: colors.borderSoft,
-      height: 1,
-      indent: 64, 
-    );
+    return Divider(color: colors.borderSoft, height: 1, indent: 64);
   }
 }

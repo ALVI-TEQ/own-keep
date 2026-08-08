@@ -4,10 +4,7 @@ import '../../theme/app_theme.dart';
 class OwnKeepRecoveryWordGrid extends StatelessWidget {
   final List<String> words;
   
-  const OwnKeepRecoveryWordGrid({
-    super.key,
-    required this.words,
-  });
+  const OwnKeepRecoveryWordGrid({super.key, required this.words});
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +39,9 @@ class OwnKeepRecoveryWordGrid extends StatelessWidget {
               ),
               Text(
                 words[index],
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
               ),
             ],
           ),

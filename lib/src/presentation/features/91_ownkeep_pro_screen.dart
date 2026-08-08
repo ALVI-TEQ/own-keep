@@ -14,11 +14,36 @@ class OwnKeepProScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     final features = [
-      {'title': l10n.s91_document_tools, 'body': l10n.s91_document_tools_body, 'icon': OwnKeepMainIcons.document_tools, 'color': colors.primaryBlue},
-      {'title': l10n.s91_ai, 'body': l10n.s91_ai_body, 'icon': OwnKeepMainIcons.ai_wand, 'color': colors.aiPurple},
-      {'title': l10n.s91_family, 'body': l10n.s91_family_body, 'icon': OwnKeepMainIcons.folder, 'color': colors.warningOrange},
-      {'title': l10n.s91_security, 'body': l10n.s91_security_body, 'icon': OwnKeepMainIcons.security, 'color': colors.dangerRed},
-      {'title': l10n.s91_collections, 'body': l10n.s91_collections_body, 'icon': OwnKeepMainIcons.collection, 'color': colors.successGreen},
+      {
+        'title': l10n.s91_document_tools,
+        'body': l10n.s91_document_tools_body,
+        'icon': OwnKeepMainIcons.document_tools,
+        'color': colors.primaryBlue,
+      },
+      {
+        'title': l10n.s91_ai,
+        'body': l10n.s91_ai_body,
+        'icon': OwnKeepMainIcons.ai_wand,
+        'color': colors.aiPurple,
+      },
+      {
+        'title': l10n.s91_family,
+        'body': l10n.s91_family_body,
+        'icon': OwnKeepMainIcons.folder,
+        'color': colors.warningOrange,
+      },
+      {
+        'title': l10n.s91_security,
+        'body': l10n.s91_security_body,
+        'icon': OwnKeepMainIcons.security,
+        'color': colors.dangerRed,
+      },
+      {
+        'title': l10n.s91_collections,
+        'body': l10n.s91_collections_body,
+        'icon': OwnKeepMainIcons.collection,
+        'color': colors.successGreen,
+      },
     ];
 
     return Scaffold(
@@ -27,7 +52,12 @@ class OwnKeepProScreen extends StatelessWidget {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
       ),
@@ -46,53 +76,105 @@ class OwnKeepProScreen extends StatelessWidget {
             children: [
               // Badge
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [const Color(0xFFFFD700).withValues(alpha: 0.2), const Color(0xFFFF8C00).withValues(alpha: 0.2)],
+                    colors: [
+                      const Color(0xFFFFD700).withValues(alpha: 0.2),
+                      const Color(0xFFFF8C00).withValues(alpha: 0.2),
+                    ],
                   ),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: const Color(0xFFFFD700).withValues(alpha: 0.5)),
+                  border: Border.all(
+                    color: const Color(0xFFFFD700).withValues(alpha: 0.5),
+                  ),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.star, color: const Color(0xFFFFD700), size: 16),
                     const SizedBox(width: 8),
-                    Text(l10n.s91_badge, style: const TextStyle(color: Color(0xFFFFD700), fontSize: 14, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                    Text(
+                      l10n.s91_badge,
+                      style: const TextStyle(
+                        color: Color(0xFFFFD700),
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               // Hero Text
-              Text(l10n.s91_hero, textAlign: TextAlign.center, style: TextStyle(color: colors.textPrimary, fontSize: 32, fontWeight: FontWeight.bold)),
+              Text(
+                l10n.s91_hero,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 16),
-              Text(l10n.s91_hero_body, textAlign: TextAlign.center, style: TextStyle(color: colors.textSecondary, fontSize: 16, height: 1.5)),
+              Text(
+                l10n.s91_hero_body,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: colors.textSecondary,
+                  fontSize: 16,
+                  height: 1.5,
+                ),
+              ),
               const SizedBox(height: 32),
-              
+
               // Price
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Text(l10n.s91_price, style: TextStyle(color: colors.textPrimary, fontSize: 40, fontWeight: FontWeight.bold)),
-                  const SizedBox(width: 8),
-                  Text('/ ${l10n.s91_price_type}', style: TextStyle(color: colors.textMuted, fontSize: 16)),
-                ],
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text(
+                      l10n.s91_price,
+                      style: TextStyle(
+                        color: colors.textPrimary,
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '/ ${l10n.s91_price_type}',
+                      style: TextStyle(color: colors.textMuted, fontSize: 16),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 48),
-              
+
               // Features list
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text(l10n.s91_features, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+                child: Text(
+                  l10n.s91_features,
+                  style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               const SizedBox(height: 16),
-              
+
               ...features.map((f) => _buildFeatureRow(f, colors)),
-              
+
               const SizedBox(height: 40),
             ],
           ),
@@ -108,17 +190,20 @@ class OwnKeepProScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Mock Upgrade Successful')));
-                    context.pop();
-                  },
+                  onPressed: null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colors.primaryBlue,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                   child: Text(
-                    l10n.s91_upgrade,
-                    style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                    'Purchases unavailable in this build',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -126,9 +211,19 @@ class OwnKeepProScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.offline_pin_outlined, color: colors.textMuted, size: 16),
+                  Icon(
+                    Icons.offline_pin_outlined,
+                    color: colors.textMuted,
+                    size: 16,
+                  ),
                   const SizedBox(width: 8),
-                  Text(l10n.s91_offline_note, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+                  Flexible(
+                    child: Text(
+                      l10n.s91_offline_note,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: colors.textMuted, fontSize: 12),
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -138,7 +233,10 @@ class OwnKeepProScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFeatureRow(Map<String, dynamic> f, OwnKeepMainColorsTheme colors) {
+  Widget _buildFeatureRow(
+    Map<String, dynamic> f,
+    OwnKeepMainColorsTheme colors,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 24.0),
       child: Row(
@@ -150,16 +248,33 @@ class OwnKeepProScreen extends StatelessWidget {
               color: (f['color'] as Color).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: SvgPicture.asset(f['icon'] as String, colorFilter: ColorFilter.mode(f['color'] as Color, BlendMode.srcIn), width: 24),
+            child: SvgPicture.asset(
+              f['icon'] as String,
+              colorFilter: ColorFilter.mode(
+                f['color'] as Color,
+                BlendMode.srcIn,
+              ),
+              width: 24,
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(f['title'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                Text(
+                  f['title'] as String,
+                  style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Text(f['body'] as String, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                Text(
+                  f['body'] as String,
+                  style: TextStyle(color: colors.textSecondary, fontSize: 14),
+                ),
               ],
             ),
           ),

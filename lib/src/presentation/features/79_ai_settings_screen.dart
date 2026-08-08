@@ -4,15 +4,17 @@ import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
 
-class AiSettingsScreen extends StatefulWidget {
+class AiSettingsScreen extends ConsumerStatefulWidget {
   const AiSettingsScreen({super.key});
 
   @override
-  State<AiSettingsScreen> createState() => _AiSettingsScreenState();
+  ConsumerState<AiSettingsScreen> createState() => _AiSettingsScreenState();
 }
 
-class _AiSettingsScreenState extends State<AiSettingsScreen> {
+class _AiSettingsScreenState extends ConsumerState<AiSettingsScreen> {
   bool _assistantEnabled = true;
   bool _suggestionsEnabled = true;
   bool _taggingEnabled = true;
@@ -20,11 +22,23 @@ class _AiSettingsScreenState extends State<AiSettingsScreen> {
   bool _similarEnabled = true;
   bool _historyEnabled = true;
   bool _backgroundEnabled = false;
+  bool _loaded = false;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.mainColors;
     final l10n = AppLocalizations.of(context)!;
+    final persisted = ref.watch(aiSettingsProvider).value;
+    if (!_loaded && persisted != null) {
+      _loaded = true;
+      _assistantEnabled = persisted['assistant'] ?? true;
+      _suggestionsEnabled = persisted['suggestions'] ?? true;
+      _taggingEnabled = persisted['tagging'] ?? true;
+      _expiryEnabled = persisted['expiry'] ?? true;
+      _similarEnabled = persisted['similar'] ?? true;
+      _historyEnabled = persisted['history'] ?? true;
+      _backgroundEnabled = persisted['background'] ?? false;
+    }
 
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -32,13 +46,28 @@ class _AiSettingsScreenState extends State<AiSettingsScreen> {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Column(
           children: [
-            Text(l10n.s79_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
-            Text(l10n.s79_subtitle, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+            Text(
+              l10n.s79_title,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              l10n.s79_subtitle,
+              style: TextStyle(color: colors.textMuted, fontSize: 12),
+            ),
           ],
         ),
         centerTitle: true,
@@ -62,19 +91,41 @@ class _AiSettingsScreenState extends State<AiSettingsScreen> {
                 decoration: BoxDecoration(
                   color: colors.successGreen.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: colors.successGreen.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: colors.successGreen.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: Row(
                   children: [
-                    SvgPicture.asset(OwnKeepMainIcons.shield_check, colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn), width: 32),
+                    SvgPicture.asset(
+                      OwnKeepMainIcons.shield_check,
+                      colorFilter: ColorFilter.mode(
+                        colors.successGreen,
+                        BlendMode.srcIn,
+                      ),
+                      width: 32,
+                    ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(l10n.s79_private_title, style: TextStyle(color: colors.successGreen, fontSize: 16, fontWeight: FontWeight.w600)),
+                          Text(
+                            l10n.s79_private_title,
+                            style: TextStyle(
+                              color: colors.successGreen,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                           const SizedBox(height: 4),
-                          Text(l10n.s79_private_body, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                          Text(
+                            l10n.s79_private_body,
+                            style: TextStyle(
+                              color: colors.textSecondary,
+                              fontSize: 14,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -84,32 +135,84 @@ class _AiSettingsScreenState extends State<AiSettingsScreen> {
               const SizedBox(height: 32),
 
               // Toggles
-              _buildToggle(l10n.s79_assistant, l10n.s79_assistant_body, _assistantEnabled, (v) => setState(() => _assistantEnabled = v), colors),
-              _buildToggle(l10n.s79_suggestions, l10n.s79_suggestions_body, _suggestionsEnabled, (v) => setState(() => _suggestionsEnabled = v), colors),
-              _buildToggle(l10n.s79_tagging, l10n.s79_tagging_body, _taggingEnabled, (v) => setState(() => _taggingEnabled = v), colors),
-              _buildToggle(l10n.s79_expiry, l10n.s79_expiry_body, _expiryEnabled, (v) => setState(() => _expiryEnabled = v), colors),
-              _buildToggle(l10n.s79_similar, l10n.s79_similar_body, _similarEnabled, (v) => setState(() => _similarEnabled = v), colors),
-              _buildToggle(l10n.s79_history, l10n.s79_history_body, _historyEnabled, (v) => setState(() => _historyEnabled = v), colors),
-              _buildToggle(l10n.s79_background, l10n.s79_background_body, _backgroundEnabled, (v) => setState(() => _backgroundEnabled = v), colors),
+              _buildToggle(
+                l10n.s79_assistant,
+                l10n.s79_assistant_body,
+                _assistantEnabled,
+                (v) => _save('assistant', v, () => _assistantEnabled = v),
+                colors,
+              ),
+              _buildToggle(
+                l10n.s79_suggestions,
+                l10n.s79_suggestions_body,
+                _suggestionsEnabled,
+                (v) => _save('suggestions', v, () => _suggestionsEnabled = v),
+                colors,
+              ),
+              _buildToggle(
+                l10n.s79_tagging,
+                l10n.s79_tagging_body,
+                _taggingEnabled,
+                (v) => _save('tagging', v, () => _taggingEnabled = v),
+                colors,
+              ),
+              _buildToggle(
+                l10n.s79_expiry,
+                l10n.s79_expiry_body,
+                _expiryEnabled,
+                (v) => _save('expiry', v, () => _expiryEnabled = v),
+                colors,
+              ),
+              _buildToggle(
+                l10n.s79_similar,
+                l10n.s79_similar_body,
+                _similarEnabled,
+                (v) => _save('similar', v, () => _similarEnabled = v),
+                colors,
+              ),
+              _buildToggle(
+                l10n.s79_history,
+                l10n.s79_history_body,
+                _historyEnabled,
+                (v) => _save('history', v, () => _historyEnabled = v),
+                colors,
+              ),
+              _buildToggle(
+                l10n.s79_background,
+                l10n.s79_background_body,
+                _backgroundEnabled,
+                (v) => _save('background', v, () => _backgroundEnabled = v),
+                colors,
+              ),
               const SizedBox(height: 40),
 
               // Clear History Button
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('AI History Cleared locally.')));
-                  },
+                  onPressed: () => context.push('/features/ai-history'),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     side: BorderSide(color: colors.dangerRed),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                   child: Column(
                     children: [
-                      Text(l10n.s79_clear, style: TextStyle(color: colors.dangerRed, fontSize: 16, fontWeight: FontWeight.w600)),
+                      Text(
+                        l10n.s79_clear,
+                        style: TextStyle(
+                          color: colors.dangerRed,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       const SizedBox(height: 4),
-                      Text(l10n.s79_clear_body, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+                      Text(
+                        l10n.s79_clear_body,
+                        style: TextStyle(color: colors.textMuted, fontSize: 12),
+                      ),
                     ],
                   ),
                 ),
@@ -122,7 +225,13 @@ class _AiSettingsScreenState extends State<AiSettingsScreen> {
     );
   }
 
-  Widget _buildToggle(String title, String body, bool value, ValueChanged<bool> onChanged, OwnKeepMainColorsTheme colors) {
+  Widget _buildToggle(
+    String title,
+    String body,
+    bool value,
+    ValueChanged<bool> onChanged,
+    OwnKeepMainColorsTheme colors,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -137,9 +246,19 @@ class _AiSettingsScreenState extends State<AiSettingsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500)),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Text(body, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
+                Text(
+                  body,
+                  style: TextStyle(color: colors.textSecondary, fontSize: 14),
+                ),
               ],
             ),
           ),
@@ -152,5 +271,12 @@ class _AiSettingsScreenState extends State<AiSettingsScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _save(String key, bool value, VoidCallback update) async {
+    setState(update);
+    final library = await ref.read(documentLibraryProvider.future);
+    await library?.setAiSetting(key, value);
+    ref.invalidate(aiSettingsProvider);
   }
 }

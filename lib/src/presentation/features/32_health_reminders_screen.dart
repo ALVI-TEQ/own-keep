@@ -7,12 +7,15 @@ import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/document_provider.dart';
+import '../../providers/vault_provider.dart';
+import 'package:vault_domain/vault_domain.dart';
 
 class HealthRemindersScreen extends ConsumerStatefulWidget {
   const HealthRemindersScreen({super.key});
 
   @override
-  ConsumerState<HealthRemindersScreen> createState() => _HealthRemindersScreenState();
+  ConsumerState<HealthRemindersScreen> createState() =>
+      _HealthRemindersScreenState();
 }
 
 class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
@@ -22,6 +25,16 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
+    final reminders =
+        ref.watch(ingestionControllerProvider)?.reminders ??
+        const <ReminderView>[];
+    final activeReminders =
+        reminders
+            .where(
+              (reminder) => reminder.completedAt == null && reminder.isEnabled,
+            )
+            .toList()
+          ..sort((a, b) => a.dueAt.compareTo(b.dueAt));
 
     final filters = [
       l10n.common_all,
@@ -36,7 +49,12 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -51,8 +69,16 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: SvgPicture.asset(OwnKeepMainIcons.notification, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
-            onPressed: () {},
+            icon: SvgPicture.asset(
+              OwnKeepMainIcons.notification,
+              colorFilter: ColorFilter.mode(
+                colors.textPrimary,
+                BlendMode.srcIn,
+              ),
+              width: 24,
+              height: 24,
+            ),
+            onPressed: () => context.push('/features/expiry-calendar'),
           ),
         ],
       ),
@@ -64,31 +90,46 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
             SizedBox(
               height: 56,
               child: ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.sm),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: OwnKeepSpacing.lg,
+                  vertical: OwnKeepSpacing.sm,
+                ),
                 scrollDirection: Axis.horizontal,
                 itemCount: filters.length,
-                separatorBuilder: (context, index) => const SizedBox(width: OwnKeepSpacing.sm),
+                separatorBuilder: (context, index) =>
+                    const SizedBox(width: OwnKeepSpacing.sm),
                 itemBuilder: (context, index) {
                   final isSelected = _selectedFilter == index;
                   return GestureDetector(
                     onTap: () => setState(() => _selectedFilter = index),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
-                        color: isSelected ? colors.primaryBlue : colors.surfacePrimary,
+                        color: isSelected
+                            ? colors.primaryBlue
+                            : colors.surfacePrimary,
                         borderRadius: BorderRadius.circular(24),
                         border: Border.all(
-                          color: isSelected ? colors.primaryBlue : colors.borderSoft,
+                          color: isSelected
+                              ? colors.primaryBlue
+                              : colors.borderSoft,
                         ),
                       ),
                       child: Center(
                         child: Text(
                           filters[index],
                           style: TextStyle(
-                            color: isSelected ? Colors.white : colors.textSecondary,
+                            color: isSelected
+                                ? Colors.white
+                                : colors.textSecondary,
                             fontSize: 14,
-                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                            fontWeight: isSelected
+                                ? FontWeight.w600
+                                : FontWeight.w400,
                             fontFamily: 'Inter',
                           ),
                         ),
@@ -102,7 +143,9 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
 
             // Today Section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              padding: const EdgeInsets.symmetric(
+                horizontal: OwnKeepSpacing.lg,
+              ),
               child: Text(
                 l10n.common_today,
                 style: TextStyle(
@@ -114,25 +157,46 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.md),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
-              child: _buildReminderCard(
-                context: context,
-                colors: colors,
-                icon: OwnKeepMainIcons.medicine_capsule,
-                iconColor: const Color(0xFF27C5E8), // accentCyan
-                title: l10n.s32_vitamin,
-                subtitle: l10n.s32_vitamin_body,
-                time: l10n.s32_vitamin_time,
-                isCompleted: false,
+            if (activeReminders.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: OwnKeepSpacing.lg,
+                ),
+                child: _buildReminderCard(
+                  context: context,
+                  colors: colors,
+                  icon: OwnKeepMainIcons.medicine_capsule,
+                  iconColor: const Color(0xFF27C5E8), // accentCyan
+                  title: activeReminders.first.title,
+                  subtitle: activeReminders.first.documentFilename,
+                  time: _formatDateTime(activeReminders.first.dueAt),
+                  isCompleted: false,
+                  onTap: () async {
+                    await ref
+                        .read(ingestionControllerProvider)
+                        ?.completeReminder(activeReminders.first.id);
+                    if (mounted) setState(() {});
+                  },
+                ),
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: OwnKeepSpacing.lg,
+                ),
+                child: Text(
+                  'No active reminders.',
+                  style: TextStyle(color: colors.textSecondary),
+                ),
               ),
-            ),
-            
+
             const SizedBox(height: OwnKeepSpacing.xxl),
 
             // Upcoming Section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              padding: const EdgeInsets.symmetric(
+                horizontal: OwnKeepSpacing.lg,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -159,35 +223,57 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
             ),
             const SizedBox(height: OwnKeepSpacing.md),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              padding: const EdgeInsets.symmetric(
+                horizontal: OwnKeepSpacing.lg,
+              ),
               child: Column(
                 children: [
-                  ref.watch(healthDocumentsProvider).when(
-                    loading: () => const Center(child: CircularProgressIndicator()),
-                    error: (err, st) => const Center(child: Text('Error loading health documents')),
-                    data: (docs) {
-                      if (docs.isEmpty) {
-                        return Padding(
-                          padding: const EdgeInsets.all(OwnKeepSpacing.md),
-                          child: Text('No health records found.', style: TextStyle(color: colors.textSecondary)),
-                        );
-                      }
-                      return Column(
-                        children: docs.map((doc) => Padding(
-                          padding: const EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-                          child: _buildUpcomingCard(
-                            context: context,
-                            colors: colors,
-                            icon: OwnKeepMainIcons.file_pdf,
-                            iconColor: colors.primaryBlue,
-                            title: doc.logicalFilename.isNotEmpty ? doc.logicalFilename : 'Health Record',
-                            subtitle: 'Stored on ${doc.importedAt.toString().split(' ')[0]}',
-                            time: 'Active',
-                          ),
-                        )).toList(),
-                      );
-                    },
-                  ),
+                  ref
+                      .watch(healthDocumentsProvider)
+                      .when(
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                        error: (err, st) => const Center(
+                          child: Text('Error loading health documents'),
+                        ),
+                        data: (docs) {
+                          if (docs.isEmpty) {
+                            return Padding(
+                              padding: const EdgeInsets.all(OwnKeepSpacing.md),
+                              child: Text(
+                                'No health records found.',
+                                style: TextStyle(color: colors.textSecondary),
+                              ),
+                            );
+                          }
+                          return Column(
+                            children: docs
+                                .map(
+                                  (doc) => Padding(
+                                    padding: const EdgeInsets.only(
+                                      bottom: OwnKeepSpacing.sm,
+                                    ),
+                                    child: _buildUpcomingCard(
+                                      context: context,
+                                      colors: colors,
+                                      icon: OwnKeepMainIcons.file_pdf,
+                                      iconColor: colors.primaryBlue,
+                                      title: doc.logicalFilename.isNotEmpty
+                                          ? doc.logicalFilename
+                                          : 'Health Record',
+                                      subtitle:
+                                          'Stored on ${doc.importedAt.toString().split(' ')[0]}',
+                                      time: 'Active',
+                                      onTap: () => context.push(
+                                        '/features/document-preview?id=${Uri.encodeQueryComponent(doc.id)}',
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          );
+                        },
+                      ),
                 ],
               ),
             ),
@@ -196,7 +282,9 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
 
             // Health Summary Section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              padding: const EdgeInsets.symmetric(
+                horizontal: OwnKeepSpacing.lg,
+              ),
               child: Text(
                 l10n.s32_summary,
                 style: TextStyle(
@@ -209,7 +297,9 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
             ),
             const SizedBox(height: OwnKeepSpacing.md),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              padding: const EdgeInsets.symmetric(
+                horizontal: OwnKeepSpacing.lg,
+              ),
               child: Row(
                 children: [
                   Expanded(
@@ -246,10 +336,10 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: _addReminder,
         backgroundColor: colors.primaryBlue,
         icon: SvgPicture.asset(
-          OwnKeepMainIcons.add, 
+          OwnKeepMainIcons.add,
           colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
           width: 24,
           height: 24,
@@ -276,79 +366,91 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
     required String subtitle,
     required String time,
     required bool isCompleted,
+    required VoidCallback onTap,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(OwnKeepSpacing.md),
-      decoration: BoxDecoration(
-        color: colors.surfacePrimary,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colors.borderSoft),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: colors.surfaceSelected,
-              borderRadius: BorderRadius.circular(12),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(OwnKeepSpacing.md),
+        decoration: BoxDecoration(
+          color: colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: colors.borderSoft),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colors.surfaceSelected,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: SvgPicture.asset(
+                icon,
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                width: 24,
+                height: 24,
+              ),
             ),
-            child: SvgPicture.asset(
-              icon, 
-              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        OwnKeepMainIcons.clock,
+                        colorFilter: ColorFilter.mode(
+                          colors.textMuted,
+                          BlendMode.srcIn,
+                        ),
+                        width: 14,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        time,
+                        style: TextStyle(
+                          color: colors.textMuted,
+                          fontSize: 12,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Container(
               width: 24,
               height: 24,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: colors.primaryBlue, width: 2),
+              ),
             ),
-          ),
-          const SizedBox(width: OwnKeepSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: colors.textPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    color: colors.textSecondary,
-                    fontSize: 13,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    SvgPicture.asset(OwnKeepMainIcons.clock, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn), width: 14),
-                    const SizedBox(width: 4),
-                    Text(
-                      time,
-                      style: TextStyle(
-                        color: colors.textMuted,
-                        fontSize: 12,
-                        fontFamily: 'Inter',
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: colors.primaryBlue, width: 2),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -361,9 +463,10 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
     required String title,
     required String subtitle,
     required String time,
+    required VoidCallback onTap,
   }) {
     return InkWell(
-      onTap: () {},
+      onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -380,7 +483,12 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
                 color: colors.surfaceSelected,
                 shape: BoxShape.circle,
               ),
-              child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+              child: SvgPicture.asset(
+                icon,
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                width: 24,
+                height: 24,
+              ),
             ),
             const SizedBox(width: OwnKeepSpacing.md),
             Expanded(
@@ -453,7 +561,12 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
       ),
       child: Column(
         children: [
-          SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+          SvgPicture.asset(
+            icon,
+            colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           const SizedBox(height: 8),
           Text(
             title.split(' ').first, // Number
@@ -478,4 +591,64 @@ class _HealthRemindersScreenState extends ConsumerState<HealthRemindersScreen> {
       ),
     );
   }
+
+  Future<void> _addReminder() async {
+    final documents = await ref.read(healthDocumentsProvider.future);
+    if (!mounted) return;
+    if (documents.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Add a health document before creating a reminder.'),
+        ),
+      );
+      return;
+    }
+    final titleController = TextEditingController();
+    final title = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('New reminder'),
+        content: TextField(
+          controller: titleController,
+          autofocus: true,
+          decoration: const InputDecoration(labelText: 'Reminder title'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () =>
+                Navigator.pop(context, titleController.text.trim()),
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
+    titleController.dispose();
+    if (!mounted || title == null || title.isEmpty) return;
+    final date = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now().add(const Duration(days: 1)),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 3650)),
+    );
+    if (!mounted || date == null) return;
+    await ref
+        .read(ingestionControllerProvider)
+        ?.createReminder(
+          ReminderDraft(
+            documentId: documents.first.id,
+            type: ReminderType.custom,
+            title: title,
+            dueAt: DateTime(date.year, date.month, date.day, 9),
+          ),
+        );
+    if (mounted) setState(() {});
+  }
+
+  String _formatDateTime(DateTime value) =>
+      '${value.day.toString().padLeft(2, '0')}/${value.month.toString().padLeft(2, '0')}/${value.year} '
+      '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}';
 }

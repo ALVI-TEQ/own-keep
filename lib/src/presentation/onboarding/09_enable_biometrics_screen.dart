@@ -11,10 +11,12 @@ class EnableBiometricsScreen extends ConsumerStatefulWidget {
   const EnableBiometricsScreen({super.key});
 
   @override
-  ConsumerState<EnableBiometricsScreen> createState() => _EnableBiometricsScreenState();
+  ConsumerState<EnableBiometricsScreen> createState() =>
+      _EnableBiometricsScreenState();
 }
 
-class _EnableBiometricsScreenState extends ConsumerState<EnableBiometricsScreen> {
+class _EnableBiometricsScreenState
+    extends ConsumerState<EnableBiometricsScreen> {
   bool _isProcessing = false;
 
   Future<void> _finalizeSetup(bool enableBiometrics) async {
@@ -22,25 +24,32 @@ class _EnableBiometricsScreenState extends ConsumerState<EnableBiometricsScreen>
     try {
       if (enableBiometrics) {
         final code = ref.read(onboardingRecoveryCodeProvider);
-        final String safeCode = code ?? "mango desert trust polar kitten guitar planet purple silver eagle bridge fitness";
+        if (code == null) {
+          throw StateError('Setup session expired');
+        }
 
         try {
-          await ref.read(vaultSessionProvider.notifier).enableBiometrics(safeCode);
+          await ref.read(vaultSessionProvider.notifier).enableBiometrics(code);
         } catch (e) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Biometrics unavailable or cancelled. Proceeding...')),
+              const SnackBar(
+                content: Text(
+                  'Biometrics could not be enabled. Try again or choose Skip.',
+                ),
+              ),
             );
           }
+          return;
         }
       }
 
       if (mounted) context.push('/setup-complete');
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Setup error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Setup error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isProcessing = false);
@@ -50,7 +59,7 @@ class _EnableBiometricsScreenState extends ConsumerState<EnableBiometricsScreen>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Scaffold(
       backgroundColor: context.onboardingColors.backgroundDeep,
       body: SafeArea(
@@ -63,7 +72,11 @@ class _EnableBiometricsScreenState extends ConsumerState<EnableBiometricsScreen>
               Align(
                 alignment: Alignment.centerLeft,
                 child: IconButton(
-                  icon: SvgPicture.asset(OwnKeepOnboardingIcons.back_arrow, width: 24, height: 24),
+                  icon: SvgPicture.asset(
+                    OwnKeepOnboardingIcons.back_arrow,
+                    width: 24,
+                    height: 24,
+                  ),
                   onPressed: () {
                     if (context.canPop()) {
                       context.pop();

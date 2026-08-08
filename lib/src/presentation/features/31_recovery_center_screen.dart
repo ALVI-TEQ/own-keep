@@ -20,7 +20,12 @@ class RecoveryCenterScreen extends StatelessWidget {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -46,7 +51,7 @@ class RecoveryCenterScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.xl),
-            
+
             // Hero Text
             RichText(
               textAlign: TextAlign.center,
@@ -63,10 +68,7 @@ class RecoveryCenterScreen extends StatelessWidget {
                   ),
                   TextSpan(
                     text: l10n.s31_hero_body,
-                    style: TextStyle(
-                      color: colors.textSecondary,
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: colors.textSecondary, fontSize: 14),
                   ),
                 ],
               ),
@@ -86,26 +88,42 @@ class RecoveryCenterScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        l10n.s31_status_title,
-                        style: TextStyle(
-                          color: colors.textSecondary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Inter',
+                      Expanded(
+                        child: Text(
+                          l10n.s31_status_title,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: colors.textSecondary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Inter',
+                          ),
                         ),
                       ),
+                      const SizedBox(width: 12),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: colors.successGreen.withOpacity(0.15),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: colors.successGreen.withOpacity(0.3)),
+                          border: Border.all(
+                            color: colors.successGreen.withOpacity(0.3),
+                          ),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            SvgPicture.asset(OwnKeepMainIcons.verified_shield, colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn), width: 14),
+                            SvgPicture.asset(
+                              OwnKeepMainIcons.verified_shield,
+                              colorFilter: ColorFilter.mode(
+                                colors.successGreen,
+                                BlendMode.srcIn,
+                              ),
+                              width: 14,
+                            ),
                             const SizedBox(width: 4),
                             Text(
                               l10n.s31_status_verified,
@@ -144,6 +162,7 @@ class RecoveryCenterScreen extends StatelessWidget {
               icon: OwnKeepMainIcons.eye,
               title: l10n.s31_view_title,
               subtitle: l10n.s31_view_body,
+              onTap: () => context.push('/features/recovery-verification'),
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
             _buildActionTile(
@@ -152,6 +171,7 @@ class RecoveryCenterScreen extends StatelessWidget {
               icon: OwnKeepMainIcons.recovery_phrase,
               title: l10n.s31_verify_title,
               subtitle: l10n.s31_verify_body,
+              onTap: () => context.push('/features/recovery-verification'),
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
             _buildActionTile(
@@ -160,6 +180,7 @@ class RecoveryCenterScreen extends StatelessWidget {
               icon: OwnKeepMainIcons.recovery_instructions,
               title: l10n.s31_instructions_title,
               subtitle: l10n.s31_instructions_body,
+              onTap: () => context.push('/features/tutorials'),
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
             _buildActionTile(
@@ -168,8 +189,9 @@ class RecoveryCenterScreen extends StatelessWidget {
               icon: OwnKeepMainIcons.emergency,
               title: l10n.s31_emergency_title,
               subtitle: l10n.s31_emergency_body,
+              onTap: () => context.push('/features/emergency-access'),
             ),
-            
+
             const SizedBox(height: OwnKeepSpacing.xxl),
 
             // Tip box
@@ -182,7 +204,15 @@ class RecoveryCenterScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  SvgPicture.asset(OwnKeepMainIcons.recovery_shield_key, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+                  SvgPicture.asset(
+                    OwnKeepMainIcons.recovery_shield_key,
+                    colorFilter: ColorFilter.mode(
+                      colors.primaryBlue,
+                      BlendMode.srcIn,
+                    ),
+                    width: 24,
+                    height: 24,
+                  ),
                   const SizedBox(width: OwnKeepSpacing.md),
                   Expanded(
                     child: Text(
@@ -210,9 +240,10 @@ class RecoveryCenterScreen extends StatelessWidget {
     required String icon,
     required String title,
     required String subtitle,
+    required VoidCallback onTap,
   }) {
     return InkWell(
-      onTap: () {},
+      onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -229,7 +260,15 @@ class RecoveryCenterScreen extends StatelessWidget {
                 color: colors.surfaceSelected,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+              child: SvgPicture.asset(
+                icon,
+                colorFilter: ColorFilter.mode(
+                  colors.primaryBlue,
+                  BlendMode.srcIn,
+                ),
+                width: 24,
+                height: 24,
+              ),
             ),
             const SizedBox(width: OwnKeepSpacing.md),
             Expanded(
@@ -257,7 +296,12 @@ class RecoveryCenterScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+            SvgPicture.asset(
+              OwnKeepMainIcons.chevron_right,
+              colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
+              width: 24,
+              height: 24,
+            ),
           ],
         ),
       ),

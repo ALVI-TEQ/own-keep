@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_onboarding_colors.dart';
 import '../../theme/ownkeep_onboarding_icons.dart';
+import '../../providers/vault_provider.dart';
 
-class SetupCompleteScreen extends StatelessWidget {
+class SetupCompleteScreen extends ConsumerWidget {
   const SetupCompleteScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Scaffold(
       backgroundColor: context.onboardingColors.backgroundDeep,
       body: SafeArea(
@@ -59,7 +61,12 @@ class SetupCompleteScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: ElevatedButton(
-                  onPressed: () => context.go('/dashboard/home'),
+                  onPressed: () {
+                    ref.read(onboardingPinProvider.notifier).state = null;
+                    ref.read(onboardingRecoveryCodeProvider.notifier).state =
+                        null;
+                    context.go('/dashboard/home');
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,

@@ -13,7 +13,8 @@ class BackupRestoreScreen extends ConsumerStatefulWidget {
   const BackupRestoreScreen({super.key});
 
   @override
-  ConsumerState<BackupRestoreScreen> createState() => _BackupRestoreScreenState();
+  ConsumerState<BackupRestoreScreen> createState() =>
+      _BackupRestoreScreenState();
 }
 
 class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
@@ -21,70 +22,166 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
   bool _isRestoring = false;
   String? _lastBackupTime;
 
+  Future<String?> _requestRecoveryPhrase({required bool confirm}) async {
+    final phrase = TextEditingController();
+    final confirmation = TextEditingController();
+    String? error;
+    final result = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: Text(confirm ? 'Confirm recovery phrase' : 'Recovery phrase'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Your phrase stays in memory only for this operation.',
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: phrase,
+                obscureText: true,
+                autocorrect: false,
+                enableSuggestions: false,
+                decoration: const InputDecoration(labelText: 'Recovery phrase'),
+              ),
+              if (confirm)
+                TextField(
+                  controller: confirmation,
+                  obscureText: true,
+                  autocorrect: false,
+                  enableSuggestions: false,
+                  decoration: const InputDecoration(
+                    labelText: 'Confirm phrase',
+                  ),
+                ),
+              if (error != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Text(
+                    error!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () {
+                final value = phrase.text.trim();
+                if (value.isEmpty) {
+                  setDialogState(() => error = 'Enter your recovery phrase.');
+                  return;
+                }
+                if (confirm && value != confirmation.text.trim()) {
+                  setDialogState(
+                    () => error = 'Recovery phrases do not match.',
+                  );
+                  return;
+                }
+                Navigator.pop(dialogContext, value);
+              },
+              child: const Text('Continue'),
+            ),
+          ],
+        ),
+      ),
+    );
+    phrase.dispose();
+    confirmation.dispose();
+    return result;
+  }
+
   Future<void> _performBackup() async {
     final handle = ref.read(vaultSessionProvider).value;
     if (handle == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vault is locked. Cannot backup.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vault is locked. Cannot backup.')),
+      );
       return;
     }
+    final passphrase = await _requestRecoveryPhrase(confirm: true);
+    if (passphrase == null || !mounted) return;
     setState(() => _isBackingUp = true);
-    
+
     try {
-      final passphrase = "mango desert trust polar kitten guitar planet purple silver eagle bridge fitness";
       final pending = await handle.createBackup(recoveryPassphrase: passphrase);
-      
+
       final transfer = const PlatformBackupArchiveTransfer();
       final saved = await transfer.exportArchive(pending.archive);
-      
+
       if (mounted) {
         setState(() {
           _isBackingUp = false;
           if (saved) {
             final now = DateTime.now();
-            _lastBackupTime = '${_pad(now.month)}/${_pad(now.day)}/${now.year} ${_pad(now.hour)}:${_pad(now.minute)}';
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Backup exported successfully!')));
+            _lastBackupTime =
+                '${_pad(now.month)}/${_pad(now.day)}/${now.year} ${_pad(now.hour)}:${_pad(now.minute)}';
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Backup exported successfully!')),
+            );
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Backup export cancelled.')));
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Backup export cancelled.')),
+            );
           }
         });
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isBackingUp = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Backup failed: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Backup failed: $e')));
       }
     }
   }
-  
+
   String _pad(int n) => n.toString().padLeft(2, '0');
 
   Future<void> _performRestore() async {
-    setState(() => _isRestoring = true);
     try {
       final transfer = const PlatformBackupArchiveTransfer();
       final selected = await transfer.pickArchive();
-      
+
       if (selected == null) {
         if (mounted) {
           setState(() => _isRestoring = false);
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Restore cancelled.')));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Restore cancelled.')));
         }
         return;
       }
-      
+
+      if (!mounted) return;
+      final passphrase = await _requestRecoveryPhrase(confirm: false);
+      if (passphrase == null || !mounted) return;
+      setState(() => _isRestoring = true);
       final lifecycle = ref.read(vaultLifecycleProvider);
-      final passphrase = "mango desert trust polar kitten guitar planet purple silver eagle bridge fitness";
-      
-      await lifecycle.restoreBackup(archive: selected.file, recoveryPassphrase: passphrase);
-      
+
+      await lifecycle.restoreBackup(
+        archive: selected.file,
+        recoveryPassphrase: passphrase,
+      );
+
       if (mounted) {
         setState(() => _isRestoring = false);
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data restored successfully!')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Data restored successfully!')),
+        );
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isRestoring = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Restore failed: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Restore failed: $e')));
       }
     }
   }
@@ -103,7 +200,9 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
             icon: Icons.backup_outlined,
             isLoading: _isBackingUp,
             onTap: _isBackingUp || _isRestoring ? null : _performBackup,
-            statusText: _lastBackupTime != null ? 'Last backup: $_lastBackupTime' : 'No recent backup',
+            statusText: _lastBackupTime != null
+                ? 'Last backup: $_lastBackupTime'
+                : 'No recent backup',
           ),
           const SizedBox(height: OwnKeepSpacing.md),
           _buildCard(
@@ -135,7 +234,9 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
       decoration: BoxDecoration(
         color: OwnKeepColors.darkSurfaceElevated,
         borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-        border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.25)),
+        border: Border.all(
+          color: OwnKeepColors.darkBorder.withValues(alpha: 0.25),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,7 +245,9 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
             children: [
               OwnKeepIconBadge(
                 icon: icon,
-                color: isDestructive ? OwnKeepColors.danger : OwnKeepColors.primary,
+                color: isDestructive
+                    ? OwnKeepColors.danger
+                    : OwnKeepColors.primary,
                 size: 40,
                 iconSize: 20,
               ),
@@ -153,9 +256,24 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: const TextStyle(color: OwnKeepColors.darkTextPrimary, fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Inter')),
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        color: OwnKeepColors.darkTextPrimary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
                     const SizedBox(height: 4),
-                    Text(description, style: const TextStyle(color: OwnKeepColors.darkTextSecondary, fontSize: 13, fontFamily: 'Inter')),
+                    Text(
+                      description,
+                      style: const TextStyle(
+                        color: OwnKeepColors.darkTextSecondary,
+                        fontSize: 13,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -163,7 +281,14 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
           ),
           if (statusText != null) ...[
             const SizedBox(height: OwnKeepSpacing.md),
-            Text(statusText, style: const TextStyle(color: OwnKeepColors.darkTextMuted, fontSize: 12, fontFamily: 'Inter')),
+            Text(
+              statusText,
+              style: const TextStyle(
+                color: OwnKeepColors.darkTextMuted,
+                fontSize: 12,
+                fontFamily: 'Inter',
+              ),
+            ),
           ],
           const SizedBox(height: OwnKeepSpacing.lg),
           SizedBox(
@@ -171,14 +296,32 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
             child: ElevatedButton(
               onPressed: onTap,
               style: ElevatedButton.styleFrom(
-                backgroundColor: isDestructive ? OwnKeepColors.danger : OwnKeepColors.primary,
+                backgroundColor: isDestructive
+                    ? OwnKeepColors.danger
+                    : OwnKeepColors.primary,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(OwnKeepRadius.sm)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(OwnKeepRadius.sm),
+                ),
               ),
               child: isLoading
-                  ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                  : Text(buttonText, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(
+                      buttonText,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
             ),
           ),
         ],

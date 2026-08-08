@@ -8,12 +8,14 @@ import '../../theme/ownkeep_onboarding_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/document_provider.dart';
+import '../dashboard/dashboard_document_presentation.dart';
 
 class AdvancedSearchScreen extends ConsumerStatefulWidget {
   const AdvancedSearchScreen({super.key});
 
   @override
-  ConsumerState<AdvancedSearchScreen> createState() => _AdvancedSearchScreenState();
+  ConsumerState<AdvancedSearchScreen> createState() =>
+      _AdvancedSearchScreenState();
 }
 
 class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
@@ -50,7 +52,15 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
               child: Row(
                 children: [
                   IconButton(
-                    icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+                    icon: SvgPicture.asset(
+                      OwnKeepMainIcons.back_arrow,
+                      colorFilter: ColorFilter.mode(
+                        colors.textPrimary,
+                        BlendMode.srcIn,
+                      ),
+                      width: 24,
+                      height: 24,
+                    ),
                     onPressed: () => context.pop(),
                   ),
                   Expanded(
@@ -64,11 +74,23 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                       ),
                       child: Row(
                         children: [
-                          SvgPicture.asset(OwnKeepMainIcons.search, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+                          SvgPicture.asset(
+                            OwnKeepMainIcons.search,
+                            colorFilter: ColorFilter.mode(
+                              colors.primaryBlue,
+                              BlendMode.srcIn,
+                            ),
+                            width: 24,
+                            height: 24,
+                          ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: TextField(
                               controller: _searchController,
+                              autofocus: true,
+                              textInputAction: TextInputAction.search,
+                              onChanged: (value) =>
+                                  setState(() => _searchQuery = value.trim()),
                               style: TextStyle(
                                 color: colors.textPrimary,
                                 fontSize: 15,
@@ -88,56 +110,94 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                           ),
                           if (_searchQuery.isNotEmpty)
                             GestureDetector(
-                              onTap: () => _searchController.clear(),
-                              child: SvgPicture.asset(OwnKeepMainIcons.close, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+                              onTap: () {
+                                _searchController.clear();
+                                setState(() => _searchQuery = '');
+                              },
+                              child: SvgPicture.asset(
+                                OwnKeepMainIcons.close,
+                                colorFilter: ColorFilter.mode(
+                                  colors.textMuted,
+                                  BlendMode.srcIn,
+                                ),
+                                width: 24,
+                                height: 24,
+                              ),
                             ),
                         ],
                       ),
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: colors.surfacePrimary,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: colors.borderSoft),
+                  InkWell(
+                    onTap: () => context.push('/dashboard/filter-and-sort'),
+                    borderRadius: BorderRadius.circular(24),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: colors.surfacePrimary,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: colors.borderSoft),
+                      ),
+                      child: SvgPicture.asset(
+                        OwnKeepMainIcons.filter,
+                        colorFilter: ColorFilter.mode(
+                          colors.textPrimary,
+                          BlendMode.srcIn,
+                        ),
+                        width: 24,
+                        height: 24,
+                      ),
                     ),
-                    child: SvgPicture.asset(OwnKeepMainIcons.filter, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
                   ),
                 ],
               ),
             ),
-            
+
             // Filter Chips
             SizedBox(
               height: 48,
               child: ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: OwnKeepSpacing.lg,
+                  vertical: 4,
+                ),
                 scrollDirection: Axis.horizontal,
                 itemCount: filters.length,
-                separatorBuilder: (context, index) => const SizedBox(width: OwnKeepSpacing.sm),
+                separatorBuilder: (context, index) =>
+                    const SizedBox(width: OwnKeepSpacing.sm),
                 itemBuilder: (context, index) {
                   final isSelected = _selectedFilter == index;
                   return GestureDetector(
                     onTap: () => setState(() => _selectedFilter = index),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
-                        color: isSelected ? colors.surfaceSelected : colors.surfacePrimary,
+                        color: isSelected
+                            ? colors.surfaceSelected
+                            : colors.surfacePrimary,
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: isSelected ? colors.primaryBlue : colors.borderSoft,
+                          color: isSelected
+                              ? colors.primaryBlue
+                              : colors.borderSoft,
                         ),
                       ),
                       child: Center(
                         child: Text(
                           filters[index],
                           style: TextStyle(
-                            color: isSelected ? colors.primaryBlue : colors.textSecondary,
+                            color: isSelected
+                                ? colors.primaryBlue
+                                : colors.textSecondary,
                             fontSize: 13,
-                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                            fontWeight: isSelected
+                                ? FontWeight.w600
+                                : FontWeight.w500,
                             fontFamily: 'Inter',
                           ),
                         ),
@@ -164,42 +224,70 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                         ),
                       )
                     else
-                      ref.watch(searchDocumentsProvider(_searchQuery)).when(
-                        loading: () => const Center(child: CircularProgressIndicator()),
-                        error: (err, st) => const Center(child: Text('Error searching documents')),
-                        data: (results) {
-                          if (results.isEmpty) {
-                            return Center(
-                              child: Text(
-                                'No results found',
-                                style: TextStyle(color: colors.textSecondary),
-                              ),
-                            );
-                          }
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${results.length} results',
-                                style: TextStyle(
-                                  color: colors.textSecondary,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Inter',
-                                ),
-                              ),
-                              const SizedBox(height: OwnKeepSpacing.sm),
-                              ...results.map((doc) => _buildResultItem(
-                                colors: colors,
-                                icon: OwnKeepMainIcons.file_pdf,
-                                iconColor: colors.primaryBlue,
-                                title: doc.logicalFilename.isNotEmpty ? doc.logicalFilename : 'Untitled',
-                                meta: doc.importedAt.toString().split(' ')[0],
-                              )),
-                            ],
-                          );
-                        },
-                      ),
+                      ref
+                          .watch(searchDocumentsProvider(_searchQuery))
+                          .when(
+                            loading: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            error: (err, st) => const Center(
+                              child: Text('Error searching documents'),
+                            ),
+                            data: (results) {
+                              final kind = switch (_selectedFilter) {
+                                1 => DashboardFileKind.documents,
+                                2 => DashboardFileKind.images,
+                                3 => DashboardFileKind.other,
+                                _ => DashboardFileKind.all,
+                              };
+                              final filteredResults = results
+                                  .where(
+                                    (doc) => documentMatchesKind(doc, kind),
+                                  )
+                                  .toList(growable: false);
+                              if (filteredResults.isEmpty) {
+                                return Center(
+                                  child: Text(
+                                    'No results found',
+                                    style: TextStyle(
+                                      color: colors.textSecondary,
+                                    ),
+                                  ),
+                                );
+                              }
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${filteredResults.length} results',
+                                    style: TextStyle(
+                                      color: colors.textSecondary,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Inter',
+                                    ),
+                                  ),
+                                  const SizedBox(height: OwnKeepSpacing.sm),
+                                  ...filteredResults.map(
+                                    (doc) => _buildResultItem(
+                                      colors: colors,
+                                      icon: dashboardDocumentIcon(doc),
+                                      iconColor: colors.primaryBlue,
+                                      onTap: () => context.push(
+                                        '/features/document-preview?id=${Uri.encodeQueryComponent(doc.id)}',
+                                      ),
+                                      title: doc.logicalFilename.isNotEmpty
+                                          ? doc.logicalFilename
+                                          : 'Untitled',
+                                      meta: doc.importedAt.toString().split(
+                                        ' ',
+                                      )[0],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
 
                     const SizedBox(height: OwnKeepSpacing.xl),
 
@@ -218,7 +306,9 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                           end: Alignment.bottomRight,
                         ),
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: colors.aiPurple.withOpacity(0.3)),
+                        border: Border.all(
+                          color: colors.aiPurple.withOpacity(0.3),
+                        ),
                       ),
                       child: Column(
                         children: [
@@ -245,8 +335,18 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: SvgPicture.asset(OwnKeepOnboardingIcons.ai_powered, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+                              onPressed: () => context.push(
+                                '/features/ai-search-results?q=${Uri.encodeQueryComponent(_searchQuery)}',
+                              ),
+                              icon: SvgPicture.asset(
+                                OwnKeepOnboardingIcons.ai_powered,
+                                colorFilter: const ColorFilter.mode(
+                                  Colors.white,
+                                  BlendMode.srcIn,
+                                ),
+                                width: 24,
+                                height: 24,
+                              ),
                               label: Text(
                                 l10n.s34_ai_button,
                                 style: const TextStyle(
@@ -258,7 +358,9 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: colors.aiPurple,
                                 foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -285,9 +387,10 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
     required Color iconColor,
     required String title,
     required String meta,
+    required VoidCallback onTap,
   }) {
     return InkWell(
-      onTap: () {},
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Row(
@@ -299,7 +402,12 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: colors.borderSoft),
               ),
-              child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+              child: SvgPicture.asset(
+                icon,
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                width: 24,
+                height: 24,
+              ),
             ),
             const SizedBox(width: OwnKeepSpacing.md),
             Expanded(
@@ -327,7 +435,12 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                 ],
               ),
             ),
-            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+            SvgPicture.asset(
+              OwnKeepMainIcons.chevron_right,
+              colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
+              width: 24,
+              height: 24,
+            ),
           ],
         ),
       ),

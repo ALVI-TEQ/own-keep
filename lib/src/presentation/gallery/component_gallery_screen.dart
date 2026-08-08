@@ -17,10 +17,7 @@ class ComponentGalleryScreen extends StatelessWidget {
               children: [
                 Text('Buttons', style: Theme.of(context).textTheme.titleLarge),
                 SizedBox(height: 16),
-                OwnKeepPrimaryButton(
-                  label: 'Primary Button',
-                  onPressed: () {},
-                ),
+                OwnKeepPrimaryButton(label: 'Primary Button', onPressed: () {}),
               ],
             ),
           ),

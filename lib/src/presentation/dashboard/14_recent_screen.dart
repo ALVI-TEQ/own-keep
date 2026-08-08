@@ -6,12 +6,20 @@ import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/document_provider.dart';
+import 'dashboard_document_presentation.dart';
 
-class RecentScreen extends ConsumerWidget {
+class RecentScreen extends ConsumerStatefulWidget {
   const RecentScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RecentScreen> createState() => _RecentScreenState();
+}
+
+class _RecentScreenState extends ConsumerState<RecentScreen> {
+  bool _addedTodayOnly = false;
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colors = context.mainColors;
 
@@ -45,7 +53,10 @@ class RecentScreen extends ConsumerWidget {
                         ),
                         child: SvgPicture.asset(
                           OwnKeepMainIcons.backArrow,
-                          colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+                          colorFilter: ColorFilter.mode(
+                            colors.textPrimary,
+                            BlendMode.srcIn,
+                          ),
                           width: 24,
                         ),
                       ),
@@ -57,12 +68,19 @@ class RecentScreen extends ConsumerWidget {
                         children: [
                           Text(
                             l10n.s14_title,
-                            style: TextStyle(color: colors.textPrimary, fontSize: 24, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              color: colors.textPrimary,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             l10n.s14_subtitle,
-                            style: TextStyle(color: colors.textSecondary, fontSize: 14),
+                            style: TextStyle(
+                              color: colors.textSecondary,
+                              fontSize: 14,
+                            ),
                           ),
                         ],
                       ),
@@ -78,10 +96,8 @@ class RecentScreen extends ConsumerWidget {
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   children: [
-                    _buildFilterChip(context, l10n.filter_all, true),
-                    _buildFilterChip(context, l10n.filter_viewed, false),
-                    _buildFilterChip(context, l10n.filter_added, false),
-                    _buildFilterChip(context, l10n.filter_updated, false),
+                    _buildFilterChip(l10n.filter_all, !_addedTodayOnly, false),
+                    _buildFilterChip(l10n.filter_added, _addedTodayOnly, true),
                   ],
                 ),
               ),
@@ -90,25 +106,61 @@ class RecentScreen extends ConsumerWidget {
               // Recent Items List
               Expanded(
                 child: recentDocsAsync.when(
-                  loading: () => const Center(child: CircularProgressIndicator()),
-                  error: (error, stack) => Center(child: Text('Failed to load recent files', style: TextStyle(color: colors.textSecondary))),
-                  data: (docs) {
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (error, stack) => Center(
+                    child: Text(
+                      'Failed to load recent files',
+                      style: TextStyle(color: colors.textSecondary),
+                    ),
+                  ),
+                  data: (allDocs) {
+                    final today = DateTime.now();
+                    final startOfToday = DateTime(
+                      today.year,
+                      today.month,
+                      today.day,
+                    );
+                    final docs = _addedTodayOnly
+                        ? allDocs
+                              .where(
+                                (doc) => !doc.importedAt.isBefore(startOfToday),
+                              )
+                              .toList()
+                        : allDocs;
                     if (docs.isEmpty) {
-                      return Center(child: Text('No recent items', style: TextStyle(color: colors.textSecondary)));
+                      return Center(
+                        child: Text(
+                          'No recent items',
+                          style: TextStyle(color: colors.textSecondary),
+                        ),
+                      );
                     }
 
                     return ListView(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
                       children: [
-                        Text(l10n.filter_all, style: TextStyle(color: colors.textMuted, fontSize: 14, fontWeight: FontWeight.w600)),
+                        Text(
+                          l10n.filter_all,
+                          style: TextStyle(
+                            color: colors.textMuted,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                         const SizedBox(height: 12),
-                        ...docs.map((doc) => _buildRecentItem(
-                          context,
-                          doc.logicalFilename.isNotEmpty ? doc.logicalFilename : 'Untitled',
-                          doc.documentType.toString().split('.').last, // Just for testing
-                          OwnKeepMainIcons.file_pdf,
-                          colors.primaryBlue,
-                        )).toList(),
+                        ...docs.map(
+                          (doc) => _buildRecentItem(
+                            context,
+                            doc.id,
+                            doc.logicalFilename.isNotEmpty
+                                ? doc.logicalFilename
+                                : 'Untitled',
+                            doc.documentType.displayName,
+                            dashboardDocumentIcon(doc),
+                            colors.primaryBlue,
+                          ),
+                        ),
                       ],
                     );
                   },
@@ -121,76 +173,95 @@ class RecentScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildFilterChip(BuildContext context, String label, bool isSelected) {
+  Widget _buildFilterChip(String label, bool isSelected, bool addedTodayOnly) {
     final colors = context.mainColors;
-    return Container(
-      margin: const EdgeInsets.only(right: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: isSelected ? colors.primaryBlue : colors.surfacePrimary,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: isSelected ? colors.primaryBlue : colors.borderSoft),
-      ),
-      child: Center(
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.white : colors.textPrimary,
-            fontSize: 14,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+    return GestureDetector(
+      onTap: () => setState(() => _addedTodayOnly = addedTodayOnly),
+      child: Container(
+        margin: const EdgeInsets.only(right: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? colors.primaryBlue : colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected ? colors.primaryBlue : colors.borderSoft,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: TextStyle(
+              color: isSelected ? Colors.white : colors.textPrimary,
+              fontSize: 14,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildRecentItem(BuildContext context, String title, String meta, String iconPath, Color iconColor) {
+  Widget _buildRecentItem(
+    BuildContext context,
+    String documentId,
+    String title,
+    String meta,
+    String iconPath,
+    Color iconColor,
+  ) {
     final colors = context.mainColors;
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colors.surfacePrimary,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colors.borderSoft),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: iconColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
+    return GestureDetector(
+      onTap: () => context.push('/features/document-preview?id=$documentId'),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: colors.borderSoft),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: SvgPicture.asset(
+                iconPath,
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                width: 24,
+              ),
             ),
-            child: SvgPicture.asset(
-              iconPath,
-              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-              width: 24,
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    meta,
+                    style: TextStyle(color: colors.textMuted, fontSize: 13),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  meta,
-                  style: TextStyle(color: colors.textMuted, fontSize: 13),
-                ),
-              ],
+            SvgPicture.asset(
+              OwnKeepMainIcons.moreVertical,
+              colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
+              width: 20,
             ),
-          ),
-          SvgPicture.asset(
-            OwnKeepMainIcons.moreVertical,
-            colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
-            width: 20,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

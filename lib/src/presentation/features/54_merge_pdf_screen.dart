@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
@@ -15,38 +16,36 @@ class MergePdfScreen extends StatefulWidget {
 class _MergePdfScreenState extends State<MergePdfScreen> {
   bool _isMerging = false;
   final List<Map<String, dynamic>> _items = [
-    {
-      'id': '1',
-      'titleKey': 's54_passport',
-      'metaKey': 's54_passport_meta',
-    },
-    {
-      'id': '2',
-      'titleKey': 's54_insurance',
-      'metaKey': 's54_insurance_meta',
-    },
-    {
-      'id': '3',
-      'titleKey': 's54_bank',
-      'metaKey': 's54_bank_meta',
-    },
+    {'id': '1', 'titleKey': 's54_passport', 'metaKey': 's54_passport_meta'},
+    {'id': '2', 'titleKey': 's54_insurance', 'metaKey': 's54_insurance_meta'},
+    {'id': '3', 'titleKey': 's54_bank', 'metaKey': 's54_bank_meta'},
   ];
 
   String _getLocalizedString(AppLocalizations l10n, String key) {
     switch (key) {
-      case 's54_passport': return l10n.s54_passport;
-      case 's54_passport_meta': return l10n.s54_passport_meta;
-      case 's54_insurance': return l10n.s54_insurance;
-      case 's54_insurance_meta': return l10n.s54_insurance_meta;
-      case 's54_bank': return l10n.s54_bank;
-      case 's54_bank_meta': return l10n.s54_bank_meta;
-      case 's54_position_1': return l10n.s54_position_1;
-      case 's54_position_2': return l10n.s54_position_2;
-      case 's54_position_3': return l10n.s54_position_3;
-      default: return key;
+      case 's54_passport':
+        return l10n.s54_passport;
+      case 's54_passport_meta':
+        return l10n.s54_passport_meta;
+      case 's54_insurance':
+        return l10n.s54_insurance;
+      case 's54_insurance_meta':
+        return l10n.s54_insurance_meta;
+      case 's54_bank':
+        return l10n.s54_bank;
+      case 's54_bank_meta':
+        return l10n.s54_bank_meta;
+      case 's54_position_1':
+        return l10n.s54_position_1;
+      case 's54_position_2':
+        return l10n.s54_position_2;
+      case 's54_position_3':
+        return l10n.s54_position_3;
+      default:
+        return key;
     }
   }
-  
+
   String _getPositionString(AppLocalizations l10n, int index) {
     if (index == 0) return l10n.s54_position_1;
     if (index == 1) return l10n.s54_position_2;
@@ -65,7 +64,12 @@ class _MergePdfScreenState extends State<MergePdfScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
@@ -102,22 +106,30 @@ class _MergePdfScreenState extends State<MergePdfScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        l10n.s54_arrange,
-                        style: TextStyle(
-                          color: colors.textSecondary,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
-                          letterSpacing: 0.5,
+                      Expanded(
+                        child: Text(
+                          l10n.s54_arrange,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: colors.textSecondary,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Inter',
+                            letterSpacing: 0.5,
+                          ),
                         ),
                       ),
-                      Text(
-                        l10n.s54_arrange_hint,
-                        style: TextStyle(
-                          color: colors.textMuted,
-                          fontSize: 12,
-                          fontFamily: 'Inter',
+                      const SizedBox(width: 12),
+                      Flexible(
+                        child: Text(
+                          l10n.s54_arrange_hint,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                            color: colors.textMuted,
+                            fontSize: 12,
+                            fontFamily: 'Inter',
+                          ),
                         ),
                       ),
                     ],
@@ -127,7 +139,7 @@ class _MergePdfScreenState extends State<MergePdfScreen> {
               ),
             ),
           ),
-          
+
           SliverReorderableList(
             itemCount: _items.length,
             onReorder: (int oldIndex, int newIndex) {
@@ -143,7 +155,10 @@ class _MergePdfScreenState extends State<MergePdfScreen> {
               final item = _items[index];
               return Container(
                 key: ValueKey(item['id']),
-                margin: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.md, vertical: 4),
+                margin: const EdgeInsets.symmetric(
+                  horizontal: OwnKeepSpacing.md,
+                  vertical: 4,
+                ),
                 padding: const EdgeInsets.all(OwnKeepSpacing.md),
                 decoration: BoxDecoration(
                   color: colors.surfacePrimary,
@@ -160,7 +175,10 @@ class _MergePdfScreenState extends State<MergePdfScreen> {
                       ),
                       child: SvgPicture.asset(
                         OwnKeepMainIcons.file_pdf,
-                        colorFilter: ColorFilter.mode(colors.dangerRed, BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(
+                          colors.dangerRed,
+                          BlendMode.srcIn,
+                        ),
                         width: 24,
                         height: 24,
                       ),
@@ -171,7 +189,10 @@ class _MergePdfScreenState extends State<MergePdfScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            _getLocalizedString(l10n, item['titleKey'] as String),
+                            _getLocalizedString(
+                              l10n,
+                              item['titleKey'] as String,
+                            ),
                             style: TextStyle(
                               color: colors.textPrimary,
                               fontSize: 15,
@@ -192,18 +213,29 @@ class _MergePdfScreenState extends State<MergePdfScreen> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 6),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                ),
                                 child: Text(
                                   '•',
-                                  style: TextStyle(color: colors.textMuted, fontSize: 12),
+                                  style: TextStyle(
+                                    color: colors.textMuted,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
-                              Text(
-                                _getLocalizedString(l10n, item['metaKey'] as String),
-                                style: TextStyle(
-                                  color: colors.textSecondary,
-                                  fontSize: 13,
-                                  fontFamily: 'Inter',
+                              Expanded(
+                                child: Text(
+                                  _getLocalizedString(
+                                    l10n,
+                                    item['metaKey'] as String,
+                                  ),
+                                  style: TextStyle(
+                                    color: colors.textSecondary,
+                                    fontSize: 13,
+                                    fontFamily: 'Inter',
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
@@ -215,7 +247,10 @@ class _MergePdfScreenState extends State<MergePdfScreen> {
                       index: index,
                       child: SvgPicture.asset(
                         OwnKeepMainIcons.reorder,
-                        colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(
+                          colors.textMuted,
+                          BlendMode.srcIn,
+                        ),
                         width: 24,
                         height: 24,
                       ),
@@ -225,7 +260,7 @@ class _MergePdfScreenState extends State<MergePdfScreen> {
               );
             },
           ),
-          
+
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(OwnKeepSpacing.md),
@@ -263,7 +298,10 @@ class _MergePdfScreenState extends State<MergePdfScreen> {
                               ),
                               child: SvgPicture.asset(
                                 OwnKeepMainIcons.file_pdf,
-                                colorFilter: ColorFilter.mode(colors.dangerRed, BlendMode.srcIn),
+                                colorFilter: ColorFilter.mode(
+                                  colors.dangerRed,
+                                  BlendMode.srcIn,
+                                ),
                                 width: 20,
                                 height: 20,
                               ),
@@ -285,29 +323,40 @@ class _MergePdfScreenState extends State<MergePdfScreen> {
                               constraints: const BoxConstraints(),
                               icon: SvgPicture.asset(
                                 OwnKeepMainIcons.edit,
-                                colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn),
+                                colorFilter: ColorFilter.mode(
+                                  colors.textSecondary,
+                                  BlendMode.srcIn,
+                                ),
                                 width: 20,
                                 height: 20,
                               ),
-                              onPressed: () {},
+                              onPressed: () =>
+                                  context.push('/features/multi-select'),
                             ),
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: OwnKeepSpacing.md, bottom: OwnKeepSpacing.sm),
+                          padding: const EdgeInsets.only(
+                            top: OwnKeepSpacing.md,
+                            bottom: OwnKeepSpacing.sm,
+                          ),
                           child: Divider(color: colors.borderSoft, height: 1),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              l10n.s54_estimated,
-                              style: TextStyle(
-                                color: colors.textSecondary,
-                                fontSize: 13,
-                                fontFamily: 'Inter',
+                            Expanded(
+                              child: Text(
+                                l10n.s54_estimated,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: colors.textSecondary,
+                                  fontSize: 13,
+                                  fontFamily: 'Inter',
+                                ),
                               ),
                             ),
+                            const SizedBox(width: 12),
                             Text(
                               l10n.s54_estimated_value,
                               style: TextStyle(
@@ -341,20 +390,7 @@ class _MergePdfScreenState extends State<MergePdfScreen> {
           border: Border(top: BorderSide(color: colors.borderSoft)),
         ),
         child: ElevatedButton(
-          onPressed: _isMerging ? null : () async {
-            setState(() {
-              _isMerging = true;
-            });
-            await Future.delayed(const Duration(seconds: 2));
-            if (!mounted) return;
-            setState(() {
-              _isMerging = false;
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('PDFs merged successfully')),
-            );
-            Navigator.pop(context);
-          },
+          onPressed: _isMerging ? null : () => _showUnavailable(context),
           style: ElevatedButton.styleFrom(
             backgroundColor: colors.primaryBlue,
             foregroundColor: Colors.white,
@@ -365,22 +401,35 @@ class _MergePdfScreenState extends State<MergePdfScreen> {
             ),
             elevation: 0,
           ),
-          child: _isMerging 
-            ? const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-              )
-            : Text(
-                l10n.s54_merge,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter',
+          child: _isMerging
+              ? const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+              : Text(
+                  l10n.s54_merge,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                  ),
                 ),
-              ),
         ),
       ),
     );
   }
+
+  Future<void> _showUnavailable(BuildContext context) => showDialog<void>(
+    context: context,
+    builder: (context) => const AlertDialog(
+      title: Text('PDF merge unavailable'),
+      content: Text(
+        'No encrypted PDF merge engine is configured in this build.',
+      ),
+    ),
+  );
 }

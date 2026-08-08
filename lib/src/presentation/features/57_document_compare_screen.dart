@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
@@ -19,7 +20,12 @@ class DocumentCompareScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
@@ -59,7 +65,10 @@ class DocumentCompareScreen extends StatelessWidget {
                 child: SvgPicture.asset(
                   'assets/main/illustrations/document_compare_versions.svg',
                   fit: BoxFit.contain,
-                  placeholderBuilder: (context) => Container(color: colors.surfacePrimary),
+                  placeholderBuilder: (context) =>
+                      Container(color: colors.surfacePrimary),
+                  width: 24,
+                  height: 24,
                 ),
               ),
             ),
@@ -75,7 +84,7 @@ class DocumentCompareScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
-            
+
             // Changes List
             Container(
               decoration: BoxDecoration(
@@ -111,9 +120,9 @@ class DocumentCompareScreen extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: OwnKeepSpacing.xl),
-            
+
             // Detailed Comparison Table
             Container(
               decoration: BoxDecoration(
@@ -125,15 +134,25 @@ class DocumentCompareScreen extends StatelessWidget {
                 children: [
                   // Table Header
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.md, vertical: OwnKeepSpacing.sm),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: OwnKeepSpacing.md,
+                      vertical: OwnKeepSpacing.sm,
+                    ),
                     decoration: BoxDecoration(
                       color: colors.backgroundTop,
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(11)),
-                      border: Border(bottom: BorderSide(color: colors.borderSoft)),
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(11),
+                      ),
+                      border: Border(
+                        bottom: BorderSide(color: colors.borderSoft),
+                      ),
                     ),
                     child: Row(
                       children: [
-                        Expanded(flex: 2, child: Container()), // Empty space for labels
+                        Expanded(
+                          flex: 2,
+                          child: Container(),
+                        ), // Empty space for labels
                         Expanded(
                           flex: 3,
                           child: Text(
@@ -161,7 +180,7 @@ class DocumentCompareScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  
+
                   // Table Rows
                   _buildTableRow(
                     colors,
@@ -199,7 +218,7 @@ class DocumentCompareScreen extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 100),
           ],
         ),
@@ -217,9 +236,7 @@ class DocumentCompareScreen extends StatelessWidget {
         ),
         child: ElevatedButton(
           onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Comparison exported successfully')),
-            );
+            context.push('/features/share-export');
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: colors.primaryBlue,
@@ -244,7 +261,13 @@ class DocumentCompareScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildChangeItem(OwnKeepMainColorsTheme colors, {required String icon, required Color iconColor, required String title, required String subtitle}) {
+  Widget _buildChangeItem(
+    OwnKeepMainColorsTheme colors, {
+    required String icon,
+    required Color iconColor,
+    required String title,
+    required String subtitle,
+  }) {
     return Padding(
       padding: const EdgeInsets.all(OwnKeepSpacing.md),
       child: Row(
@@ -294,7 +317,14 @@ class DocumentCompareScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTableRow(OwnKeepMainColorsTheme colors, {required String label, required String valueA, required String valueB, required bool isChanged, Color? highlightColor}) {
+  Widget _buildTableRow(
+    OwnKeepMainColorsTheme colors, {
+    required String label,
+    required String valueA,
+    required String valueB,
+    required bool isChanged,
+    Color? highlightColor,
+  }) {
     return Padding(
       padding: const EdgeInsets.all(OwnKeepSpacing.md),
       child: Row(
@@ -326,17 +356,23 @@ class DocumentCompareScreen extends StatelessWidget {
           Expanded(
             flex: 3,
             child: Container(
-              padding: isChanged ? const EdgeInsets.symmetric(horizontal: 6, vertical: 2) : EdgeInsets.zero,
-              decoration: isChanged 
-                ? BoxDecoration(
-                    color: (highlightColor ?? colors.primaryBlue).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(4),
-                  ) 
-                : null,
+              padding: isChanged
+                  ? const EdgeInsets.symmetric(horizontal: 6, vertical: 2)
+                  : EdgeInsets.zero,
+              decoration: isChanged
+                  ? BoxDecoration(
+                      color: (highlightColor ?? colors.primaryBlue).withOpacity(
+                        0.1,
+                      ),
+                      borderRadius: BorderRadius.circular(4),
+                    )
+                  : null,
               child: Text(
                 valueB,
                 style: TextStyle(
-                  color: isChanged ? (highlightColor ?? colors.primaryBlue) : colors.textPrimary,
+                  color: isChanged
+                      ? (highlightColor ?? colors.primaryBlue)
+                      : colors.textPrimary,
                   fontSize: 13,
                   fontWeight: isChanged ? FontWeight.w600 : FontWeight.normal,
                   fontFamily: 'Inter',

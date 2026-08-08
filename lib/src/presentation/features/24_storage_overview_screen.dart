@@ -12,16 +12,21 @@ import '../../providers/document_provider.dart';
 class StorageOverviewScreen extends ConsumerWidget {
   const StorageOverviewScreen({super.key});
 
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
-    
+
     final storageStats = ref.watch(storageStatsProvider);
-    
+    final documents = ref.watch(allDocumentsProvider).value ?? const [];
+    int countMime(String prefix) =>
+        documents.where((doc) => doc.mimeType.startsWith(prefix)).length;
+
     String formatBytes(int bytes) {
       if (bytes < 1024) return '$bytes B';
       if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-      if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+      if (bytes < 1024 * 1024 * 1024)
+        return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
       return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
     }
 
@@ -31,7 +36,12 @@ class StorageOverviewScreen extends ConsumerWidget {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -63,15 +73,19 @@ class StorageOverviewScreen extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        l10n.s24_vault_storage,
-                        style: TextStyle(
-                          color: colors.textPrimary,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
+                      Expanded(
+                        child: Text(
+                          l10n.s24_vault_storage,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: colors.textPrimary,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Inter',
+                          ),
                         ),
                       ),
+                      const SizedBox(width: 12),
                       Text(
                         l10n.s24_total,
                         style: TextStyle(
@@ -100,29 +114,30 @@ class StorageOverviewScreen extends ConsumerWidget {
                             Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                  Text(
-                                    storageStats.maybeWhen(
-                                      data: (stats) => 'Active',
-                                      orElse: () => '-',
-                                    ),
-                                    style: TextStyle(
-                                      color: colors.textPrimary,
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w700,
-                                      fontFamily: 'Inter',
-                                    ),
+                                Text(
+                                  storageStats.maybeWhen(
+                                    data: (stats) => 'Active',
+                                    orElse: () => '-',
                                   ),
-                                  Text(
-                                    storageStats.maybeWhen(
-                                      data: (stats) => formatBytes(stats['totalSize'] as int),
-                                      orElse: () => '-',
-                                    ),
-                                    style: TextStyle(
-                                      color: colors.textSecondary,
-                                      fontSize: 12,
-                                      fontFamily: 'Inter',
-                                    ),
+                                  style: TextStyle(
+                                    color: colors.textPrimary,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: 'Inter',
                                   ),
+                                ),
+                                Text(
+                                  storageStats.maybeWhen(
+                                    data: (stats) =>
+                                        formatBytes(stats['totalSize'] as int),
+                                    orElse: () => '-',
+                                  ),
+                                  style: TextStyle(
+                                    color: colors.textSecondary,
+                                    fontSize: 12,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
                               ],
                             ),
                           ],
@@ -133,13 +148,33 @@ class StorageOverviewScreen extends ConsumerWidget {
                       Expanded(
                         child: Column(
                           children: [
-                            _buildLegendItem(colors, colors.primaryBlue, l10n.s24_documents, l10n.s24_documents_size),
+                            _buildLegendItem(
+                              colors,
+                              colors.primaryBlue,
+                              l10n.s24_documents,
+                              '${documents.where((doc) => doc.mimeType.startsWith('application/') || doc.mimeType.startsWith('text/')).length} items',
+                            ),
                             const SizedBox(height: 12),
-                            _buildLegendItem(colors, colors.successGreen, l10n.s24_images, l10n.s24_images_size),
+                            _buildLegendItem(
+                              colors,
+                              colors.successGreen,
+                              l10n.s24_images,
+                              '${countMime('image/')} items',
+                            ),
                             const SizedBox(height: 12),
-                            _buildLegendItem(colors, colors.warningOrange, l10n.s24_videos, l10n.s24_videos_size),
+                            _buildLegendItem(
+                              colors,
+                              colors.warningOrange,
+                              l10n.s24_videos,
+                              '${countMime('video/')} items',
+                            ),
                             const SizedBox(height: 12),
-                            _buildLegendItem(colors, colors.aiPurple, l10n.s24_others, l10n.s24_others_size),
+                            _buildLegendItem(
+                              colors,
+                              colors.aiPurple,
+                              l10n.s24_others,
+                              '${documents.where((doc) => !doc.mimeType.startsWith('application/') && !doc.mimeType.startsWith('text/') && !doc.mimeType.startsWith('image/') && !doc.mimeType.startsWith('video/')).length} items',
+                            ),
                           ],
                         ),
                       ),
@@ -159,37 +194,6 @@ class StorageOverviewScreen extends ConsumerWidget {
             ),
             const SizedBox(height: OwnKeepSpacing.xxl),
 
-            // Large Items
-            _buildSectionHeader(l10n.s24_large_items, l10n.common_see_all, colors),
-            const SizedBox(height: OwnKeepSpacing.md),
-            _buildListItem(
-              context: context,
-              colors: colors,
-              icon: OwnKeepMainIcons.video,
-              iconColor: colors.warningOrange,
-              title: l10n.s24_video,
-              subtitle: l10n.s24_video_size,
-            ),
-            const SizedBox(height: OwnKeepSpacing.sm),
-            _buildListItem(
-              context: context,
-              colors: colors,
-              icon: OwnKeepMainIcons.raw_image,
-              iconColor: colors.successGreen,
-              title: l10n.s24_raw_photo,
-              subtitle: l10n.s24_raw_photo_size,
-            ),
-            const SizedBox(height: OwnKeepSpacing.sm),
-            _buildListItem(
-              context: context,
-              colors: colors,
-              icon: OwnKeepMainIcons.archive_zip,
-              iconColor: colors.aiPurple,
-              title: l10n.s24_project_zip,
-              subtitle: l10n.s24_project_zip_size,
-            ),
-            const SizedBox(height: OwnKeepSpacing.xxl),
-
             // Cleanup Suggestions
             _buildSectionHeader(l10n.s24_cleanup, null, colors),
             const SizedBox(height: OwnKeepSpacing.md),
@@ -199,6 +203,7 @@ class StorageOverviewScreen extends ConsumerWidget {
               title: l10n.s24_duplicates,
               subtitle: l10n.s24_duplicates_meta,
               actionLabel: "Review",
+              onPressed: () => context.push('/features/duplicate-finder'),
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
             _buildCleanupCard(
@@ -207,6 +212,13 @@ class StorageOverviewScreen extends ConsumerWidget {
               title: l10n.s24_large_videos,
               subtitle: l10n.s24_large_videos_meta,
               actionLabel: "Review",
+              onPressed: () {
+                final current = ref.read(dashboardDocumentFilterProvider);
+                ref
+                    .read(dashboardDocumentFilterProvider.notifier)
+                    .update(current.copyWith(kind: DashboardFileKind.videos));
+                context.push('/dashboard/all-files');
+              },
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
             _buildCleanupCard(
@@ -215,6 +227,7 @@ class StorageOverviewScreen extends ConsumerWidget {
               title: l10n.s24_unopened,
               subtitle: l10n.s24_unopened_meta,
               actionLabel: "Review",
+              onPressed: () => context.push('/dashboard/all-files'),
             ),
             const SizedBox(height: OwnKeepSpacing.xl),
 
@@ -232,8 +245,20 @@ class StorageOverviewScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   TextButton.icon(
-                    onPressed: () {},
-                    icon: SvgPicture.asset(OwnKeepMainIcons.refresh, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 16, height: 16),
+                    onPressed: () {
+                      ref.invalidate(storageStatsProvider);
+                      ref.invalidate(vaultStorageSummaryProvider);
+                      ref.invalidate(allDocumentsProvider);
+                    },
+                    icon: SvgPicture.asset(
+                      OwnKeepMainIcons.refresh,
+                      colorFilter: ColorFilter.mode(
+                        colors.primaryBlue,
+                        BlendMode.srcIn,
+                      ),
+                      width: 16,
+                      height: 16,
+                    ),
                     label: Text(
                       l10n.s24_scan_again,
                       style: TextStyle(
@@ -254,30 +279,40 @@ class StorageOverviewScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLegendItem(OwnKeepMainColorsTheme colors, Color dotColor, String label, String size) {
+  Widget _buildLegendItem(
+    OwnKeepMainColorsTheme colors,
+    Color dotColor,
+    String label,
+    String size,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Container(
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
-                color: dotColor,
-                shape: BoxShape.circle,
+        Expanded(
+          child: Row(
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: dotColor,
+                  shape: BoxShape.circle,
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: TextStyle(
-                color: colors.textSecondary,
-                fontSize: 13,
-                fontFamily: 'Inter',
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  label,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: colors.textSecondary,
+                    fontSize: 13,
+                    fontFamily: 'Inter',
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         Text(
           size,
@@ -292,7 +327,11 @@ class StorageOverviewScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSectionHeader(String title, String? action, OwnKeepMainColorsTheme colors) {
+  Widget _buildSectionHeader(
+    String title,
+    String? action,
+    OwnKeepMainColorsTheme colors,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -319,73 +358,13 @@ class StorageOverviewScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildListItem({
-    required BuildContext context,
-    required OwnKeepMainColorsTheme colors,
-    required String icon,
-    required Color iconColor,
-    required String title,
-    required String subtitle,
-  }) {
-    return InkWell(
-      onTap: () {},
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: colors.surfacePrimary,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: colors.borderSoft),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: colors.surfaceSelected,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
-            ),
-            const SizedBox(width: OwnKeepSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: colors.textPrimary,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'Inter',
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      color: colors.textSecondary,
-                      fontSize: 13,
-                      fontFamily: 'Inter',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildCleanupCard({
     required OwnKeepMainColorsTheme colors,
     required String icon,
     required String title,
     required String subtitle,
     required String actionLabel,
+    required VoidCallback onPressed,
   }) {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -402,7 +381,15 @@ class StorageOverviewScreen extends ConsumerWidget {
               color: colors.surfaceSelected,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+            child: SvgPicture.asset(
+              icon,
+              colorFilter: ColorFilter.mode(
+                colors.primaryBlue,
+                BlendMode.srcIn,
+              ),
+              width: 24,
+              height: 24,
+            ),
           ),
           const SizedBox(width: OwnKeepSpacing.md),
           Expanded(
@@ -431,7 +418,7 @@ class StorageOverviewScreen extends ConsumerWidget {
             ),
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: onPressed,
             style: ElevatedButton.styleFrom(
               backgroundColor: colors.surfaceSelected,
               foregroundColor: colors.primaryBlue,

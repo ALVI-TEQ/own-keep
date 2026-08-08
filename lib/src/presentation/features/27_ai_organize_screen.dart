@@ -5,14 +5,60 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/document_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class AiOrganizeScreen extends StatelessWidget {
+class AiOrganizeScreen extends ConsumerStatefulWidget {
   const AiOrganizeScreen({super.key});
+
+  @override
+  ConsumerState<AiOrganizeScreen> createState() => _AiOrganizeScreenState();
+}
+
+class _AiOrganizeScreenState extends ConsumerState<AiOrganizeScreen> {
+  bool _autoOrganize = true;
+
+  @override
+  void initState() {
+    super.initState();
+    SharedPreferences.getInstance().then((preferences) {
+      if (mounted) {
+        setState(
+          () => _autoOrganize = preferences.getBool('ai_auto_organize') ?? true,
+        );
+      }
+    });
+  }
+
+  Future<void> _setAutoOrganize(bool value) async {
+    setState(() => _autoOrganize = value);
+    await (await SharedPreferences.getInstance()).setBool(
+      'ai_auto_organize',
+      value,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
+    final documents = ref.watch(allDocumentsProvider).value ?? const [];
+    final uncategorized = documents
+        .where((doc) => doc.documentType.storageValue == 'UNKNOWN')
+        .length;
+    final missingTags = documents.where((doc) => doc.tags.isEmpty).length;
+    final filenames = <String, int>{};
+    for (final document in documents) {
+      filenames.update(
+        document.logicalFilename.toLowerCase(),
+        (count) => count + 1,
+        ifAbsent: () => 1,
+      );
+    }
+    final duplicates = filenames.values
+        .where((count) => count > 1)
+        .fold<int>(0, (sum, count) => sum + count);
 
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -20,7 +66,12 @@ class AiOrganizeScreen extends StatelessWidget {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -35,8 +86,16 @@ class AiOrganizeScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: SvgPicture.asset(OwnKeepMainIcons.history, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
-            onPressed: () {},
+            icon: SvgPicture.asset(
+              OwnKeepMainIcons.history,
+              colorFilter: ColorFilter.mode(
+                colors.textPrimary,
+                BlendMode.srcIn,
+              ),
+              width: 24,
+              height: 24,
+            ),
+            onPressed: () => context.push('/features/ai-history'),
           ),
         ],
       ),
@@ -66,7 +125,10 @@ class AiOrganizeScreen extends StatelessWidget {
                     ),
                     child: SvgPicture.asset(
                       OwnKeepMainIcons.check_circle,
-                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      colorFilter: const ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
                       width: 32,
                       height: 32,
                     ),
@@ -93,11 +155,14 @@ class AiOrganizeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: OwnKeepSpacing.xl),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () => context.push('/dashboard/all-files'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: colors.aiPurple,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
                       ),
@@ -137,7 +202,8 @@ class AiOrganizeScreen extends StatelessWidget {
               iconColor: const Color(0xFF27C5E8), // accentCyan
               title: l10n.s27_uncategorized,
               subtitle: l10n.s27_uncategorized_body,
-              countLabel: l10n.s27_uncategorized_count,
+              countLabel: '$uncategorized',
+              onTap: () => context.push('/dashboard/all-files'),
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
             _buildSuggestionCard(
@@ -147,7 +213,8 @@ class AiOrganizeScreen extends StatelessWidget {
               iconColor: colors.warningOrange,
               title: l10n.s27_duplicates,
               subtitle: l10n.s27_duplicates_body,
-              countLabel: l10n.s27_duplicates_count,
+              countLabel: '$duplicates',
+              onTap: () => context.push('/features/duplicate-finder'),
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
             _buildSuggestionCard(
@@ -157,7 +224,8 @@ class AiOrganizeScreen extends StatelessWidget {
               iconColor: const Color(0xFFE54B86), // tagPink
               title: l10n.s27_missing_tags,
               subtitle: l10n.s27_missing_tags_body,
-              countLabel: l10n.s27_missing_tags_count,
+              countLabel: '$missingTags',
+              onTap: () => context.push('/features/tag-manager'),
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
             _buildSuggestionCard(
@@ -167,7 +235,8 @@ class AiOrganizeScreen extends StatelessWidget {
               iconColor: colors.successGreen,
               title: l10n.s27_similar,
               subtitle: l10n.s27_similar_body,
-              countLabel: l10n.s27_similar_count,
+              countLabel: '${documents.length}',
+              onTap: () => context.push('/features/similar-documents'),
             ),
 
             const SizedBox(height: OwnKeepSpacing.xxl),
@@ -207,11 +276,7 @@ class AiOrganizeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SvgPicture.asset(
-                    OwnKeepMainIcons.toggle_on,
-                    colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn),
-                    width: 40,
-                  ),
+                  Switch(value: _autoOrganize, onChanged: _setAutoOrganize),
                 ],
               ),
             ),
@@ -230,9 +295,10 @@ class AiOrganizeScreen extends StatelessWidget {
     required String title,
     required String subtitle,
     required String countLabel,
+    required VoidCallback onTap,
   }) {
     return InkWell(
-      onTap: () {},
+      onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -250,7 +316,7 @@ class AiOrganizeScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: SvgPicture.asset(
-                icon, 
+                icon,
                 colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
                 width: 24,
                 height: 24,
@@ -274,7 +340,10 @@ class AiOrganizeScreen extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: colors.surfaceSelected,
                           borderRadius: BorderRadius.circular(4),
@@ -306,7 +375,12 @@ class AiOrganizeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SvgPicture.asset(OwnKeepMainIcons.arrow_right, colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn)),
+            SvgPicture.asset(
+              OwnKeepMainIcons.arrow_right,
+              colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
+              width: 24,
+              height: 24,
+            ),
           ],
         ),
       ),

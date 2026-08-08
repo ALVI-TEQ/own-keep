@@ -17,11 +17,20 @@ class OwnKeepPinPad extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _NumRow(keys: const [('1', ''), ('2', 'ABC'), ('3', 'DEF')], onPress: onKeyPress),
+        _NumRow(
+          keys: const [('1', ''), ('2', 'ABC'), ('3', 'DEF')],
+          onPress: onKeyPress,
+        ),
         const SizedBox(height: 16),
-        _NumRow(keys: const [('4', 'GHI'), ('5', 'JKL'), ('6', 'MNO')], onPress: onKeyPress),
+        _NumRow(
+          keys: const [('4', 'GHI'), ('5', 'JKL'), ('6', 'MNO')],
+          onPress: onKeyPress,
+        ),
         const SizedBox(height: 16),
-        _NumRow(keys: const [('7', 'PQRS'), ('8', 'TUV'), ('9', 'WXYZ')], onPress: onKeyPress),
+        _NumRow(
+          keys: const [('7', 'PQRS'), ('8', 'TUV'), ('9', 'WXYZ')],
+          onPress: onKeyPress,
+        ),
         const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -45,7 +54,9 @@ class _NumRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: keys.map((k) => _NumKey(main: k.$1, sub: k.$2, onPress: onPress)).toList(),
+      children: keys
+          .map((k) => _NumKey(main: k.$1, sub: k.$2, onPress: onPress))
+          .toList(),
     );
   }
 }
@@ -62,7 +73,8 @@ class _NumKey extends StatelessWidget {
       onTap: () => onPress(main),
       behavior: HitTestBehavior.opaque,
       child: Container(
-        width: 84, height: 84,
+        width: 84,
+        height: 84,
         decoration: BoxDecoration(
           color: context.onboardingColors.surfaceKeypad,
           shape: BoxShape.circle,
@@ -70,9 +82,26 @@ class _NumKey extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(main, style: TextStyle(color: context.onboardingColors.textPrimary, fontSize: 32, fontWeight: FontWeight.w400, fontFamily: 'Inter')),
+            Text(
+              main,
+              style: TextStyle(
+                color: context.onboardingColors.textPrimary,
+                fontSize: 32,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Inter',
+              ),
+            ),
             if (sub.isNotEmpty)
-              Text(sub, style: TextStyle(color: context.onboardingColors.textSecondary, fontSize: 10, letterSpacing: 1.5, fontWeight: FontWeight.w600, fontFamily: 'Inter')),
+              Text(
+                sub,
+                style: TextStyle(
+                  color: context.onboardingColors.textSecondary,
+                  fontSize: 10,
+                  letterSpacing: 1.5,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+              ),
           ],
         ),
       ),
@@ -90,13 +119,18 @@ class _BackspaceKey extends StatelessWidget {
       onTap: onPress,
       behavior: HitTestBehavior.opaque,
       child: Container(
-        width: 84, height: 84,
+        width: 84,
+        height: 84,
         decoration: const BoxDecoration(
           color: Colors.transparent,
           shape: BoxShape.circle,
         ),
         child: Center(
-          child: SvgPicture.asset(OwnKeepOnboardingIcons.keypad_backspace, width: 32, height: 32),
+          child: SvgPicture.asset(
+            OwnKeepOnboardingIcons.keypad_backspace,
+            width: 32,
+            height: 32,
+          ),
         ),
       ),
     );
@@ -108,7 +142,12 @@ class OwnKeepPinIndicator extends StatelessWidget {
   final int currentLength;
   final bool hasError;
 
-  const OwnKeepPinIndicator({super.key, required this.length, required this.currentLength, this.hasError = false});
+  const OwnKeepPinIndicator({
+    super.key,
+    required this.length,
+    required this.currentLength,
+    this.hasError = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -122,8 +161,14 @@ class OwnKeepPinIndicator extends StatelessWidget {
             isFilled 
               ? OwnKeepOnboardingIcons.pin_dot_active 
               : OwnKeepOnboardingIcons.pin_dot_inactive,
-            width: 16, height: 16,
-            colorFilter: hasError && isFilled ? ColorFilter.mode(context.onboardingColors.foreverRed, BlendMode.srcIn) : null,
+            width: 16,
+            height: 16,
+            colorFilter: hasError && isFilled
+                ? ColorFilter.mode(
+                    context.onboardingColors.foreverRed,
+                    BlendMode.srcIn,
+                  )
+                : null,
           ),
         );
       }),

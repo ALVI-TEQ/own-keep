@@ -1,199 +1,122 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ownkeep/src/l10n/app_localizations.dart';
-import '../../theme/ownkeep_main_colors.dart';
-import '../../theme/ownkeep_main_icons.dart';
+import 'package:vault_domain/vault_domain.dart';
 
-class AutoTaggingScreen extends StatefulWidget {
+import '../../providers/document_provider.dart';
+import '../../providers/vault_provider.dart';
+import '../../theme/ownkeep_main_colors.dart';
+
+class AutoTaggingScreen extends ConsumerStatefulWidget {
   const AutoTaggingScreen({super.key});
 
   @override
-  State<AutoTaggingScreen> createState() => _AutoTaggingScreenState();
+  ConsumerState<AutoTaggingScreen> createState() => _AutoTaggingScreenState();
 }
 
-class _AutoTaggingScreenState extends State<AutoTaggingScreen> {
-  final Set<int> _selectedIndexes = {0, 1, 2, 3, 4}; // All selected by default
+class _AutoTaggingScreenState extends ConsumerState<AutoTaggingScreen> {
+  final _selectedIds = <String>{};
+  bool _initialized = false;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.mainColors;
-    final l10n = AppLocalizations.of(context)!;
-
-    final tags = [
-      {'title': l10n.s77_passport, 'tags': ['#identity', '#travel', '#important']},
-      {'title': l10n.s77_insurance, 'tags': ['#finance', '#health']},
-      {'title': l10n.s77_salary, 'tags': ['#finance', '#work', '#2025']},
-      {'title': l10n.s77_licence, 'tags': ['#identity', '#vehicle']},
-      {'title': l10n.s77_deed, 'tags': ['#property', '#legal', '#important']},
-    ];
-
+    final documentsAsync = ref.watch(allDocumentsProvider);
     return Scaffold(
       backgroundColor: colors.backgroundTop,
       appBar: AppBar(
         backgroundColor: colors.backgroundTop,
-        elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
           onPressed: () => context.pop(),
+          icon: const Icon(Icons.arrow_back),
         ),
-        title: Column(
-          children: [
-            Text(l10n.s77_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
-            Text(l10n.s77_subtitle, style: TextStyle(color: colors.textMuted, fontSize: 12)),
-          ],
-        ),
-        centerTitle: true,
+        title: const Text('Review Auto Tags'),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [colors.backgroundTop, colors.backgroundBottom],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: colors.primaryBlue.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(16),
+      body: documentsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, _) =>
+            Center(child: Text('Unable to load documents: $error')),
+        data: (documents) {
+          final suggestions = documents
+              .map((document) => (document, suggestedTagsForDocument(document)))
+              .where((entry) => entry.$2.isNotEmpty)
+              .toList();
+          if (!_initialized) {
+            _initialized = true;
+            _selectedIds.addAll(suggestions.map((entry) => entry.$1.id));
+          }
+          if (suggestions.isEmpty) {
+            return const Center(child: Text('No tag suggestions available.'));
+          }
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: suggestions.length,
+            itemBuilder: (context, index) {
+              final document = suggestions[index].$1;
+              final tags = suggestions[index].$2;
+              return Card(
+                color: colors.surfacePrimary,
+                child: CheckboxListTile(
+                  value: _selectedIds.contains(document.id),
+                  onChanged: (_) => setState(() {
+                    _selectedIds.contains(document.id)
+                        ? _selectedIds.remove(document.id)
+                        : _selectedIds.add(document.id);
+                  }),
+                  title: Text(document.logicalFilename),
+                  subtitle: Text(tags.map((tag) => '#$tag').join('  ')),
                 ),
-                child: Row(
-                  children: [
-                    SvgPicture.asset(OwnKeepMainIcons.ai_sparkle, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(l10n.s77_ready, style: TextStyle(color: colors.primaryBlue, fontSize: 14, fontWeight: FontWeight.w600)),
-                          Text(l10n.s77_ready_body, style: TextStyle(color: colors.textSecondary, fontSize: 14)),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                itemCount: tags.length,
-                itemBuilder: (context, index) {
-                  final item = tags[index];
-                  final isSelected = _selectedIndexes.contains(index);
-
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (isSelected) {
-                          _selectedIndexes.remove(index);
-                        } else {
-                          _selectedIndexes.add(index);
-                        }
-                      });
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(bottom: 16),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: colors.surfacePrimary,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: isSelected ? colors.primaryBlue : colors.borderSoft,
-                          width: isSelected ? 2 : 1,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 24,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              color: isSelected ? colors.primaryBlue : Colors.transparent,
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(
-                                color: isSelected ? colors.primaryBlue : colors.borderSoft,
-                                width: 2,
-                              ),
-                            ),
-                            child: isSelected ? const Icon(Icons.check, size: 16, color: Colors.white) : null,
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(OwnKeepMainIcons.file_pdf, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 16),
-                                    const SizedBox(width: 8),
-                                    Text(item['title'] as String, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
-                                  ],
-                                ),
-                                const SizedBox(height: 12),
-                                Wrap(
-                                  spacing: 8,
-                                  runSpacing: 8,
-                                  children: (item['tags'] as List<String>).map((tag) {
-                                    return Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: colors.surfaceSecondary,
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Text(tag, style: TextStyle(color: colors.textSecondary, fontSize: 12)),
-                                    );
-                                  }).toList(),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+              );
+            },
+          );
+        },
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: ElevatedButton(
-              onPressed: _selectedIndexes.isEmpty
-                  ? null
-                  : () {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Tags applied')));
-                      context.pop();
-                    },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colors.primaryBlue,
-                disabledBackgroundColor: colors.surfacePrimary,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              ),
-              child: Text(
-                l10n.s77_apply_all,
-                style: TextStyle(
-                  color: _selectedIndexes.isEmpty ? colors.textMuted : Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
+          padding: const EdgeInsets.all(16),
+          child: FilledButton(
+            onPressed: _selectedIds.isEmpty ? null : _applyTags,
+            child: Text('Apply to ${_selectedIds.length} document(s)'),
           ),
         ),
       ),
     );
   }
+
+  Future<void> _applyTags() async {
+    final controller = ref.read(ingestionControllerProvider);
+    if (controller == null) return;
+    for (final id in _selectedIds) {
+      final detail = await ref.read(documentDetailProvider(id).future);
+      if (detail == null) continue;
+      await controller.replaceTags(
+        id,
+        <String>{
+          ...detail.summary.tags.map((tag) => tag.name),
+          ...suggestedTagsForDocument(detail.summary),
+        }.toList(),
+      );
+    }
+    ref.invalidate(allDocumentsProvider);
+    if (mounted) context.pop();
+  }
 }
+
+List<String> suggestedTagsForDocument(DocumentListItemView document) =>
+    switch (document.documentType) {
+      DocumentType.aadhaar ||
+      DocumentType.pan ||
+      DocumentType.voterId => const ['identity', 'important'],
+      DocumentType.passport => const ['identity', 'travel', 'important'],
+      DocumentType.drivingLicence => const ['identity', 'vehicle'],
+      DocumentType.bankStatement ||
+      DocumentType.invoice ||
+      DocumentType.receipt => const ['finance'],
+      DocumentType.insurancePolicy => const ['insurance', 'important'],
+      DocumentType.medicalReport ||
+      DocumentType.prescription => const ['health'],
+      DocumentType.propertyTax => const ['property', 'finance'],
+      DocumentType.vehicleDocument => const ['vehicle'],
+      DocumentType.educationCertificate => const ['education'],
+      _ => const <String>[],
+    };

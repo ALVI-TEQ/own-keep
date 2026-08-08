@@ -15,16 +15,42 @@ class SetPinScreen extends StatefulWidget {
 
 class _SetPinScreenState extends State<SetPinScreen> {
   String _pin = '';
+  String? _error;
 
   void _onKeyPress(String value) {
     if (_pin.length < 6) {
       setState(() {
         _pin += value;
+        _error = null;
       });
       if (_pin.length == 6) {
-        context.push('/confirm-pin', extra: _pin);
+        if (_isWeakPin(_pin)) {
+          setState(() {
+            _pin = '';
+            _error = 'Choose a PIN without repeated or sequential digits.';
+          });
+        } else {
+          context.push('/confirm-pin', extra: _pin);
+        }
       }
     }
+  }
+
+  bool _isWeakPin(String pin) {
+    if (pin.split('').every((digit) => digit == pin[0])) return true;
+    const sequences = <String>{
+      '012345',
+      '123456',
+      '234567',
+      '345678',
+      '456789',
+      '987654',
+      '876543',
+      '765432',
+      '654321',
+      '543210',
+    };
+    return sequences.contains(pin);
   }
 
   void _onBackspace() {
@@ -38,7 +64,7 @@ class _SetPinScreenState extends State<SetPinScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Scaffold(
       backgroundColor: context.onboardingColors.backgroundDeep,
       body: SafeArea(
@@ -51,7 +77,11 @@ class _SetPinScreenState extends State<SetPinScreen> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: IconButton(
-                  icon: SvgPicture.asset(OwnKeepOnboardingIcons.back_arrow, width: 24, height: 24),
+                  icon: SvgPicture.asset(
+                    OwnKeepOnboardingIcons.back_arrow,
+                    width: 24,
+                    height: 24,
+                  ),
                   onPressed: () {
                     if (context.canPop()) {
                       context.pop();
@@ -86,13 +116,21 @@ class _SetPinScreenState extends State<SetPinScreen> {
                   ),
                 ),
               ),
+              if (_error != null) ...[
+                const SizedBox(height: 16),
+                Text(
+                  _error!,
+                  style: TextStyle(
+                    color: context.onboardingColors.foreverRed,
+                    fontSize: 14,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ],
               const Spacer(),
               OwnKeepPinIndicator(length: 6, currentLength: _pin.length),
               const Spacer(),
-              OwnKeepPinPad(
-                onKeyPress: _onKeyPress,
-                onBackspace: _onBackspace,
-              ),
+              OwnKeepPinPad(onKeyPress: _onKeyPress, onBackspace: _onBackspace),
               const SizedBox(height: 32),
             ],
           ),

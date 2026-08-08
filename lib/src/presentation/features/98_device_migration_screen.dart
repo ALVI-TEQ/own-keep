@@ -13,37 +13,111 @@ class DeviceMigrationScreen extends ConsumerStatefulWidget {
   const DeviceMigrationScreen({super.key});
 
   @override
-  ConsumerState<DeviceMigrationScreen> createState() => _DeviceMigrationScreenState();
+  ConsumerState<DeviceMigrationScreen> createState() =>
+      _DeviceMigrationScreenState();
 }
 
 class _DeviceMigrationScreenState extends ConsumerState<DeviceMigrationScreen> {
-  int _selectedMethod = 0; // 0=Nearby, 1=File
+  int _selectedMethod = 1; // File export is the implemented transport.
   bool _isExporting = false;
+
+  Future<String?> _requestRecoveryPhrase() async {
+    final phrase = TextEditingController();
+    final confirmation = TextEditingController();
+    String? error;
+    final value = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('Protect migration archive'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Enter and confirm the recovery phrase for this encrypted export.',
+              ),
+              TextField(
+                controller: phrase,
+                obscureText: true,
+                autocorrect: false,
+                enableSuggestions: false,
+                decoration: const InputDecoration(labelText: 'Recovery phrase'),
+              ),
+              TextField(
+                controller: confirmation,
+                obscureText: true,
+                autocorrect: false,
+                enableSuggestions: false,
+                decoration: const InputDecoration(labelText: 'Confirm phrase'),
+              ),
+              if (error != null)
+                Text(error!, style: const TextStyle(color: Colors.red)),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () {
+                final entered = phrase.text.trim();
+                if (entered.isEmpty || entered != confirmation.text.trim()) {
+                  setDialogState(
+                    () => error = entered.isEmpty
+                        ? 'Enter your recovery phrase.'
+                        : 'Recovery phrases do not match.',
+                  );
+                  return;
+                }
+                Navigator.pop(dialogContext, entered);
+              },
+              child: const Text('Continue'),
+            ),
+          ],
+        ),
+      ),
+    );
+    phrase.dispose();
+    confirmation.dispose();
+    return value;
+  }
 
   Future<void> _performFileExport() async {
     final handle = ref.read(vaultSessionProvider).value;
     if (handle == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vault is locked.')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Vault is locked.')));
       return;
     }
+    final passphrase = await _requestRecoveryPhrase();
+    if (passphrase == null || !mounted) return;
     setState(() => _isExporting = true);
-    
+
     try {
-      final passphrase = "mango desert trust polar kitten guitar planet purple silver eagle bridge fitness";
       final pending = await handle.createBackup(recoveryPassphrase: passphrase);
       final transfer = const PlatformBackupArchiveTransfer();
       final saved = await transfer.exportArchive(pending.archive);
-      
+      pending.dispose();
+
       if (mounted) {
         setState(() => _isExporting = false);
         if (saved) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Migration file exported successfully!')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Migration file exported successfully!'),
+            ),
+          );
         }
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isExporting = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Export failed: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Export failed: $e')));
       }
     }
   }
@@ -66,13 +140,28 @@ class _DeviceMigrationScreenState extends ConsumerState<DeviceMigrationScreen> {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Column(
           children: [
-            Text(l10n.s98_title, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
-            Text(l10n.s98_subtitle, style: TextStyle(color: colors.textMuted, fontSize: 12)),
+            Text(
+              l10n.s98_title,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              l10n.s98_subtitle,
+              style: TextStyle(color: colors.textMuted, fontSize: 12),
+            ),
           ],
         ),
         centerTitle: true,
@@ -96,7 +185,9 @@ class _DeviceMigrationScreenState extends ConsumerState<DeviceMigrationScreen> {
                 decoration: BoxDecoration(
                   color: colors.primaryBlue.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: colors.primaryBlue.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: colors.primaryBlue.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -106,16 +197,36 @@ class _DeviceMigrationScreenState extends ConsumerState<DeviceMigrationScreen> {
                         color: colors.primaryBlue,
                         shape: BoxShape.circle,
                       ),
-                      child: SvgPicture.asset(OwnKeepMainIcons.device_sync, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn), width: 24),
+                      child: SvgPicture.asset(
+                        OwnKeepMainIcons.device_sync,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
+                        width: 24,
+                      ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(l10n.s98_secure, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
+                          Text(
+                            l10n.s98_secure,
+                            style: TextStyle(
+                              color: colors.textPrimary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           const SizedBox(height: 4),
-                          Text(l10n.s98_secure_body, style: TextStyle(color: colors.textSecondary, fontSize: 12)),
+                          Text(
+                            l10n.s98_secure_body,
+                            style: TextStyle(
+                              color: colors.textSecondary,
+                              fontSize: 12,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -124,18 +235,50 @@ class _DeviceMigrationScreenState extends ConsumerState<DeviceMigrationScreen> {
               ),
               const SizedBox(height: 32),
 
-              Text(l10n.s98_choose, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(
+                l10n.s98_choose,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 16),
-              
-              _buildMethodCard(l10n.s98_nearby, l10n.s98_nearby_body, OwnKeepMainIcons.device_sync, 0, colors),
-              _buildMethodCard(l10n.s98_file, l10n.s98_file_body, OwnKeepMainIcons.folder_export, 1, colors),
-              
+
+              _buildMethodCard(
+                l10n.s98_nearby,
+                l10n.s98_nearby_body,
+                OwnKeepMainIcons.device_sync,
+                0,
+                colors,
+              ),
+              _buildMethodCard(
+                l10n.s98_file,
+                l10n.s98_file_body,
+                OwnKeepMainIcons.folder_export,
+                1,
+                colors,
+              ),
+
               const SizedBox(height: 32),
 
-              Text(l10n.s98_checklist, style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(
+                l10n.s98_checklist,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 16),
-              
-              ...checklist.map((item) => _buildChecklistItem(item['title'] as String, item['done'] as bool, colors)),
+
+              ...checklist.map(
+                (item) => _buildChecklistItem(
+                  item['title'] as String,
+                  item['done'] as bool,
+                  colors,
+                ),
+              ),
             ],
           ),
         ),
@@ -147,23 +290,34 @@ class _DeviceMigrationScreenState extends ConsumerState<DeviceMigrationScreen> {
             width: double.infinity,
             height: 56,
             child: ElevatedButton(
-              onPressed: _isExporting ? null : () {
-                if (_selectedMethod == 1) {
-                  _performFileExport();
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Mock Nearby Migration Started')));
-                }
-              },
+              onPressed: _isExporting || _selectedMethod == 0
+                  ? null
+                  : _performFileExport,
               style: ElevatedButton.styleFrom(
                 backgroundColor: colors.primaryBlue,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
               child: _isExporting
-                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                : Text(
-                    l10n.s98_start,
-                    style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(
+                      _selectedMethod == 0
+                          ? 'Nearby transfer unavailable'
+                          : l10n.s98_start,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
             ),
           ),
         ),
@@ -171,7 +325,13 @@ class _DeviceMigrationScreenState extends ConsumerState<DeviceMigrationScreen> {
     );
   }
 
-  Widget _buildMethodCard(String title, String body, String iconPath, int index, OwnKeepMainColorsTheme colors) {
+  Widget _buildMethodCard(
+    String title,
+    String body,
+    String iconPath,
+    int index,
+    OwnKeepMainColorsTheme colors,
+  ) {
     bool isSelected = _selectedMethod == index;
     return GestureDetector(
       onTap: () => setState(() => _selectedMethod = index),
@@ -179,9 +339,14 @@ class _DeviceMigrationScreenState extends ConsumerState<DeviceMigrationScreen> {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? colors.primaryBlue.withValues(alpha: 0.1) : colors.surfacePrimary,
+          color: isSelected
+              ? colors.primaryBlue.withValues(alpha: 0.1)
+              : colors.surfacePrimary,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: isSelected ? colors.primaryBlue : colors.borderSoft, width: isSelected ? 2 : 1),
+          border: Border.all(
+            color: isSelected ? colors.primaryBlue : colors.borderSoft,
+            width: isSelected ? 2 : 1,
+          ),
         ),
         child: Row(
           children: [
@@ -191,16 +356,33 @@ class _DeviceMigrationScreenState extends ConsumerState<DeviceMigrationScreen> {
                 color: colors.surfaceSecondary,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: SvgPicture.asset(iconPath, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn), width: 24),
+              child: SvgPicture.asset(
+                iconPath,
+                colorFilter: ColorFilter.mode(
+                  colors.primaryBlue,
+                  BlendMode.srcIn,
+                ),
+                width: 24,
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   const SizedBox(height: 4),
-                  Text(body, style: TextStyle(color: colors.textSecondary, fontSize: 12)),
+                  Text(
+                    body,
+                    style: TextStyle(color: colors.textSecondary, fontSize: 12),
+                  ),
                 ],
               ),
             ),
@@ -209,10 +391,15 @@ class _DeviceMigrationScreenState extends ConsumerState<DeviceMigrationScreen> {
               height: 24,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: isSelected ? colors.primaryBlue : colors.textSecondary, width: 2),
+                border: Border.all(
+                  color: isSelected ? colors.primaryBlue : colors.textSecondary,
+                  width: 2,
+                ),
                 color: isSelected ? colors.primaryBlue : Colors.transparent,
               ),
-              child: isSelected ? const Icon(Icons.check, size: 16, color: Colors.white) : null,
+              child: isSelected
+                  ? const Icon(Icons.check, size: 16, color: Colors.white)
+                  : null,
             ),
           ],
         ),
@@ -220,14 +407,31 @@ class _DeviceMigrationScreenState extends ConsumerState<DeviceMigrationScreen> {
     );
   }
 
-  Widget _buildChecklistItem(String title, bool done, OwnKeepMainColorsTheme colors) {
+  Widget _buildChecklistItem(
+    String title,
+    bool done,
+    OwnKeepMainColorsTheme colors,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Row(
         children: [
-          Icon(done ? Icons.check_circle : Icons.radio_button_unchecked, color: done ? colors.successGreen : colors.textMuted, size: 24),
+          Icon(
+            done ? Icons.check_circle : Icons.radio_button_unchecked,
+            color: done ? colors.successGreen : colors.textMuted,
+            size: 24,
+          ),
           const SizedBox(width: 12),
-          Text(title, style: TextStyle(color: done ? colors.textPrimary : colors.textSecondary, fontSize: 16)),
+          Expanded(
+            child: Text(
+              title,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: done ? colors.textPrimary : colors.textSecondary,
+                fontSize: 16,
+              ),
+            ),
+          ),
         ],
       ),
     );

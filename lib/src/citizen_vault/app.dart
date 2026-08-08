@@ -1,5 +1,4 @@
 import 'package:ownkeep/src/citizen_vault/backup/backup_archive_transfer.dart';
-import 'package:ownkeep/src/citizen_vault/design/ownkeep_figma_screens.dart';
 import 'package:ownkeep/src/citizen_vault/design/ownkeep_theme.dart';
 import 'package:ownkeep/src/citizen_vault/ingestion/ingestion_ui_controller.dart';
 import 'package:ownkeep/src/citizen_vault/l10n/app_strings.dart';

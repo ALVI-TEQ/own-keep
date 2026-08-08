@@ -14,6 +14,7 @@ class NavigationMenuDrawer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final colors = context.mainColors;
+    final location = GoRouterState.of(context).uri.path;
 
     return Drawer(
       backgroundColor: colors.navigationBackground,
@@ -36,7 +37,10 @@ class NavigationMenuDrawer extends ConsumerWidget {
                     child: Center(
                       child: SvgPicture.asset(
                         OwnKeepMainIcons.profile,
-                        colorFilter: ColorFilter.mode(colors.neutralIcon, BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(
+                          colors.neutralIcon,
+                          BlendMode.srcIn,
+                        ),
                         width: 24,
                       ),
                     ),
@@ -48,30 +52,49 @@ class NavigationMenuDrawer extends ConsumerWidget {
                       children: [
                         Text(
                           l10n.s20_profile_name,
-                          style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            color: colors.textPrimary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           l10n.s20_vault_name,
-                          style: TextStyle(color: colors.primaryBlue, fontSize: 12),
+                          style: TextStyle(
+                            color: colors.primaryBlue,
+                            fontSize: 12,
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  SvgPicture.asset(
-                    OwnKeepMainIcons.settings,
-                    colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
-                    width: 24,
+                  GestureDetector(
+                    onTap: () {
+                      context.pop();
+                      context.push('/features/settings-advanced');
+                    },
+                    child: SvgPicture.asset(
+                      OwnKeepMainIcons.settings,
+                      colorFilter: ColorFilter.mode(
+                        colors.textMuted,
+                        BlendMode.srcIn,
+                      ),
+                      width: 24,
+                    ),
                   ),
                 ],
               ),
             ),
-            
+
             // Storage Quick Status
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: colors.surfacePrimary,
                   borderRadius: BorderRadius.circular(12),
@@ -81,14 +104,20 @@ class NavigationMenuDrawer extends ConsumerWidget {
                   children: [
                     SvgPicture.asset(
                       OwnKeepMainIcons.storage,
-                      colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(
+                        colors.primaryBlue,
+                        BlendMode.srcIn,
+                      ),
                       width: 20,
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         l10n.s20_vault_summary,
-                        style: TextStyle(color: colors.textSecondary, fontSize: 13),
+                        style: TextStyle(
+                          color: colors.textSecondary,
+                          fontSize: 13,
+                        ),
                       ),
                     ),
                   ],
@@ -102,19 +131,106 @@ class NavigationMenuDrawer extends ConsumerWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 children: [
-                  Text(l10n.s20_navigation, style: TextStyle(color: colors.textMuted, fontSize: 14, fontWeight: FontWeight.w600)),
+                  Text(
+                    l10n.s20_navigation,
+                    style: TextStyle(
+                      color: colors.textMuted,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   const SizedBox(height: 12),
-                  _buildNavItem(context, l10n.nav_home, l10n.nav_home_body, OwnKeepMainIcons.home, true, () => context.pop()),
-                  _buildNavItem(context, l10n.nav_collections, l10n.nav_collections_body, OwnKeepMainIcons.collections, false, () { context.pop(); context.push('/features/tag-manager'); }),
-                  _buildNavItem(context, l10n.nav_ai, l10n.nav_ai_body, OwnKeepMainIcons.aiAssistant, false, () { context.pop(); context.push('/features/ai-organize'); }),
-                  _buildNavItem(context, l10n.nav_reminders, l10n.nav_reminders_body, OwnKeepMainIcons.reminder, false, () { context.pop(); context.push('/features/health-reminders'); }),
-                  _buildNavItem(context, l10n.nav_activity, l10n.nav_activity_body, OwnKeepMainIcons.activity, false, () { context.pop(); context.push('/features/access-history'); }),
-                  _buildNavItem(context, l10n.nav_backup, l10n.nav_backup_body, OwnKeepMainIcons.backup, false, () { context.pop(); context.push('/features/backup-restore'); }),
+                  _buildNavItem(
+                    context,
+                    l10n.nav_home,
+                    l10n.nav_home_body,
+                    OwnKeepMainIcons.home,
+                    location == '/dashboard/home',
+                    () {
+                      context.pop();
+                      context.go('/dashboard/home');
+                    },
+                  ),
+                  _buildNavItem(
+                    context,
+                    l10n.nav_collections,
+                    l10n.nav_collections_body,
+                    OwnKeepMainIcons.collections,
+                    location == '/dashboard/collections',
+                    () {
+                      context.pop();
+                      context.go('/dashboard/collections');
+                    },
+                  ),
+                  _buildNavItem(
+                    context,
+                    l10n.nav_ai,
+                    l10n.nav_ai_body,
+                    OwnKeepMainIcons.aiAssistant,
+                    false,
+                    () {
+                      context.pop();
+                      context.push('/features/ai-organize');
+                    },
+                  ),
+                  _buildNavItem(
+                    context,
+                    l10n.nav_reminders,
+                    l10n.nav_reminders_body,
+                    OwnKeepMainIcons.reminder,
+                    false,
+                    () {
+                      context.pop();
+                      context.push('/features/health-reminders');
+                    },
+                  ),
+                  _buildNavItem(
+                    context,
+                    l10n.nav_activity,
+                    l10n.nav_activity_body,
+                    OwnKeepMainIcons.activity,
+                    false,
+                    () {
+                      context.pop();
+                      context.push('/features/access-history');
+                    },
+                  ),
+                  _buildNavItem(
+                    context,
+                    l10n.nav_backup,
+                    l10n.nav_backup_body,
+                    OwnKeepMainIcons.backup,
+                    false,
+                    () {
+                      context.pop();
+                      context.push('/features/backup-restore');
+                    },
+                  ),
                   const SizedBox(height: 16),
                   Divider(color: colors.borderSoft),
                   const SizedBox(height: 16),
-                  _buildNavItem(context, l10n.nav_settings, l10n.nav_settings_body, OwnKeepMainIcons.settings, false, () { context.pop(); context.push('/features/settings-advanced'); }),
-                  _buildNavItem(context, l10n.nav_help, l10n.nav_help_body, OwnKeepMainIcons.help, false, () { context.pop(); context.push('/features/help-support'); }),
+                  _buildNavItem(
+                    context,
+                    l10n.nav_settings,
+                    l10n.nav_settings_body,
+                    OwnKeepMainIcons.settings,
+                    false,
+                    () {
+                      context.pop();
+                      context.push('/features/settings-advanced');
+                    },
+                  ),
+                  _buildNavItem(
+                    context,
+                    l10n.nav_help,
+                    l10n.nav_help_body,
+                    OwnKeepMainIcons.help,
+                    false,
+                    () {
+                      context.pop();
+                      context.push('/features/help-support');
+                    },
+                  ),
                 ],
               ),
             ),
@@ -126,7 +242,7 @@ class NavigationMenuDrawer extends ConsumerWidget {
                 onTap: () async {
                   await ref.read(vaultSessionProvider.notifier).lockVault();
                   if (context.mounted) {
-                    context.go('/splash');
+                    context.go('/lock');
                   }
                 },
                 child: Container(
@@ -134,7 +250,9 @@ class NavigationMenuDrawer extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: colors.surfaceDanger,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: colors.dangerRed.withValues(alpha: 0.3)),
+                    border: Border.all(
+                      color: colors.dangerRed.withValues(alpha: 0.3),
+                    ),
                   ),
                   child: Row(
                     children: [
@@ -146,7 +264,10 @@ class NavigationMenuDrawer extends ConsumerWidget {
                         ),
                         child: SvgPicture.asset(
                           OwnKeepMainIcons.lock,
-                          colorFilter: ColorFilter.mode(colors.dangerRed, BlendMode.srcIn),
+                          colorFilter: ColorFilter.mode(
+                            colors.dangerRed,
+                            BlendMode.srcIn,
+                          ),
                           width: 20,
                         ),
                       ),
@@ -157,12 +278,19 @@ class NavigationMenuDrawer extends ConsumerWidget {
                           children: [
                             Text(
                               l10n.nav_lock,
-                              style: TextStyle(color: colors.dangerRed, fontSize: 16, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                color: colors.dangerRed,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             const SizedBox(height: 2),
                             Text(
                               l10n.nav_lock_body,
-                              style: TextStyle(color: colors.dangerRed.withValues(alpha: 0.7), fontSize: 12),
+                              style: TextStyle(
+                                color: colors.dangerRed.withValues(alpha: 0.7),
+                                fontSize: 12,
+                              ),
                             ),
                           ],
                         ),
@@ -178,7 +306,14 @@ class NavigationMenuDrawer extends ConsumerWidget {
     );
   }
 
-  Widget _buildNavItem(BuildContext context, String title, String subtitle, String iconPath, bool isSelected, VoidCallback onTap) {
+  Widget _buildNavItem(
+    BuildContext context,
+    String title,
+    String subtitle,
+    String iconPath,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
     final colors = context.mainColors;
     return GestureDetector(
       onTap: onTap,
@@ -193,7 +328,10 @@ class NavigationMenuDrawer extends ConsumerWidget {
           children: [
             SvgPicture.asset(
               iconPath,
-              colorFilter: ColorFilter.mode(isSelected ? colors.primaryBlue : colors.neutralIcon, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                isSelected ? colors.primaryBlue : colors.neutralIcon,
+                BlendMode.srcIn,
+              ),
               width: 24,
             ),
             const SizedBox(width: 16),
@@ -203,7 +341,15 @@ class NavigationMenuDrawer extends ConsumerWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(color: isSelected ? colors.textPrimary : colors.textSecondary, fontSize: 15, fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal),
+                    style: TextStyle(
+                      color: isSelected
+                          ? colors.textPrimary
+                          : colors.textSecondary,
+                      fontSize: 15,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.normal,
+                    ),
                   ),
                   Text(
                     subtitle,

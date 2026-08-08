@@ -21,7 +21,11 @@ class _WipeDataScreenState extends ConsumerState<WipeDataScreen> {
   bool _deviceChecked = false;
   String _confirmText = '';
 
-  bool get _canDelete => _backupChecked && _recoveryChecked && _deviceChecked && _confirmText == 'DELETE';
+  bool get _canDelete =>
+      _backupChecked &&
+      _recoveryChecked &&
+      _deviceChecked &&
+      _confirmText == 'DELETE';
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +38,12 @@ class _WipeDataScreenState extends ConsumerState<WipeDataScreen> {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -49,7 +58,10 @@ class _WipeDataScreenState extends ConsumerState<WipeDataScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
+        padding: const EdgeInsets.symmetric(
+          horizontal: OwnKeepSpacing.lg,
+          vertical: OwnKeepSpacing.md,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -63,7 +75,14 @@ class _WipeDataScreenState extends ConsumerState<WipeDataScreen> {
               ),
               child: Column(
                 children: [
-                  SvgPicture.asset(OwnKeepMainIcons.danger_exclamation, colorFilter: ColorFilter.mode(colors.dangerRed, BlendMode.srcIn), width: 48),
+                  SvgPicture.asset(
+                    OwnKeepMainIcons.danger_exclamation,
+                    colorFilter: ColorFilter.mode(
+                      colors.dangerRed,
+                      BlendMode.srcIn,
+                    ),
+                    width: 48,
+                  ),
                   const SizedBox(height: OwnKeepSpacing.md),
                   Text(
                     l10n.s46_warning_title,
@@ -102,11 +121,26 @@ class _WipeDataScreenState extends ConsumerState<WipeDataScreen> {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.md),
-            _buildCheckbox(colors, l10n.s46_backup_check, _backupChecked, (val) => setState(() => _backupChecked = val)),
+            _buildCheckbox(
+              colors,
+              l10n.s46_backup_check,
+              _backupChecked,
+              (val) => setState(() => _backupChecked = val),
+            ),
             const SizedBox(height: OwnKeepSpacing.sm),
-            _buildCheckbox(colors, l10n.s46_recovery_check, _recoveryChecked, (val) => setState(() => _recoveryChecked = val)),
+            _buildCheckbox(
+              colors,
+              l10n.s46_recovery_check,
+              _recoveryChecked,
+              (val) => setState(() => _recoveryChecked = val),
+            ),
             const SizedBox(height: OwnKeepSpacing.sm),
-            _buildCheckbox(colors, l10n.s46_device_check, _deviceChecked, (val) => setState(() => _deviceChecked = val)),
+            _buildCheckbox(
+              colors,
+              l10n.s46_device_check,
+              _deviceChecked,
+              (val) => setState(() => _deviceChecked = val),
+            ),
 
             const SizedBox(height: OwnKeepSpacing.xl),
 
@@ -151,12 +185,16 @@ class _WipeDataScreenState extends ConsumerState<WipeDataScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _canDelete ? () async {
-                  await ref.read(vaultSessionProvider.notifier).destroyVault();
+                onPressed: _canDelete
+                    ? () async {
+                        await ref
+                            .read(vaultSessionProvider.notifier)
+                            .destroyVault();
                   if (context.mounted) {
                     context.go('/welcome');
                   }
-                } : null,
+                      }
+                    : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colors.dangerRed,
                   disabledBackgroundColor: colors.dangerRed.withOpacity(0.3),
@@ -168,7 +206,9 @@ class _WipeDataScreenState extends ConsumerState<WipeDataScreen> {
                 child: Text(
                   l10n.s46_delete,
                   style: TextStyle(
-                    color: _canDelete ? Colors.white : Colors.white.withOpacity(0.5),
+                    color: _canDelete
+                        ? Colors.white
+                        : Colors.white.withOpacity(0.5),
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Inter',
@@ -200,7 +240,12 @@ class _WipeDataScreenState extends ConsumerState<WipeDataScreen> {
     );
   }
 
-  Widget _buildCheckbox(OwnKeepMainColorsTheme colors, String label, bool isChecked, ValueChanged<bool> onChanged) {
+  Widget _buildCheckbox(
+    OwnKeepMainColorsTheme colors,
+    String label,
+    bool isChecked,
+    ValueChanged<bool> onChanged,
+  ) {
     return GestureDetector(
       onTap: () => onChanged(!isChecked),
       child: Row(

@@ -7,11 +7,25 @@ import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/document_provider.dart';
+import '../dashboard/dashboard_document_presentation.dart';
+import 'package:vault_domain/vault_domain.dart';
 
-class ExpiryCalendarScreen extends ConsumerWidget {
+class ExpiryCalendarScreen extends ConsumerStatefulWidget {
   const ExpiryCalendarScreen({super.key});
 
-  Widget build(BuildContext context, WidgetRef ref) {
+  @override
+  ConsumerState<ExpiryCalendarScreen> createState() =>
+      _ExpiryCalendarScreenState();
+}
+
+class _ExpiryCalendarScreenState extends ConsumerState<ExpiryCalendarScreen> {
+  late DateTime _visibleMonth = DateTime(
+    DateTime.now().year,
+    DateTime.now().month,
+  );
+
+  @override
+  Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
 
@@ -21,7 +35,12 @@ class ExpiryCalendarScreen extends ConsumerWidget {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -46,7 +65,7 @@ class ExpiryCalendarScreen extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    l10n.s33_month,
+                    _monthLabel(_visibleMonth),
                     style: TextStyle(
                       color: colors.textPrimary,
                       fontSize: 18,
@@ -57,22 +76,50 @@ class ExpiryCalendarScreen extends ConsumerWidget {
                   Row(
                     children: [
                       IconButton(
-                        icon: SvgPicture.asset(OwnKeepMainIcons.chevron_left, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
-                        onPressed: () {},
+                        icon: SvgPicture.asset(
+                          OwnKeepMainIcons.chevron_left,
+                          colorFilter: ColorFilter.mode(
+                            colors.textPrimary,
+                            BlendMode.srcIn,
+                          ),
+                          width: 24,
+                          height: 24,
+                        ),
+                        onPressed: () => setState(
+                          () => _visibleMonth = DateTime(
+                            _visibleMonth.year,
+                            _visibleMonth.month - 1,
+                          ),
+                        ),
                       ),
                       IconButton(
-                        icon: SvgPicture.asset(OwnKeepMainIcons.chevron_right, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
-                        onPressed: () {},
+                        icon: SvgPicture.asset(
+                          OwnKeepMainIcons.chevron_right,
+                          colorFilter: ColorFilter.mode(
+                            colors.textPrimary,
+                            BlendMode.srcIn,
+                          ),
+                          width: 24,
+                          height: 24,
+                        ),
+                        onPressed: () => setState(
+                          () => _visibleMonth = DateTime(
+                            _visibleMonth.year,
+                            _visibleMonth.month + 1,
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-            
+
             // Weekday Headers
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              padding: const EdgeInsets.symmetric(
+                horizontal: OwnKeepSpacing.lg,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -88,28 +135,20 @@ class ExpiryCalendarScreen extends ConsumerWidget {
             ),
             const SizedBox(height: OwnKeepSpacing.md),
 
-            // Calendar Grid (Mock representation for 12-18 May 2025 week)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildDayCell(colors, '11', false, false),
-                  _buildDayCell(colors, '12', true, false), // Has event
-                  _buildDayCell(colors, '13', false, false),
-                  _buildDayCell(colors, '14', false, false),
-                  _buildDayCell(colors, '15', true, true),  // Selected and has event
-                  _buildDayCell(colors, '16', false, false),
-                  _buildDayCell(colors, '17', false, false),
-                ],
-              ),
-            ),
-            
+            ref
+                .watch(allDocumentsProvider)
+                .maybeWhen(
+                  data: (documents) => _buildCalendarGrid(colors, documents),
+                  orElse: () => const SizedBox(height: 48),
+                ),
+
             const SizedBox(height: OwnKeepSpacing.xxl),
 
             // Upcoming Expiries Header
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+              padding: const EdgeInsets.symmetric(
+                horizontal: OwnKeepSpacing.lg,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -138,44 +177,82 @@ class ExpiryCalendarScreen extends ConsumerWidget {
 
             // Expiry List
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
-              child: ref.watch(allDocumentsProvider).when(
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, st) => const Center(child: Text('Error loading documents')),
-                data: (docs) {
-                  if (docs.isEmpty) {
-                    return Padding(
-                      padding: const EdgeInsets.all(OwnKeepSpacing.md),
-                      child: Text('No expiring documents found.', style: TextStyle(color: colors.textSecondary)),
-                    );
-                  }
-                  // For now, mock expiries on real documents
-                  return Column(
-                    children: docs.take(4).map((doc) => Padding(
-                      padding: const EdgeInsets.only(bottom: OwnKeepSpacing.sm),
-                      child: _buildExpiryCard(
-                        context: context,
-                        colors: colors,
-                        icon: OwnKeepMainIcons.file_pdf,
-                        iconColor: colors.primaryBlue,
-                        title: doc.logicalFilename.isNotEmpty ? doc.logicalFilename : 'Document',
-                        subtitle: 'Expires soon',
-                        date: 'In 5 days',
-                        isCritical: false,
-                      ),
-                    )).toList(),
-                  );
-                },
+              padding: const EdgeInsets.symmetric(
+                horizontal: OwnKeepSpacing.lg,
               ),
+              child: ref
+                  .watch(allDocumentsProvider)
+                  .when(
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (err, st) =>
+                        const Center(child: Text('Error loading documents')),
+                    data: (docs) {
+                      final expiring =
+                          docs.where((doc) {
+                            final expiry = doc.expiryAt;
+                            return expiry != null &&
+                                expiry.year == _visibleMonth.year &&
+                                expiry.month == _visibleMonth.month;
+                          }).toList()..sort(
+                            (a, b) => a.expiryAt!.compareTo(b.expiryAt!),
+                          );
+                      if (expiring.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.all(OwnKeepSpacing.md),
+                          child: Text(
+                            'No expiring documents found.',
+                            style: TextStyle(color: colors.textSecondary),
+                          ),
+                        );
+                      }
+                      return Column(
+                        children: expiring
+                            .map(
+                              (doc) => Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: OwnKeepSpacing.sm,
+                                ),
+                                child: _buildExpiryCard(
+                                  context: context,
+                                  colors: colors,
+                                  icon: dashboardDocumentIcon(doc),
+                                  iconColor: colors.primaryBlue,
+                                  title: doc.logicalFilename.isNotEmpty
+                                      ? doc.logicalFilename
+                                      : 'Document',
+                                  subtitle:
+                                      'Expires ${_formatDate(doc.expiryAt!)}',
+                                  date: _relativeExpiry(doc.expiryAt!),
+                                  isCritical:
+                                      doc.expiryAt!
+                                          .difference(DateTime.now())
+                                          .inDays <=
+                                      7,
+                                  onTap: () => context.push(
+                                    '/features/document-preview?id=${Uri.encodeQueryComponent(doc.id)}',
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      );
+                    },
+                  ),
             ),
             const SizedBox(height: 100), // padding for floating action button
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => context.push('/features/health-reminders'),
         backgroundColor: colors.primaryBlue,
-        child: SvgPicture.asset(OwnKeepMainIcons.add, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+        child: SvgPicture.asset(
+          OwnKeepMainIcons.add,
+          colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          width: 24,
+          height: 24,
+        ),
       ),
     );
   }
@@ -196,7 +273,12 @@ class ExpiryCalendarScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDayCell(OwnKeepMainColorsTheme colors, String day, bool hasEvent, bool isSelected) {
+  Widget _buildDayCell(
+    OwnKeepMainColorsTheme colors,
+    String day,
+    bool hasEvent,
+    bool isSelected,
+  ) {
     return Container(
       width: 40,
       height: 48,
@@ -241,69 +323,170 @@ class ExpiryCalendarScreen extends ConsumerWidget {
     required String subtitle,
     required String date,
     required bool isCritical,
+    required VoidCallback onTap,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: colors.surfacePrimary,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isCritical ? colors.dangerRed.withOpacity(0.5) : colors.borderSoft),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: colors.surfaceSelected,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: colors.surfacePrimary,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isCritical
+                ? colors.dangerRed.withOpacity(0.5)
+                : colors.borderSoft,
           ),
-          const SizedBox(width: OwnKeepSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: colors.textPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    color: colors.textSecondary,
-                    fontSize: 13,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    SvgPicture.asset(OwnKeepMainIcons.calendar, colorFilter: ColorFilter.mode(isCritical ? colors.dangerRed : colors.textMuted, BlendMode.srcIn), width: 14),
-                    const SizedBox(width: 4),
-                    Text(
-                      date,
-                      style: TextStyle(
-                        color: isCritical ? colors.dangerRed : colors.textMuted,
-                        fontSize: 12,
-                        fontWeight: isCritical ? FontWeight.w600 : FontWeight.w400,
-                        fontFamily: 'Inter',
-                      ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colors.surfaceSelected,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: SvgPicture.asset(
+                icon,
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                width: 24,
+                height: 24,
+              ),
+            ),
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        OwnKeepMainIcons.calendar,
+                        colorFilter: ColorFilter.mode(
+                          isCritical ? colors.dangerRed : colors.textMuted,
+                          BlendMode.srcIn,
+                        ),
+                        width: 14,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        date,
+                        style: TextStyle(
+                          color: isCritical
+                              ? colors.dangerRed
+                              : colors.textMuted,
+                          fontSize: 12,
+                          fontWeight: isCritical
+                              ? FontWeight.w600
+                              : FontWeight.w400,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          SvgPicture.asset(OwnKeepMainIcons.more_vertical, colorFilter: ColorFilter.mode(colors.textSecondary, BlendMode.srcIn)),
-        ],
+            SvgPicture.asset(
+              OwnKeepMainIcons.more_vertical,
+              colorFilter: ColorFilter.mode(
+                colors.textSecondary,
+                BlendMode.srcIn,
+              ),
+              width: 24,
+              height: 24,
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  String _monthLabel(DateTime date) =>
+      '${const <String>['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][date.month - 1]} ${date.year}';
+
+  Widget _buildCalendarGrid(
+    OwnKeepMainColorsTheme colors,
+    List<DocumentListItemView> documents,
+  ) {
+    final firstDay = DateTime(_visibleMonth.year, _visibleMonth.month);
+    final dayCount = DateTime(
+      _visibleMonth.year,
+      _visibleMonth.month + 1,
+      0,
+    ).day;
+    final leadingCells = firstDay.weekday % 7;
+    final eventDays = documents
+        .map((document) => document.expiryAt)
+        .whereType<DateTime>()
+        .where(
+          (date) =>
+              date.year == _visibleMonth.year &&
+              date.month == _visibleMonth.month,
+        )
+        .map((date) => date.day)
+        .toSet();
+    final today = DateTime.now();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 7,
+          childAspectRatio: .84,
+        ),
+        itemCount: leadingCells + dayCount,
+        itemBuilder: (context, index) {
+          if (index < leadingCells) return const SizedBox.shrink();
+          final day = index - leadingCells + 1;
+          return Center(
+            child: _buildDayCell(
+              colors,
+              '$day',
+              eventDays.contains(day),
+              today.year == _visibleMonth.year &&
+                  today.month == _visibleMonth.month &&
+                  today.day == day,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) =>
+      '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+
+  String _relativeExpiry(DateTime date) {
+    final now = DateTime.now();
+    final days = DateTime(
+      date.year,
+      date.month,
+      date.day,
+    ).difference(DateTime(now.year, now.month, now.day)).inDays;
+    if (days < 0) return 'Expired ${-days} days ago';
+    if (days == 0) return 'Expires today';
+    return '$days days left';
   }
 }

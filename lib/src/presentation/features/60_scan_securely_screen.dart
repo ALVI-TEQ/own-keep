@@ -4,15 +4,18 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/vault_provider.dart';
+import '../../citizen_vault/ingestion/document_scanner_screen.dart';
 
-class SecureScanScreen extends StatefulWidget {
+class SecureScanScreen extends ConsumerStatefulWidget {
   const SecureScanScreen({super.key});
 
   @override
-  State<SecureScanScreen> createState() => _SecureScanScreenState();
+  ConsumerState<SecureScanScreen> createState() => _SecureScanScreenState();
 }
 
-class _SecureScanScreenState extends State<SecureScanScreen> {
+class _SecureScanScreenState extends ConsumerState<SecureScanScreen> {
   bool _flashEnabled = false;
   bool _autoCrop = true;
   bool _enhance = true;
@@ -30,7 +33,12 @@ class _SecureScanScreenState extends State<SecureScanScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
@@ -59,7 +67,12 @@ class _SecureScanScreenState extends State<SecureScanScreen> {
           IconButton(
             icon: SvgPicture.asset(
               OwnKeepMainIcons.flash, // using flash icon
-              colorFilter: ColorFilter.mode(_flashEnabled ? colors.warningOrange : Colors.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                _flashEnabled ? colors.warningOrange : Colors.white,
+                BlendMode.srcIn,
+              ),
+              width: 24,
+              height: 24,
             ),
             onPressed: () {
               setState(() {
@@ -76,9 +89,11 @@ class _SecureScanScreenState extends State<SecureScanScreen> {
             child: SvgPicture.asset(
               'assets/main/illustrations/secure_scan_document.svg',
               fit: BoxFit.cover,
+              width: 24,
+              height: 24,
             ),
           ),
-          
+
           // Scanner Corners overlaid on top of the preview
           Positioned.fill(
             child: Padding(
@@ -87,38 +102,70 @@ class _SecureScanScreenState extends State<SecureScanScreen> {
                 children: [
                   // Top Left
                   Positioned(
-                    top: 0, left: 0,
-                    child: SvgPicture.asset(OwnKeepMainIcons.scanner_corner, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn), width: 32),
+                    top: 0,
+                    left: 0,
+                    child: SvgPicture.asset(
+                      OwnKeepMainIcons.scanner_corner,
+                      colorFilter: const ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
+                      width: 32,
+                    ),
                   ),
                   // Top Right (rotated)
                   Positioned(
-                    top: 0, right: 0,
+                    top: 0,
+                    right: 0,
                     child: Transform.rotate(
                       angle: 1.5708, // 90 degrees
-                      child: SvgPicture.asset(OwnKeepMainIcons.scanner_corner, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn), width: 32),
+                      child: SvgPicture.asset(
+                        OwnKeepMainIcons.scanner_corner,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
+                        width: 32,
+                      ),
                     ),
                   ),
                   // Bottom Left (rotated)
                   Positioned(
-                    bottom: 0, left: 0,
+                    bottom: 0,
+                    left: 0,
                     child: Transform.rotate(
                       angle: -1.5708, // -90 degrees
-                      child: SvgPicture.asset(OwnKeepMainIcons.scanner_corner, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn), width: 32),
+                      child: SvgPicture.asset(
+                        OwnKeepMainIcons.scanner_corner,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
+                        width: 32,
+                      ),
                     ),
                   ),
                   // Bottom Right (rotated)
                   Positioned(
-                    bottom: 0, right: 0,
+                    bottom: 0,
+                    right: 0,
                     child: Transform.rotate(
                       angle: 3.14159, // 180 degrees
-                      child: SvgPicture.asset(OwnKeepMainIcons.scanner_corner, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn), width: 32),
+                      child: SvgPicture.asset(
+                        OwnKeepMainIcons.scanner_corner,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
+                        width: 32,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          
+
           // Document Detected Badge
           Positioned(
             top: 24,
@@ -126,7 +173,10 @@ class _SecureScanScreenState extends State<SecureScanScreen> {
             right: 0,
             child: Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: colors.successGreen.withOpacity(0.9),
                   borderRadius: BorderRadius.circular(20),
@@ -134,7 +184,11 @@ class _SecureScanScreenState extends State<SecureScanScreen> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.document_scanner, color: Colors.white, size: 16),
+                    const Icon(
+                      Icons.document_scanner,
+                      color: Colors.white,
+                      size: 16,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       l10n.s60_detected,
@@ -150,7 +204,7 @@ class _SecureScanScreenState extends State<SecureScanScreen> {
               ),
             ),
           ),
-          
+
           // Controls and Capture Button
           Positioned(
             bottom: 0,
@@ -161,7 +215,8 @@ class _SecureScanScreenState extends State<SecureScanScreen> {
                 left: OwnKeepSpacing.md,
                 right: OwnKeepSpacing.md,
                 top: OwnKeepSpacing.xl,
-                bottom: MediaQuery.of(context).padding.bottom + OwnKeepSpacing.lg,
+                bottom:
+                    MediaQuery.of(context).padding.bottom + OwnKeepSpacing.lg,
               ),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -183,16 +238,20 @@ class _SecureScanScreenState extends State<SecureScanScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _buildModePill(l10n.s60_document, true),
-                        _buildModePill(l10n.s60_multi_page, _multiPage, onTap: () {
-                          setState(() {
-                            _multiPage = !_multiPage;
-                          });
-                        }),
+                        _buildModePill(
+                          l10n.s60_multi_page,
+                          _multiPage,
+                          onTap: () {
+                            setState(() {
+                              _multiPage = !_multiPage;
+                            });
+                          },
+                        ),
                       ],
                     ),
                   ),
                   const SizedBox(height: OwnKeepSpacing.lg),
-                  
+
                   // Capture Button Row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -201,26 +260,42 @@ class _SecureScanScreenState extends State<SecureScanScreen> {
                       // Toggles column
                       Column(
                         children: [
-                          _buildToggleItem(l10n.s60_auto_crop, _autoCrop, () => setState(() => _autoCrop = !_autoCrop)),
+                          _buildToggleItem(
+                            l10n.s60_auto_crop,
+                            _autoCrop,
+                            () => setState(() => _autoCrop = !_autoCrop),
+                          ),
                           const SizedBox(height: OwnKeepSpacing.sm),
-                          _buildToggleItem(l10n.s60_enhance, _enhance, () => setState(() => _enhance = !_enhance)),
+                          _buildToggleItem(
+                            l10n.s60_enhance,
+                            _enhance,
+                            () => setState(() => _enhance = !_enhance),
+                          ),
                         ],
                       ),
-                      
+
                       // Capture Button
                       GestureDetector(
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Document scanned successfully')),
+                          final controller = ref.read(
+                            ingestionControllerProvider,
                           );
-                          Navigator.pop(context);
+                          if (controller == null) return;
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) =>
+                                  DocumentScannerScreen(controller: controller),
+                            ),
+                          );
                         },
                         child: SvgPicture.asset(
-                          OwnKeepMainIcons.capture_button, // assuming this exists
+                          OwnKeepMainIcons
+                              .capture_button, // assuming this exists
                           width: 80,
                           height: 80,
                           placeholderBuilder: (context) => Container(
-                            width: 80, height: 80, 
+                            width: 80,
+                            height: 80,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(color: Colors.white, width: 4),
@@ -229,30 +304,40 @@ class _SecureScanScreenState extends State<SecureScanScreen> {
                           ),
                         ),
                       ),
-                      
+
                       // OCR toggle
-                      _buildToggleItem(l10n.s60_ocr, _ocr, () => setState(() => _ocr = !_ocr)),
+                      _buildToggleItem(
+                        l10n.s60_ocr,
+                        _ocr,
+                        () => setState(() => _ocr = !_ocr),
+                      ),
                     ],
                   ),
                   const SizedBox(height: OwnKeepSpacing.xl),
-                  
+
                   // Security Notice
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
                         OwnKeepMainIcons.tip_check,
-                        colorFilter: ColorFilter.mode(colors.successGreen, BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(
+                          colors.successGreen,
+                          BlendMode.srcIn,
+                        ),
                         width: 16,
                         height: 16,
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        l10n.s60_notice,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 12,
-                          fontFamily: 'Inter',
+                      Flexible(
+                        child: Text(
+                          l10n.s60_notice,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 12,
+                            fontFamily: 'Inter',
+                          ),
                         ),
                       ),
                     ],
@@ -265,7 +350,7 @@ class _SecureScanScreenState extends State<SecureScanScreen> {
       ),
     );
   }
-  
+
   Widget _buildModePill(String text, bool isSelected, {VoidCallback? onTap}) {
     return GestureDetector(
       onTap: onTap,
@@ -301,8 +386,13 @@ class _SecureScanScreenState extends State<SecureScanScreen> {
               shape: BoxShape.circle,
             ),
             child: SvgPicture.asset(
-              isSelected ? OwnKeepMainIcons.tip_check : OwnKeepMainIcons.radio_unselected,
-              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              isSelected
+                  ? OwnKeepMainIcons.tip_check
+                  : OwnKeepMainIcons.radio_unselected,
+              colorFilter: const ColorFilter.mode(
+                Colors.white,
+                BlendMode.srcIn,
+              ),
               width: 20,
               height: 20,
             ),

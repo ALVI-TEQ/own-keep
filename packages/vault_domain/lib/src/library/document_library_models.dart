@@ -36,6 +36,27 @@ final class DocumentTagView {
 }
 
 @immutable
+final class CustomCollectionView {
+  const CustomCollectionView({
+    required this.id,
+    required this.name,
+    required this.iconKey,
+    required this.colorValue,
+    required this.autoTagEnabled,
+    required this.aiSuggestEnabled,
+    required this.pinHomeEnabled,
+  });
+
+  final String id;
+  final String name;
+  final String iconKey;
+  final int colorValue;
+  final bool autoTagEnabled;
+  final bool aiSuggestEnabled;
+  final bool pinHomeEnabled;
+}
+
+@immutable
 final class DocumentListItemView {
   const DocumentListItemView({
     required this.id,

@@ -27,7 +27,12 @@ class _RateOwnKeepScreenState extends State<RateOwnKeepScreen> {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -42,7 +47,10 @@ class _RateOwnKeepScreenState extends State<RateOwnKeepScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
+        padding: const EdgeInsets.symmetric(
+          horizontal: OwnKeepSpacing.lg,
+          vertical: OwnKeepSpacing.md,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -93,9 +101,12 @@ class _RateOwnKeepScreenState extends State<RateOwnKeepScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: SvgPicture.asset(
-                      OwnKeepMainIcons.rating_star, // using rating_star icon for both states here and tinting
+                      OwnKeepMainIcons
+                          .rating_star, // using rating_star icon for both states here and tinting
                       colorFilter: ColorFilter.mode(
-                        isSelected ? colors.warningOrange : colors.surfaceSelected,
+                        isSelected
+                            ? colors.warningOrange
+                            : colors.surfaceSelected,
                         BlendMode.srcIn,
                       ),
                       width: 40,
@@ -113,7 +124,7 @@ class _RateOwnKeepScreenState extends State<RateOwnKeepScreen> {
                 fontFamily: 'Inter',
               ),
             ),
-            
+
             const SizedBox(height: OwnKeepSpacing.xxl),
 
             // Comment Box
@@ -164,19 +175,25 @@ class _RateOwnKeepScreenState extends State<RateOwnKeepScreen> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: OwnKeepSpacing.xl),
 
             // Submit Button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _selectedRating > 0 ? () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Thank you for rating $_selectedRating stars!')),
-                  );
-                  context.pop();
-                } : null,
+                onPressed: _selectedRating > 0
+                    ? () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Thank you for rating $_selectedRating stars!',
+                            ),
+                          ),
+                        );
+                        context.pop();
+                      }
+                    : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colors.primaryBlue,
                   disabledBackgroundColor: colors.surfaceSelected,
@@ -209,9 +226,23 @@ class _RateOwnKeepScreenState extends State<RateOwnKeepScreen> {
               ),
               child: Column(
                 children: [
-                  _buildLinkItem(colors, OwnKeepMainIcons.share, l10n.s45_share, l10n.s45_share_body, colors.aiPurple),
+                  _buildLinkItem(
+                    context,
+                    colors,
+                    OwnKeepMainIcons.share,
+                    l10n.s45_share,
+                    l10n.s45_share_body,
+                    colors.aiPurple,
+                  ),
                   Divider(color: colors.borderSoft, height: 1, indent: 64),
-                  _buildLinkItem(colors, OwnKeepMainIcons.contact_email, l10n.s45_feedback, l10n.s45_feedback_body, const Color(0xFF27C5E8)),
+                  _buildLinkItem(
+                    context,
+                    colors,
+                    OwnKeepMainIcons.contact_email,
+                    l10n.s45_feedback,
+                    l10n.s45_feedback_body,
+                    const Color(0xFF27C5E8),
+                  ),
                 ],
               ),
             ),
@@ -223,14 +254,15 @@ class _RateOwnKeepScreenState extends State<RateOwnKeepScreen> {
   }
 
   Widget _buildLinkItem(
-    OwnKeepMainColorsTheme colors, 
-    String icon, 
+    BuildContext context,
+    OwnKeepMainColorsTheme colors,
+    String icon,
     String title,
     String subtitle,
     Color iconColor,
   ) {
     return InkWell(
-      onTap: () {},
+      onTap: () => context.push('/features/help-support'),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -242,8 +274,10 @@ class _RateOwnKeepScreenState extends State<RateOwnKeepScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: SvgPicture.asset(
-                icon, 
+                icon,
                 colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                width: 24,
+                height: 24,
               ),
             ),
             const SizedBox(width: OwnKeepSpacing.md),
@@ -273,8 +307,10 @@ class _RateOwnKeepScreenState extends State<RateOwnKeepScreen> {
               ),
             ),
             SvgPicture.asset(
-              OwnKeepMainIcons.chevron_right, 
+              OwnKeepMainIcons.chevron_right,
               colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
+              width: 24,
+              height: 24,
             ),
           ],
         ),

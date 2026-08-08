@@ -23,7 +23,12 @@ class DataUsageScreen extends ConsumerWidget {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -38,7 +43,10 @@ class DataUsageScreen extends ConsumerWidget {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
+        padding: const EdgeInsets.symmetric(
+          horizontal: OwnKeepSpacing.lg,
+          vertical: OwnKeepSpacing.md,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -65,7 +73,11 @@ class DataUsageScreen extends ConsumerWidget {
                       fontFamily: 'Inter',
                     ),
                   ),
-                  loading: () => const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+                  loading: () => const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
                   error: (_, __) => const Text('Error'),
                 ),
               ],
@@ -93,22 +105,27 @@ class DataUsageScreen extends ConsumerWidget {
                   storageStats.when(
                     data: (data) {
                       final used = data['totalSize'] as int? ?? 0;
-                      final capacity = 5 * 1024 * 1024 * 1024; // Mock 5GB capacity
-                      final free = capacity - used;
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            l10n.s42_used.replaceAll('850 MB', _formatBytes(used)),
-                            style: TextStyle(
-                              color: colors.textPrimary,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'Inter',
+                          Expanded(
+                            child: Text(
+                              l10n.s42_used.replaceAll(
+                                '850 MB',
+                                _formatBytes(used),
+                              ),
+                              style: TextStyle(
+                                color: colors.textPrimary,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Inter',
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
+                          const SizedBox(width: 12),
                           Text(
-                            l10n.s42_free.replaceAll('4.15 GB', _formatBytes(free)),
+                            'Measured on device',
                             style: TextStyle(
                               color: colors.textSecondary,
                               fontSize: 14,
@@ -141,24 +158,41 @@ class DataUsageScreen extends ConsumerWidget {
             storageStats.when(
               data: (data) {
                 final byType = data['sizeByType'] as Map<String, int>? ?? {};
-                final total = data['totalSize'] as int? ?? 1; // Prevent division by zero
-                final docSize = byType['DOCUMENT'] ?? byType['GENERAL_DOCUMENT'] ?? 0;
+                final total = data['totalSize'] as int? ?? 0;
+                final docSize =
+                    byType['DOCUMENT'] ?? byType['GENERAL_DOCUMENT'] ?? 0;
                 final imgSize = byType['IMAGE'] ?? 0;
                 final vidSize = byType['VIDEO'] ?? 0;
                 final otherSize = total - (docSize + imgSize + vidSize);
 
-                String pct(int val) => '${(val / total * 100).toStringAsFixed(1)}%';
+                String pct(int val) => total == 0
+                    ? '0.0%'
+                    : '${(val / total * 100).toStringAsFixed(1)}%';
 
                 return Column(
                   children: [
                     Row(
                       children: [
                         Expanded(
-                          child: _buildTypeCard(colors, OwnKeepMainIcons.document, l10n.s42_documents, pct(docSize), _formatBytes(docSize), const Color(0xFF27C5E8)),
+                          child: _buildTypeCard(
+                            colors,
+                            OwnKeepMainIcons.document,
+                            l10n.s42_documents,
+                            pct(docSize),
+                            _formatBytes(docSize),
+                            const Color(0xFF27C5E8),
+                          ),
                         ),
                         const SizedBox(width: OwnKeepSpacing.sm),
                         Expanded(
-                          child: _buildTypeCard(colors, OwnKeepMainIcons.image, l10n.s42_images, pct(imgSize), _formatBytes(imgSize), colors.primaryBlue),
+                          child: _buildTypeCard(
+                            colors,
+                            OwnKeepMainIcons.image,
+                            l10n.s42_images,
+                            pct(imgSize),
+                            _formatBytes(imgSize),
+                            colors.primaryBlue,
+                          ),
                         ),
                       ],
                     ),
@@ -166,11 +200,25 @@ class DataUsageScreen extends ConsumerWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: _buildTypeCard(colors, OwnKeepMainIcons.video, l10n.s42_videos, pct(vidSize), _formatBytes(vidSize), colors.aiPurple),
+                          child: _buildTypeCard(
+                            colors,
+                            OwnKeepMainIcons.video,
+                            l10n.s42_videos,
+                            pct(vidSize),
+                            _formatBytes(vidSize),
+                            colors.aiPurple,
+                          ),
                         ),
                         const SizedBox(width: OwnKeepSpacing.sm),
                         Expanded(
-                          child: _buildTypeCard(colors, OwnKeepMainIcons.others, l10n.s42_others, pct(otherSize > 0 ? otherSize : 0), _formatBytes(otherSize > 0 ? otherSize : 0), colors.warningOrange),
+                          child: _buildTypeCard(
+                            colors,
+                            OwnKeepMainIcons.others,
+                            l10n.s42_others,
+                            pct(otherSize > 0 ? otherSize : 0),
+                            _formatBytes(otherSize > 0 ? otherSize : 0),
+                            colors.warningOrange,
+                          ),
                         ),
                       ],
                     ),
@@ -208,15 +256,37 @@ class DataUsageScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: OwnKeepSpacing.md),
-            Column(
-              children: [
-                _buildListCard(colors, OwnKeepMainIcons.large_video, l10n.s42_video_file, l10n.s42_video_file_size, colors.primaryBlue),
-                const SizedBox(height: OwnKeepSpacing.sm),
-                _buildListCard(colors, OwnKeepMainIcons.archive_zip, l10n.s42_project_file, l10n.s42_project_file_size, colors.warningOrange),
-                const SizedBox(height: OwnKeepSpacing.sm),
-                _buildListCard(colors, OwnKeepMainIcons.raw_image, l10n.s42_raw_file, l10n.s42_raw_file_size, colors.aiPurple),
-              ],
-            ),
+            ref
+                .watch(allDocumentsProvider)
+                .when(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (_, _) => const Text('Unable to load vault records.'),
+                  data: (documents) => Column(
+                    children: documents
+                        .take(3)
+                        .map(
+                          (document) => Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: OwnKeepSpacing.sm,
+                            ),
+                            child: InkWell(
+                              onTap: () => context.push(
+                                '/features/document-preview?id=${Uri.encodeQueryComponent(document.id)}',
+                              ),
+                              child: _buildListCard(
+                                colors,
+                                OwnKeepMainIcons.document,
+                                document.logicalFilename,
+                                document.mimeType,
+                                colors.primaryBlue,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
 
             const SizedBox(height: OwnKeepSpacing.xxl),
 
@@ -233,9 +303,23 @@ class DataUsageScreen extends ConsumerWidget {
             const SizedBox(height: OwnKeepSpacing.md),
             Column(
               children: [
-                _buildOptimizationCard(colors, OwnKeepMainIcons.duplicate, l10n.s42_duplicates, l10n.s42_duplicates_size, colors.warningOrange),
+                _buildOptimizationCard(
+                  colors,
+                  OwnKeepMainIcons.duplicate,
+                  l10n.s42_duplicates,
+                  l10n.s42_duplicates_size,
+                  colors.warningOrange,
+                  () => context.push('/features/duplicate-finder'),
+                ),
                 const SizedBox(height: OwnKeepSpacing.sm),
-                _buildOptimizationCard(colors, OwnKeepMainIcons.unneeded_files, l10n.s42_unneeded, l10n.s42_unneeded_size, const Color(0xFF27C5E8)),
+                _buildOptimizationCard(
+                  colors,
+                  OwnKeepMainIcons.unneeded_files,
+                  l10n.s42_unneeded,
+                  l10n.s42_unneeded_size,
+                  const Color(0xFF27C5E8),
+                  () => context.push('/features/recently-deleted'),
+                ),
               ],
             ),
             const SizedBox(height: OwnKeepSpacing.xxl),
@@ -257,7 +341,14 @@ class DataUsageScreen extends ConsumerWidget {
     return '${size.toStringAsFixed(1)} ${suffixes[i]}';
   }
 
-  Widget _buildTypeCard(OwnKeepMainColorsTheme colors, String icon, String title, String percent, String size, Color iconColor) {
+  Widget _buildTypeCard(
+    OwnKeepMainColorsTheme colors,
+    String icon,
+    String title,
+    String percent,
+    String size,
+    Color iconColor,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -277,7 +368,11 @@ class DataUsageScreen extends ConsumerWidget {
                   color: colors.surfaceSelected,
                   shape: BoxShape.circle,
                 ),
-                child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn), width: 16),
+                child: SvgPicture.asset(
+                  icon,
+                  colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                  width: 16,
+                ),
               ),
               Text(
                 percent,
@@ -313,7 +408,13 @@ class DataUsageScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildListCard(OwnKeepMainColorsTheme colors, String icon, String title, String subtitle, Color iconColor) {
+  Widget _buildListCard(
+    OwnKeepMainColorsTheme colors,
+    String icon,
+    String title,
+    String subtitle,
+    Color iconColor,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -329,7 +430,12 @@ class DataUsageScreen extends ConsumerWidget {
               color: colors.surfaceSelected,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+            child: SvgPicture.asset(
+              icon,
+              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              width: 24,
+              height: 24,
+            ),
           ),
           const SizedBox(width: OwnKeepSpacing.md),
           Expanded(
@@ -356,7 +462,14 @@ class DataUsageScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildOptimizationCard(OwnKeepMainColorsTheme colors, String icon, String title, String size, Color iconColor) {
+  Widget _buildOptimizationCard(
+    OwnKeepMainColorsTheme colors,
+    String icon,
+    String title,
+    String size,
+    Color iconColor,
+    VoidCallback onReview,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -372,7 +485,12 @@ class DataUsageScreen extends ConsumerWidget {
               color: colors.surfaceSelected,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: SvgPicture.asset(icon, colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+            child: SvgPicture.asset(
+              icon,
+              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              width: 24,
+              height: 24,
+            ),
           ),
           const SizedBox(width: OwnKeepSpacing.md),
           Expanded(
@@ -402,7 +520,7 @@ class DataUsageScreen extends ConsumerWidget {
             ),
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: onReview,
             style: ElevatedButton.styleFrom(
               backgroundColor: colors.surfaceSelected,
               foregroundColor: colors.textPrimary,
@@ -412,7 +530,10 @@ class DataUsageScreen extends ConsumerWidget {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             ),
-            child: const Text('Review', style: TextStyle(fontWeight: FontWeight.w600)),
+            child: const Text(
+              'Review',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
           ),
         ],
       ),

@@ -18,7 +18,12 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -33,7 +38,10 @@ class ProfileScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
+        padding: const EdgeInsets.symmetric(
+          horizontal: OwnKeepSpacing.lg,
+          vertical: OwnKeepSpacing.md,
+        ),
         children: [
           Container(
             padding: const EdgeInsets.all(OwnKeepSpacing.xl),
@@ -55,7 +63,10 @@ class ProfileScreen extends StatelessWidget {
                   child: Center(
                     child: SvgPicture.asset(
                       OwnKeepMainIcons.profile,
-                      colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(
+                        colors.primaryBlue,
+                        BlendMode.srcIn,
+                      ),
                       width: 40,
                     ),
                   ),
@@ -72,11 +83,29 @@ class ProfileScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: OwnKeepSpacing.xxl),
-                _buildOption(context, colors, 'Settings & Preferences', OwnKeepMainIcons.settings, '/features/settings-advanced'),
+                _buildOption(
+                  context,
+                  colors,
+                  'Settings & Preferences',
+                  OwnKeepMainIcons.settings,
+                  '/features/settings-advanced',
+                ),
                 Divider(color: colors.borderSoft, height: 1),
-                _buildOption(context, colors, 'Security & App Lock', OwnKeepMainIcons.lock, '/lock'),
+                _buildOption(
+                  context,
+                  colors,
+                  'Security & App Lock',
+                  OwnKeepMainIcons.lock,
+                  '/lock',
+                ),
                 Divider(color: colors.borderSoft, height: 1),
-                _buildOption(context, colors, 'Help & Support', OwnKeepMainIcons.help, '/features/help-support'),
+                _buildOption(
+                  context,
+                  colors,
+                  'Help & Support',
+                  OwnKeepMainIcons.help,
+                  '/features/help-support',
+                ),
               ],
             ),
           ),
@@ -85,7 +114,13 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOption(BuildContext context, OwnKeepMainColorsTheme colors, String label, String iconPath, String route) {
+  Widget _buildOption(
+    BuildContext context,
+    OwnKeepMainColorsTheme colors,
+    String label,
+    String iconPath,
+    String route,
+  ) {
     return InkWell(
       onTap: () => context.push(route),
       child: Padding(
@@ -94,7 +129,10 @@ class ProfileScreen extends StatelessWidget {
           children: [
             SvgPicture.asset(
               iconPath, 
-              colorFilter: ColorFilter.mode(colors.neutralIcon, BlendMode.srcIn), 
+              colorFilter: ColorFilter.mode(
+                colors.neutralIcon,
+                BlendMode.srcIn,
+              ),
               width: 24,
             ),
             const SizedBox(width: OwnKeepSpacing.md),

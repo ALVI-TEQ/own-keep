@@ -27,7 +27,10 @@ class OwnKeepActionTile extends StatelessWidget {
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5),
+              border: Border.all(
+                color: color.withValues(alpha: 0.3),
+                width: 1.5,
+              ),
             ),
             child: Icon(icon, color: color, size: 28),
           ),
@@ -205,7 +208,11 @@ class OwnKeepStorageBar extends StatelessWidget {
           children: [
             Text(
               'Storage Overview',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
             ),
             Text(
               labelText,
@@ -268,7 +275,10 @@ class OwnKeepSearchField extends StatelessWidget {
           borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
           borderSide: BorderSide.none,
         ),
-        contentPadding: EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: OwnKeepSpacing.lg,
+          vertical: OwnKeepSpacing.md,
+        ),
       ),
     );
   }
@@ -299,8 +309,14 @@ class OwnKeepFileTile extends StatelessWidget {
         ),
         child: Icon(icon, color: Theme.of(context).primaryColor),
       ),
-      title: Text(title, style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
-      subtitle: Text(date, style: TextStyle(color: OwnKeepColors.textSecondary)),
+      title: Text(
+        title,
+        style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+      ),
+      subtitle: Text(
+        date,
+        style: TextStyle(color: OwnKeepColors.textSecondary),
+      ),
       trailing: Icon(Icons.more_vert, color: OwnKeepColors.textSecondary),
       onTap: onTap,
     );
@@ -358,4 +374,3 @@ class OwnKeepCollectionCard extends StatelessWidget {
     );
   }
 }
-

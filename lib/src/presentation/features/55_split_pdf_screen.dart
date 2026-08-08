@@ -28,7 +28,12 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
@@ -77,7 +82,10 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
                     ),
                     child: SvgPicture.asset(
                       OwnKeepMainIcons.file_pdf,
-                      colorFilter: ColorFilter.mode(colors.dangerRed, BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(
+                        colors.dangerRed,
+                        BlendMode.srcIn,
+                      ),
                       width: 20,
                       height: 20,
                     ),
@@ -110,9 +118,9 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: OwnKeepSpacing.xl),
-            
+
             Text(
               l10n.s55_select_pages,
               style: TextStyle(
@@ -124,7 +132,7 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
-            
+
             // Grid of Pages
             GridView.builder(
               shrinkWrap: true,
@@ -138,13 +146,17 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
               itemCount: 4,
               itemBuilder: (context, index) {
                 final isSelected = _selectedPages[index];
-                
+
                 String pageLabel = '';
-                if (index == 0) pageLabel = l10n.s55_page_1;
-                else if (index == 1) pageLabel = l10n.s55_page_2;
-                else if (index == 2) pageLabel = l10n.s55_page_3;
-                else if (index == 3) pageLabel = l10n.s55_page_4;
-                
+                if (index == 0)
+                  pageLabel = l10n.s55_page_1;
+                else if (index == 1)
+                  pageLabel = l10n.s55_page_2;
+                else if (index == 2)
+                  pageLabel = l10n.s55_page_3;
+                else if (index == 3)
+                  pageLabel = l10n.s55_page_4;
+
                 return GestureDetector(
                   onTap: () {
                     setState(() {
@@ -156,7 +168,9 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
                       color: colors.surfacePrimary,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: isSelected ? colors.primaryBlue : colors.borderSoft,
+                        color: isSelected
+                            ? colors.primaryBlue
+                            : colors.borderSoft,
                         width: isSelected ? 2 : 1,
                       ),
                     ),
@@ -188,7 +202,9 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
                                 pageLabel,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: isSelected ? colors.primaryBlue : colors.textSecondary,
+                                  color: isSelected
+                                      ? colors.primaryBlue
+                                      : colors.textSecondary,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                   fontFamily: 'Inter',
@@ -204,7 +220,10 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
                             right: 8,
                             child: SvgPicture.asset(
                               OwnKeepMainIcons.page_selected,
-                              colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn),
+                              colorFilter: ColorFilter.mode(
+                                colors.primaryBlue,
+                                BlendMode.srcIn,
+                              ),
                               width: 24,
                               height: 24,
                             ),
@@ -218,7 +237,10 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
                               height: 24,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                border: Border.all(color: colors.borderSoft, width: 1.5),
+                                border: Border.all(
+                                  color: colors.borderSoft,
+                                  width: 1.5,
+                                ),
                               ),
                             ),
                           ),
@@ -230,7 +252,7 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
             ),
 
             const SizedBox(height: OwnKeepSpacing.xl),
-            
+
             Text(
               l10n.s55_split_options,
               style: TextStyle(
@@ -242,7 +264,7 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
-            
+
             Container(
               decoration: BoxDecoration(
                 color: colors.surfacePrimary,
@@ -252,29 +274,29 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
               child: Column(
                 children: [
                   _buildOptionItem(
-                    colors, 
-                    'extract', 
-                    l10n.s55_extract, 
+                    colors,
+                    'extract',
+                    l10n.s55_extract,
                     l10n.s55_extract_body,
                   ),
                   Divider(color: colors.borderSoft, height: 1),
                   _buildOptionItem(
-                    colors, 
-                    'separate', 
-                    l10n.s55_separate, 
+                    colors,
+                    'separate',
+                    l10n.s55_separate,
                     l10n.s55_separate_body,
                   ),
                   Divider(color: colors.borderSoft, height: 1),
                   _buildOptionItem(
-                    colors, 
-                    'remove', 
-                    l10n.s55_remove, 
+                    colors,
+                    'remove',
+                    l10n.s55_remove,
                     l10n.s55_remove_body,
                   ),
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 100),
           ],
         ),
@@ -291,20 +313,17 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
           border: Border(top: BorderSide(color: colors.borderSoft)),
         ),
         child: ElevatedButton(
-          onPressed: _isSplitting ? null : () async {
-            setState(() {
-              _isSplitting = true;
-            });
-            await Future.delayed(const Duration(seconds: 2));
-            if (!mounted) return;
-            setState(() {
-              _isSplitting = false;
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('PDF split successfully')),
-            );
-            Navigator.pop(context);
-          },
+          onPressed: _isSplitting
+              ? null
+              : () => showDialog<void>(
+                  context: context,
+                  builder: (context) => const AlertDialog(
+                    title: Text('PDF split unavailable'),
+                    content: Text(
+                      'No encrypted PDF split engine is configured in this build.',
+                    ),
+                  ),
+                ),
           style: ElevatedButton.styleFrom(
             backgroundColor: colors.primaryBlue,
             foregroundColor: Colors.white,
@@ -316,27 +335,35 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
             elevation: 0,
           ),
           child: _isSplitting
-            ? const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-              )
-            : Text(
-                l10n.s55_action,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter',
+              ? const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+              : Text(
+                  l10n.s55_action,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                  ),
                 ),
-              ),
         ),
       ),
     );
   }
 
-  Widget _buildOptionItem(OwnKeepMainColorsTheme colors, String value, String title, String subtitle) {
+  Widget _buildOptionItem(
+    OwnKeepMainColorsTheme colors,
+    String value,
+    String title,
+    String subtitle,
+  ) {
     final isSelected = _selectedOption == value;
-    
+
     return InkWell(
       onTap: () {
         setState(() {
@@ -349,8 +376,13 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SvgPicture.asset(
-              isSelected ? OwnKeepMainIcons.radio_selected : OwnKeepMainIcons.radio_unselected,
-              colorFilter: ColorFilter.mode(isSelected ? colors.primaryBlue : colors.borderSoft, BlendMode.srcIn),
+              isSelected
+                  ? OwnKeepMainIcons.radio_selected
+                  : OwnKeepMainIcons.radio_unselected,
+              colorFilter: ColorFilter.mode(
+                isSelected ? colors.primaryBlue : colors.borderSoft,
+                BlendMode.srcIn,
+              ),
               width: 24,
               height: 24,
             ),

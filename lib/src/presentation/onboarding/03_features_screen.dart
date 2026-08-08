@@ -24,7 +24,11 @@ class FeaturesScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: IconButton(
-                  icon: SvgPicture.asset(OwnKeepOnboardingIcons.back_arrow, width: 24, height: 24),
+                  icon: SvgPicture.asset(
+                    OwnKeepOnboardingIcons.back_arrow,
+                    width: 24,
+                    height: 24,
+                  ),
                   onPressed: () {
                     if (context.canPop()) {
                       context.pop();
@@ -51,25 +55,29 @@ class FeaturesScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      _buildFeatureRow(context,
+                      _buildFeatureRow(
+                        context,
                         iconPath: OwnKeepOnboardingIcons.store_folder,
                         title: l10n.s03_store_title,
                         description: l10n.s03_store_body,
                       ),
                       const SizedBox(height: 32),
-                      _buildFeatureRow(context,
+                      _buildFeatureRow(
+                        context,
                         iconPath: OwnKeepOnboardingIcons.ai_powered,
                         title: l10n.s03_ai_title,
                         description: l10n.s03_ai_body,
                       ),
                       const SizedBox(height: 32),
-                      _buildFeatureRow(context,
+                      _buildFeatureRow(
+                        context,
                         iconPath: OwnKeepOnboardingIcons.organized_gallery,
                         title: l10n.s03_organized_title,
                         description: l10n.s03_organized_body,
                       ),
                       const SizedBox(height: 32),
-                      _buildFeatureRow(context,
+                      _buildFeatureRow(
+                        context,
                         iconPath: OwnKeepOnboardingIcons.secure_shield,
                         title: l10n.s03_secure_title,
                         description: l10n.s03_secure_body,
@@ -82,9 +90,17 @@ class FeaturesScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(OwnKeepOnboardingIcons.page_dot_inactive, width: 8, height: 8),
+                  SvgPicture.asset(
+                    OwnKeepOnboardingIcons.page_dot_inactive,
+                    width: 8,
+                    height: 8,
+                  ),
                   const SizedBox(width: 8),
-                  SvgPicture.asset(OwnKeepOnboardingIcons.page_dot_active, width: 8, height: 8),
+                  SvgPicture.asset(
+                    OwnKeepOnboardingIcons.page_dot_active,
+                    width: 8,
+                    height: 8,
+                  ),
                 ],
               ),
               const SizedBox(height: 24),
@@ -123,7 +139,8 @@ class FeaturesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFeatureRow(BuildContext context, {
+  Widget _buildFeatureRow(
+    BuildContext context, {
     required String iconPath,
     required String title,
     required String description,

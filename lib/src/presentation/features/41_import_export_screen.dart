@@ -5,12 +5,14 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/vault_provider.dart';
 
-class ImportExportScreen extends StatelessWidget {
+class ImportExportScreen extends ConsumerWidget {
   const ImportExportScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
 
@@ -20,7 +22,12 @@ class ImportExportScreen extends StatelessWidget {
         backgroundColor: colors.backgroundTop,
         elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(OwnKeepMainIcons.back_arrow, colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn)),
+          icon: SvgPicture.asset(
+            OwnKeepMainIcons.back_arrow,
+            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            width: 24,
+            height: 24,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -35,7 +42,10 @@ class ImportExportScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: OwnKeepSpacing.lg, vertical: OwnKeepSpacing.md),
+        padding: const EdgeInsets.symmetric(
+          horizontal: OwnKeepSpacing.lg,
+          vertical: OwnKeepSpacing.md,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -59,13 +69,45 @@ class ImportExportScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildActionItem(context, colors, OwnKeepMainIcons.import_files, l10n.s41_import_files, l10n.s41_import_files_body, const Color(0xFF27C5E8)),
+                  _buildActionItem(
+                    context,
+                    colors,
+                    OwnKeepMainIcons.import_files,
+                    l10n.s41_import_files,
+                    l10n.s41_import_files_body,
+                    const Color(0xFF27C5E8),
+                    () => _runImport(context, ref, gallery: false),
+                  ),
                   _buildDivider(colors),
-                  _buildActionItem(context, colors, OwnKeepMainIcons.import_gallery, l10n.s41_import_gallery, l10n.s41_import_gallery_body, colors.warningOrange),
+                  _buildActionItem(
+                    context,
+                    colors,
+                    OwnKeepMainIcons.import_gallery,
+                    l10n.s41_import_gallery,
+                    l10n.s41_import_gallery_body,
+                    colors.warningOrange,
+                    () => _runImport(context, ref, gallery: true),
+                  ),
                   _buildDivider(colors),
-                  _buildActionItem(context, colors, OwnKeepMainIcons.import_cloud, l10n.s41_import_cloud, l10n.s41_import_cloud_body, colors.primaryBlue),
+                  _buildActionItem(
+                    context,
+                    colors,
+                    OwnKeepMainIcons.import_cloud,
+                    l10n.s41_import_cloud,
+                    l10n.s41_import_cloud_body,
+                    colors.primaryBlue,
+                    () => context.push('/features/backup-restore'),
+                  ),
                   _buildDivider(colors),
-                  _buildActionItem(context, colors, OwnKeepMainIcons.import_computer, l10n.s41_import_computer, l10n.s41_import_computer_body, colors.aiPurple),
+                  _buildActionItem(
+                    context,
+                    colors,
+                    OwnKeepMainIcons.import_computer,
+                    l10n.s41_import_computer,
+                    l10n.s41_import_computer_body,
+                    colors.aiPurple,
+                    () => _runImport(context, ref, gallery: false),
+                  ),
                 ],
               ),
             ),
@@ -92,13 +134,45 @@ class ImportExportScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildActionItem(context, colors, OwnKeepMainIcons.backup, l10n.s41_export_backup, l10n.s41_export_backup_body, colors.successGreen),
+                  _buildActionItem(
+                    context,
+                    colors,
+                    OwnKeepMainIcons.backup,
+                    l10n.s41_export_backup,
+                    l10n.s41_export_backup_body,
+                    colors.successGreen,
+                    () => context.push('/features/backup-restore'),
+                  ),
                   _buildDivider(colors),
-                  _buildActionItem(context, colors, OwnKeepMainIcons.file_pdf, l10n.s41_export_documents, l10n.s41_export_documents_body, const Color(0xFF27C5E8)),
+                  _buildActionItem(
+                    context,
+                    colors,
+                    OwnKeepMainIcons.file_pdf,
+                    l10n.s41_export_documents,
+                    l10n.s41_export_documents_body,
+                    const Color(0xFF27C5E8),
+                    () => context.push('/features/share-export'),
+                  ),
                   _buildDivider(colors),
-                  _buildActionItem(context, colors, OwnKeepMainIcons.export_media, l10n.s41_export_media, l10n.s41_export_media_body, colors.warningOrange),
+                  _buildActionItem(
+                    context,
+                    colors,
+                    OwnKeepMainIcons.export_media,
+                    l10n.s41_export_media,
+                    l10n.s41_export_media_body,
+                    colors.warningOrange,
+                    () => context.push('/features/share-export'),
+                  ),
                   _buildDivider(colors),
-                  _buildActionItem(context, colors, OwnKeepMainIcons.export_report, l10n.s41_export_report, l10n.s41_export_report_body, colors.aiPurple),
+                  _buildActionItem(
+                    context,
+                    colors,
+                    OwnKeepMainIcons.export_report,
+                    l10n.s41_export_report,
+                    l10n.s41_export_report_body,
+                    colors.aiPurple,
+                    () => context.push('/features/statistics'),
+                  ),
                 ],
               ),
             ),
@@ -115,7 +189,15 @@ class ImportExportScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  SvgPicture.asset(OwnKeepMainIcons.backup_tip, colorFilter: ColorFilter.mode(colors.primaryBlue, BlendMode.srcIn)),
+                  SvgPicture.asset(
+                    OwnKeepMainIcons.backup_tip,
+                    colorFilter: ColorFilter.mode(
+                      colors.primaryBlue,
+                      BlendMode.srcIn,
+                    ),
+                    width: 24,
+                    height: 24,
+                  ),
                   const SizedBox(width: OwnKeepSpacing.md),
                   Expanded(
                     child: Text(
@@ -130,7 +212,7 @@ class ImportExportScreen extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: OwnKeepSpacing.xxl),
           ],
         ),
@@ -140,18 +222,15 @@ class ImportExportScreen extends StatelessWidget {
 
   Widget _buildActionItem(
     BuildContext context,
-    OwnKeepMainColorsTheme colors, 
-    String icon, 
+    OwnKeepMainColorsTheme colors,
+    String icon,
     String title,
     String subtitle,
     Color iconColor,
+    VoidCallback onTap,
   ) {
     return InkWell(
-      onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Started $title...')),
-        );
-      },
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -163,8 +242,10 @@ class ImportExportScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: SvgPicture.asset(
-                icon, 
+                icon,
                 colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                width: 24,
+                height: 24,
               ),
             ),
             const SizedBox(width: OwnKeepSpacing.md),
@@ -194,13 +275,44 @@ class ImportExportScreen extends StatelessWidget {
               ),
             ),
             SvgPicture.asset(
-              OwnKeepMainIcons.chevron_right, 
+              OwnKeepMainIcons.chevron_right,
               colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
+              width: 24,
+              height: 24,
             ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _runImport(
+    BuildContext context,
+    WidgetRef ref, {
+    required bool gallery,
+  }) async {
+    final controller = ref.read(ingestionControllerProvider);
+    if (controller == null) return;
+    try {
+      if (gallery) {
+        await controller.importGalleryImage();
+      } else {
+        await controller.importFile();
+      }
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Import added to the secure processing queue.'),
+          ),
+        );
+      }
+    } catch (error) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Import failed: $error')));
+      }
+    }
   }
 
   Widget _buildDivider(OwnKeepMainColorsTheme colors) {

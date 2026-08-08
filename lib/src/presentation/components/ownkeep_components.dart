@@ -19,12 +19,7 @@ class OwnKeepAppScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: showAppBar
-          ? AppBar(
-              title: Text(title),
-              actions: actions,
-            )
-          : null,
+      appBar: showAppBar ? AppBar(title: Text(title), actions: actions) : null,
       body: body,
     );
   }
@@ -99,10 +94,7 @@ class OwnKeepCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-        border: Border.all(
-          color: OwnKeepColors.surfaceHighlight,
-          width: 1,
-        ),
+        border: Border.all(color: OwnKeepColors.surfaceHighlight, width: 1),
       ),
       child: child,
     );
@@ -145,15 +137,12 @@ class OwnKeepFeatureTile extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(color: Colors.white),
                 ),
                 SizedBox(height: OwnKeepSpacing.xs),
-                Text(
-                  subtitle,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
+                Text(subtitle, style: Theme.of(context).textTheme.bodyMedium),
               ],
             ),
           ),

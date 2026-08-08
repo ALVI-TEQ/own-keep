@@ -24,7 +24,10 @@ class CreateVaultScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  l10n.s04_title.replaceFirst(' ', '\n'), // Rough break to match mockup "Let's create\nyour vault"
+                  l10n.s04_title.replaceFirst(
+                    ' ',
+                    '\n',
+                  ), // Rough break to match mockup "Let's create\nyour vault"
                   style: TextStyle(
                     color: context.onboardingColors.textPrimary,
                     fontSize: 36,

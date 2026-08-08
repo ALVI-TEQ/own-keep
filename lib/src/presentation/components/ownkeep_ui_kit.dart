@@ -158,7 +158,9 @@ class OwnKeepListTile extends StatelessWidget {
           decoration: BoxDecoration(
             color: OwnKeepColors.darkSurfaceElevated,
             borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-            border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+            border: Border.all(
+              color: OwnKeepColors.darkBorder.withValues(alpha: 0.3),
+            ),
           ),
           child: Row(
             children: [
@@ -247,7 +249,9 @@ class OwnKeepTipCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: OwnKeepColors.primary.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-        border: Border.all(color: OwnKeepColors.primary.withValues(alpha: 0.15)),
+        border: Border.all(
+          color: OwnKeepColors.primary.withValues(alpha: 0.15),
+        ),
       ),
       child: Row(
         children: [
@@ -341,11 +345,7 @@ class OwnKeepScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: OwnKeepColors.darkBackground,
-      appBar: OwnKeepAppBar(
-        title: title,
-        showBack: showBack,
-        actions: actions,
-      ),
+      appBar: OwnKeepAppBar(title: title, showBack: showBack, actions: actions),
       body: body,
       bottomNavigationBar: showBottomNav ? OwnKeepBottomNav() : null,
       floatingActionButton: floatingActionButton,
@@ -367,7 +367,9 @@ class OwnKeepBottomNav extends StatelessWidget {
       decoration: BoxDecoration(
         color: OwnKeepColors.darkSurface,
         border: Border(
-          top: BorderSide(color: OwnKeepColors.darkBorder.withValues(alpha: 0.3)),
+          top: BorderSide(
+            color: OwnKeepColors.darkBorder.withValues(alpha: 0.3),
+          ),
         ),
       ),
       padding: EdgeInsets.only(
@@ -437,7 +439,9 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isActive ? OwnKeepColors.primary : OwnKeepColors.darkTextMuted;
+    final color = isActive
+        ? OwnKeepColors.primary
+        : OwnKeepColors.darkTextMuted;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -544,7 +548,9 @@ class OwnKeepSuggestionChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: OwnKeepColors.darkSurfaceElevated,
           borderRadius: BorderRadius.circular(OwnKeepRadius.sm),
-          border: Border.all(color: OwnKeepColors.darkBorder.withValues(alpha: 0.5)),
+          border: Border.all(
+            color: OwnKeepColors.darkBorder.withValues(alpha: 0.5),
+          ),
         ),
         child: Row(
           children: [
@@ -553,10 +559,16 @@ class OwnKeepSuggestionChip extends StatelessWidget {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: (iconColor ?? OwnKeepColors.primary).withValues(alpha: 0.15),
+                  color: (iconColor ?? OwnKeepColors.primary).withValues(
+                    alpha: 0.15,
+                  ),
                   borderRadius: BorderRadius.circular(OwnKeepRadius.xs),
                 ),
-                child: Icon(icon, size: 18, color: iconColor ?? OwnKeepColors.primary),
+                child: Icon(
+                  icon,
+                  size: 18,
+                  color: iconColor ?? OwnKeepColors.primary,
+                ),
               ),
               SizedBox(width: OwnKeepSpacing.sm),
             ],
