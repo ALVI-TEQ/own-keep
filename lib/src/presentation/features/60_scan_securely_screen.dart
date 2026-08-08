@@ -6,6 +6,7 @@ import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/vault_provider.dart';
+import '../../providers/document_provider.dart';
 import '../../citizen_vault/ingestion/document_scanner_screen.dart';
 
 class SecureScanScreen extends ConsumerStatefulWidget {
@@ -178,7 +179,7 @@ class _SecureScanScreenState extends ConsumerState<SecureScanScreen> {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: colors.successGreen.withOpacity(0.9),
+                  color: colors.successGreen.withValues(alpha: 0.9),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -223,8 +224,8 @@ class _SecureScanScreenState extends ConsumerState<SecureScanScreen> {
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                   colors: [
-                    Colors.black.withOpacity(0.9),
-                    Colors.black.withOpacity(0.0),
+                    Colors.black.withValues(alpha: 0.9),
+                    Colors.black.withValues(alpha: 0.0),
                   ],
                 ),
               ),
@@ -276,17 +277,21 @@ class _SecureScanScreenState extends ConsumerState<SecureScanScreen> {
 
                       // Capture Button
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           final controller = ref.read(
                             ingestionControllerProvider,
                           );
                           if (controller == null) return;
-                          Navigator.of(context).push(
-                            MaterialPageRoute<void>(
+                          final saved = await Navigator.of(context).push<bool>(
+                            MaterialPageRoute<bool>(
                               builder: (_) =>
                                   DocumentScannerScreen(controller: controller),
                             ),
                           );
+                          if (saved != true) return;
+                          ref.invalidate(allDocumentsProvider);
+                          ref.invalidate(recentDocumentsProvider);
+                          ref.invalidate(storageStatsProvider);
                         },
                         child: SvgPicture.asset(
                           OwnKeepMainIcons

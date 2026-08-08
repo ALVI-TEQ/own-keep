@@ -183,9 +183,11 @@ class ImportExportScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(OwnKeepSpacing.md),
               decoration: BoxDecoration(
-                color: colors.primaryBlue.withOpacity(0.1),
+                color: colors.primaryBlue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: colors.primaryBlue.withOpacity(0.3)),
+                border: Border.all(
+                  color: colors.primaryBlue.withValues(alpha: 0.3),
+                ),
               ),
               child: Row(
                 children: [

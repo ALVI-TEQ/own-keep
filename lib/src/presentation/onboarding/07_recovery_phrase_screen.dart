@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ownkeep/src/l10n/app_localizations.dart';
 import 'package:vault_crypto/vault_crypto.dart';
 import 'package:vault_platform/vault_platform.dart';
+
+import '../../domain/recovery/recovery_method.dart';
 import '../../providers/vault_provider.dart';
 import '../../theme/ownkeep_onboarding_colors.dart';
-import '../../theme/ownkeep_onboarding_icons.dart';
 
 class RecoveryPhraseScreen extends ConsumerStatefulWidget {
   const RecoveryPhraseScreen({super.key});
@@ -18,260 +17,195 @@ class RecoveryPhraseScreen extends ConsumerStatefulWidget {
 }
 
 class _RecoveryPhraseScreenState extends ConsumerState<RecoveryPhraseScreen> {
-  List<String> _words = [];
-  String? _generationError;
+  final _passphrase = TextEditingController();
+  final _confirmation = TextEditingController();
+  String? _generatedPhrase;
+  String? _error;
+  bool _obscure = true;
 
   @override
   void initState() {
     super.initState();
-    _generateWords();
+    _generatePhrase();
   }
 
-  Future<void> _generateWords() async {
+  @override
+  void dispose() {
+    _passphrase.dispose();
+    _confirmation.dispose();
+    super.dispose();
+  }
+
+  Future<void> _generatePhrase() async {
+    setState(() {
+      _generatedPhrase = null;
+      _error = null;
+    });
     try {
-      final code = await const RecoveryCodeGenerator(
+      final phrase = await const RecoveryPhraseGenerator(
         PlatformCryptographicRandom(),
       ).generate();
-      if (!mounted) return;
-      setState(() {
-        final symbols = code.replaceAll('-', '');
-        var offset = 0;
-        _words = List<String>.generate(12, (index) {
-          final length = index < 8 ? 3 : 2;
-          final part = symbols.substring(offset, offset + length);
-          offset += length;
-          return part;
-        });
-        _generationError = null;
-      });
-      ref.read(onboardingRecoveryCodeProvider.notifier).state = code;
-    } on Object {
-      if (!mounted) return;
-      setState(
-        () => _generationError = 'Could not securely generate a recovery code.',
-      );
+      if (mounted) setState(() => _generatedPhrase = phrase);
+    } catch (_) {
+      if (mounted) {
+        setState(() => _error = 'Could not securely generate a phrase.');
+      }
     }
+  }
+
+  void _continue() {
+    final method = ref.read(onboardingRecoveryMethodProvider);
+    final String credential;
+    if (method == RecoveryMethod.generatedPhrase) {
+      final phrase = _generatedPhrase;
+      if (phrase == null) return;
+      credential = phrase;
+    } else {
+      credential = normalizeRecoveryCredential(
+        _passphrase.text,
+        RecoveryMethod.customPassphrase,
+      );
+      final assessment = RecoveryCredentialPolicy.assess(credential);
+      if (!assessment.accepted ||
+          credential.runes.length < minimumNewCustomRecoveryCharacters) {
+        setState(
+          () => _error =
+              'Use a memorable recovery password with at least 16 characters.',
+        );
+        return;
+      }
+      if (credential != _confirmation.text.trim()) {
+        setState(() => _error = 'Recovery passwords do not match.');
+        return;
+      }
+    }
+    ref.read(onboardingRecoveryCodeProvider.notifier).state = credential;
+    context.push('/verify-phrase');
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
+    final colors = context.onboardingColors;
+    final method = ref.watch(onboardingRecoveryMethodProvider);
+    final words = recoveryWords(_generatedPhrase ?? '');
     return Scaffold(
-      backgroundColor: context.onboardingColors.backgroundDeep,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: IconButton(
-                  icon: SvgPicture.asset(
-                    OwnKeepOnboardingIcons.back_arrow,
-                    width: 24,
-                    height: 24,
-                  ),
-                  onPressed: () {
-                    if (context.canPop()) {
-                      context.pop();
-                    }
-                  },
-                ),
-              ),
-              const SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  l10n.s07_title,
-                  style: TextStyle(
-                    color: context.onboardingColors.textPrimary,
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    height: 1.2,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  l10n.s07_body,
-                  style: TextStyle(
-                    color: context.onboardingColors.textSecondary,
-                    fontSize: 16,
-                    height: 1.5,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                decoration: BoxDecoration(
-                  color: context.onboardingColors.warningAmber.withValues(
-                    alpha: 0.1,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: context.onboardingColors.warningAmber.withValues(
-                      alpha: 0.3,
-                    ),
-                  ),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SvgPicture.asset(
-                      OwnKeepOnboardingIcons.warning_triangle,
-                      width: 20,
-                      height: 20,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        l10n.s07_warning,
-                        style: TextStyle(
-                          color: context.onboardingColors.warningAmber,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          height: 1.4,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 32),
-              Expanded(
-                child: _generationError != null
-                    ? Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              _generationError!,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: context.onboardingColors.foreverRed,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            TextButton(
-                              onPressed: _generateWords,
-                              child: const Text('Try again'),
-                            ),
-                          ],
-                        ),
-                      )
-                    : _words.isNotEmpty
-                    ? SingleChildScrollView(
-                        child: Wrap(
-                          spacing: 12,
-                          runSpacing: 12,
-                          alignment: WrapAlignment.center,
-                          children: List.generate(_words.length, (index) {
-                            return Container(
-                              width: 130, // Fixed width for responsive wrap
-                              height: 48, // Fixed height
-                              decoration: BoxDecoration(
-                                color: context.onboardingColors.surfaceElevated,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: context.onboardingColors.borderSubtle,
-                                  width: 1.5,
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 32,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          context.onboardingColors.surfaceChip,
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(14),
-                                        bottomLeft: Radius.circular(14),
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        '${index + 1}',
-                                        style: TextStyle(
-                                          color: context
-                                              .onboardingColors
-                                              .textSecondary,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: 'Inter',
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Center(
-                                      child: Text(
-                                        _words[index],
-                                        style: TextStyle(
-                                          color: context
-                                              .onboardingColors
-                                              .textPrimary,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: 'Inter',
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
-                        ),
-                      )
-                    : Center(child: CircularProgressIndicator()),
-              ),
-              const SizedBox(height: 24),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: OwnKeepOnboardingGradients.primaryButton,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: ElevatedButton(
-                  onPressed: _words.isNotEmpty
-                      ? () => context.push('/verify-phrase')
-                      : () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  child: Text(
-                    l10n.s07_action_next,
-                    style: TextStyle(
-                      color: context.onboardingColors.textPrimary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Inter',
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 32),
-            ],
+      backgroundColor: colors.backgroundDeep,
+      appBar: AppBar(
+        backgroundColor: colors.backgroundDeep,
+        leading: const BackButton(),
+        title: const Text('Choose recovery method'),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(24),
+        children: [
+          Text(
+            'Protect access to your vault and encrypted backups.',
+            style: TextStyle(color: colors.textSecondary, fontSize: 16),
           ),
-        ),
+          const SizedBox(height: 24),
+          SegmentedButton<RecoveryMethod>(
+            segments: const [
+              ButtonSegment(
+                value: RecoveryMethod.generatedPhrase,
+                icon: Icon(Icons.auto_awesome),
+                label: Text('12 words'),
+              ),
+              ButtonSegment(
+                value: RecoveryMethod.customPassphrase,
+                icon: Icon(Icons.password),
+                label: Text('My password'),
+              ),
+            ],
+            selected: {method},
+            onSelectionChanged: (selection) {
+              ref
+                  .read(onboardingRecoveryMethodProvider.notifier)
+                  .select(selection.single);
+              setState(() => _error = null);
+            },
+          ),
+          const SizedBox(height: 24),
+          if (method == RecoveryMethod.generatedPhrase) ...[
+            const Text(
+              'Recommended',
+              style: TextStyle(
+                color: Colors.greenAccent,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Write these words down in order. OwnKeep cannot recover them.',
+              style: TextStyle(color: colors.textSecondary),
+            ),
+            const SizedBox(height: 20),
+            if (_generatedPhrase == null && _error == null)
+              const Center(child: CircularProgressIndicator())
+            else
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: [
+                  for (var index = 0; index < words.length; index++)
+                    Chip(label: Text('${index + 1}. ${words[index]}')),
+                ],
+              ),
+            const SizedBox(height: 16),
+            TextButton.icon(
+              onPressed: _generatePhrase,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Generate another phrase'),
+            ),
+          ] else ...[
+            Text(
+              'Use at least 16 characters. A memorable multi-word password is best.',
+              style: TextStyle(color: colors.textSecondary),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _passphrase,
+              obscureText: _obscure,
+              autocorrect: false,
+              enableSuggestions: false,
+              decoration: InputDecoration(
+                labelText: 'Recovery password',
+                border: const OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  onPressed: () => setState(() => _obscure = !_obscure),
+                  icon: Icon(
+                    _obscure ? Icons.visibility : Icons.visibility_off,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _confirmation,
+              obscureText: _obscure,
+              autocorrect: false,
+              enableSuggestions: false,
+              decoration: const InputDecoration(
+                labelText: 'Confirm recovery password',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+          if (_error != null) ...[
+            const SizedBox(height: 16),
+            Text(_error!, style: TextStyle(color: colors.foreverRed)),
+          ],
+          const SizedBox(height: 32),
+          FilledButton(
+            onPressed: method == RecoveryMethod.generatedPhrase
+                ? (_generatedPhrase == null ? null : _continue)
+                : _continue,
+            child: Text(
+              method == RecoveryMethod.generatedPhrase
+                  ? 'Verify word order'
+                  : 'Create with this password',
+            ),
+          ),
+        ],
       ),
     );
   }

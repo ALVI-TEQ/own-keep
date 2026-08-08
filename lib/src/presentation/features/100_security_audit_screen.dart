@@ -33,6 +33,7 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
     final colors = context.mainColors;
     final documents = ref.watch(allDocumentsProvider);
     final unlocked = ref.watch(vaultSessionProvider).value != null;
+    final preferences = ref.watch(ingestionControllerProvider)?.preferences;
     return Scaffold(
       backgroundColor: colors.backgroundTop,
       appBar: AppBar(
@@ -106,10 +107,14 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
               !documents.isLoading && failed == 0,
               '/features/data-check',
             ),
-            const _AuditCheck(
+            _AuditCheck(
               'Portable backup',
-              'Backup recency is not tracked until a verified backup-history store is added.',
-              false,
+              preferences?.lastBackupAt == null
+                  ? 'No successful portable backup has been recorded.'
+                  : 'Last successful backup: '
+                        '${preferences!.lastBackupAt!.toLocal().toString().split('.')[0]} '
+                        '(${preferences.lastBackupObjectCount ?? 0} objects).',
+              preferences?.lastBackupAt != null,
               '/features/backup-restore',
             ),
           ];

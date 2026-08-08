@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/services.dart';
+import 'package:ownkeep/src/platform/trusted_external_activity.dart';
 
 /// User-controlled transfer boundary for encrypted `.cvault` archives.
 abstract interface class BackupArchiveTransfer {
@@ -45,8 +46,8 @@ final class PlatformBackupArchiveTransfer implements BackupArchiveTransfer {
 
   @override
   Future<SelectedBackupArchive?> pickArchive() async {
-    final selected = await openFile(
-      acceptedTypeGroups: const <XTypeGroup>[_backupType],
+    final selected = await TrustedExternalActivity.run(
+      () => openFile(acceptedTypeGroups: const <XTypeGroup>[_backupType]),
     );
     if (selected == null) return null;
     return validateSelectedBackup(selected);
@@ -59,9 +60,10 @@ final class PlatformBackupArchiveTransfer implements BackupArchiveTransfer {
       throw const BackupArchiveTransferFailure('backup_missing');
     }
     try {
-      return await _channel.invokeMethod<bool>(
-            'exportArchive',
-            <String, Object>{'sourcePath': archive.path},
+      return await TrustedExternalActivity.run<bool?>(
+            () => _channel.invokeMethod<bool>('exportArchive', <String, Object>{
+              'sourcePath': archive.path,
+            }),
           ) ??
           false;
     } on PlatformException catch (error) {

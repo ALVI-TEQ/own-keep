@@ -213,7 +213,7 @@ class AiInsightsScreen extends ConsumerWidget {
                 l10n.s72_uncategorized_body,
                 colors.primaryBlue,
                 colors,
-                () => context.push('/dashboard/all-files'),
+                () => context.push('/features/review-categories'),
               ),
               _buildInsightRow(
                 context,

@@ -265,7 +265,7 @@ class _AiSettingsScreenState extends ConsumerState<AiSettingsScreen> {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: colors.primaryBlue,
+            activeThumbColor: colors.primaryBlue,
             inactiveTrackColor: colors.surfaceSecondary,
           ),
         ],

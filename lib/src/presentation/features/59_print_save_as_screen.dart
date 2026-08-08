@@ -281,9 +281,11 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
             Container(
               padding: const EdgeInsets.all(OwnKeepSpacing.md),
               decoration: BoxDecoration(
-                color: colors.surfaceDanger.withOpacity(0.1),
+                color: colors.surfaceDanger.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: colors.dangerRed.withOpacity(0.3)),
+                border: Border.all(
+                  color: colors.dangerRed.withValues(alpha: 0.3),
+                ),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -396,7 +398,7 @@ class _PrintSaveAsScreenState extends State<PrintSaveAsScreen> {
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? colors.primaryBlue.withOpacity(0.1)
+                    ? colors.primaryBlue.withValues(alpha: 0.1)
                     : colors.backgroundTop,
                 borderRadius: BorderRadius.circular(8),
               ),

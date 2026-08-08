@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:ownkeep/src/platform/trusted_external_activity.dart';
 
 /// User-controlled plaintext export boundary for one authenticated original.
 // The interface is an injectable native security boundary.
@@ -32,12 +33,14 @@ final class PlatformDocumentFileTransfer implements DocumentFileTransfer {
       throw const DocumentFileTransferFailure('document_missing');
     }
     try {
-      return await _channel
-              .invokeMethod<bool>('exportDocument', <String, Object>{
-                'sourcePath': source.path,
-                'suggestedName': suggestedName,
-                'mimeType': mimeType,
-              }) ??
+      return await TrustedExternalActivity.run<bool?>(
+            () =>
+                _channel.invokeMethod<bool>('exportDocument', <String, Object>{
+                  'sourcePath': source.path,
+                  'suggestedName': suggestedName,
+                  'mimeType': mimeType,
+                }),
+          ) ??
           false;
     } on PlatformException catch (error) {
       throw DocumentFileTransferFailure('document_export_failed', cause: error);

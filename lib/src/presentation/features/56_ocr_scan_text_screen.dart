@@ -8,6 +8,7 @@ import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 import '../../providers/document_provider.dart';
+import '../../providers/vault_provider.dart';
 
 class OcrScanTextScreen extends ConsumerWidget {
   const OcrScanTextScreen({super.key, required this.documentId});
@@ -80,7 +81,7 @@ class OcrScanTextScreen extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -197,11 +198,30 @@ class OcrScanTextScreen extends ConsumerWidget {
             Expanded(
               child: ElevatedButton.icon(
                 onPressed: extractedText.isEmpty
-                    ? null
+                    ? documentId == null
+                          ? null
+                          : () async {
+                              final controller = ref.read(
+                                ingestionControllerProvider,
+                              );
+                              if (controller == null) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Running private on-device OCR…',
+                                  ),
+                                ),
+                              );
+                              await controller.reprocessDocument(documentId!);
+                              ref.invalidate(
+                                documentDetailProvider(documentId!),
+                              );
+                            }
                     : () async {
                         await Clipboard.setData(
                           ClipboardData(text: extractedText),
                         );
+                        if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Text copied to clipboard'),
@@ -218,7 +238,7 @@ class OcrScanTextScreen extends ConsumerWidget {
                   height: 20,
                 ),
                 label: Text(
-                  l10n.s56_copy,
+                  extractedText.isEmpty ? 'Run OCR' : l10n.s56_copy,
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,

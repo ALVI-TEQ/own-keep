@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../providers/vault_provider.dart';
 import '../../theme/ownkeep_main_colors.dart';
+import '../components/recovery_credential_dialog.dart';
 
 class RecoveryVerificationScreen extends ConsumerStatefulWidget {
   const RecoveryVerificationScreen({super.key});
@@ -15,23 +16,15 @@ class RecoveryVerificationScreen extends ConsumerStatefulWidget {
 
 class _RecoveryVerificationScreenState
     extends ConsumerState<RecoveryVerificationScreen> {
-  final _phrase = TextEditingController();
-  bool _obscure = true;
   bool _checking = false;
   String? _error;
 
-  @override
-  void dispose() {
-    _phrase.dispose();
-    super.dispose();
-  }
-
   Future<void> _verify() async {
-    final phrase = _phrase.text.trim();
-    if (phrase.isEmpty) {
-      setState(() => _error = 'Enter your recovery phrase.');
-      return;
-    }
+    final phrase = await showRecoveryCredentialDialog(
+      context,
+      title: 'Verify recovery credential',
+    );
+    if (phrase == null || !mounted) return;
     setState(() {
       _checking = true;
       _error = null;
@@ -39,15 +32,15 @@ class _RecoveryVerificationScreenState
     try {
       await ref.read(vaultLifecycleProvider).unlock(recoveryPassphrase: phrase);
       if (!mounted) return;
-      _phrase.clear();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Recovery phrase verified locally.')),
+        const SnackBar(content: Text('Recovery credential verified locally.')),
       );
       context.pop();
     } catch (_) {
       if (mounted) {
         setState(
-          () => _error = 'The recovery phrase is not valid for this vault.',
+          () =>
+              _error = 'That recovery credential is not valid for this vault.',
         );
       }
     } finally {
@@ -66,7 +59,7 @@ class _RecoveryVerificationScreenState
           onPressed: context.pop,
           icon: const Icon(Icons.arrow_back),
         ),
-        title: const Text('Verify recovery phrase'),
+        title: const Text('Verify recovery credential'),
       ),
       body: ListView(
         padding: const EdgeInsets.all(24),
@@ -81,24 +74,8 @@ class _RecoveryVerificationScreenState
             ),
           ),
           const SizedBox(height: 24),
-          TextField(
-            controller: _phrase,
-            obscureText: _obscure,
-            autocorrect: false,
-            enableSuggestions: false,
-            minLines: 1,
-            maxLines: _obscure ? 1 : 4,
-            decoration: InputDecoration(
-              labelText: 'Recovery phrase',
-              errorText: _error,
-              border: const OutlineInputBorder(),
-              suffixIcon: IconButton(
-                onPressed: () => setState(() => _obscure = !_obscure),
-                icon: Icon(_obscure ? Icons.visibility : Icons.visibility_off),
-              ),
-            ),
-            onSubmitted: (_) => _checking ? null : _verify(),
-          ),
+          if (_error != null)
+            Text(_error!, style: TextStyle(color: colors.dangerRed)),
           const SizedBox(height: 24),
           FilledButton.icon(
             onPressed: _checking ? null : _verify,

@@ -369,13 +369,13 @@ class _AppLockScreenState extends ConsumerState<AppLockScreen> {
               label,
               style: TextStyle(color: colors.textPrimary, fontSize: 16),
             ),
-            Radio<int>(
-              value: index,
-              groupValue: _autoLockIndex,
-              onChanged: (v) {
-                if (v != null) _setAutoLock(v);
-              },
-              activeColor: colors.primaryBlue,
+            Icon(
+              _autoLockIndex == index
+                  ? Icons.radio_button_checked
+                  : Icons.radio_button_off,
+              color: _autoLockIndex == index
+                  ? colors.primaryBlue
+                  : colors.textMuted,
             ),
           ],
         ),

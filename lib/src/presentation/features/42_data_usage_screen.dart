@@ -78,7 +78,7 @@ class DataUsageScreen extends ConsumerWidget {
                     height: 16,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
-                  error: (_, __) => const Text('Error'),
+                  error: (_, _) => const Text('Error'),
                 ),
               ],
             ),
@@ -137,7 +137,7 @@ class DataUsageScreen extends ConsumerWidget {
                       );
                     },
                     loading: () => const SizedBox.shrink(),
-                    error: (_, __) => const SizedBox.shrink(),
+                    error: (_, _) => const SizedBox.shrink(),
                   ),
                 ],
               ),
@@ -226,7 +226,7 @@ class DataUsageScreen extends ConsumerWidget {
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (_, __) => const SizedBox.shrink(),
+              error: (_, _) => const SizedBox.shrink(),
             ),
 
             const SizedBox(height: OwnKeepSpacing.xxl),

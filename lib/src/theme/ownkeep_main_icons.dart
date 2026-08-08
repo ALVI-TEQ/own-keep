@@ -29,7 +29,8 @@ abstract final class OwnKeepMainIcons {
   static const String profile = 'assets/main/icons/profile.svg';
   static const String property = 'assets/main/icons/property.svg';
   static const String radioSelected = 'assets/main/icons/radio_selected.svg';
-  static const String radioUnselected = 'assets/main/icons/radio_unselected.svg';
+  static const String radioUnselected =
+      'assets/main/icons/radio_unselected.svg';
   static const String recent = 'assets/main/icons/recent.svg';
   static const String reminder = 'assets/main/icons/reminder.svg';
   static const String scan = 'assets/main/icons/scan.svg';
@@ -61,7 +62,8 @@ abstract final class OwnKeepMainIcons {
   static const String encrypted_file = 'assets/main/icons/encrypted_file.svg';
   static const String export = 'assets/main/icons/export.svg';
   static const String faq = 'assets/main/icons/faq.svg';
-  static const String favorite_outline = 'assets/main/icons/favorite_outline.svg';
+  static const String favorite_outline =
+      'assets/main/icons/favorite_outline.svg';
   static const String file_add = 'assets/main/icons/file_add.svg';
   static const String file_pdf = 'assets/main/icons/file_pdf.svg';
   static const String folder = 'assets/main/icons/folder.svg';
@@ -85,17 +87,22 @@ abstract final class OwnKeepMainIcons {
   static const String share_export = 'assets/main/icons/share_export.svg';
   static const String share_user = 'assets/main/icons/share_user.svg';
   static const String shield_check = 'assets/main/icons/shield_check.svg';
-  static const String similar_documents = 'assets/main/icons/similar_documents.svg';
+  static const String similar_documents =
+      'assets/main/icons/similar_documents.svg';
   static const String timeline = 'assets/main/icons/timeline.svg';
   static const String toggle_on = 'assets/main/icons/toggle_on.svg';
   static const String trash = 'assets/main/icons/trash.svg';
   static const String video = 'assets/main/icons/video.svg';
   static const String video_tutorial = 'assets/main/icons/video_tutorial.svg';
   static const String warning = 'assets/main/icons/warning.svg';
-  static const String passport_preview_placeholder = 'assets/screens_21_30/illustrations/passport_preview_placeholder.svg';
-  static const String share_secure_illustration = 'assets/screens_21_30/illustrations/share_secure_illustration.svg';
-  static const String storage_donut_chart = 'assets/screens_21_30/illustrations/storage_donut_chart.svg';
-  static const String vault_information_illustration = 'assets/screens_21_30/illustrations/vault_information_illustration.svg';
+  static const String passport_preview_placeholder =
+      'assets/screens_21_30/illustrations/passport_preview_placeholder.svg';
+  static const String share_secure_illustration =
+      'assets/screens_21_30/illustrations/share_secure_illustration.svg';
+  static const String storage_donut_chart =
+      'assets/screens_21_30/illustrations/storage_donut_chart.svg';
+  static const String vault_information_illustration =
+      'assets/screens_21_30/illustrations/vault_information_illustration.svg';
 
   static const String ai_assistant = 'assets/main/icons/ai_assistant.svg';
   static const String audit = 'assets/main/icons/audit.svg';
@@ -110,28 +117,36 @@ abstract final class OwnKeepMainIcons {
   static const String data_check = 'assets/main/icons/data_check.svg';
   static const String decoy_vault = 'assets/main/icons/decoy_vault.svg';
   static const String developer = 'assets/main/icons/developer.svg';
-  static const String doctor_appointment = 'assets/main/icons/doctor_appointment.svg';
+  static const String doctor_appointment =
+      'assets/main/icons/doctor_appointment.svg';
   static const String emergency = 'assets/main/icons/emergency.svg';
   static const String eye = 'assets/main/icons/eye.svg';
   static const String file_open = 'assets/main/icons/file_open.svg';
   static const String fingerprint = 'assets/main/icons/fingerprint.svg';
   static const String hidden_vault = 'assets/main/icons/hidden_vault.svg';
-  static const String insurance_document = 'assets/main/icons/insurance_document.svg';
-  static const String keypad_backspace = 'assets/main/icons/keypad_backspace.svg';
+  static const String insurance_document =
+      'assets/main/icons/insurance_document.svg';
+  static const String keypad_backspace =
+      'assets/main/icons/keypad_backspace.svg';
   static const String logs = 'assets/main/icons/logs.svg';
   static const String medicine_bottle = 'assets/main/icons/medicine_bottle.svg';
   static const String medicine_box = 'assets/main/icons/medicine_box.svg';
-  static const String medicine_capsule = 'assets/main/icons/medicine_capsule.svg';
+  static const String medicine_capsule =
+      'assets/main/icons/medicine_capsule.svg';
   static const String notification = 'assets/main/icons/notification.svg';
   static const String page_dot_active = 'assets/main/icons/page_dot_active.svg';
-  static const String page_dot_inactive = 'assets/main/icons/page_dot_inactive.svg';
+  static const String page_dot_inactive =
+      'assets/main/icons/page_dot_inactive.svg';
   static const String passport = 'assets/main/icons/passport.svg';
   static const String pin_dot_active = 'assets/main/icons/pin_dot_active.svg';
-  static const String pin_dot_inactive = 'assets/main/icons/pin_dot_inactive.svg';
+  static const String pin_dot_inactive =
+      'assets/main/icons/pin_dot_inactive.svg';
   static const String pin_protection = 'assets/main/icons/pin_protection.svg';
-  static const String recovery_instructions = 'assets/main/icons/recovery_instructions.svg';
+  static const String recovery_instructions =
+      'assets/main/icons/recovery_instructions.svg';
   static const String recovery_phrase = 'assets/main/icons/recovery_phrase.svg';
-  static const String recovery_shield_key = 'assets/main/icons/recovery_shield_key.svg';
+  static const String recovery_shield_key =
+      'assets/main/icons/recovery_shield_key.svg';
   static const String reports = 'assets/main/icons/reports.svg';
   static const String reset = 'assets/main/icons/reset.svg';
   static const String screenshots = 'assets/main/icons/screenshots.svg';
@@ -139,31 +154,45 @@ abstract final class OwnKeepMainIcons {
   static const String similar_photos = 'assets/main/icons/similar_photos.svg';
   static const String similar_videos = 'assets/main/icons/similar_videos.svg';
   static const String stealth = 'assets/main/icons/stealth.svg';
-  static const String vault_encryption = 'assets/main/icons/vault_encryption.svg';
+  static const String vault_encryption =
+      'assets/main/icons/vault_encryption.svg';
   static const String verified_shield = 'assets/main/icons/verified_shield.svg';
   static const String wipe_data = 'assets/main/icons/wipe_data.svg';
-  static const String activity_sparklines = 'assets/screens_31_40/illustrations/activity_sparklines.svg';
-  static const String duplicate_donut_chart = 'assets/screens_31_40/illustrations/duplicate_donut_chart.svg';
-  static const String expiry_calendar_fixture = 'assets/screens_31_40/illustrations/expiry_calendar_fixture.svg';
-  static const String lock_mountain_background = 'assets/screens_31_40/illustrations/lock_mountain_background.svg';
-  static const String onboarding_vault_orbit_illustration = 'assets/screens_31_40/illustrations/onboarding_vault_orbit_illustration.svg';
-  static const String recovery_shield_key_illustration = 'assets/screens_31_40/illustrations/recovery_shield_key_illustration.svg';
-  static const String statistics_donut_chart = 'assets/screens_31_40/illustrations/statistics_donut_chart.svg';
+  static const String activity_sparklines =
+      'assets/screens_31_40/illustrations/activity_sparklines.svg';
+  static const String duplicate_donut_chart =
+      'assets/screens_31_40/illustrations/duplicate_donut_chart.svg';
+  static const String expiry_calendar_fixture =
+      'assets/screens_31_40/illustrations/expiry_calendar_fixture.svg';
+  static const String lock_mountain_background =
+      'assets/screens_31_40/illustrations/lock_mountain_background.svg';
+  static const String onboarding_vault_orbit_illustration =
+      'assets/screens_31_40/illustrations/onboarding_vault_orbit_illustration.svg';
+  static const String recovery_shield_key_illustration =
+      'assets/screens_31_40/illustrations/recovery_shield_key_illustration.svg';
+  static const String statistics_donut_chart =
+      'assets/screens_31_40/illustrations/statistics_donut_chart.svg';
 
-  static const String acknowledgements = 'assets/main/icons/acknowledgements.svg';
+  static const String acknowledgements =
+      'assets/main/icons/acknowledgements.svg';
   static const String app_lock_logo = 'assets/main/icons/app_lock_logo.svg';
   static const String backup_tip = 'assets/main/icons/backup_tip.svg';
   static const String check_badge = 'assets/main/icons/check_badge.svg';
-  static const String checkbox_unselected = 'assets/main/icons/checkbox_unselected.svg';
+  static const String checkbox_unselected =
+      'assets/main/icons/checkbox_unselected.svg';
   static const String contact_email = 'assets/main/icons/contact_email.svg';
-  static const String danger_exclamation = 'assets/main/icons/danger_exclamation.svg';
+  static const String danger_exclamation =
+      'assets/main/icons/danger_exclamation.svg';
   static const String document_index = 'assets/main/icons/document_index.svg';
-  static const String education_category = 'assets/main/icons/education_category.svg';
-  static const String encrypted_manifest = 'assets/main/icons/encrypted_manifest.svg';
+  static const String education_category =
+      'assets/main/icons/education_category.svg';
+  static const String encrypted_manifest =
+      'assets/main/icons/encrypted_manifest.svg';
   static const String export_media = 'assets/main/icons/export_media.svg';
   static const String export_report = 'assets/main/icons/export_report.svg';
   static const String file_integrity = 'assets/main/icons/file_integrity.svg';
-  static const String finance_category = 'assets/main/icons/finance_category.svg';
+  static const String finance_category =
+      'assets/main/icons/finance_category.svg';
   static const String health_category = 'assets/main/icons/health_category.svg';
   static const String import_cloud = 'assets/main/icons/import_cloud.svg';
   static const String import_computer = 'assets/main/icons/import_computer.svg';
@@ -173,38 +202,56 @@ abstract final class OwnKeepMainIcons {
   static const String legal = 'assets/main/icons/legal.svg';
   static const String new_folder = 'assets/main/icons/new_folder.svg';
   static const String others = 'assets/main/icons/others.svg';
-  static const String personal_category = 'assets/main/icons/personal_category.svg';
+  static const String personal_category =
+      'assets/main/icons/personal_category.svg';
   static const String play = 'assets/main/icons/play.svg';
   static const String privacy_first = 'assets/main/icons/privacy_first.svg';
-  static const String property_category = 'assets/main/icons/property_category.svg';
+  static const String property_category =
+      'assets/main/icons/property_category.svg';
   static const String rating_heart = 'assets/main/icons/rating_heart.svg';
   static const String rating_star = 'assets/main/icons/rating_star.svg';
-  static const String recovery_metadata = 'assets/main/icons/recovery_metadata.svg';
+  static const String recovery_metadata =
+      'assets/main/icons/recovery_metadata.svg';
   static const String star = 'assets/main/icons/star.svg';
-  static const String storage_consistency = 'assets/main/icons/storage_consistency.svg';
+  static const String storage_consistency =
+      'assets/main/icons/storage_consistency.svg';
   static const String success_check = 'assets/main/icons/success_check.svg';
   static const String tutorial_backup = 'assets/main/icons/tutorial_backup.svg';
-  static const String tutorial_documents = 'assets/main/icons/tutorial_documents.svg';
-  static const String tutorial_reminder = 'assets/main/icons/tutorial_reminder.svg';
-  static const String tutorial_security = 'assets/main/icons/tutorial_security.svg';
+  static const String tutorial_documents =
+      'assets/main/icons/tutorial_documents.svg';
+  static const String tutorial_reminder =
+      'assets/main/icons/tutorial_reminder.svg';
+  static const String tutorial_security =
+      'assets/main/icons/tutorial_security.svg';
   static const String tutorial_share = 'assets/main/icons/tutorial_share.svg';
   static const String tutorial_tags = 'assets/main/icons/tutorial_tags.svg';
   static const String tutorial_vault = 'assets/main/icons/tutorial_vault.svg';
   static const String unneeded_files = 'assets/main/icons/unneeded_files.svg';
   static const String vault_backup = 'assets/main/icons/vault_backup.svg';
-  static const String vehicle_category = 'assets/main/icons/vehicle_category.svg';
-  static const String version_restore_blue = 'assets/main/icons/version_restore_blue.svg';
-  static const String version_restore_green = 'assets/main/icons/version_restore_green.svg';
-  static const String version_restore_purple = 'assets/main/icons/version_restore_purple.svg';
+  static const String vehicle_category =
+      'assets/main/icons/vehicle_category.svg';
+  static const String version_restore_blue =
+      'assets/main/icons/version_restore_blue.svg';
+  static const String version_restore_green =
+      'assets/main/icons/version_restore_green.svg';
+  static const String version_restore_purple =
+      'assets/main/icons/version_restore_purple.svg';
   static const String website = 'assets/main/icons/website.svg';
   static const String whats_new = 'assets/main/icons/whats_new.svg';
-  static const String about_ownkeep_logo = 'assets/screens_41_50/illustrations/about_ownkeep_logo.svg';
-  static const String data_check_success = 'assets/screens_41_50/illustrations/data_check_success.svg';
-  static const String data_usage_donut_chart = 'assets/screens_41_50/illustrations/data_usage_donut_chart.svg';
-  static const String passport_file_preview = 'assets/screens_41_50/illustrations/passport_file_preview.svg';
-  static const String rate_ownkeep_illustration = 'assets/screens_41_50/illustrations/rate_ownkeep_illustration.svg';
-  static const String tutorial_thumbnail_sheet = 'assets/screens_41_50/illustrations/tutorial_thumbnail_sheet.svg';
-  static const String wipe_data_warning = 'assets/screens_41_50/illustrations/wipe_data_warning.svg';
+  static const String about_ownkeep_logo =
+      'assets/screens_41_50/illustrations/about_ownkeep_logo.svg';
+  static const String data_check_success =
+      'assets/screens_41_50/illustrations/data_check_success.svg';
+  static const String data_usage_donut_chart =
+      'assets/screens_41_50/illustrations/data_usage_donut_chart.svg';
+  static const String passport_file_preview =
+      'assets/screens_41_50/illustrations/passport_file_preview.svg';
+  static const String rate_ownkeep_illustration =
+      'assets/screens_41_50/illustrations/rate_ownkeep_illustration.svg';
+  static const String tutorial_thumbnail_sheet =
+      'assets/screens_41_50/illustrations/tutorial_thumbnail_sheet.svg';
+  static const String wipe_data_warning =
+      'assets/screens_41_50/illustrations/wipe_data_warning.svg';
 
   static const String capture_button = 'assets/main/icons/capture_button.svg';
   static const String change_blue = 'assets/main/icons/change_blue.svg';
@@ -225,21 +272,28 @@ abstract final class OwnKeepMainIcons {
   static const String page_selected = 'assets/main/icons/page_selected.svg';
   static const String print = 'assets/main/icons/print.svg';
   static const String radio_selected = 'assets/main/icons/radio_selected.svg';
-  static const String radio_unselected = 'assets/main/icons/radio_unselected.svg';
+  static const String radio_unselected =
+      'assets/main/icons/radio_unselected.svg';
   static const String reorder = 'assets/main/icons/reorder.svg';
   static const String save_files = 'assets/main/icons/save_files.svg';
   static const String save_note = 'assets/main/icons/save_note.svg';
   static const String save_pdf = 'assets/main/icons/save_pdf.svg';
   static const String scanner_corner = 'assets/main/icons/scanner_corner.svg';
-  static const String selection_checked = 'assets/main/icons/selection_checked.svg';
+  static const String selection_checked =
+      'assets/main/icons/selection_checked.svg';
   static const String split_pdf = 'assets/main/icons/split_pdf.svg';
   static const String tip_check = 'assets/main/icons/tip_check.svg';
   static const String toggle_off = 'assets/main/icons/toggle_off.svg';
-  static const String document_compare_versions = 'assets/screens_51_60/illustrations/document_compare_versions.svg';
-  static const String ocr_insurance_policy = 'assets/screens_51_60/illustrations/ocr_insurance_policy.svg';
-  static const String pdf_name_preview = 'assets/screens_51_60/illustrations/pdf_name_preview.svg';
-  static const String secure_scan_document = 'assets/screens_51_60/illustrations/secure_scan_document.svg';
-  static const String split_pdf_page_grid = 'assets/screens_51_60/illustrations/split_pdf_page_grid.svg';
+  static const String document_compare_versions =
+      'assets/screens_51_60/illustrations/document_compare_versions.svg';
+  static const String ocr_insurance_policy =
+      'assets/screens_51_60/illustrations/ocr_insurance_policy.svg';
+  static const String pdf_name_preview =
+      'assets/screens_51_60/illustrations/pdf_name_preview.svg';
+  static const String secure_scan_document =
+      'assets/screens_51_60/illustrations/secure_scan_document.svg';
+  static const String split_pdf_page_grid =
+      'assets/screens_51_60/illustrations/split_pdf_page_grid.svg';
 
   static const String expiring = 'assets/main/icons/expiring.svg';
   static const String vitamin = 'assets/main/icons/vitamin.svg';
@@ -263,14 +317,16 @@ abstract final class OwnKeepMainIcons {
   static const String work_letter = 'assets/main/icons/work_letter.svg';
   static const String hotel = 'assets/main/icons/hotel.svg';
   static const String booking = 'assets/main/icons/booking.svg';
-  static const String education_diamond = 'assets/main/icons/education_diamond.svg';
+  static const String education_diamond =
+      'assets/main/icons/education_diamond.svg';
   static const String due_soon = 'assets/main/icons/due_soon.svg';
   static const String custom_square = 'assets/main/icons/custom_square.svg';
   static const String receipts = 'assets/main/icons/receipts.svg';
   static const String report = 'assets/main/icons/report.svg';
   static const String contracts = 'assets/main/icons/contracts.svg';
   static const String registration = 'assets/main/icons/registration.svg';
-  static const String vehicle_document = 'assets/main/icons/vehicle_document.svg';
+  static const String vehicle_document =
+      'assets/main/icons/vehicle_document.svg';
   static const String custom_sparkle = 'assets/main/icons/custom_sparkle.svg';
   static const String employers = 'assets/main/icons/employers.svg';
   static const String income = 'assets/main/icons/income.svg';
@@ -296,7 +352,8 @@ abstract final class OwnKeepMainIcons {
   static const String voice_input = 'assets/main/icons/voice_input.svg';
   static const String rename = 'assets/main/icons/rename.svg';
   static const String archive = 'assets/main/icons/archive.svg';
-  static const String background_analysis = 'assets/main/icons/background_analysis.svg';
+  static const String background_analysis =
+      'assets/main/icons/background_analysis.svg';
   static const String send = 'assets/main/icons/send.svg';
   static const String expiry_calendar = 'assets/main/icons/expiry_calendar.svg';
 
@@ -307,17 +364,21 @@ abstract final class OwnKeepMainIcons {
   static const String approvals = 'assets/main/icons/approvals.svg';
   static const String members = 'assets/main/icons/members.svg';
   static const String device_verified = 'assets/main/icons/device_verified.svg';
-  static const String emergency_exclamation = 'assets/main/icons/emergency_exclamation.svg';
+  static const String emergency_exclamation =
+      'assets/main/icons/emergency_exclamation.svg';
   static const String avatar_alekhya = 'assets/main/icons/avatar_alekhya.svg';
   static const String permissions = 'assets/main/icons/permissions.svg';
   static const String health_records = 'assets/main/icons/health_records.svg';
-  static const String emergency_contacts = 'assets/main/icons/emergency_contacts.svg';
+  static const String emergency_contacts =
+      'assets/main/icons/emergency_contacts.svg';
   static const String access_allowed = 'assets/main/icons/access_allowed.svg';
   static const String waiting_period = 'assets/main/icons/waiting_period.svg';
   static const String identity_card = 'assets/main/icons/identity_card.svg';
-  static const String package_lifetime = 'assets/main/icons/package_lifetime.svg';
+  static const String package_lifetime =
+      'assets/main/icons/package_lifetime.svg';
   static const String permission_view = 'assets/main/icons/permission_view.svg';
-  static const String offline_transfer = 'assets/main/icons/offline_transfer.svg';
+  static const String offline_transfer =
+      'assets/main/icons/offline_transfer.svg';
   static const String edit_metadata = 'assets/main/icons/edit_metadata.svg';
   static const String avatar_ramesh = 'assets/main/icons/avatar_ramesh.svg';
   static const String audit_export = 'assets/main/icons/audit_export.svg';
@@ -329,14 +390,18 @@ abstract final class OwnKeepMainIcons {
   static const String single_use = 'assets/main/icons/single_use.svg';
   static const String timeline_dot = 'assets/main/icons/timeline_dot.svg';
   static const String unlock = 'assets/main/icons/unlock.svg';
-  static const String education_collection = 'assets/main/icons/education_collection.svg';
-  static const String family_documents = 'assets/main/icons/family_documents.svg';
-  static const String insurance_details = 'assets/main/icons/insurance_details.svg';
+  static const String education_collection =
+      'assets/main/icons/education_collection.svg';
+  static const String family_documents =
+      'assets/main/icons/family_documents.svg';
+  static const String insurance_details =
+      'assets/main/icons/insurance_details.svg';
   static const String trusted_contact = 'assets/main/icons/trusted_contact.svg';
   static const String qr_code = 'assets/main/icons/qr_code.svg';
   static const String property_papers = 'assets/main/icons/property_papers.svg';
   static const String delete_document = 'assets/main/icons/delete_document.svg';
-  static const String encrypted_package = 'assets/main/icons/encrypted_package.svg';
+  static const String encrypted_package =
+      'assets/main/icons/encrypted_package.svg';
   static const String access_pending = 'assets/main/icons/access_pending.svg';
   static const String permission_add = 'assets/main/icons/permission_add.svg';
   static const String export_shared = 'assets/main/icons/export_shared.svg';
@@ -351,20 +416,23 @@ abstract final class OwnKeepMainIcons {
   static const String step_2 = 'assets/main/icons/step_2.svg';
   static const String theme_midnight = 'assets/main/icons/theme_midnight.svg';
   static const String step_4 = 'assets/main/icons/step_4.svg';
-  static const String available_storage = 'assets/main/icons/available_storage.svg';
+  static const String available_storage =
+      'assets/main/icons/available_storage.svg';
   static const String pin = 'assets/main/icons/pin.svg';
   static const String pro_star = 'assets/main/icons/pro_star.svg';
   static const String container = 'assets/main/icons/container.svg';
   static const String phrase_slot = 'assets/main/icons/phrase_slot.svg';
   static const String cvault_file = 'assets/main/icons/cvault_file.svg';
   static const String key_derivation = 'assets/main/icons/key_derivation.svg';
-  static const String content_encryption = 'assets/main/icons/content_encryption.svg';
+  static const String content_encryption =
+      'assets/main/icons/content_encryption.svg';
   static const String theme_graphite = 'assets/main/icons/theme_graphite.svg';
   static const String qr_pairing = 'assets/main/icons/qr_pairing.svg';
   static const String local_storage = 'assets/main/icons/local_storage.svg';
   static const String theme_indigo = 'assets/main/icons/theme_indigo.svg';
   static const String version = 'assets/main/icons/version.svg';
-  static const String recovery_envelope = 'assets/main/icons/recovery_envelope.svg';
+  static const String recovery_envelope =
+      'assets/main/icons/recovery_envelope.svg';
   static const String integrity = 'assets/main/icons/integrity.svg';
 
   static const String collection = 'assets/main/icons/collections_tab.svg';
@@ -382,5 +450,4 @@ abstract final class OwnKeepMainIcons {
   static const String email = 'assets/main/icons/email.svg';
   static const String document_tools = 'assets/main/icons/document_group.svg';
   static const String ai_wand = 'assets/main/icons/custom_sparkle.svg';
-
 }

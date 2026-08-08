@@ -11,7 +11,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
-    
+
     return Scaffold(
       backgroundColor: colors.backgroundTop,
       appBar: AppBar(
@@ -75,9 +75,9 @@ class ProfileScreen extends StatelessWidget {
                 Text(
                   'My Vault Profile',
                   style: TextStyle(
-                    color: colors.textPrimary, 
-                    fontSize: 22, 
-                    fontWeight: FontWeight.bold, 
+                    color: colors.textPrimary,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
                     fontFamily: 'Inter',
                   ),
                   textAlign: TextAlign.center,
@@ -128,7 +128,7 @@ class ProfileScreen extends StatelessWidget {
         child: Row(
           children: [
             SvgPicture.asset(
-              iconPath, 
+              iconPath,
               colorFilter: ColorFilter.mode(
                 colors.neutralIcon,
                 BlendMode.srcIn,
@@ -138,10 +138,10 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(width: OwnKeepSpacing.md),
             Expanded(
               child: Text(
-                label, 
+                label,
                 style: TextStyle(
-                  color: colors.textPrimary, 
-                  fontSize: 16, 
+                  color: colors.textPrimary,
+                  fontSize: 16,
                   fontWeight: FontWeight.w500,
                   fontFamily: 'Inter',
                 ),

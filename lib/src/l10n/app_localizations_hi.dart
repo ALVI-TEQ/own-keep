@@ -167,7 +167,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get s01_action_get_started => 'Get Started';
 
   @override
-  String get s01_action_existing_account => 'I have an account';
+  String get s01_action_existing_account => 'Restore a vault backup';
 
   @override
   String get s02_title_line_1 => 'Your data.';

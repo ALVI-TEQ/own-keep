@@ -109,15 +109,34 @@ class OwnKeepMainColorsTheme extends ThemeExtension<OwnKeepMainColorsTheme> {
   }
 
   @override
-  OwnKeepMainColorsTheme lerp(ThemeExtension<OwnKeepMainColorsTheme>? other, double t) {
+  OwnKeepMainColorsTheme lerp(
+    ThemeExtension<OwnKeepMainColorsTheme>? other,
+    double t,
+  ) {
     if (other is! OwnKeepMainColorsTheme) return this;
     return OwnKeepMainColorsTheme(
       backgroundTop: Color.lerp(backgroundTop, other.backgroundTop, t)!,
-      backgroundBottom: Color.lerp(backgroundBottom, other.backgroundBottom, t)!,
-      navigationBackground: Color.lerp(navigationBackground, other.navigationBackground, t)!,
-      searchBackground: Color.lerp(searchBackground, other.searchBackground, t)!,
+      backgroundBottom: Color.lerp(
+        backgroundBottom,
+        other.backgroundBottom,
+        t,
+      )!,
+      navigationBackground: Color.lerp(
+        navigationBackground,
+        other.navigationBackground,
+        t,
+      )!,
+      searchBackground: Color.lerp(
+        searchBackground,
+        other.searchBackground,
+        t,
+      )!,
       surfacePrimary: Color.lerp(surfacePrimary, other.surfacePrimary, t)!,
-      surfaceSecondary: Color.lerp(surfaceSecondary, other.surfaceSecondary, t)!,
+      surfaceSecondary: Color.lerp(
+        surfaceSecondary,
+        other.surfaceSecondary,
+        t,
+      )!,
       surfaceSelected: Color.lerp(surfaceSelected, other.surfaceSelected, t)!,
       surfacePurple: Color.lerp(surfacePurple, other.surfacePurple, t)!,
       surfaceDanger: Color.lerp(surfaceDanger, other.surfaceDanger, t)!,
@@ -192,24 +211,20 @@ class OwnKeepMainColorsTheme extends ThemeExtension<OwnKeepMainColorsTheme> {
 }
 
 extension OwnKeepMainColorsExtension on BuildContext {
-  OwnKeepMainColorsTheme get mainColors => Theme.of(this).extension<OwnKeepMainColorsTheme>() ?? OwnKeepMainColorsTheme.defaultDark;
+  OwnKeepMainColorsTheme get mainColors =>
+      Theme.of(this).extension<OwnKeepMainColorsTheme>() ??
+      OwnKeepMainColorsTheme.defaultDark;
 }
 
 abstract final class OwnKeepMainGradients {
   static const screenBackground = LinearGradient(
-    colors: [
-      Color(0xFF050F20),
-      Color(0xFF020914),
-    ],
+    colors: [Color(0xFF050F20), Color(0xFF020914)],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
 
   static const primaryAction = LinearGradient(
-    colors: [
-      Color(0xFF7E48FF),
-      Color(0xFF3E62FF),
-    ],
+    colors: [Color(0xFF7E48FF), Color(0xFF3E62FF)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

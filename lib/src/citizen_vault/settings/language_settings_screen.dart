@@ -8,10 +8,17 @@ import 'package:vault_domain/vault_domain.dart';
 /// Screen presenting persisted interface-language preferences.
 final class LanguageSettingsScreen extends StatefulWidget {
   /// Creates the language settings screen.
-  const LanguageSettingsScreen({required this.controller, super.key});
+  const LanguageSettingsScreen({
+    required this.controller,
+    this.onLanguageChanged,
+    super.key,
+  });
 
   /// Controller instance.
   final IngestionUiController controller;
+
+  /// Updates the Flutter localization locale alongside the vault preference.
+  final ValueChanged<SupportedLanguage>? onLanguageChanged;
 
   @override
   State<LanguageSettingsScreen> createState() => _LanguageSettingsScreenState();
@@ -156,9 +163,9 @@ final class _LanguageSettingsScreenState extends State<LanguageSettingsScreen> {
                                 color: Color(0xFFCBD5E1),
                               ),
                         onTap: () {
-                          widget.controller.setUiLanguage(
-                            SupportedLanguage.values[i],
-                          );
+                          final language = SupportedLanguage.values[i];
+                          widget.controller.setUiLanguage(language);
+                          widget.onLanguageChanged?.call(language);
                         },
                       ),
                     ],

@@ -8,6 +8,8 @@ import '../../theme/ownkeep_radius.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/vault_provider.dart';
 import '../../citizen_vault/backup/backup_archive_transfer.dart';
+import '../components/recovery_credential_dialog.dart';
+import 'package:vault_domain/vault_domain.dart';
 
 class BackupRestoreScreen extends ConsumerStatefulWidget {
   const BackupRestoreScreen({super.key});
@@ -20,81 +22,12 @@ class BackupRestoreScreen extends ConsumerStatefulWidget {
 class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
   bool _isBackingUp = false;
   bool _isRestoring = false;
-  String? _lastBackupTime;
 
   Future<String?> _requestRecoveryPhrase({required bool confirm}) async {
-    final phrase = TextEditingController();
-    final confirmation = TextEditingController();
-    String? error;
-    final result = await showDialog<String>(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          title: Text(confirm ? 'Confirm recovery phrase' : 'Recovery phrase'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Your phrase stays in memory only for this operation.',
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: phrase,
-                obscureText: true,
-                autocorrect: false,
-                enableSuggestions: false,
-                decoration: const InputDecoration(labelText: 'Recovery phrase'),
-              ),
-              if (confirm)
-                TextField(
-                  controller: confirmation,
-                  obscureText: true,
-                  autocorrect: false,
-                  enableSuggestions: false,
-                  decoration: const InputDecoration(
-                    labelText: 'Confirm phrase',
-                  ),
-                ),
-              if (error != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Text(
-                    error!,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancel'),
-            ),
-            FilledButton(
-              onPressed: () {
-                final value = phrase.text.trim();
-                if (value.isEmpty) {
-                  setDialogState(() => error = 'Enter your recovery phrase.');
-                  return;
-                }
-                if (confirm && value != confirmation.text.trim()) {
-                  setDialogState(
-                    () => error = 'Recovery phrases do not match.',
-                  );
-                  return;
-                }
-                Navigator.pop(dialogContext, value);
-              },
-              child: const Text('Continue'),
-            ),
-          ],
-        ),
-      ),
+    return showRecoveryCredentialDialog(
+      context,
+      title: confirm ? 'Authenticate backup' : 'Unlock backup',
     );
-    phrase.dispose();
-    confirmation.dispose();
-    return result;
   }
 
   Future<void> _performBackup() async {
@@ -115,13 +48,23 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
       final transfer = const PlatformBackupArchiveTransfer();
       final saved = await transfer.exportArchive(pending.archive);
 
+      if (saved) {
+        final current = handle.ingestionController.preferences;
+        await handle.ingestionController.savePreferences(
+          VaultPreferencesView(
+            useGrid: current.useGrid,
+            darkMode: current.darkMode,
+            defaultReminderOffsets: current.defaultReminderOffsets,
+            lastBackupAt: DateTime.now().toUtc(),
+            lastBackupObjectCount: pending.objectCount,
+          ),
+        );
+      }
+
       if (mounted) {
         setState(() {
           _isBackingUp = false;
           if (saved) {
-            final now = DateTime.now();
-            _lastBackupTime =
-                '${_pad(now.month)}/${_pad(now.day)}/${now.year} ${_pad(now.hour)}:${_pad(now.minute)}';
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Backup exported successfully!')),
             );
@@ -142,8 +85,6 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
     }
   }
 
-  String _pad(int n) => n.toString().padLeft(2, '0');
-
   Future<void> _performRestore() async {
     try {
       final transfer = const PlatformBackupArchiveTransfer();
@@ -160,21 +101,40 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
       }
 
       if (!mounted) return;
+      final replace = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Replace current vault?'),
+          content: const Text(
+            'The selected encrypted backup will replace the current vault. '
+            'If verification fails, OwnKeep will restore the current vault automatically.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Continue'),
+            ),
+          ],
+        ),
+      );
+      if (replace != true || !mounted) return;
       final passphrase = await _requestRecoveryPhrase(confirm: false);
       if (passphrase == null || !mounted) return;
       setState(() => _isRestoring = true);
-      final lifecycle = ref.read(vaultLifecycleProvider);
-
-      await lifecycle.restoreBackup(
-        archive: selected.file,
-        recoveryPassphrase: passphrase,
-      );
+      await ref
+          .read(vaultSessionProvider.notifier)
+          .restoreVault(selected.file, passphrase);
 
       if (mounted) {
         setState(() => _isRestoring = false);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Data restored successfully!')),
         );
+        Navigator.of(context).popUntil((route) => route.isFirst);
       }
     } catch (e) {
       if (mounted) {
@@ -188,6 +148,8 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final preferences = ref.watch(ingestionControllerProvider)?.preferences;
+    final lastBackup = preferences?.lastBackupAt?.toLocal();
     return OwnKeepAppScaffold(
       title: 'Backup & Restore',
       body: ListView(
@@ -200,8 +162,9 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
             icon: Icons.backup_outlined,
             isLoading: _isBackingUp,
             onTap: _isBackingUp || _isRestoring ? null : _performBackup,
-            statusText: _lastBackupTime != null
-                ? 'Last backup: $_lastBackupTime'
+            statusText: lastBackup != null
+                ? 'Last backup: ${lastBackup.toString().split('.')[0]} '
+                      '• ${preferences?.lastBackupObjectCount ?? 0} objects'
                 : 'No recent backup',
           ),
           const SizedBox(height: OwnKeepSpacing.md),

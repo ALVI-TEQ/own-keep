@@ -10,7 +10,7 @@ class OwnKeepOnboardingScaffold extends StatelessWidget {
   final VoidCallback? onBack;
 
   const OwnKeepOnboardingScaffold({
-    super.key, 
+    super.key,
     required this.child,
     this.showBackButton = false,
     this.onBack,
@@ -32,10 +32,10 @@ class OwnKeepOnboardingScaffold extends StatelessWidget {
                 onPressed:
                     onBack ??
                     () {
-                  if (context.canPop()) {
-                    context.pop();
-                  }
-                },
+                      if (context.canPop()) {
+                        context.pop();
+                      }
+                    },
               ),
             )
           : null,
@@ -52,10 +52,10 @@ class OwnKeepOnboardingScaffold extends StatelessWidget {
 class OwnKeepOnboardingHeader extends StatelessWidget {
   final String title;
   final String? subtitle;
-  
+
   const OwnKeepOnboardingHeader({
-    super.key, 
-    required this.title, 
+    super.key,
+    required this.title,
     this.subtitle,
   });
 
@@ -282,7 +282,7 @@ class OwnKeepRecoveryWordGrid extends StatelessWidget {
           onTap: () => onWordTap?.call(index, words[index]),
           child: Container(
             width: 130, // Fixed width for responsive wrap
-            height: 48,  // Fixed height
+            height: 48, // Fixed height
             decoration: BoxDecoration(
               color: isSelected
                   ? context.appColors.brandPurple.withValues(alpha: 0.2)

@@ -196,7 +196,7 @@ class OwnKeepFigmaSplashScreen extends StatelessWidget {
                       border: Border.all(color: OwnKeepTheme.blue, width: 2.5),
                       boxShadow: [
                         BoxShadow(
-                          color: OwnKeepTheme.blue.withOpacity(0.5),
+                          color: OwnKeepTheme.blue.withValues(alpha: 0.5),
                           blurRadius: 30,
                         ),
                       ],
@@ -311,7 +311,7 @@ class OwnKeepFigmaOnboardingScreen extends StatelessWidget {
                   border: Border.all(color: OwnKeepTheme.blue, strokeAlign: 1),
                   boxShadow: [
                     BoxShadow(
-                      color: OwnKeepTheme.blue.withOpacity(0.3),
+                      color: OwnKeepTheme.blue.withValues(alpha: 0.3),
                       blurRadius: 25,
                     ),
                   ],
@@ -333,8 +333,7 @@ class OwnKeepFigmaOnboardingScreen extends StatelessWidget {
                 width: i == 0 ? 20 : 6,
                 height: 6,
                 decoration: BoxDecoration(
-                  color:
-                      i == 0 ? OwnKeepTheme.blue : const Color(0x33FFFFFF),
+                  color: i == 0 ? OwnKeepTheme.blue : const Color(0x33FFFFFF),
                   borderRadius: BorderRadius.circular(3),
                 ),
               ),
@@ -469,7 +468,7 @@ class _OwnKeepFigmaCreateVaultScreenState
             trailing: Switch(
               value: _biometrics,
               onChanged: (v) => setState(() => _biometrics = v),
-              activeColor: OwnKeepTheme.blue,
+              activeThumbColor: OwnKeepTheme.blue,
             ),
           ),
           const SizedBox(height: 8),
@@ -623,7 +622,7 @@ class OwnKeepFigmaLockScreen extends StatelessWidget {
                 width: 72,
                 height: 72,
                 decoration: BoxDecoration(
-                  color: OwnKeepTheme.blue.withOpacity(0.15),
+                  color: OwnKeepTheme.blue.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                   border: Border.all(color: OwnKeepTheme.blue, width: 2),
                 ),
@@ -784,10 +783,26 @@ class OwnKeepFigmaDashboardScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _quickAction('Scan', Icons.qr_code_scanner, const Color(0xFF2563EB)),
-              _quickAction('Add New', Icons.add_rounded, const Color(0xFF059669)),
-              _quickAction('AI Assistant', Icons.auto_awesome, const Color(0xFF7C3AED)),
-              _quickAction('Quick Note', Icons.edit_note, const Color(0xFFEA580C)),
+              _quickAction(
+                'Scan',
+                Icons.qr_code_scanner,
+                const Color(0xFF2563EB),
+              ),
+              _quickAction(
+                'Add New',
+                Icons.add_rounded,
+                const Color(0xFF059669),
+              ),
+              _quickAction(
+                'AI Assistant',
+                Icons.auto_awesome,
+                const Color(0xFF7C3AED),
+              ),
+              _quickAction(
+                'Quick Note',
+                Icons.edit_note,
+                const Color(0xFFEA580C),
+              ),
             ],
           ),
           const SizedBox(height: 20),
@@ -903,9 +918,11 @@ class OwnKeepFigmaDashboardScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: OwnKeepTheme.blue.withOpacity(0.15),
+              color: OwnKeepTheme.blue.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: OwnKeepTheme.blue.withOpacity(0.3)),
+              border: Border.all(
+                color: OwnKeepTheme.blue.withValues(alpha: 0.3),
+              ),
             ),
             child: Row(
               children: const [
@@ -1074,10 +1091,7 @@ class OwnKeepFigmaDashboardScreen extends StatelessWidget {
               ),
               Text(
                 count,
-                style: const TextStyle(
-                  color: Color(0xFF64748B),
-                  fontSize: 10,
-                ),
+                style: const TextStyle(color: Color(0xFF64748B), fontSize: 10),
               ),
             ],
           ),

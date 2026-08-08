@@ -12,11 +12,15 @@ import 'package:vault_domain/vault_domain.dart';
 class DuplicateFinderScreen extends ConsumerWidget {
   const DuplicateFinderScreen({super.key});
 
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
 
     final allDocsAsync = ref.watch(allDocumentsProvider);
+    final duplicateGroups = duplicateDocumentGroups(
+      allDocsAsync.value ?? const <DocumentListItemView>[],
+    );
 
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -124,10 +128,10 @@ class DuplicateFinderScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(OwnKeepSpacing.md),
               decoration: BoxDecoration(
-                color: colors.warningOrange.withOpacity(0.1),
+                color: colors.warningOrange.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: colors.warningOrange.withOpacity(0.3),
+                  color: colors.warningOrange.withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
@@ -159,7 +163,9 @@ class DuplicateFinderScreen extends ConsumerWidget {
                   ),
                   const SizedBox(width: 12),
                   ElevatedButton(
-                    onPressed: () => context.push('/dashboard/all-files'),
+                    onPressed: duplicateGroups.isEmpty
+                        ? null
+                        : () => _openGroup(context, duplicateGroups.first),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: colors.warningOrange,
                       foregroundColor: Colors.white,
@@ -204,49 +210,48 @@ class DuplicateFinderScreen extends ConsumerWidget {
             ),
             const SizedBox(height: OwnKeepSpacing.md),
 
-            Column(
-              children: [
-                _buildGroupCard(
-                  colors: colors,
-                  icon: OwnKeepMainIcons.image,
-                  iconColor: colors.primaryBlue,
-                  title: l10n.s36_similar_photos,
-                  meta: l10n.s36_similar_photos_meta,
-                  onTap: () => context.push('/features/advanced-search'),
+            if (duplicateGroups.isEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 32),
+                child: Center(
+                  child: Text(
+                    'No duplicate documents found.',
+                    style: TextStyle(color: colors.textSecondary),
+                  ),
                 ),
-                const SizedBox(height: OwnKeepSpacing.sm),
-                _buildGroupCard(
-                  colors: colors,
-                  icon: OwnKeepMainIcons.similar_documents,
-                  iconColor: const Color(0xFF27C5E8),
-                  title: l10n.s36_similar_documents,
-                  meta: l10n.s36_similar_documents_meta,
-                  onTap: () => context.push('/features/advanced-search'),
-                ),
-                const SizedBox(height: OwnKeepSpacing.sm),
-                _buildGroupCard(
-                  colors: colors,
-                  icon: OwnKeepMainIcons.video,
-                  iconColor: colors.aiPurple,
-                  title: l10n.s36_similar_videos,
-                  meta: l10n.s36_similar_videos_meta,
-                  onTap: () => context.push('/features/advanced-search'),
-                ),
-                const SizedBox(height: OwnKeepSpacing.sm),
-                _buildGroupCard(
-                  colors: colors,
-                  icon: OwnKeepMainIcons.image,
-                  iconColor: colors.warningOrange,
-                  title: l10n.s36_screenshots,
-                  meta: l10n.s36_screenshots_meta,
-                  onTap: () => context.push('/features/advanced-search'),
-                ),
-              ],
-            ),
+              )
+            else
+              Column(
+                children: duplicateGroups
+                    .map(
+                      (group) => Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: OwnKeepSpacing.sm,
+                        ),
+                        child: _buildGroupCard(
+                          colors: colors,
+                          icon: group.first.mimeType.startsWith('image/')
+                              ? OwnKeepMainIcons.image
+                              : OwnKeepMainIcons.similar_documents,
+                          iconColor: colors.primaryBlue,
+                          title: group.first.logicalFilename,
+                          meta: '${group.length} matching copies',
+                          onTap: () => _openGroup(context, group),
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
           ],
         ),
       ),
     );
+  }
+
+  void _openGroup(BuildContext context, List<DocumentListItemView> documents) {
+    final first = Uri.encodeQueryComponent(documents[0].id);
+    final second = Uri.encodeQueryComponent(documents[1].id);
+    context.push('/features/duplicate-resolution?first=$first&second=$second');
   }
 
   Widget _buildStatColumn(
@@ -375,4 +380,17 @@ int duplicateDocumentCount(List<DocumentListItemView> documents) {
     0,
     (total, count) => total + (count > 1 ? count - 1 : 0),
   );
+}
+
+List<List<DocumentListItemView>> duplicateDocumentGroups(
+  List<DocumentListItemView> documents,
+) {
+  final grouped = <String, List<DocumentListItemView>>{};
+  for (final document in documents) {
+    final key =
+        '${document.logicalFilename.trim().toLowerCase()}|${document.mimeType.toLowerCase()}|${document.byteSize}';
+    grouped.putIfAbsent(key, () => <DocumentListItemView>[]).add(document);
+  }
+  return grouped.values.where((items) => items.length > 1).toList()
+    ..sort((a, b) => b.length.compareTo(a.length));
 }

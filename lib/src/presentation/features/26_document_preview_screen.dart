@@ -8,6 +8,9 @@ import '../../theme/ownkeep_spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/vault_provider.dart';
 import '../../providers/document_provider.dart';
+import '../../citizen_vault/library/document_export_confirmation.dart';
+import '../../citizen_vault/library/full_document_screen.dart';
+import '../../citizen_vault/library/pdf_document_tools.dart';
 import 'dart:typed_data';
 
 class DocumentPreviewScreen extends ConsumerStatefulWidget {
@@ -22,6 +25,7 @@ class DocumentPreviewScreen extends ConsumerStatefulWidget {
 class _DocumentPreviewScreenState extends ConsumerState<DocumentPreviewScreen> {
   Uint8List? _previewBytes;
   bool _isLoading = true;
+  int _pageCount = 1;
 
   Future<void> _toggleFavorite() async {
     final id = widget.documentId;
@@ -41,11 +45,27 @@ class _DocumentPreviewScreenState extends ConsumerState<DocumentPreviewScreen> {
     final detail = await ref.read(documentDetailProvider(id).future);
     final controller = ref.read(ingestionControllerProvider);
     if (detail == null || controller == null) return;
+    if (!mounted || !await confirmDocumentExport(context)) return;
     final message = await controller.exportDocument(detail);
-    if (mounted)
+    if (mounted) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(message)));
+    }
+  }
+
+  Future<void> _openOriginal() async {
+    final id = widget.documentId;
+    if (id == null) return;
+    final detail = await ref.read(documentDetailProvider(id).future);
+    final controller = ref.read(ingestionControllerProvider);
+    if (!mounted || detail == null || controller == null) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) =>
+            FullDocumentScreen(controller: controller, detail: detail),
+      ),
+    );
   }
 
   Future<void> _moveToTrash() async {
@@ -74,11 +94,23 @@ class _DocumentPreviewScreenState extends ConsumerState<DocumentPreviewScreen> {
       final controller = ref.read(ingestionControllerProvider);
       if (controller != null) {
         final bytes = await controller.documentPreview(widget.documentId!);
-        if (mounted)
+        final detail = await ref.read(
+          documentDetailProvider(widget.documentId!).future,
+        );
+        var pageCount = 1;
+        if (detail?.summary.mimeType.toLowerCase() == 'application/pdf') {
+          pageCount = await const PdfDocumentTools().pageCount(
+            controller: controller,
+            document: detail!,
+          );
+        }
+        if (mounted) {
           setState(() {
             _previewBytes = bytes;
+            _pageCount = pageCount;
             _isLoading = false;
           });
+        }
       } else {
         if (mounted) setState(() => _isLoading = false);
       }
@@ -182,11 +214,11 @@ class _DocumentPreviewScreenState extends ConsumerState<DocumentPreviewScreen> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.6),
+                        color: Colors.black.withValues(alpha: 0.6),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(
-                        l10n.s26_page,
+                        'Page 1 of $_pageCount',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,
@@ -202,7 +234,7 @@ class _DocumentPreviewScreenState extends ConsumerState<DocumentPreviewScreen> {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.6),
+                        color: Colors.black.withValues(alpha: 0.6),
                         shape: BoxShape.circle,
                       ),
                       child: SvgPicture.asset(
@@ -270,7 +302,10 @@ class _DocumentPreviewScreenState extends ConsumerState<DocumentPreviewScreen> {
                               'Added: ${doc.summary.importedAt.toString().split('.')[0]}',
                             ),
                             const SizedBox(height: 12),
-                            _buildInfoRow(colors, 'Size: Unknown KB'),
+                            _buildInfoRow(
+                              colors,
+                              'Size: ${_formatBytes(doc.summary.byteSize)}',
+                            ),
                             const SizedBox(height: OwnKeepSpacing.xl),
 
                             // Tags
@@ -372,6 +407,12 @@ class _DocumentPreviewScreenState extends ConsumerState<DocumentPreviewScreen> {
     );
   }
 
+  String _formatBytes(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+  }
+
   Widget _buildTag(
     OwnKeepMainColorsTheme colors,
     String label,
@@ -380,9 +421,9 @@ class _DocumentPreviewScreenState extends ConsumerState<DocumentPreviewScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: tagColor.withOpacity(0.15),
+        color: tagColor.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: tagColor.withOpacity(0.3)),
+        border: Border.all(color: tagColor.withValues(alpha: 0.3)),
       ),
       child: Text(
         label,
@@ -435,11 +476,65 @@ class _DocumentPreviewScreenState extends ConsumerState<DocumentPreviewScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
+              leading: const Icon(Icons.visibility_outlined),
+              title: const Text('View original file'),
+              onTap: () {
+                Navigator.pop(sheetContext);
+                _openOriginal();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.text_snippet_outlined),
+              title: const Text('View extracted text'),
+              onTap: () {
+                Navigator.pop(sheetContext);
+                final id = widget.documentId;
+                if (id != null) {
+                  context.push('/features/ocr-scan-text?id=$id');
+                }
+              },
+            ),
+            if (ref
+                    .read(documentDetailProvider(widget.documentId ?? ''))
+                    .value
+                    ?.summary
+                    .mimeType
+                    .toLowerCase() ==
+                'application/pdf') ...[
+              ListTile(
+                leading: const Icon(Icons.merge_type),
+                title: const Text('Merge PDFs'),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  context.push('/features/merge-pdf');
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.call_split),
+                title: const Text('Split PDF'),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  context.push('/features/split-pdf');
+                },
+              ),
+            ],
+            ListTile(
               leading: const Icon(Icons.label_outline),
               title: const Text('Manage tags'),
               onTap: () {
                 Navigator.pop(sheetContext);
                 context.push('/features/tag-manager');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.history),
+              title: const Text('Document processing history'),
+              onTap: () {
+                Navigator.pop(sheetContext);
+                final id = widget.documentId;
+                if (id != null) {
+                  context.push('/features/version-history?id=$id');
+                }
               },
             ),
             ListTile(

@@ -8,6 +8,7 @@ import '../../theme/ownkeep_main_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/vault_provider.dart';
 import '../../citizen_vault/backup/backup_archive_transfer.dart';
+import '../components/recovery_credential_dialog.dart';
 
 class DeviceMigrationScreen extends ConsumerStatefulWidget {
   const DeviceMigrationScreen({super.key});
@@ -22,66 +23,10 @@ class _DeviceMigrationScreenState extends ConsumerState<DeviceMigrationScreen> {
   bool _isExporting = false;
 
   Future<String?> _requestRecoveryPhrase() async {
-    final phrase = TextEditingController();
-    final confirmation = TextEditingController();
-    String? error;
-    final value = await showDialog<String>(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          title: const Text('Protect migration archive'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Enter and confirm the recovery phrase for this encrypted export.',
-              ),
-              TextField(
-                controller: phrase,
-                obscureText: true,
-                autocorrect: false,
-                enableSuggestions: false,
-                decoration: const InputDecoration(labelText: 'Recovery phrase'),
-              ),
-              TextField(
-                controller: confirmation,
-                obscureText: true,
-                autocorrect: false,
-                enableSuggestions: false,
-                decoration: const InputDecoration(labelText: 'Confirm phrase'),
-              ),
-              if (error != null)
-                Text(error!, style: const TextStyle(color: Colors.red)),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancel'),
-            ),
-            FilledButton(
-              onPressed: () {
-                final entered = phrase.text.trim();
-                if (entered.isEmpty || entered != confirmation.text.trim()) {
-                  setDialogState(
-                    () => error = entered.isEmpty
-                        ? 'Enter your recovery phrase.'
-                        : 'Recovery phrases do not match.',
-                  );
-                  return;
-                }
-                Navigator.pop(dialogContext, entered);
-              },
-              child: const Text('Continue'),
-            ),
-          ],
-        ),
-      ),
+    return showRecoveryCredentialDialog(
+      context,
+      title: 'Protect migration archive',
     );
-    phrase.dispose();
-    confirmation.dispose();
-    return value;
   }
 
   Future<void> _performFileExport() async {

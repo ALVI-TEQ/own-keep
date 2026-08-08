@@ -11,7 +11,7 @@ class CreateVaultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Scaffold(
       backgroundColor: context.onboardingColors.backgroundDeep,
       body: SafeArea(
@@ -63,7 +63,7 @@ class CreateVaultScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: ElevatedButton(
-                  onPressed: () => context.push('/set-pin'),
+                  onPressed: () => context.push('/legal-consent'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,

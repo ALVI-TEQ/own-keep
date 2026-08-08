@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ownkeep/src/citizen_vault/vault/vault_lifecycle.dart';
 import 'package:ownkeep/src/citizen_vault/ingestion/ingestion_ui_controller.dart';
 import 'package:ownkeep/src/citizen_vault/vault/pin_credential_store.dart';
+import 'package:ownkeep/src/domain/recovery/recovery_method.dart';
 
 class AppDarkModeNotifier extends Notifier<bool> {
   final bool initialValue;
@@ -35,7 +36,7 @@ final appThemeColorProvider = NotifierProvider<AppThemeColorNotifier, String>(
 
 class AppLanguageNotifier extends Notifier<String> {
   final String initialValue;
-  AppLanguageNotifier({this.initialValue = 'English'});
+  AppLanguageNotifier({this.initialValue = 'en'});
 
   @override
   String build() => initialValue;
@@ -112,8 +113,10 @@ class VaultSessionNotifier extends AsyncNotifier<UnlockedVaultHandle?> {
   }
 
   Future<void> restoreVault(File archive, String recoveryPassphrase) async {
+    final previousHandle = state.value;
     state = const AsyncLoading();
     try {
+      await previousHandle?.close();
       final handle = await ref
           .read(vaultLifecycleProvider)
           .restoreBackup(
@@ -163,6 +166,18 @@ class OnboardingRecoveryCodeNotifier extends Notifier<String?> {
 final onboardingRecoveryCodeProvider =
     NotifierProvider<OnboardingRecoveryCodeNotifier, String?>(
       OnboardingRecoveryCodeNotifier.new,
+    );
+
+class OnboardingRecoveryMethodNotifier extends Notifier<RecoveryMethod> {
+  @override
+  RecoveryMethod build() => RecoveryMethod.generatedPhrase;
+
+  void select(RecoveryMethod value) => state = value;
+}
+
+final onboardingRecoveryMethodProvider =
+    NotifierProvider<OnboardingRecoveryMethodNotifier, RecoveryMethod>(
+      OnboardingRecoveryMethodNotifier.new,
     );
 
 class OnboardingPinNotifier extends Notifier<String?> {

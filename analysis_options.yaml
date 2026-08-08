@@ -21,6 +21,9 @@ linter:
   # `// ignore_for_file: name_of_lint` syntax on the line or in the file
   # producing the lint.
   rules:
+    # Presentation files intentionally start with their design screen number
+    # (01–100) so the implementation remains traceable to the approved UI set.
+    file_names: false
     # avoid_print: false  # Uncomment to disable the `avoid_print` rule
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 

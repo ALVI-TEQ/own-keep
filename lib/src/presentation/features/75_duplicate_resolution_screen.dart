@@ -39,19 +39,24 @@ class _DuplicateResolutionScreenState
       ),
       body: candidates.length < 2
           ? const Center(child: Text('Two valid documents are required.'))
-          : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: candidates.length,
-              itemBuilder: (context, index) => Card(
-                color: colors.surfacePrimary,
-                child: RadioListTile<int>(
-                  value: index,
-                  groupValue: _selectedIndex,
-                  onChanged: (value) =>
-                      setState(() => _selectedIndex = value ?? 0),
-                  title: Text(candidates[index].logicalFilename),
-                  subtitle: Text(
-                    '${candidates[index].mimeType} • ${candidates[index].importedAt.toLocal()}',
+          : RadioGroup<int>(
+              groupValue: _selectedIndex,
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() => _selectedIndex = value);
+                }
+              },
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: candidates.length,
+                itemBuilder: (context, index) => Card(
+                  color: colors.surfacePrimary,
+                  child: RadioListTile<int>(
+                    value: index,
+                    title: Text(candidates[index].logicalFilename),
+                    subtitle: Text(
+                      '${candidates[index].mimeType} • ${candidates[index].importedAt.toLocal()}',
+                    ),
                   ),
                 ),
               ),

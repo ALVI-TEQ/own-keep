@@ -8,6 +8,7 @@ import '../../theme/ownkeep_main_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/vault_provider.dart';
 import '../../citizen_vault/backup/backup_archive_transfer.dart';
+import '../components/recovery_credential_dialog.dart';
 
 class RestoreVaultScreen extends ConsumerStatefulWidget {
   const RestoreVaultScreen({super.key});
@@ -22,36 +23,7 @@ class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
   bool _isRestoring = false;
 
   Future<String?> _requestRecoveryPhrase() async {
-    final phrase = TextEditingController();
-    final result = await showDialog<String>(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Unlock backup'),
-        content: TextField(
-          controller: phrase,
-          obscureText: true,
-          autocorrect: false,
-          enableSuggestions: false,
-          decoration: const InputDecoration(labelText: 'Recovery phrase'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () {
-              final value = phrase.text.trim();
-              if (value.isNotEmpty) Navigator.pop(dialogContext, value);
-            },
-            child: const Text('Restore'),
-          ),
-        ],
-      ),
-    );
-    phrase.dispose();
-    return result;
+    return showRecoveryCredentialDialog(context, title: 'Unlock backup');
   }
 
   Future<void> _pickArchive() async {
@@ -380,11 +352,9 @@ class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Radio<int>(
-              value: index,
-              groupValue: _restoreOption,
-              onChanged: (v) => setState(() => _restoreOption = v!),
-              activeColor: colors.primaryBlue,
+            Icon(
+              isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+              color: isSelected ? colors.primaryBlue : colors.textMuted,
             ),
             const SizedBox(width: 8),
             Expanded(

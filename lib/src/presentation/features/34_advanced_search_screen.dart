@@ -299,15 +299,15 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            colors.aiPurple.withOpacity(0.1),
-                            colors.primaryBlue.withOpacity(0.1),
+                            colors.aiPurple.withValues(alpha: 0.1),
+                            colors.primaryBlue.withValues(alpha: 0.1),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: colors.aiPurple.withOpacity(0.3),
+                          color: colors.aiPurple.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Column(

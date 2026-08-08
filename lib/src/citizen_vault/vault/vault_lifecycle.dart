@@ -330,10 +330,14 @@ final class LocalVaultLifecycle implements VaultLifecycle {
     required File archive,
     required String recoveryPassphrase,
   }) async {
-    if (await exists()) {
-      throw const VaultLifecycleFailure('vault_already_exists');
-    }
+    Directory? previousVault;
     try {
+      if (await exists()) {
+        previousVault = Directory(
+          '${_root.path}.before-restore-${DateTime.now().microsecondsSinceEpoch}',
+        );
+        await _root.rename(previousVault.path);
+      }
       final restore = BackupRestoreService(
         archiveVerifier: VaultBackupArchiveVerifier(random: _random),
         capacityPolicy: _restoreStorage,
@@ -351,21 +355,42 @@ final class LocalVaultLifecycle implements VaultLifecycle {
             .where((segment) => segment.isNotEmpty)
             .last,
       );
-      return await unlock(recoveryPassphrase: recoveryPassphrase);
+      final handle = await unlock(recoveryPassphrase: recoveryPassphrase);
+      if (previousVault != null && previousVault.existsSync()) {
+        try {
+          await previousVault.delete(recursive: true);
+        } on Object {
+          // The encrypted pre-restore copy can be cleaned on a later startup.
+        }
+      }
+      return handle;
     } on BackupAuthenticationFailure catch (error) {
+      await _rollBackFailedRestore(previousVault);
       throw VaultLifecycleFailure(
         'incorrect_recovery_credential',
         cause: error,
       );
     } on InsufficientRestoreStorageFailure catch (error) {
+      await _rollBackFailedRestore(previousVault);
       throw VaultLifecycleFailure('restore_storage_insufficient', cause: error);
     } on VaultLifecycleFailure {
+      await _rollBackFailedRestore(previousVault);
       rethrow;
     } on BackupFailure catch (error) {
+      await _rollBackFailedRestore(previousVault);
       throw VaultLifecycleFailure('backup_restore_failed', cause: error);
     } on Object catch (error) {
+      await _rollBackFailedRestore(previousVault);
       throw VaultLifecycleFailure('backup_restore_failed', cause: error);
     }
+  }
+
+  Future<void> _rollBackFailedRestore(Directory? previousVault) async {
+    if (previousVault == null || !previousVault.existsSync()) return;
+    if (_root.existsSync()) {
+      await _root.delete(recursive: true);
+    }
+    await previousVault.rename(_root.path);
   }
 
   @override

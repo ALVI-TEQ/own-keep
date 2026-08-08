@@ -27,7 +27,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     // Adding slight delay to prevent jarring transitions if very fast
     await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
-    
+
     try {
       final lifecycle = ref.read(vaultLifecycleProvider);
       final exists = await lifecycle.exists();

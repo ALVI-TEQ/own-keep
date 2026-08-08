@@ -98,7 +98,7 @@ class _RecentlyDeletedScreenState extends ConsumerState<RecentlyDeletedScreen> {
             margin: const EdgeInsets.all(OwnKeepSpacing.lg),
             padding: const EdgeInsets.all(OwnKeepSpacing.md),
             decoration: BoxDecoration(
-              color: colors.surfaceSelected.withOpacity(0.5),
+              color: colors.surfaceSelected.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: colors.borderSoft),
             ),

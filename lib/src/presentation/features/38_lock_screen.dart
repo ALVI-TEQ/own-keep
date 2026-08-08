@@ -9,9 +9,12 @@ import '../../theme/ownkeep_spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../providers/vault_provider.dart';
+import '../../citizen_vault/vault/pin_credential_store.dart';
 
 class LockScreen extends ConsumerStatefulWidget {
-  const LockScreen({super.key});
+  const LockScreen({this.returnTo, super.key});
+
+  final String? returnTo;
 
   @override
   ConsumerState<LockScreen> createState() => _LockScreenState();
@@ -23,6 +26,34 @@ class _LockScreenState extends ConsumerState<LockScreen> {
 
   String? _error;
   bool _isAuthenticating = false;
+  bool _biometricEnabled = false;
+  bool _automaticBiometricAttempted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBiometricState();
+  }
+
+  Future<void> _loadBiometricState() async {
+    final lifecycle = ref.read(vaultLifecycleProvider);
+    final results = await Future.wait<bool>([
+      lifecycle.biometricEnabled(),
+      lifecycle.biometricAvailable(),
+    ]);
+    if (!mounted) return;
+
+    final canUnlockWithBiometrics = results[0] && results[1];
+    setState(() => _biometricEnabled = canUnlockWithBiometrics);
+    if (canUnlockWithBiometrics && !_automaticBiometricAttempted) {
+      _automaticBiometricAttempted = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && !_isAuthenticating) {
+          _authenticateBiometric();
+        }
+      });
+    }
+  }
 
   void _onKeypadTap(String value) {
     if (_pin.length < _pinLength && !_isAuthenticating) {
@@ -44,9 +75,19 @@ class _LockScreenState extends ConsumerState<LockScreen> {
     try {
       await ref.read(vaultSessionProvider.notifier).unlockVault(_pin);
       if (mounted) {
-        context.go('/dashboard/home');
+        context.go(_destination);
       }
-    } catch (e) {
+    } on PinCredentialFailure catch (failure) {
+      if (mounted) {
+        setState(() {
+          _error = failure.code == 'pin_not_enrolled'
+              ? 'No PIN is stored for this vault. Use recovery options.'
+              : 'Incorrect PIN';
+          _pin = '';
+          _isAuthenticating = false;
+        });
+      }
+    } catch (_) {
       if (mounted) {
         setState(() {
           _error = 'Incorrect PIN';
@@ -74,7 +115,7 @@ class _LockScreenState extends ConsumerState<LockScreen> {
     try {
       await ref.read(vaultSessionProvider.notifier).unlockWithBiometrics();
       if (mounted) {
-        context.go('/dashboard/home');
+        context.go(_destination);
       }
     } catch (e) {
       if (mounted) {
@@ -84,6 +125,17 @@ class _LockScreenState extends ConsumerState<LockScreen> {
         });
       }
     }
+  }
+
+  String get _destination {
+    final value = widget.returnTo;
+    if (value == null ||
+        !value.startsWith('/') ||
+        value.startsWith('/lock') ||
+        value.startsWith('/splash')) {
+      return '/dashboard/home';
+    }
+    return value;
   }
 
   @override
@@ -166,6 +218,19 @@ class _LockScreenState extends ConsumerState<LockScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Column(
                 children: [
+                  if (_biometricEnabled) ...[
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: _isAuthenticating
+                            ? null
+                            : _authenticateBiometric,
+                        icon: const Icon(Icons.fingerprint),
+                        label: const Text('Unlock with biometrics'),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
                   _buildKeypadRow(
                     ['1', '2', '3'],
                     ['', l10n.s38_key_2_letters, l10n.s38_key_3_letters],
@@ -198,7 +263,7 @@ class _LockScreenState extends ConsumerState<LockScreen> {
                       _buildIconButton(
                         OwnKeepOnboardingIcons.face_id,
                         colors,
-                        _authenticateBiometric,
+                        _biometricEnabled ? _authenticateBiometric : null,
                       ),
                       _buildNumberKey('0', '', colors),
                       _buildIconButton(
@@ -294,7 +359,7 @@ class _LockScreenState extends ConsumerState<LockScreen> {
   Widget _buildIconButton(
     String icon,
     OwnKeepMainColorsTheme colors,
-    VoidCallback onTap,
+    VoidCallback? onTap,
   ) {
     return GestureDetector(
       onTap: onTap,
@@ -308,7 +373,10 @@ class _LockScreenState extends ConsumerState<LockScreen> {
         child: Center(
           child: SvgPicture.asset(
             icon,
-            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
+            colorFilter: ColorFilter.mode(
+              onTap == null ? colors.textMuted : colors.textPrimary,
+              BlendMode.srcIn,
+            ),
             width: 28,
             height: 28,
           ),

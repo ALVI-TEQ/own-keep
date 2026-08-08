@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../providers/document_provider.dart';
-import '../../providers/vault_provider.dart';
 import '../../theme/ownkeep_main_colors.dart';
 
 class AiSearchResultsScreen extends ConsumerWidget {
@@ -14,7 +13,8 @@ class AiSearchResultsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.mainColors;
-    final response = ref.watch(ingestionControllerProvider)?.askVault(query);
+    final responseAsync = ref.watch(vaultContentAnswerProvider(query));
+    final response = responseAsync.value;
     final documents = ref.watch(allDocumentsProvider);
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -35,10 +35,12 @@ class AiSearchResultsScreen extends ConsumerWidget {
             color: colors.surfacePrimary,
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Text(
-                response?.answerText ??
-                    'Unlock the vault to search its local index.',
-              ),
+              child: responseAsync.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Text(
+                      response?.answerText ??
+                          'No matching content was found in the local index.',
+                    ),
             ),
           ),
           const SizedBox(height: 20),

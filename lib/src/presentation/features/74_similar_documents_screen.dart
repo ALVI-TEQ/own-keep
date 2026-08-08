@@ -29,10 +29,11 @@ class SimilarDocumentsScreen extends ConsumerWidget {
             error: (error, _) => Center(child: Text('$error')),
             data: (documents) {
               final groups = similarDocumentGroups(documents);
-              if (groups.isEmpty)
+              if (groups.isEmpty) {
                 return const Center(
                   child: Text('No similar document groups found.'),
                 );
+              }
               return ListView(
                 padding: const EdgeInsets.all(16),
                 children: groups.entries

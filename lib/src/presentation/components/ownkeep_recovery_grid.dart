@@ -3,7 +3,7 @@ import '../../theme/app_theme.dart';
 
 class OwnKeepRecoveryWordGrid extends StatelessWidget {
   final List<String> words;
-  
+
   const OwnKeepRecoveryWordGrid({super.key, required this.words});
 
   @override

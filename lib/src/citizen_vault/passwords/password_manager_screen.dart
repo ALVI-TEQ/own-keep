@@ -69,9 +69,8 @@ final class _PasswordManagerScreenState extends State<PasswordManagerScreen> {
       );
     }
     entries.sort(
-      (left, right) => left.title.toLowerCase().compareTo(
-        right.title.toLowerCase(),
-      ),
+      (left, right) =>
+          left.title.toLowerCase().compareTo(right.title.toLowerCase()),
     );
     if (mounted) {
       setState(() {
@@ -115,7 +114,9 @@ final class _PasswordManagerScreenState extends State<PasswordManagerScreen> {
     await Clipboard.setData(ClipboardData(text: entry.password));
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Password copied. It clears in 30 seconds.')),
+      const SnackBar(
+        content: Text('Password copied. It clears in 30 seconds.'),
+      ),
     );
     Timer(const Duration(seconds: 30), () async {
       final current = await Clipboard.getData(Clipboard.kTextPlain);
@@ -226,12 +227,14 @@ final class _PasswordManagerScreenState extends State<PasswordManagerScreen> {
   @override
   Widget build(BuildContext context) {
     final query = _search.text.trim().toLowerCase();
-    final visible = _entries.where((entry) {
-      if (query.isEmpty) return true;
-      return entry.title.toLowerCase().contains(query) ||
-          entry.username.toLowerCase().contains(query) ||
-          entry.website.toLowerCase().contains(query);
-    }).toList(growable: false);
+    final visible = _entries
+        .where((entry) {
+          if (query.isEmpty) return true;
+          return entry.title.toLowerCase().contains(query) ||
+              entry.username.toLowerCase().contains(query) ||
+              entry.website.toLowerCase().contains(query);
+        })
+        .toList(growable: false);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Password Manager'),

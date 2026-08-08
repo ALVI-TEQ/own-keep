@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-class OwnKeepOnboardingColorsTheme extends ThemeExtension<OwnKeepOnboardingColorsTheme> {
+class OwnKeepOnboardingColorsTheme
+    extends ThemeExtension<OwnKeepOnboardingColorsTheme> {
   final Color backgroundPrimary;
   final Color backgroundDeep;
   final Color backgroundGlow;
@@ -119,10 +120,17 @@ class OwnKeepOnboardingColorsTheme extends ThemeExtension<OwnKeepOnboardingColor
   }
 
   @override
-  OwnKeepOnboardingColorsTheme lerp(ThemeExtension<OwnKeepOnboardingColorsTheme>? other, double t) {
+  OwnKeepOnboardingColorsTheme lerp(
+    ThemeExtension<OwnKeepOnboardingColorsTheme>? other,
+    double t,
+  ) {
     if (other is! OwnKeepOnboardingColorsTheme) return this;
     return OwnKeepOnboardingColorsTheme(
-      backgroundPrimary: Color.lerp(backgroundPrimary, other.backgroundPrimary, t)!,
+      backgroundPrimary: Color.lerp(
+        backgroundPrimary,
+        other.backgroundPrimary,
+        t,
+      )!,
       backgroundDeep: Color.lerp(backgroundDeep, other.backgroundDeep, t)!,
       backgroundGlow: Color.lerp(backgroundGlow, other.backgroundGlow, t)!,
       surfacePrimary: Color.lerp(surfacePrimary, other.surfacePrimary, t)!,
@@ -137,7 +145,11 @@ class OwnKeepOnboardingColorsTheme extends ThemeExtension<OwnKeepOnboardingColor
       textMuted: Color.lerp(textMuted, other.textMuted, t)!,
       textDisabled: Color.lerp(textDisabled, other.textDisabled, t)!,
       brandPurple: Color.lerp(brandPurple, other.brandPurple, t)!,
-      brandPurpleBright: Color.lerp(brandPurpleBright, other.brandPurpleBright, t)!,
+      brandPurpleBright: Color.lerp(
+        brandPurpleBright,
+        other.brandPurpleBright,
+        t,
+      )!,
       brandBlue: Color.lerp(brandBlue, other.brandBlue, t)!,
       offlineCyan: Color.lerp(offlineCyan, other.offlineCyan, t)!,
       secureGreen: Color.lerp(secureGreen, other.secureGreen, t)!,
@@ -208,16 +220,14 @@ class OwnKeepOnboardingColorsTheme extends ThemeExtension<OwnKeepOnboardingColor
 }
 
 extension OwnKeepOnboardingColorsExtension on BuildContext {
-  OwnKeepOnboardingColorsTheme get onboardingColors => Theme.of(this).extension<OwnKeepOnboardingColorsTheme>() ?? OwnKeepOnboardingColorsTheme.defaultDark;
+  OwnKeepOnboardingColorsTheme get onboardingColors =>
+      Theme.of(this).extension<OwnKeepOnboardingColorsTheme>() ??
+      OwnKeepOnboardingColorsTheme.defaultDark;
 }
 
 abstract final class OwnKeepOnboardingGradients {
   static const primaryButton = LinearGradient(
-    colors: [
-      Color(0xFF3C38E7),
-      Color(0xFF4630E0),
-      Color(0xFF4E2BD5),
-    ],
+    colors: [Color(0xFF3C38E7), Color(0xFF4630E0), Color(0xFF4E2BD5)],
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
   );

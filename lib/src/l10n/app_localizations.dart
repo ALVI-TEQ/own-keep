@@ -411,7 +411,7 @@ abstract class AppLocalizations {
   /// No description provided for @s01_action_existing_account.
   ///
   /// In en, this message translates to:
-  /// **'I have an account'**
+  /// **'Restore a vault backup'**
   String get s01_action_existing_account;
 
   /// No description provided for @s02_title_line_1.

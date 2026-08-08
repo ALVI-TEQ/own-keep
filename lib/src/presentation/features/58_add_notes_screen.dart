@@ -263,7 +263,7 @@ class _AddNotesScreenState extends ConsumerState<AddNotesScreen> {
                         _reminderEnabled = value;
                       });
                     },
-                    activeColor: colors.primaryBlue,
+                    activeThumbColor: colors.primaryBlue,
                     inactiveTrackColor: colors.borderSoft,
                     inactiveThumbColor: colors.textMuted,
                   ),

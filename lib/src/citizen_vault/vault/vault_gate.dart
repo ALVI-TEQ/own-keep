@@ -6,6 +6,7 @@ import 'package:ownkeep/src/citizen_vault/vault/splash_screen.dart';
 import 'package:ownkeep/src/citizen_vault/vault/user_agreement_screen.dart';
 import 'package:ownkeep/src/citizen_vault/vault/vault_lifecycle.dart';
 import 'package:flutter/material.dart';
+import 'package:ownkeep/src/platform/trusted_external_activity.dart';
 import 'package:vault_crypto/vault_crypto.dart';
 import 'package:vault_domain/vault_domain.dart';
 
@@ -65,7 +66,9 @@ final class _VaultGateState extends State<VaultGate>
           setState(() => _privacyCovered = true);
         }
         final handle = _handle;
-        if (handle != null && !handle.isBusy) {
+        if (handle != null &&
+            !handle.isBusy &&
+            !TrustedExternalActivity.isActive) {
           unawaited(_lockForBackground(handle));
         }
     }

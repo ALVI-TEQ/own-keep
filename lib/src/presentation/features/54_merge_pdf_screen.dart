@@ -1,435 +1,141 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ownkeep/src/l10n/app_localizations.dart';
-import '../../theme/ownkeep_main_colors.dart';
-import '../../theme/ownkeep_main_icons.dart';
-import '../../theme/ownkeep_spacing.dart';
+import 'package:vault_domain/vault_domain.dart';
 
-class MergePdfScreen extends StatefulWidget {
+import '../../citizen_vault/library/pdf_document_tools.dart';
+import '../../providers/document_provider.dart';
+import '../../providers/vault_provider.dart';
+import '../../theme/ownkeep_main_colors.dart';
+
+class MergePdfScreen extends ConsumerStatefulWidget {
   const MergePdfScreen({super.key});
 
   @override
-  State<MergePdfScreen> createState() => _MergePdfScreenState();
+  ConsumerState<MergePdfScreen> createState() => _MergePdfScreenState();
 }
 
-class _MergePdfScreenState extends State<MergePdfScreen> {
-  bool _isMerging = false;
-  final List<Map<String, dynamic>> _items = [
-    {'id': '1', 'titleKey': 's54_passport', 'metaKey': 's54_passport_meta'},
-    {'id': '2', 'titleKey': 's54_insurance', 'metaKey': 's54_insurance_meta'},
-    {'id': '3', 'titleKey': 's54_bank', 'metaKey': 's54_bank_meta'},
-  ];
+class _MergePdfScreenState extends ConsumerState<MergePdfScreen> {
+  final _selected = <String>[];
+  bool _busy = false;
 
-  String _getLocalizedString(AppLocalizations l10n, String key) {
-    switch (key) {
-      case 's54_passport':
-        return l10n.s54_passport;
-      case 's54_passport_meta':
-        return l10n.s54_passport_meta;
-      case 's54_insurance':
-        return l10n.s54_insurance;
-      case 's54_insurance_meta':
-        return l10n.s54_insurance_meta;
-      case 's54_bank':
-        return l10n.s54_bank;
-      case 's54_bank_meta':
-        return l10n.s54_bank_meta;
-      case 's54_position_1':
-        return l10n.s54_position_1;
-      case 's54_position_2':
-        return l10n.s54_position_2;
-      case 's54_position_3':
-        return l10n.s54_position_3;
-      default:
-        return key;
+  Future<void> _merge(List<DocumentListItemView> pdfs) async {
+    final controller = ref.read(ingestionControllerProvider);
+    if (controller == null || _selected.length < 2) return;
+    setState(() => _busy = true);
+    try {
+      final details = <DocumentDetailView>[];
+      for (final id in _selected) {
+        final detail = await ref.read(documentDetailProvider(id).future);
+        if (detail != null) details.add(detail);
+      }
+      final message = await const PdfDocumentTools().merge(
+        controller: controller,
+        documents: details,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('PDF merge failed: $error')));
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
     }
-  }
-
-  String _getPositionString(AppLocalizations l10n, int index) {
-    if (index == 0) return l10n.s54_position_1;
-    if (index == 1) return l10n.s54_position_2;
-    if (index == 2) return l10n.s54_position_3;
-    return 'Position ${index + 1}';
   }
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
-    final l10n = AppLocalizations.of(context)!;
-
+    final colors = context.mainColors;
+    final documents = ref.watch(allDocumentsProvider);
     return Scaffold(
       backgroundColor: colors.backgroundTop,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        backgroundColor: colors.backgroundTop,
         leading: IconButton(
-          icon: SvgPicture.asset(
-            OwnKeepMainIcons.back_arrow,
-            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
-            width: 24,
-            height: 24,
-          ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: context.pop,
+          icon: const Icon(Icons.arrow_back),
         ),
-        title: Column(
-          children: [
-            Text(
-              l10n.s54_title,
-              style: TextStyle(
-                color: colors.textPrimary,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'Inter',
-              ),
-            ),
-            Text(
-              l10n.s54_subtitle,
-              style: TextStyle(
-                color: colors.textSecondary,
-                fontSize: 13,
-                fontFamily: 'Inter',
-              ),
-            ),
-          ],
-        ),
-        centerTitle: true,
+        title: const Text('Merge PDFs'),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(OwnKeepSpacing.md),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          l10n.s54_arrange,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: colors.textSecondary,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Inter',
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Flexible(
-                        child: Text(
-                          l10n.s54_arrange_hint,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                            color: colors.textMuted,
-                            fontSize: 12,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: OwnKeepSpacing.sm),
-                ],
+      body: documents.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, _) => Center(child: Text('$error')),
+        data: (items) {
+          final pdfs = items
+              .where((item) => item.mimeType.toLowerCase() == 'application/pdf')
+              .toList();
+          if (pdfs.isEmpty) {
+            return const Center(child: Text('No PDF files in this vault.'));
+          }
+          return ReorderableListView(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+            header: const Padding(
+              padding: EdgeInsets.only(bottom: 12),
+              child: Text(
+                'Select at least two PDFs. Drag selected files to set their order.',
               ),
             ),
-          ),
-
-          SliverReorderableList(
-            itemCount: _items.length,
-            onReorder: (int oldIndex, int newIndex) {
+            onReorderItem: (oldIndex, newIndex) {
+              final selectedItems = pdfs
+                  .where((item) => _selected.contains(item.id))
+                  .toList();
+              if (oldIndex >= selectedItems.length) {
+                return;
+              }
+              final id = selectedItems.removeAt(oldIndex).id;
+              selectedItems.insert(
+                newIndex.clamp(0, selectedItems.length),
+                pdfs.firstWhere((d) => d.id == id),
+              );
               setState(() {
-                if (newIndex > oldIndex) {
-                  newIndex -= 1;
-                }
-                final item = _items.removeAt(oldIndex);
-                _items.insert(newIndex, item);
+                _selected
+                  ..clear()
+                  ..addAll(selectedItems.map((item) => item.id));
               });
             },
-            itemBuilder: (context, index) {
-              final item = _items[index];
-              return Container(
-                key: ValueKey(item['id']),
-                margin: const EdgeInsets.symmetric(
-                  horizontal: OwnKeepSpacing.md,
-                  vertical: 4,
+            children: pdfs.map((item) {
+              final checked = _selected.contains(item.id);
+              return CheckboxListTile(
+                key: ValueKey(item.id),
+                value: checked,
+                secondary: const Icon(Icons.picture_as_pdf),
+                title: Text(item.logicalFilename),
+                subtitle: Text(
+                  checked
+                      ? 'Position ${_selected.indexOf(item.id) + 1}'
+                      : 'Not selected',
                 ),
-                padding: const EdgeInsets.all(OwnKeepSpacing.md),
-                decoration: BoxDecoration(
-                  color: colors.surfacePrimary,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: colors.borderSoft),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: colors.backgroundTop,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: SvgPicture.asset(
-                        OwnKeepMainIcons.file_pdf,
-                        colorFilter: ColorFilter.mode(
-                          colors.dangerRed,
-                          BlendMode.srcIn,
-                        ),
-                        width: 24,
-                        height: 24,
-                      ),
-                    ),
-                    const SizedBox(width: OwnKeepSpacing.md),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _getLocalizedString(
-                              l10n,
-                              item['titleKey'] as String,
-                            ),
-                            style: TextStyle(
-                              color: colors.textPrimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Inter',
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Row(
-                            children: [
-                              Text(
-                                _getPositionString(l10n, index),
-                                style: TextStyle(
-                                  color: colors.primaryBlue,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Inter',
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 6,
-                                ),
-                                child: Text(
-                                  '•',
-                                  style: TextStyle(
-                                    color: colors.textMuted,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  _getLocalizedString(
-                                    l10n,
-                                    item['metaKey'] as String,
-                                  ),
-                                  style: TextStyle(
-                                    color: colors.textSecondary,
-                                    fontSize: 13,
-                                    fontFamily: 'Inter',
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    ReorderableDragStartListener(
-                      index: index,
-                      child: SvgPicture.asset(
-                        OwnKeepMainIcons.reorder,
-                        colorFilter: ColorFilter.mode(
-                          colors.textMuted,
-                          BlendMode.srcIn,
-                        ),
-                        width: 24,
-                        height: 24,
-                      ),
-                    ),
-                  ],
-                ),
+                onChanged: (value) => setState(() {
+                  value == true
+                      ? _selected.add(item.id)
+                      : _selected.remove(item.id);
+                }),
               );
-            },
-          ),
-
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(OwnKeepSpacing.md),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: OwnKeepSpacing.lg),
-                  Text(
-                    l10n.s54_output_file,
-                    style: TextStyle(
-                      color: colors.textSecondary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Inter',
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  const SizedBox(height: OwnKeepSpacing.sm),
-                  Container(
-                    padding: const EdgeInsets.all(OwnKeepSpacing.md),
-                    decoration: BoxDecoration(
-                      color: colors.surfacePrimary,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: colors.borderSoft),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: colors.backgroundTop,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: SvgPicture.asset(
-                                OwnKeepMainIcons.file_pdf,
-                                colorFilter: ColorFilter.mode(
-                                  colors.dangerRed,
-                                  BlendMode.srcIn,
-                                ),
-                                width: 20,
-                                height: 20,
-                              ),
-                            ),
-                            const SizedBox(width: OwnKeepSpacing.sm),
-                            Expanded(
-                              child: Text(
-                                l10n.s54_output_name,
-                                style: TextStyle(
-                                  color: colors.textPrimary,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'Inter',
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(),
-                              icon: SvgPicture.asset(
-                                OwnKeepMainIcons.edit,
-                                colorFilter: ColorFilter.mode(
-                                  colors.textSecondary,
-                                  BlendMode.srcIn,
-                                ),
-                                width: 20,
-                                height: 20,
-                              ),
-                              onPressed: () =>
-                                  context.push('/features/multi-select'),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: OwnKeepSpacing.md,
-                            bottom: OwnKeepSpacing.sm,
-                          ),
-                          child: Divider(color: colors.borderSoft, height: 1),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                l10n.s54_estimated,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: colors.textSecondary,
-                                  fontSize: 13,
-                                  fontFamily: 'Inter',
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              l10n.s54_estimated_value,
-                              style: TextStyle(
-                                color: colors.textPrimary,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Inter',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 100),
-                ],
-              ),
-            ),
-          ),
-        ],
+            }).toList(),
+          );
+        },
       ),
-      bottomSheet: Container(
-        padding: EdgeInsets.only(
-          left: OwnKeepSpacing.md,
-          right: OwnKeepSpacing.md,
-          top: OwnKeepSpacing.md,
-          bottom: MediaQuery.of(context).padding.bottom + OwnKeepSpacing.md,
-        ),
-        decoration: BoxDecoration(
-          color: colors.navigationBackground,
-          border: Border(top: BorderSide(color: colors.borderSoft)),
-        ),
-        child: ElevatedButton(
-          onPressed: _isMerging ? null : () => _showUnavailable(context),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: colors.primaryBlue,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            minimumSize: const Size(double.infinity, 50),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 0,
-          ),
-          child: _isMerging
-              ? const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
+      bottomNavigationBar: SafeArea(
+        minimum: const EdgeInsets.all(16),
+        child: FilledButton.icon(
+          onPressed: _busy || _selected.length < 2
+              ? null
+              : () => _merge(ref.read(allDocumentsProvider).value ?? const []),
+          icon: _busy
+              ? const SizedBox.square(
+                  dimension: 18,
+                  child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : Text(
-                  l10n.s54_merge,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
-                  ),
-                ),
+              : const Icon(Icons.merge_type),
+          label: Text(_busy ? 'Merging locally…' : 'Merge and save'),
         ),
       ),
     );
   }
-
-  Future<void> _showUnavailable(BuildContext context) => showDialog<void>(
-    context: context,
-    builder: (context) => const AlertDialog(
-      title: Text('PDF merge unavailable'),
-      content: Text(
-        'No encrypted PDF merge engine is configured in this build.',
-      ),
-    ),
-  );
 }

@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../theme/ownkeep_main_colors.dart';
+import '../../providers/vault_provider.dart';
+import '../../citizen_vault/vault/encrypted_local_state_repository.dart';
 
-class InviteMembersScreen extends StatefulWidget {
+class InviteMembersScreen extends ConsumerStatefulWidget {
   const InviteMembersScreen({super.key});
 
   @override
-  State<InviteMembersScreen> createState() => _InviteMembersScreenState();
+  ConsumerState<InviteMembersScreen> createState() =>
+      _InviteMembersScreenState();
 }
 
-class _InviteMembersScreenState extends State<InviteMembersScreen> {
+class _InviteMembersScreenState extends ConsumerState<InviteMembersScreen> {
   final _formKey = GlobalKey<FormState>();
   final _name = TextEditingController();
   String _role = 'Adult';
@@ -92,8 +96,21 @@ class _InviteMembersScreenState extends State<InviteMembersScreen> {
             ),
             const SizedBox(height: 24),
             FilledButton.icon(
-              onPressed: () {
+              onPressed: () async {
                 if (!_formKey.currentState!.validate()) return;
+                final now = DateTime.now().toUtc();
+                await ref
+                    .read(ingestionControllerProvider)
+                    ?.addOfflineInvitation(
+                      OfflineInvitation(
+                        id: '${now.microsecondsSinceEpoch}',
+                        recipientName: _name.text.trim(),
+                        role: _role,
+                        method: _method,
+                        createdAt: now,
+                      ),
+                    );
+                if (!context.mounted) return;
                 context.push(
                   _method == 'Direct device transfer'
                       ? '/features/device-migration'

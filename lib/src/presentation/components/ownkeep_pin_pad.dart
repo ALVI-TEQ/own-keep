@@ -158,9 +158,9 @@ class OwnKeepPinIndicator extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: SvgPicture.asset(
-            isFilled 
-              ? OwnKeepOnboardingIcons.pin_dot_active 
-              : OwnKeepOnboardingIcons.pin_dot_inactive,
+            isFilled
+                ? OwnKeepOnboardingIcons.pin_dot_active
+                : OwnKeepOnboardingIcons.pin_dot_inactive,
             width: 16,
             height: 16,
             colorFilter: hasError && isFilled

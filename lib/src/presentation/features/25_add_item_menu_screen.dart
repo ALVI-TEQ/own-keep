@@ -8,6 +8,7 @@ import '../../theme/ownkeep_spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/vault_provider.dart';
 import '../../providers/document_provider.dart';
+import '../../citizen_vault/ingestion/document_scanner_screen.dart';
 
 class AddItemMenuScreen extends ConsumerWidget {
   const AddItemMenuScreen({super.key});
@@ -61,11 +62,19 @@ class AddItemMenuScreen extends ConsumerWidget {
                     colors.primaryBlue,
                     () async {
                       final c = ref.read(ingestionControllerProvider);
-                      if (c != null && context.mounted) {
-                        context.pop();
-                        await c.captureImage();
+                      if (c != null) {
+                        final saved = await Navigator.of(context).push<bool>(
+                          MaterialPageRoute<bool>(
+                            builder: (_) =>
+                                DocumentScannerScreen(controller: c),
+                          ),
+                        );
+                        if (!context.mounted) return;
+                        if (saved != true) return;
                         ref.invalidate(allDocumentsProvider);
                         ref.invalidate(recentDocumentsProvider);
+                        ref.invalidate(storageStatsProvider);
+                        context.pop();
                       }
                     },
                   ),
@@ -80,11 +89,13 @@ class AddItemMenuScreen extends ConsumerWidget {
                     colors.successGreen,
                     () async {
                       final c = ref.read(ingestionControllerProvider);
-                      if (c != null && context.mounted) {
-                        context.pop();
+                      if (c != null) {
                         await c.captureImage();
+                        if (!context.mounted) return;
                         ref.invalidate(allDocumentsProvider);
                         ref.invalidate(recentDocumentsProvider);
+                        ref.invalidate(storageStatsProvider);
+                        _finishImport(context, c.notice);
                       }
                     },
                   ),
@@ -103,11 +114,13 @@ class AddItemMenuScreen extends ConsumerWidget {
                     colors.warningOrange,
                     () async {
                       final c = ref.read(ingestionControllerProvider);
-                      if (c != null && context.mounted) {
-                        context.pop();
+                      if (c != null) {
                         await c.importFile();
+                        if (!context.mounted) return;
                         ref.invalidate(allDocumentsProvider);
                         ref.invalidate(recentDocumentsProvider);
+                        ref.invalidate(storageStatsProvider);
+                        _finishImport(context, c.notice);
                       }
                     },
                   ),
@@ -120,7 +133,7 @@ class AddItemMenuScreen extends ConsumerWidget {
                     OwnKeepMainIcons.microphone,
                     l10n.s25_voice,
                     colors.aiPurple,
-                    () => context.push('/features/add-notes'),
+                    () => context.push('/features/create-voice-note'),
                   ),
                 ),
               ],
@@ -135,7 +148,7 @@ class AddItemMenuScreen extends ConsumerWidget {
                     OwnKeepMainIcons.note,
                     l10n.s25_note,
                     const Color(0xFF27C5E8),
-                    () => context.push('/features/add-notes'),
+                    () => context.push('/features/create-contact'),
                   ),
                 ),
                 const SizedBox(width: OwnKeepSpacing.md),
@@ -165,11 +178,13 @@ class AddItemMenuScreen extends ConsumerWidget {
               null,
               () async {
                 final c = ref.read(ingestionControllerProvider);
-                if (c != null && context.mounted) {
-                  context.pop();
+                if (c != null) {
                   await c.importGalleryImage();
+                  if (!context.mounted) return;
                   ref.invalidate(allDocumentsProvider);
                   ref.invalidate(recentDocumentsProvider);
+                  ref.invalidate(storageStatsProvider);
+                  _finishImport(context, c.notice);
                 }
               },
             ),
@@ -182,24 +197,16 @@ class AddItemMenuScreen extends ConsumerWidget {
               null,
               () async {
                 final c = ref.read(ingestionControllerProvider);
-                if (c != null && context.mounted) {
-                  context.pop();
+                if (c != null) {
                   await c.importFile();
+                  if (!context.mounted) return;
                   ref.invalidate(allDocumentsProvider);
                   ref.invalidate(recentDocumentsProvider);
+                  ref.invalidate(storageStatsProvider);
+                  _finishImport(context, c.notice);
                 }
               },
             ),
-            const SizedBox(height: OwnKeepSpacing.sm),
-            _buildListTile(
-              context,
-              colors,
-              OwnKeepMainIcons.cloud,
-              l10n.s25_cloud,
-              l10n.s25_cloud_note,
-              () => context.push('/features/cloud-sync'),
-            ),
-
             const SizedBox(height: OwnKeepSpacing.xxl),
 
             // Create New Folder Section
@@ -221,7 +228,7 @@ class AddItemMenuScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(OwnKeepSpacing.md),
               decoration: BoxDecoration(
-                color: colors.surfaceSelected.withOpacity(0.5),
+                color: colors.surfaceSelected.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: colors.borderSoft),
               ),
@@ -268,6 +275,16 @@ class AddItemMenuScreen extends ConsumerWidget {
         letterSpacing: 1.1,
       ),
     );
+  }
+
+  void _finishImport(BuildContext context, String? notice) {
+    if (!context.mounted) return;
+    if (notice != null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(notice)));
+    }
+    if (notice == 'Added to OwnKeep') context.pop();
   }
 
   Widget _buildGridItem(

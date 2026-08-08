@@ -1,17 +1,24 @@
 import 'package:ownkeep/src/citizen_vault/l10n/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ownkeep/src/presentation/legal/ownkeep_legal.dart';
 
 /// Versioned clickwrap agreement shown before a user can create a new vault.
 abstract final class OwnKeepUserAgreement {
   /// Increment whenever the legal text materially changes.
-  static const version = '2026-07-29.v1';
+  static const version = OwnKeepLegal.agreementVersion;
 
   /// Human-readable effective date.
-  static const effectiveDate = '29 July 2026';
+  static const effectiveDate = OwnKeepLegal.effectiveDate;
 
   static const receiptVersionKey = 'ownkeep_user_agreement_version';
   static const receiptAcceptedAtKey = 'ownkeep_user_agreement_accepted_at';
+
+  static Future<bool> hasCurrentAcceptance() async {
+    final preferences = await SharedPreferences.getInstance();
+    return preferences.getString(receiptVersionKey) == version &&
+        preferences.getString(receiptAcceptedAtKey) != null;
+  }
 
   /// Records a minimal local receipt without storing identity or vault data.
   static Future<void> recordAcceptance() async {
@@ -184,6 +191,34 @@ class _UserAgreementScreenState extends State<UserAgreementScreen> {
                         ),
                       ),
                       const SizedBox(height: 12),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 8,
+                        children: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) =>
+                                    const OwnKeepLegalDocumentScreen(
+                                      document: OwnKeepLegalDocument.privacy,
+                                    ),
+                              ),
+                            ),
+                            child: const Text('Privacy Policy'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) =>
+                                    const OwnKeepLegalDocumentScreen(
+                                      document: OwnKeepLegalDocument.terms,
+                                    ),
+                              ),
+                            ),
+                            child: const Text('Terms & Conditions'),
+                          ),
+                        ],
+                      ),
                       CheckboxListTile(
                         contentPadding: EdgeInsets.zero,
                         controlAffinity: ListTileControlAffinity.leading,

@@ -8,7 +8,7 @@ class OwnKeepColors {
   static Color backgroundDark = const Color(0xFF060B19);
   static Color surfaceDark = const Color(0xFF0F172A);
   static Color surfaceHighlight = const Color(0xFF1E293B);
-  
+
   // Gradients and Accents
   static Color primaryBlue = const Color(0xFF4F46E5);
   static Color primaryPurple = const Color(0xFF7C3AED);
@@ -81,7 +81,7 @@ class AppTheme {
   static ThemeData get darkTheme {
     final base = ThemeData.dark();
     final colors = AppColors.defaultDark;
-    
+
     return base.copyWith(
       scaffoldBackgroundColor: colors.bgPrimary,
       primaryColor: colors.brandPurple,
@@ -106,30 +106,44 @@ class AppTheme {
         ),
       ),
       textTheme: GoogleFonts.interTextTheme(base.textTheme).copyWith(
-        displayLarge: TextStyle(color: colors.textPrimary, fontWeight: FontWeight.bold),
-        displayMedium: TextStyle(color: colors.textPrimary, fontWeight: FontWeight.bold),
-        displaySmall: TextStyle(color: colors.textPrimary, fontWeight: FontWeight.bold),
-        headlineMedium: TextStyle(color: colors.textPrimary, fontWeight: FontWeight.w600, fontSize: 24),
-        titleLarge: TextStyle(color: colors.textPrimary, fontWeight: FontWeight.w600, fontSize: 20),
-        titleMedium: TextStyle(color: colors.textPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+        displayLarge: TextStyle(
+          color: colors.textPrimary,
+          fontWeight: FontWeight.bold,
+        ),
+        displayMedium: TextStyle(
+          color: colors.textPrimary,
+          fontWeight: FontWeight.bold,
+        ),
+        displaySmall: TextStyle(
+          color: colors.textPrimary,
+          fontWeight: FontWeight.bold,
+        ),
+        headlineMedium: TextStyle(
+          color: colors.textPrimary,
+          fontWeight: FontWeight.w600,
+          fontSize: 24,
+        ),
+        titleLarge: TextStyle(
+          color: colors.textPrimary,
+          fontWeight: FontWeight.w600,
+          fontSize: 20,
+        ),
+        titleMedium: TextStyle(
+          color: colors.textPrimary,
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+        ),
         bodyLarge: TextStyle(color: colors.textSecondary, fontSize: 16),
         bodyMedium: TextStyle(color: colors.textSecondary, fontSize: 14),
         bodySmall: TextStyle(color: colors.textSecondary, fontSize: 12),
       ),
-      iconTheme: IconThemeData(
-        color: colors.textPrimary,
-      ),
-      extensions: [
-        colors,
-        OwnKeepMainColorsTheme.defaultDark,
-      ],
+      iconTheme: IconThemeData(color: colors.textPrimary),
+      extensions: [colors, OwnKeepMainColorsTheme.defaultDark],
     );
   }
 
   // Optional light theme placeholder
   static ThemeData get lightTheme => ThemeData.light().copyWith(
-    extensions: [
-      OwnKeepMainColorsTheme.defaultLight,
-    ],
+    extensions: [OwnKeepMainColorsTheme.defaultLight],
   );
 }

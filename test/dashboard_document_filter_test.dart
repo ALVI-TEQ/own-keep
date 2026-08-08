@@ -20,6 +20,9 @@ void main() {
     expect(documentMatchesKind(note, DashboardFileKind.notes), isTrue);
     expect(documentMatchesKind(image, DashboardFileKind.documents), isFalse);
     expect(documentMatchesKind(pdf, DashboardFileKind.all), isTrue);
+    expect(documentMatchesKind(image, DashboardFileKind.other), isTrue);
+    expect(documentMatchesKind(pdf, DashboardFileKind.other), isTrue);
+    expect(documentMatchesKind(note, DashboardFileKind.other), isTrue);
   });
 
   test('dashboard filter copyWith preserves unchanged selections', () {
@@ -57,11 +60,17 @@ void main() {
       OwnKeepMainIcons.note,
     );
   });
+
+  test('persisted document summaries expose their plaintext byte size', () {
+    final document = _document(mimeType: 'application/pdf', byteSize: 4096);
+    expect(document.byteSize, 4096);
+  });
 }
 
 DocumentListItemView _document({
   required String mimeType,
   DocumentType documentType = DocumentType.generalDocument,
+  int byteSize = 0,
 }) => DocumentListItemView(
   id: mimeType,
   logicalFilename: 'file',
@@ -73,4 +82,5 @@ DocumentListItemView _document({
   isFavourite: false,
   isArchived: false,
   tags: const [],
+  byteSize: byteSize,
 );

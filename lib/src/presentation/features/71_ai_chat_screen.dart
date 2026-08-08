@@ -25,7 +25,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     super.dispose();
   }
 
-  void _sendMessage(String text) {
+  Future<void> _sendMessage(String text) async {
     if (text.trim().isEmpty) return;
     setState(() {
       _messages.add({'role': 'user', 'text': text});
@@ -33,7 +33,10 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     });
     _controller.clear();
 
-    final response = ref.read(ingestionControllerProvider)?.askVault(text);
+    final response = await ref
+        .read(ingestionControllerProvider)
+        ?.askVaultWithContent(text);
+    if (!mounted) return;
     setState(() {
       _isTyping = false;
       _messages.add({

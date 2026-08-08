@@ -87,7 +87,11 @@ class AppColors extends ThemeExtension<AppColors> {
       textMuted: Color.lerp(textMuted, other.textMuted, t)!,
       brandPurple: Color.lerp(brandPurple, other.brandPurple, t)!,
       brandPurpleDark: Color.lerp(brandPurpleDark, other.brandPurpleDark, t)!,
-      brandPurpleLight: Color.lerp(brandPurpleLight, other.brandPurpleLight, t)!,
+      brandPurpleLight: Color.lerp(
+        brandPurpleLight,
+        other.brandPurpleLight,
+        t,
+      )!,
       cyan: Color.lerp(cyan, other.cyan, t)!,
       green: Color.lerp(green, other.green, t)!,
       red: Color.lerp(red, other.red, t)!,
@@ -116,5 +120,6 @@ class AppColors extends ThemeExtension<AppColors> {
 
 // Convenience extension for easier access
 extension AppColorsExtension on BuildContext {
-  AppColors get appColors => Theme.of(this).extension<AppColors>() ?? AppColors.defaultDark;
+  AppColors get appColors =>
+      Theme.of(this).extension<AppColors>() ?? AppColors.defaultDark;
 }

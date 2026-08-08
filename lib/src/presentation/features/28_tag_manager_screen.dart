@@ -20,6 +20,54 @@ class TagManagerScreen extends ConsumerStatefulWidget {
 class _TagManagerScreenState extends ConsumerState<TagManagerScreen> {
   String _query = '';
 
+  Future<void> _createTag() async {
+    final input = TextEditingController();
+    final name = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Create tag'),
+        content: TextField(
+          controller: input,
+          autofocus: true,
+          maxLength: 40,
+          textInputAction: TextInputAction.done,
+          decoration: const InputDecoration(
+            labelText: 'Tag name',
+            hintText: 'Example: Tax documents',
+          ),
+          onSubmitted: (value) => Navigator.of(dialogContext).pop(value.trim()),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(input.text.trim()),
+            child: const Text('Create'),
+          ),
+        ],
+      ),
+    );
+    input.dispose();
+    if (name == null || name.isEmpty || !mounted) return;
+    try {
+      await ref.read(ingestionControllerProvider)?.createTag(name);
+      ref.invalidate(customTagsProvider);
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Tag “$name” created.')));
+      }
+    } on Object {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('That tag could not be created.')),
+        );
+      }
+    }
+  }
+
   Future<void> _renameTag(DocumentTagView tag) async {
     final input = TextEditingController(text: tag.name);
     final name = await showDialog<String>(
@@ -171,7 +219,7 @@ class _TagManagerScreenState extends ConsumerState<TagManagerScreen> {
               width: 24,
               height: 24,
             ),
-            onPressed: () => context.push('/dashboard/all-files'),
+            onPressed: _createTag,
           ),
         ],
       ),

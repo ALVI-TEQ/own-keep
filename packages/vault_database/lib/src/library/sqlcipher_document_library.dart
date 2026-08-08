@@ -70,7 +70,7 @@ final class SqlCipherDocumentLibrary {
     };
     final rows = await database.customSelect('''
           SELECT d.id, d.logical_filename, d.document_type, d.mime_type,
-                 d.status, d.integrity_status, d.imported_at,
+                 d.status, d.integrity_status, d.imported_at, d.plaintext_size,
                  d.is_favourite, d.is_archived, d.deleted_at,
             (SELECT min(r.due_at) FROM reminders r
               WHERE r.document_id = d.id AND r.is_enabled = 1
@@ -100,7 +100,7 @@ final class SqlCipherDocumentLibrary {
         .customSelect(
           '''
               SELECT d.id, d.logical_filename, d.document_type, d.mime_type,
-                     d.status, d.integrity_status, d.imported_at,
+                     d.status, d.integrity_status, d.imported_at, d.plaintext_size,
                      d.is_favourite, d.is_archived, d.deleted_at,
                 (SELECT min(r.due_at) FROM reminders r
                   WHERE r.document_id = d.id AND r.is_enabled = 1
@@ -219,6 +219,26 @@ final class SqlCipherDocumentLibrary {
               .toList(growable: false),
         ),
   );
+
+  /// Creates a reusable tag even before it is assigned to a document.
+  Future<void> createTag(String name) async {
+    final clean = name.trim().replaceAll(RegExp(r'\s+'), ' ');
+    if (clean.isEmpty || clean.length > 40) {
+      throw ArgumentError.value(name, 'name');
+    }
+    final id = _hex(await _random.secureBytes(16));
+    await _session.write((database) async {
+      final timestamp = DateTime.now().toUtc().millisecondsSinceEpoch;
+      await database.customStatement(
+        '''
+        INSERT OR IGNORE INTO document_tags(
+          id, name, normalized_name, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?)
+        ''',
+        <Object>[id, clean, clean.toLowerCase(), timestamp, timestamp],
+      );
+    });
+  }
 
   /// Renames a tag, merging it into an existing normalized tag when needed.
   Future<void> renameTag(String tagId, String name) {
@@ -642,6 +662,7 @@ final class SqlCipherDocumentLibrary {
     expiryAt: DateTime.tryParse(
       row.readNullable<String>('expiry_value') ?? '',
     )?.toUtc(),
+    byteSize: row.read<int>('plaintext_size'),
   );
 
   static ExtractedFieldView? _mapField(QueryRow row) {

@@ -8,6 +8,8 @@ import '../../theme/ownkeep_onboarding_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../providers/vault_provider.dart';
 
 class SettingsAdvancedScreen extends ConsumerStatefulWidget {
   const SettingsAdvancedScreen({super.key});
@@ -19,8 +21,42 @@ class SettingsAdvancedScreen extends ConsumerStatefulWidget {
 
 class _SettingsAdvancedScreenState
     extends ConsumerState<SettingsAdvancedScreen> {
-  bool _biometricEnabled = true;
+  bool _biometricEnabled = false;
   bool _backupEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    final biometric = await ref.read(vaultLifecycleProvider).biometricEnabled();
+    if (!mounted) return;
+    setState(() {
+      _biometricEnabled = biometric;
+      _backupEnabled = prefs.getBool('backup_reminders_enabled') ?? false;
+    });
+  }
+
+  Future<void> _toggleBiometrics() async {
+    if (_biometricEnabled) {
+      await ref.read(vaultLifecycleProvider).disableBiometrics();
+      if (mounted) setState(() => _biometricEnabled = false);
+    } else if (mounted) {
+      context.push('/features/recovery-center');
+    }
+  }
+
+  Future<void> _toggleBackup() async {
+    final value = !_backupEnabled;
+    setState(() => _backupEnabled = value);
+    await (await SharedPreferences.getInstance()).setBool(
+      'backup_reminders_enabled',
+      value,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +96,59 @@ class _SettingsAdvancedScreenState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'APPEARANCE & LANGUAGE',
+              style: TextStyle(
+                color: colors.primaryBlue,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.1,
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.sm),
+            Container(
+              decoration: BoxDecoration(
+                color: colors.surfacePrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.borderSoft),
+              ),
+              child: Column(
+                children: [
+                  _buildSettingItem(
+                    colors,
+                    OwnKeepMainIcons.settings,
+                    'Language & OCR',
+                    value: ref.watch(appLanguageProvider).toUpperCase(),
+                    onTap: () => context.push('/features/language'),
+                  ),
+                  _buildDivider(colors),
+                  _buildSettingItem(
+                    colors,
+                    OwnKeepMainIcons.theme_midnight,
+                    'Themes and colours',
+                    onTap: () => context.push('/features/themes'),
+                  ),
+                  _buildDivider(colors),
+                  _buildSettingItem(
+                    colors,
+                    OwnKeepMainIcons.theme_graphite,
+                    'Dark mode',
+                    isToggle: true,
+                    isToggleOn: ref.watch(appDarkModeProvider),
+                    onTap: () async {
+                      final value = !ref.read(appDarkModeProvider);
+                      ref.read(appDarkModeProvider.notifier).state = value;
+                      await (await SharedPreferences.getInstance()).setBool(
+                        'app_dark_mode',
+                        value,
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: OwnKeepSpacing.xl),
+
             // Security Section
             Text(
               l10n.s40_security,
@@ -92,31 +181,11 @@ class _SettingsAdvancedScreenState
                     _buildDivider(colors),
                     _buildSettingItem(
                       colors,
-                      OwnKeepMainIcons.stealth,
-                      l10n.s40_stealth,
-                      value: l10n.s40_off,
-                      onTap: () => context.push('/features/hidden-vault'),
-                    ),
-                    _buildDivider(colors),
-                    _buildSettingItem(
-                      colors,
-                      OwnKeepMainIcons.decoy_vault,
-                      l10n.s40_decoy,
-                      value: l10n.s40_not_set,
-                      onTap: () => context.push('/features/decoy-vault'),
-                    ),
-                    _buildDivider(colors),
-                    _buildSettingItem(
-                      colors,
                       OwnKeepMainIcons.biometric,
                       l10n.s40_biometric,
                       isToggle: true,
                       isToggleOn: _biometricEnabled,
-                      onTap: () {
-                        setState(() {
-                          _biometricEnabled = !_biometricEnabled;
-                        });
-                      },
+                      onTap: _toggleBiometrics,
                     ),
                     _buildDivider(colors),
                     _buildSettingItem(
@@ -171,11 +240,15 @@ class _SettingsAdvancedScreenState
                       l10n.s40_backup,
                       isToggle: true,
                       isToggleOn: _backupEnabled,
-                      onTap: () {
-                        setState(() {
-                          _backupEnabled = !_backupEnabled;
-                        });
-                      },
+                      onTap: _toggleBackup,
+                    ),
+                    _buildDivider(colors),
+                    _buildSettingItem(
+                      colors,
+                      OwnKeepMainIcons.restore,
+                      'Backup and restore',
+                      subtitle: 'Create a backup or restore an encrypted vault',
+                      onTap: () => context.push('/features/backup-restore'),
                     ),
                     _buildDivider(colors),
                     _buildSettingItem(

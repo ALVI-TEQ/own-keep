@@ -21,9 +21,7 @@ abstract final class OwnKeepTheme {
       onSecondary: Colors.white,
       error: OwnKeepColors.danger,
       onError: Colors.white,
-      surface: isDark
-          ? OwnKeepColors.darkSurface
-          : OwnKeepColors.lightSurface,
+      surface: isDark ? OwnKeepColors.darkSurface : OwnKeepColors.lightSurface,
       onSurface: isDark
           ? OwnKeepColors.darkTextPrimary
           : OwnKeepColors.lightTextPrimary,
@@ -43,8 +41,9 @@ abstract final class OwnKeepTheme {
       fontFamily: OwnKeepTypography.fontFamily,
       textTheme: TextTheme(
         displayLarge: OwnKeepTypography.displayLarge.copyWith(color: textColor),
-        displayMedium:
-            OwnKeepTypography.displayMedium.copyWith(color: textColor),
+        displayMedium: OwnKeepTypography.displayMedium.copyWith(
+          color: textColor,
+        ),
         titleLarge: OwnKeepTypography.titleLarge.copyWith(color: textColor),
         titleMedium: OwnKeepTypography.titleMedium.copyWith(color: textColor),
         bodyLarge: OwnKeepTypography.bodyLarge.copyWith(color: textColor),
@@ -95,10 +94,7 @@ abstract final class OwnKeepTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-          borderSide: const BorderSide(
-            color: OwnKeepColors.primary,
-            width: 2,
-          ),
+          borderSide: const BorderSide(color: OwnKeepColors.primary, width: 2),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
@@ -112,8 +108,12 @@ abstract final class OwnKeepTheme {
         ),
       ),
       extensions: [
-        isDark ? OwnKeepOnboardingColorsTheme.defaultDark : OwnKeepOnboardingColorsTheme.defaultLight,
-        isDark ? OwnKeepMainColorsTheme.defaultDark : OwnKeepMainColorsTheme.defaultLight,
+        isDark
+            ? OwnKeepOnboardingColorsTheme.defaultDark
+            : OwnKeepOnboardingColorsTheme.defaultLight,
+        isDark
+            ? OwnKeepMainColorsTheme.defaultDark
+            : OwnKeepMainColorsTheme.defaultLight,
       ],
     );
   }

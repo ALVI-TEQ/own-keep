@@ -7,9 +7,12 @@ import 'dart:io';
 
 import 'package:ownkeep/src/citizen_vault/ingestion/device_import_picker.dart';
 import 'package:ownkeep/src/citizen_vault/library/document_file_transfer.dart';
+import 'package:ownkeep/src/citizen_vault/intelligence/encrypted_ai_history_repository.dart';
+import 'package:ownkeep/src/citizen_vault/vault/encrypted_local_state_repository.dart';
 import 'package:ownkeep/src/citizen_vault/life/life_graph_search.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ownkeep/src/platform/trusted_external_activity.dart';
 import 'package:vault_database/vault_database.dart'
     hide
         AttentionItem,
@@ -196,6 +199,9 @@ abstract class IngestionUiController extends ChangeNotifier {
 
   /// Replaces one document's tag set.
   Future<void> replaceTags(String documentId, List<String> names) async {}
+
+  /// Creates a reusable custom tag.
+  Future<void> createTag(String name) async {}
 
   /// Renames a tag, merging an existing normalized duplicate.
   Future<void> renameTag(String tagId, String name) async {}
@@ -543,6 +549,17 @@ abstract class IngestionUiController extends ChangeNotifier {
     );
   }
 
+  Future<AskQueryResponse> askVaultWithContent(String query) async =>
+      askVault(query);
+
+  Future<List<AiHistoryEntry>> aiHistory() async => const [];
+
+  Future<void> clearAiHistory() async {}
+
+  Future<List<OfflineInvitation>> offlineInvitations() async => const [];
+
+  Future<void> addOfflineInvitation(OfflineInvitation invitation) async {}
+
   /// Minimized Emergency Storage boundary manager.
   EmergencyStorageManager get emergencyStorage => EmergencyStorageManager();
 
@@ -687,6 +704,13 @@ final class UnlockedIngestionUiController extends IngestionUiController {
        _picker = picker ?? DeviceImportPicker(),
        _documentTransfer =
            documentTransfer ?? const PlatformDocumentFileTransfer() {
+    _emergencyStorage = EmergencyStorageManager(
+      initialEnvelope: _emptyEmergencyEnvelope,
+      onChanged: (envelope) {
+        unawaited(_localState.saveEmergencyEnvelope(envelope));
+      },
+    );
+    unawaited(_restoreEmergencyEnvelope());
     _restoreSavedLanguage();
   }
 
@@ -699,6 +723,11 @@ final class UnlockedIngestionUiController extends IngestionUiController {
   final Directory _vaultRoot;
   final ImportPicker _picker;
   final DocumentFileTransfer _documentTransfer;
+
+  EncryptedAiHistoryRepository get _aiHistory =>
+      EncryptedAiHistoryRepository(_graph.session);
+  EncryptedLocalStateRepository get _localState =>
+      EncryptedLocalStateRepository(_graph.session);
 
   /// Stable foreground worker identifier.
   final String workerId;
@@ -793,6 +822,7 @@ final class UnlockedIngestionUiController extends IngestionUiController {
   @override
   void beginExternalActivity() {
     _externalActivityCount += 1;
+    TrustedExternalActivity.begin();
     notifyListeners();
   }
 
@@ -800,6 +830,7 @@ final class UnlockedIngestionUiController extends IngestionUiController {
   void endExternalActivity() {
     if (_externalActivityCount == 0) return;
     _externalActivityCount -= 1;
+    TrustedExternalActivity.end();
     notifyListeners();
   }
 
@@ -875,23 +906,30 @@ final class UnlockedIngestionUiController extends IngestionUiController {
     return res;
   }
 
-  final _emergencyStorage = EmergencyStorageManager(
-    initialEnvelope: EmergencyCardEnvelope(
-      medicalRecord: const EmergencyMedicalRecord(
-        fullName: '',
-        bloodGroup: '',
-        allergies: '',
-        medications: '',
-        doctorName: '',
-        doctorPhone: '',
-        insuranceProvider: '',
-        insurancePolicyNumber: '',
-      ),
-      contacts: const <EmergencyContact>[],
-      lastUpdated: DateTime.fromMillisecondsSinceEpoch(0, isUtc: true),
-      isEnabled: false,
+  late final EmergencyStorageManager _emergencyStorage;
+
+  static final _emptyEmergencyEnvelope = EmergencyCardEnvelope(
+    medicalRecord: const EmergencyMedicalRecord(
+      fullName: '',
+      bloodGroup: '',
+      allergies: '',
+      medications: '',
+      doctorName: '',
+      doctorPhone: '',
+      insuranceProvider: '',
+      insurancePolicyNumber: '',
     ),
+    contacts: const <EmergencyContact>[],
+    lastUpdated: DateTime.fromMillisecondsSinceEpoch(0, isUtc: true),
+    isEnabled: false,
   );
+
+  Future<void> _restoreEmergencyEnvelope() async {
+    final restored = await _localState.readEmergencyEnvelope();
+    if (restored == null) return;
+    _emergencyStorage.restoreEnvelope(restored);
+    notifyListeners();
+  }
 
   @override
   EmergencyStorageManager get emergencyStorage => _emergencyStorage;
@@ -1114,6 +1152,71 @@ final class UnlockedIngestionUiController extends IngestionUiController {
       _coordinator.search(query);
 
   @override
+  Future<AskQueryResponse> askVaultWithContent(String query) async {
+    final structured = askVault(query);
+    final matches = await search(query);
+    if (matches.isEmpty) {
+      await _aiHistory.add(
+        query: query,
+        answer: structured.answerText,
+        evidenceDocumentIds: structured.evidenceDocumentIds,
+      );
+      return structured;
+    }
+    final excerpts = <String>[];
+    final evidence = <String>{...structured.evidenceDocumentIds};
+    for (final match in matches.take(5)) {
+      final detail = await _library.document(match.documentId);
+      if (detail == null) continue;
+      evidence.add(match.documentId);
+      final text = detail.textPages
+          .map((page) => page.text.trim())
+          .where((value) => value.isNotEmpty)
+          .join(' ')
+          .replaceAll(RegExp(r'\s+'), ' ');
+      if (text.isNotEmpty) {
+        excerpts.add(
+          '${detail.summary.logicalFilename}: '
+          '${text.substring(0, text.length.clamp(0, 320))}',
+        );
+      }
+    }
+    final answer = excerpts.isEmpty
+        ? structured.answerText
+        : 'Found ${matches.length} matching encrypted records.\n\n'
+              '${excerpts.join('\n\n')}';
+    final response = AskQueryResponse(
+      query: query,
+      answerText: answer,
+      category: structured.category,
+      isAvailable: structured.isAvailable || excerpts.isNotEmpty,
+      confidence: matches.first.relevance.clamp(0, 1),
+      explanationSteps: structured.explanationSteps,
+      evidenceDocumentIds: evidence.toList(),
+    );
+    await _aiHistory.add(
+      query: query,
+      answer: answer,
+      evidenceDocumentIds: response.evidenceDocumentIds,
+    );
+    return response;
+  }
+
+  @override
+  Future<List<AiHistoryEntry>> aiHistory() => _aiHistory.list();
+
+  @override
+  Future<void> clearAiHistory() => _aiHistory.clear();
+
+  @override
+  Future<List<OfflineInvitation>> offlineInvitations() =>
+      _localState.readInvitations();
+
+  @override
+  Future<void> addOfflineInvitation(OfflineInvitation invitation) =>
+      _localState.addInvitation(invitation);
+
+  @override
   Future<List<LifeSearchResult>> graphSearch(String query) async {
     final documents = await search(query);
     return LifeGraphSearch.build(
@@ -1256,6 +1359,10 @@ final class UnlockedIngestionUiController extends IngestionUiController {
   @override
   Future<void> replaceTags(String documentId, List<String> names) =>
       _libraryAction(() => _library.replaceTags(documentId, names));
+
+  @override
+  Future<void> createTag(String name) =>
+      _libraryAction(() => _library.createTag(name));
 
   @override
   Future<void> renameTag(String tagId, String name) =>

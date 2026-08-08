@@ -335,7 +335,7 @@ class _ExpiryCalendarScreenState extends ConsumerState<ExpiryCalendarScreen> {
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isCritical
-                ? colors.dangerRed.withOpacity(0.5)
+                ? colors.dangerRed.withValues(alpha: 0.5)
                 : colors.borderSoft,
           ),
         ),

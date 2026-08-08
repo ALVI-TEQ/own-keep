@@ -25,8 +25,9 @@ class StorageOverviewScreen extends ConsumerWidget {
     String formatBytes(int bytes) {
       if (bytes < 1024) return '$bytes B';
       if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-      if (bytes < 1024 * 1024 * 1024)
+      if (bytes < 1024 * 1024 * 1024) {
         return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+      }
       return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
     }
 
@@ -87,7 +88,7 @@ class StorageOverviewScreen extends ConsumerWidget {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        l10n.s24_total,
+                        '${documents.length} encrypted items',
                         style: TextStyle(
                           color: colors.textSecondary,
                           fontSize: 14,
@@ -106,10 +107,10 @@ class StorageOverviewScreen extends ConsumerWidget {
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
-                            SvgPicture.asset(
-                              'assets/main/illustrations/storage_donut_chart.svg',
-                              width: 120,
-                              height: 120,
+                            Icon(
+                              Icons.donut_large,
+                              size: 112,
+                              color: colors.primaryBlue,
                             ),
                             Column(
                               mainAxisSize: MainAxisSize.min,
@@ -182,7 +183,11 @@ class StorageOverviewScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: OwnKeepSpacing.xl),
                   Text(
-                    l10n.s24_usage,
+                    storageStats.maybeWhen(
+                      data: (stats) =>
+                          '${formatBytes(stats['totalSize'] as int)} encrypted vault storage',
+                      orElse: () => 'Calculating encrypted vault storage…',
+                    ),
                     style: TextStyle(
                       color: colors.textSecondary,
                       fontSize: 14,
@@ -201,7 +206,7 @@ class StorageOverviewScreen extends ConsumerWidget {
               colors: colors,
               icon: OwnKeepMainIcons.duplicate,
               title: l10n.s24_duplicates,
-              subtitle: l10n.s24_duplicates_meta,
+              subtitle: 'Scan ${documents.length} items for identical files',
               actionLabel: "Review",
               onPressed: () => context.push('/features/duplicate-finder'),
             ),
@@ -210,14 +215,14 @@ class StorageOverviewScreen extends ConsumerWidget {
               colors: colors,
               icon: OwnKeepMainIcons.video,
               title: l10n.s24_large_videos,
-              subtitle: l10n.s24_large_videos_meta,
+              subtitle: '${countMime('video/')} videos in this vault',
               actionLabel: "Review",
               onPressed: () {
                 final current = ref.read(dashboardDocumentFilterProvider);
                 ref
                     .read(dashboardDocumentFilterProvider.notifier)
                     .update(current.copyWith(kind: DashboardFileKind.videos));
-                context.push('/dashboard/all-files');
+                context.go('/dashboard/all-files');
               },
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
@@ -225,9 +230,9 @@ class StorageOverviewScreen extends ConsumerWidget {
               colors: colors,
               icon: OwnKeepMainIcons.files,
               title: l10n.s24_unopened,
-              subtitle: l10n.s24_unopened_meta,
+              subtitle: 'Open history is not tracked in this offline release',
               actionLabel: "Review",
-              onPressed: () => context.push('/dashboard/all-files'),
+              onPressed: null,
             ),
             const SizedBox(height: OwnKeepSpacing.xl),
 
@@ -236,7 +241,7 @@ class StorageOverviewScreen extends ConsumerWidget {
               child: Column(
                 children: [
                   Text(
-                    l10n.s24_last_scan,
+                    'Calculated from the current encrypted vault',
                     style: TextStyle(
                       color: colors.textMuted,
                       fontSize: 12,
@@ -364,7 +369,7 @@ class StorageOverviewScreen extends ConsumerWidget {
     required String title,
     required String subtitle,
     required String actionLabel,
-    required VoidCallback onPressed,
+    required VoidCallback? onPressed,
   }) {
     return Container(
       padding: const EdgeInsets.all(12),

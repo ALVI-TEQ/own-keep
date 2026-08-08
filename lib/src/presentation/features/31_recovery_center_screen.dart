@@ -107,10 +107,10 @@ class RecoveryCenterScreen extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: colors.successGreen.withOpacity(0.15),
+                          color: colors.successGreen.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: colors.successGreen.withOpacity(0.3),
+                            color: colors.successGreen.withValues(alpha: 0.3),
                           ),
                         ),
                         child: Row(
@@ -198,7 +198,7 @@ class RecoveryCenterScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(OwnKeepSpacing.md),
               decoration: BoxDecoration(
-                color: colors.surfaceSelected.withOpacity(0.5),
+                color: colors.surfaceSelected.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: colors.borderSoft),
               ),

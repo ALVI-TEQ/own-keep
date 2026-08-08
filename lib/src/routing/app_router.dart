@@ -13,6 +13,9 @@ import '../presentation/onboarding/07_recovery_phrase_screen.dart';
 import '../presentation/onboarding/08_verify_phrase_screen.dart';
 import '../presentation/onboarding/09_enable_biometrics_screen.dart';
 import '../presentation/onboarding/10_setup_complete_screen.dart';
+import '../citizen_vault/vault/user_agreement_screen.dart';
+import '../citizen_vault/settings/language_settings_screen.dart';
+import '../presentation/legal/ownkeep_legal.dart';
 
 import '../presentation/dashboard/11_home_dashboard_screen.dart';
 import '../presentation/dashboard/12_collections_screen.dart';
@@ -27,6 +30,8 @@ import '../presentation/dashboard/20_navigation_menu.dart';
 
 import '../theme/app_theme.dart';
 import '../providers/vault_provider.dart';
+import '../providers/subscription_provider.dart';
+import '../domain/subscription/feature_entitlements.dart';
 
 import '../presentation/features/21_share_export_screen.dart';
 import '../presentation/features/22_favorites_list_screen.dart';
@@ -59,15 +64,16 @@ import '../presentation/features/48_file_details_screen.dart';
 import '../presentation/features/49_version_history_screen.dart';
 import '../presentation/features/50_move_or_copy_screen.dart';
 import '../presentation/features/51_multi_select_screen.dart';
-import '../presentation/features/52_move_to_screen.dart';
 import '../presentation/features/53_rename_screen.dart';
 import '../presentation/features/54_merge_pdf_screen.dart';
 import '../presentation/features/55_split_pdf_screen.dart';
 import '../presentation/features/56_ocr_scan_text_screen.dart';
 import '../presentation/features/57_document_compare_screen.dart';
 import '../presentation/features/58_add_notes_screen.dart';
-import '../presentation/features/59_print_save_as_screen.dart';
 import '../presentation/features/60_scan_securely_screen.dart';
+import '../presentation/features/uncategorized_documents_screen.dart';
+import '../presentation/features/create_voice_note_screen.dart';
+import '../presentation/features/create_contact_screen.dart';
 
 import '../presentation/features/collections/smart_collection_category.dart';
 import '../presentation/features/collections/smart_collection_screen.dart';
@@ -97,8 +103,6 @@ import '../presentation/features/91_profile_screen.dart';
 import '../presentation/features/91_ownkeep_pro_screen.dart';
 import '../presentation/features/92_themes_screen.dart';
 import '../presentation/features/93_app_lock_screen.dart';
-import '../presentation/features/94_hidden_vault_screen.dart';
-import '../presentation/features/95_decoy_vault_screen.dart';
 import '../presentation/features/96_recovery_verification_screen.dart';
 import '../presentation/features/97_encryption_details_screen.dart';
 import '../presentation/features/98_device_migration_screen.dart';
@@ -106,6 +110,39 @@ import '../presentation/features/99_restore_vault_screen.dart';
 import '../presentation/features/100_security_audit_screen.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
+  const proFeaturePaths = <String>{
+    '/features/ai-organize',
+    '/features/review-categories',
+    '/features/ai-chat',
+    '/features/ai-insights',
+    '/features/smart-suggestions',
+    '/features/similar-documents',
+    '/features/ai-timeline',
+    '/features/auto-tagging',
+    '/features/ai-search-results',
+    '/features/ai-settings',
+    '/features/ai-history',
+    '/features/ocr-scan-text',
+    '/features/document-compare',
+    '/features/merge-pdf',
+    '/features/split-pdf',
+    '/features/advanced-search',
+    '/features/duplicate-finder',
+    '/features/duplicate-resolution',
+    '/features/statistics',
+    '/features/custom-collection',
+    '/features/family-sharing',
+    '/features/members',
+    '/features/invite-members',
+    '/features/permissions',
+    '/features/trusted-contacts',
+    '/features/emergency-access',
+    '/features/shared-collections',
+    '/features/shared-activity',
+    '/features/invitations',
+    '/features/device-migration',
+    '/features/security-audit',
+  };
   const protectedFeaturePaths = <String>{
     '/features/share-export',
     '/features/favorites-list',
@@ -114,6 +151,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     '/features/add-item-menu',
     '/features/document-preview',
     '/features/ai-organize',
+    '/features/review-categories',
     '/features/tag-manager',
     '/features/vault-info',
     '/features/help-support',
@@ -133,14 +171,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     '/features/version-history',
     '/features/move-or-copy',
     '/features/multi-select',
-    '/features/move-to',
     '/features/rename',
-    '/features/merge-pdf',
-    '/features/split-pdf',
     '/features/ocr-scan-text',
     '/features/document-compare',
+    '/features/merge-pdf',
+    '/features/split-pdf',
     '/features/add-notes',
-    '/features/print-save-as',
+    '/features/create-voice-note',
+    '/features/create-contact',
     '/features/scan-securely',
     '/features/ai-chat',
     '/features/ai-insights',
@@ -165,9 +203,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     '/features/backup-restore',
     '/features/pro',
     '/features/themes',
+    '/features/language',
     '/features/app-lock',
-    '/features/hidden-vault',
-    '/features/decoy-vault',
     '/features/recovery-verification',
     '/features/encryption-details',
     '/features/device-migration',
@@ -181,6 +218,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               state.uri.path.startsWith('/collections/')) &&
           ref.read(vaultSessionProvider).value == null) {
         return '/lock';
+      }
+      if ((proFeaturePaths.contains(state.uri.path) ||
+              state.uri.path == '/collections/custom/new') &&
+          ref.read(ownKeepPlanProvider) == OwnKeepPlan.free) {
+        return Uri(
+          path: '/features/pro',
+          queryParameters: {'returnTo': state.uri.toString()},
+        ).toString();
       }
       return null;
     },
@@ -203,7 +248,31 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const CreateVaultScreen(),
       ),
       GoRoute(
+        path: '/legal-consent',
+        builder: (context, state) => UserAgreementScreen(
+          onAccepted: () async {
+            if (context.mounted) context.go('/set-pin');
+          },
+        ),
+      ),
+      GoRoute(
+        path: '/privacy-policy',
+        builder: (context, state) => const OwnKeepLegalDocumentScreen(
+          document: OwnKeepLegalDocument.privacy,
+        ),
+      ),
+      GoRoute(
+        path: '/terms-conditions',
+        builder: (context, state) => const OwnKeepLegalDocumentScreen(
+          document: OwnKeepLegalDocument.terms,
+        ),
+      ),
+      GoRoute(
         path: '/set-pin',
+        redirect: (context, state) async =>
+            await OwnKeepUserAgreement.hasCurrentAcceptance()
+            ? null
+            : '/legal-consent',
         builder: (context, state) => const SetPinScreen(),
       ),
       GoRoute(
@@ -250,6 +319,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       // Feature Routes (Screens 21-100)
       GoRoute(
         path: '/features/share-export',
+        redirect: (context, state) => state.uri.queryParameters['id'] == null
+            ? '/dashboard/all-files'
+            : null,
         builder: (context, state) =>
             ShareExportScreen(documentId: state.uri.queryParameters['id']),
       ),
@@ -280,6 +352,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/features/ai-organize',
         builder: (context, state) => const AiOrganizeScreen(),
+      ),
+      GoRoute(
+        path: '/features/review-categories',
+        builder: (context, state) => const UncategorizedDocumentsScreen(),
       ),
       GoRoute(
         path: '/features/tag-manager',
@@ -321,7 +397,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/features/statistics',
         builder: (context, state) => const StatisticsScreen(),
       ),
-      GoRoute(path: '/lock', builder: (context, state) => const LockScreen()),
+      GoRoute(
+        path: '/lock',
+        builder: (context, state) =>
+            LockScreen(returnTo: state.uri.queryParameters['returnTo']),
+      ),
       GoRoute(
         path: '/features/quick-actions',
         builder: (context, state) => const QuickActionsScreen(),
@@ -329,6 +409,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/features/settings-advanced',
         builder: (context, state) => const SettingsAdvancedScreen(),
+      ),
+      GoRoute(
+        path: '/features/pro',
+        builder: (context, state) =>
+            OwnKeepProScreen(returnTo: state.uri.queryParameters['returnTo']),
       ),
       GoRoute(
         path: '/features/profile',
@@ -372,7 +457,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/features/version-history',
-        builder: (context, state) => const VersionHistoryScreen(),
+        builder: (context, state) =>
+            VersionHistoryScreen(documentId: state.uri.queryParameters['id']),
       ),
       GoRoute(
         path: '/features/move-or-copy',
@@ -387,10 +473,6 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => MultiSelectScreen(
           collectionName: state.uri.queryParameters['collection'],
         ),
-      ),
-      GoRoute(
-        path: '/features/move-to',
-        builder: (context, state) => const MoveToScreen(),
       ),
       GoRoute(
         path: '/features/rename',
@@ -425,8 +507,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const AddNotesScreen(),
       ),
       GoRoute(
-        path: '/features/print-save-as',
-        builder: (context, state) => const PrintSaveAsScreen(),
+        path: '/features/create-voice-note',
+        builder: (context, state) => const CreateVoiceNoteScreen(),
+      ),
+      GoRoute(
+        path: '/features/create-contact',
+        builder: (context, state) => const CreateContactScreen(),
       ),
       GoRoute(
         path: '/features/scan-securely',
@@ -465,8 +551,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/features/duplicate-resolution',
         builder: (context, state) => DuplicateResolutionScreen(
           documentIds: [
-            if (state.uri.queryParameters['first'] case final id?) id,
-            if (state.uri.queryParameters['second'] case final id?) id,
+            ?state.uri.queryParameters['first'],
+            ?state.uri.queryParameters['second'],
           ],
         ),
       ),
@@ -536,24 +622,22 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const BackupRestoreScreen(),
       ),
       GoRoute(
-        path: '/features/pro',
-        builder: (context, state) => const OwnKeepProScreen(),
-      ),
-      GoRoute(
         path: '/features/themes',
         builder: (context, state) => const ThemesScreen(),
       ),
       GoRoute(
+        path: '/features/language',
+        redirect: (context, state) =>
+            ref.read(ingestionControllerProvider) == null ? '/lock' : null,
+        builder: (context, state) => LanguageSettingsScreen(
+          controller: ref.read(ingestionControllerProvider)!,
+          onLanguageChanged: (language) =>
+              ref.read(appLanguageProvider.notifier).state = language.code,
+        ),
+      ),
+      GoRoute(
         path: '/features/app-lock',
         builder: (context, state) => const AppLockScreen(),
-      ),
-      GoRoute(
-        path: '/features/hidden-vault',
-        builder: (context, state) => const HiddenVaultScreen(),
-      ),
-      GoRoute(
-        path: '/features/decoy-vault',
-        builder: (context, state) => const DecoyVaultScreen(),
       ),
       GoRoute(
         path: '/features/recovery-verification',
@@ -575,8 +659,6 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/features/security-audit',
         builder: (context, state) => const SecurityAuditScreen(),
       ),
-      // GoRoute(path: '/features/ownkeep-pro', builder: (context, state) => const OwnKeepProScreen()),
-
       // Collections Routes
       GoRoute(
         path: '/collections/custom/new',

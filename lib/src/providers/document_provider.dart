@@ -66,6 +66,13 @@ final allDocumentsProvider = FutureProvider<List<DocumentListItemView>>((
   );
 });
 
+final vaultContentAnswerProvider =
+    FutureProvider.family<AskQueryResponse?, String>((ref, query) async {
+      final controller = ref.watch(ingestionControllerProvider);
+      if (controller == null || query.trim().isEmpty) return null;
+      return controller.askVaultWithContent(query.trim());
+    });
+
 enum DashboardFileKind { all, documents, images, videos, notes, other }
 
 enum DashboardDateRange { anyTime, today, thisWeek, thisMonth }
@@ -157,13 +164,32 @@ bool documentMatchesKind(
     DashboardFileKind.images => mime.startsWith('image/'),
     DashboardFileKind.videos => mime.startsWith('video/'),
     DashboardFileKind.notes => document.documentType == DocumentType.note,
-    DashboardFileKind.other =>
-      !mime.startsWith('application/') &&
-          !mime.startsWith('text/') &&
-          !mime.startsWith('image/') &&
-          !mime.startsWith('video/'),
+    DashboardFileKind.other => documentMatchesOtherCollection(document),
   };
 }
+
+const _namedCollectionDocumentTypes = <DocumentType>{
+  DocumentType.aadhaar,
+  DocumentType.pan,
+  DocumentType.passport,
+  DocumentType.drivingLicence,
+  DocumentType.voterId,
+  DocumentType.bankStatement,
+  DocumentType.receipt,
+  DocumentType.invoice,
+  DocumentType.medicalReport,
+  DocumentType.prescription,
+  DocumentType.electricityBill,
+  DocumentType.waterBill,
+  DocumentType.gasBill,
+  DocumentType.propertyTax,
+  DocumentType.vehicleDocument,
+  DocumentType.educationCertificate,
+};
+
+/// Matches the same uncategorized items represented by the Others collection.
+bool documentMatchesOtherCollection(DocumentListItemView document) =>
+    !_namedCollectionDocumentTypes.contains(document.documentType);
 
 DateTime? _dateCutoff(DashboardDateRange range) {
   final now = DateTime.now();

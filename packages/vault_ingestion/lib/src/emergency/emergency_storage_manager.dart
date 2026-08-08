@@ -4,14 +4,23 @@ import 'package:vault_domain/vault_domain.dart';
 /// Strictly isolated from primary vault database, graph, and evidence files.
 final class EmergencyStorageManager {
   /// Creates an isolated emergency storage manager.
-  EmergencyStorageManager({EmergencyCardEnvelope? initialEnvelope}) {
+  EmergencyStorageManager({
+    EmergencyCardEnvelope? initialEnvelope,
+    this.onChanged,
+  }) {
     _envelope = initialEnvelope ?? _defaultEmergencyEnvelope;
   }
 
   EmergencyCardEnvelope _envelope = _defaultEmergencyEnvelope;
+  final void Function(EmergencyCardEnvelope envelope)? onChanged;
 
   /// Minimized emergency envelope.
   EmergencyCardEnvelope get envelope => _envelope;
+
+  /// Restores a previously persisted envelope without creating audit events.
+  void restoreEnvelope(EmergencyCardEnvelope envelope) {
+    _envelope = envelope;
+  }
 
   /// Updates emergency medical record and contacts.
   void updateEnvelope({
@@ -26,6 +35,7 @@ final class EmergencyStorageManager {
       isEnabled: isEnabled,
       accessLog: _envelope.accessLog,
     );
+    onChanged?.call(_envelope);
   }
 
   /// Records an auditable emergency card access event.
@@ -40,11 +50,13 @@ final class EmergencyStorageManager {
       isEnabled: _envelope.isEnabled,
       accessLog: updatedLogs,
     );
+    onChanged?.call(_envelope);
   }
 
   /// Completely resets emergency storage envelope.
   void resetEmergencyStorage() {
     _envelope = _defaultEmergencyEnvelope;
+    onChanged?.call(_envelope);
   }
 
   static final EmergencyCardEnvelope _defaultEmergencyEnvelope =

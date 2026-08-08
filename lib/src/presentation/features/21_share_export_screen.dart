@@ -16,10 +16,7 @@ class ShareExportScreen extends ConsumerWidget {
 
   Future<void> _export(BuildContext context, WidgetRef ref) async {
     final id = documentId;
-    if (id == null) {
-      context.push('/dashboard/all-files');
-      return;
-    }
+    if (id == null) return;
     final detail = await ref.read(documentDetailProvider(id).future);
     final controller = ref.read(ingestionControllerProvider);
     if (detail == null || controller == null) return;
@@ -105,24 +102,6 @@ class ShareExportScreen extends ConsumerWidget {
             _buildOptionTile(
               context: context,
               colors: colors,
-              icon: OwnKeepMainIcons.share_user,
-              title: l10n.s21_ownkeep_user,
-              subtitle: l10n.s21_ownkeep_user_body,
-              onTap: () => context.push('/features/invitations'),
-            ),
-            const SizedBox(height: OwnKeepSpacing.md),
-            _buildOptionTile(
-              context: context,
-              colors: colors,
-              icon: OwnKeepMainIcons.secure_link,
-              title: l10n.s21_secure_link,
-              subtitle: l10n.s21_secure_link_body,
-              onTap: () => context.push('/features/family-sharing'),
-            ),
-            const SizedBox(height: OwnKeepSpacing.md),
-            _buildOptionTile(
-              context: context,
-              colors: colors,
               icon: OwnKeepMainIcons.encrypted_file,
               title: l10n.s21_encrypted_file,
               subtitle: l10n.s21_encrypted_file_body,
@@ -158,7 +137,7 @@ class ShareExportScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(OwnKeepSpacing.md),
               decoration: BoxDecoration(
-                color: colors.surfaceSelected.withOpacity(0.5),
+                color: colors.surfaceSelected.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: colors.borderSoft),
               ),

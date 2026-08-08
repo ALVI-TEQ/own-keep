@@ -120,7 +120,7 @@ class _AiOrganizeScreenState extends ConsumerState<AiOrganizeScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: SvgPicture.asset(
@@ -148,14 +148,15 @@ class _AiOrganizeScreenState extends ConsumerState<AiOrganizeScreen> {
                     l10n.s27_scan_complete_body,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                       fontSize: 14,
                       fontFamily: 'Inter',
                     ),
                   ),
                   const SizedBox(height: OwnKeepSpacing.xl),
                   ElevatedButton(
-                    onPressed: () => context.push('/dashboard/all-files'),
+                    onPressed: () =>
+                        context.push('/features/review-categories'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: colors.aiPurple,
@@ -203,7 +204,7 @@ class _AiOrganizeScreenState extends ConsumerState<AiOrganizeScreen> {
               title: l10n.s27_uncategorized,
               subtitle: l10n.s27_uncategorized_body,
               countLabel: '$uncategorized',
-              onTap: () => context.push('/dashboard/all-files'),
+              onTap: () => context.push('/features/review-categories'),
             ),
             const SizedBox(height: OwnKeepSpacing.sm),
             _buildSuggestionCard(

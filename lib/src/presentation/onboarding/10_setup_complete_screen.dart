@@ -6,6 +6,7 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_onboarding_colors.dart';
 import '../../theme/ownkeep_onboarding_icons.dart';
 import '../../providers/vault_provider.dart';
+import '../../domain/recovery/recovery_method.dart';
 
 class SetupCompleteScreen extends ConsumerWidget {
   const SetupCompleteScreen({super.key});
@@ -65,6 +66,9 @@ class SetupCompleteScreen extends ConsumerWidget {
                     ref.read(onboardingPinProvider.notifier).state = null;
                     ref.read(onboardingRecoveryCodeProvider.notifier).state =
                         null;
+                    ref
+                        .read(onboardingRecoveryMethodProvider.notifier)
+                        .select(RecoveryMethod.generatedPhrase);
                     context.go('/dashboard/home');
                   },
                   style: ElevatedButton.styleFrom(

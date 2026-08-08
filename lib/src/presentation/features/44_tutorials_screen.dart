@@ -317,7 +317,7 @@ class TutorialsScreen extends StatelessWidget {
                     child: SvgPicture.asset(
                       icon,
                       colorFilter: ColorFilter.mode(
-                        iconColor.withOpacity(0.5),
+                        iconColor.withValues(alpha: 0.5),
                         BlendMode.srcIn,
                       ),
                       width: 48,
@@ -332,7 +332,7 @@ class TutorialsScreen extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.7),
+                        color: Colors.black.withValues(alpha: 0.7),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(

@@ -21,8 +21,9 @@ class VaultInfoScreen extends ConsumerWidget {
     String formatBytes(int bytes) {
       if (bytes < 1024) return '$bytes B';
       if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-      if (bytes < 1024 * 1024 * 1024)
+      if (bytes < 1024 * 1024 * 1024) {
         return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+      }
       return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
     }
 
@@ -172,7 +173,7 @@ class VaultInfoScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(OwnKeepSpacing.md),
               decoration: BoxDecoration(
-                color: colors.surfaceSelected.withOpacity(0.5),
+                color: colors.surfaceSelected.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: colors.borderSoft),
               ),

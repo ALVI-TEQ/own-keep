@@ -156,14 +156,9 @@ class CollectionsScreen extends ConsumerWidget {
                     'EDUCATION_CERTIFICATE',
                   });
 
-                  final otherCount =
-                      docs.length -
-                      (personalCount +
-                          financeCount +
-                          healthCount +
-                          propertyCount +
-                          vehicleCount +
-                          educationCount);
+                  final otherCount = docs
+                      .where(documentMatchesOtherCollection)
+                      .length;
 
                   return Column(
                     children: [

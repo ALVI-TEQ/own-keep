@@ -211,6 +211,17 @@ class NavigationMenuDrawer extends ConsumerWidget {
                   const SizedBox(height: 16),
                   _buildNavItem(
                     context,
+                    'OwnKeep Pro',
+                    'Unlock and test all Pro features',
+                    OwnKeepMainIcons.favorite,
+                    false,
+                    () {
+                      context.pop();
+                      context.push('/features/pro');
+                    },
+                  ),
+                  _buildNavItem(
+                    context,
                     l10n.nav_settings,
                     l10n.nav_settings_body,
                     OwnKeepMainIcons.settings,

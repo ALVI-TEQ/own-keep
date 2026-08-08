@@ -237,7 +237,7 @@ class _MoveOrCopyScreenState extends ConsumerState<MoveOrCopyScreen> {
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: colors.primaryBlue.withOpacity(0.1),
+                              color: colors.primaryBlue.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: SvgPicture.asset(

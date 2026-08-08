@@ -1,0 +1,87 @@
+Run these commands from the OwnKeep project directory.
+
+```bash
+cd /Users/taraka/Taraka/ALVITEQ/flutter/apps/own_keep
+
+# Clean and restore dependencies
+flutter clean
+flutter pub get
+
+# Validate the project
+flutter analyze
+flutter test
+
+# Check connected devices
+flutter devices
+
+# Run and install debug build on the connected device
+flutter run
+```
+
+If multiple devices are connected:
+
+```bash
+flutter devices
+flutter run -d <DEVICE_ID>
+```
+
+Build and install APK manually:
+
+```bash
+flutter build apk --debug
+# Preserve the existing local vault and PIN while updating the debug APK.
+adb -s <DEVICE_ID> install -r build/app/outputs/flutter-apk/app-debug.apk
+```
+
+Do not use `flutter install` for OwnKeep development updates. It may uninstall
+the existing app first, which permanently deletes the device-local vault, PIN,
+preferences, and every document that has not been exported to a backup.
+
+For a release APK after configuring `android/key.properties`:
+
+```bash
+flutter build apk --release
+adb -s <DEVICE_ID> install -r build/app/outputs/flutter-apk/app-release.apk
+```
+
+For the Play Store AAB:
+
+```bash
+flutter build appbundle --release
+```
+
+Or run the complete release validation:
+
+```bash
+./scripts/play_release_preflight.sh
+```
+
+Useful maintenance commands:
+
+```bash
+# Regenerate localization files
+flutter gen-l10n
+
+# Regenerate generated Dart/database code when required
+dart run build_runner build --delete-conflicting-outputs
+
+# Show dependency status
+flutter pub outdated
+
+# View device logs
+flutter logs -d <DEVICE_ID>
+```
+
+Recommended full debug sequence:
+
+```bash
+cd /Users/taraka/Taraka/ALVITEQ/flutter/apps/own_keep
+flutter clean
+flutter pub get
+flutter gen-l10n
+dart run build_runner build --delete-conflicting-outputs
+flutter analyze
+flutter test
+flutter devices
+flutter run -d <DEVICE_ID>
+```

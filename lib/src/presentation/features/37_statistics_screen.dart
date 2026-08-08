@@ -11,6 +11,7 @@ import '../../providers/document_provider.dart';
 class StatisticsScreen extends ConsumerWidget {
   const StatisticsScreen({super.key});
 
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
     final l10n = AppLocalizations.of(context)!;
@@ -20,8 +21,9 @@ class StatisticsScreen extends ConsumerWidget {
     String formatBytes(int bytes) {
       if (bytes < 1024) return '$bytes B';
       if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-      if (bytes < 1024 * 1024 * 1024)
+      if (bytes < 1024 * 1024 * 1024) {
         return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+      }
       return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
     }
 
@@ -132,12 +134,7 @@ class StatisticsScreen extends ConsumerWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          l10n.s37_used +
-                              ' ' +
-                              storageStats.maybeWhen(
-                                data: (s) => formatBytes(s['totalSize'] as int),
-                                orElse: () => '-',
-                              ),
+                          '${l10n.s37_used} ${storageStats.maybeWhen(data: (s) => formatBytes(s['totalSize'] as int), orElse: () => '-')}',
                           style: TextStyle(
                             color: colors.textPrimary,
                             fontSize: 14,

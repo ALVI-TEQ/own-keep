@@ -4,6 +4,7 @@ import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:ownkeep/src/citizen_vault/ingestion/ingestion_ui_controller.dart';
 import 'package:ownkeep/src/citizen_vault/l10n/app_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mime/mime.dart';
 import 'package:vault_domain/vault_domain.dart';
 import 'package:vault_ingestion/vault_ingestion.dart';
@@ -20,6 +21,9 @@ class DocumentScannerScreen extends StatefulWidget {
 }
 
 class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
+  static const _androidScanner = MethodChannel(
+    'com.alviteq.ownkeep/document_scanner',
+  );
   List<String> _paths = const <String>[];
   bool _busy = false;
   String? _error;
@@ -31,12 +35,26 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
     });
     widget.controller.beginExternalActivity();
     try {
-      final paths = await CunningDocumentScanner.getPictures(
-        noOfPages: 20,
-        asPdf: true,
-      );
+      final List<String>? paths;
+      if (Platform.isAndroid) {
+        final path = await _androidScanner.invokeMethod<String>('scanDocument');
+        paths = path == null ? null : <String>[path];
+      } else {
+        paths = await CunningDocumentScanner.getPictures(
+          noOfPages: 20,
+          asPdf: true,
+        );
+      }
       if (!mounted) return;
       setState(() => _paths = paths ?? const <String>[]);
+    } on PlatformException catch (error) {
+      if (mounted) {
+        setState(
+          () => _error = error.code == 'SCANNER_UNAVAILABLE'
+              ? 'The document scanner needs current Google Play services. Update Play services and try again.'
+              : 'Scanner could not be opened.',
+        );
+      }
     } catch (_) {
       if (mounted) setState(() => _error = 'Scanner could not be opened.');
     } finally {
@@ -47,19 +65,35 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
 
   Future<void> _save() async {
     if (_paths.isEmpty) return;
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
     final path = _paths.single;
     final file = File(path);
-    final length = await file.length();
-    await widget.controller.importCandidate(
-      IngestionCandidate(
-        logicalFilename: 'Scan-${DateTime.now().millisecondsSinceEpoch}.pdf',
-        mimeType: lookupMimeType(path) ?? 'application/pdf',
-        length: length,
-        source: DocumentImportSource.camera,
-        openRead: file.openRead,
-      ),
-    );
-    if (mounted) Navigator.of(context).pop();
+    try {
+      final length = await file.length();
+      await widget.controller.importCandidate(
+        IngestionCandidate(
+          logicalFilename: 'Scan-${DateTime.now().millisecondsSinceEpoch}.pdf',
+          mimeType: lookupMimeType(path) ?? 'application/pdf',
+          length: length,
+          source: DocumentImportSource.camera,
+          openRead: file.openRead,
+        ),
+      );
+      if (!mounted) return;
+      if (widget.controller.notice == 'Added to OwnKeep') {
+        Navigator.of(context).pop(true);
+      } else {
+        setState(
+          () => _error =
+              widget.controller.notice ?? 'The scan could not be saved.',
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
   }
 
   @override
@@ -91,6 +125,12 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
       Text(
         'Scan documents securely into OwnKeep'.tr,
         style: TextStyle(color: Colors.white, fontSize: 18),
+      ),
+      const SizedBox(height: 8),
+      Text(
+        'Automatic edges • crop • filters • multi-page PDF'.tr,
+        textAlign: TextAlign.center,
+        style: const TextStyle(color: Colors.white60),
       ),
       if (_error != null) ...[
         const SizedBox(height: 12),

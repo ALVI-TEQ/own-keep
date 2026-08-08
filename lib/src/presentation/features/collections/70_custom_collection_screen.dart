@@ -458,7 +458,7 @@ class _CustomCollectionScreenState
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: colors.primaryBlue,
+            activeThumbColor: colors.primaryBlue,
             inactiveTrackColor: colors.surfacePrimary,
           ),
         ],

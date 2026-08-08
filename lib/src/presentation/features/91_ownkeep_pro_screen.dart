@@ -1,285 +1,299 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ownkeep/src/l10n/app_localizations.dart';
-import '../../theme/ownkeep_main_colors.dart';
-import '../../theme/ownkeep_main_icons.dart';
 
-class OwnKeepProScreen extends StatelessWidget {
-  const OwnKeepProScreen({super.key});
+import '../../domain/subscription/feature_entitlements.dart';
+import '../../providers/subscription_provider.dart';
+import '../../theme/ownkeep_main_colors.dart';
+
+class OwnKeepProScreen extends ConsumerWidget {
+  const OwnKeepProScreen({super.key, this.returnTo});
+
+  final String? returnTo;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.mainColors;
-    final l10n = AppLocalizations.of(context)!;
-
-    final features = [
-      {
-        'title': l10n.s91_document_tools,
-        'body': l10n.s91_document_tools_body,
-        'icon': OwnKeepMainIcons.document_tools,
-        'color': colors.primaryBlue,
-      },
-      {
-        'title': l10n.s91_ai,
-        'body': l10n.s91_ai_body,
-        'icon': OwnKeepMainIcons.ai_wand,
-        'color': colors.aiPurple,
-      },
-      {
-        'title': l10n.s91_family,
-        'body': l10n.s91_family_body,
-        'icon': OwnKeepMainIcons.folder,
-        'color': colors.warningOrange,
-      },
-      {
-        'title': l10n.s91_security,
-        'body': l10n.s91_security_body,
-        'icon': OwnKeepMainIcons.security,
-        'color': colors.dangerRed,
-      },
-      {
-        'title': l10n.s91_collections,
-        'body': l10n.s91_collections_body,
-        'icon': OwnKeepMainIcons.collection,
-        'color': colors.successGreen,
-      },
-    ];
-
+    final plan = ref.watch(ownKeepPlanProvider);
+    final proFeatures = OwnKeepFeatureCatalog.definitions.where(
+      (item) => item.minimumPlan == OwnKeepPlan.pro,
+    );
     return Scaffold(
       backgroundColor: colors.backgroundTop,
       appBar: AppBar(
         backgroundColor: colors.backgroundTop,
-        elevation: 0,
         leading: IconButton(
-          icon: SvgPicture.asset(
-            OwnKeepMainIcons.back_arrow,
-            colorFilter: ColorFilter.mode(colors.textPrimary, BlendMode.srcIn),
-            width: 24,
-            height: 24,
-          ),
-          onPressed: () => context.pop(),
+          onPressed: context.pop,
+          icon: const Icon(Icons.arrow_back),
         ),
+        title: const Text('OwnKeep Pro'),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [colors.backgroundTop, colors.backgroundBottom],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Badge
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      const Color(0xFFFFD700).withValues(alpha: 0.2),
-                      const Color(0xFFFF8C00).withValues(alpha: 0.2),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: const Color(0xFFFFD700).withValues(alpha: 0.5),
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.star, color: const Color(0xFFFFD700), size: 16),
-                    const SizedBox(width: 8),
-                    Text(
-                      l10n.s91_badge,
-                      style: const TextStyle(
-                        color: Color(0xFFFFD700),
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                  ],
-                ),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF7147E8), Color(0xFF315BD6)],
               ),
-              const SizedBox(height: 24),
-
-              // Hero Text
-              Text(
-                l10n.s91_hero,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: colors.textPrimary,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                l10n.s91_hero_body,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: colors.textSecondary,
-                  fontSize: 16,
-                  height: 1.5,
-                ),
-              ),
-              const SizedBox(height: 32),
-
-              // Price
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Text(
-                      l10n.s91_price,
-                      style: TextStyle(
-                        color: colors.textPrimary,
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '/ ${l10n.s91_price_type}',
-                      style: TextStyle(color: colors.textMuted, fontSize: 16),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 48),
-
-              // Features list
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  l10n.s91_features,
-                  style: TextStyle(
-                    color: colors.textPrimary,
-                    fontSize: 18,
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Column(
+              children: [
+                const Icon(Icons.workspace_premium, size: 52),
+                const SizedBox(height: 12),
+                Text(
+                  plan == OwnKeepPlan.pro
+                      ? 'OwnKeep Pro is active'
+                      : 'Unlock every Pro feature',
+                  style: const TextStyle(
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              const SizedBox(height: 16),
-
-              ...features.map((f) => _buildFeatureRow(f, colors)),
-
-              const SizedBox(height: 40),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colors.primaryBlue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  child: Text(
-                    'Purchases unavailable in this build',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Test subscription • ₹499/year',
+                  style: TextStyle(color: Colors.white70),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.offline_pin_outlined,
-                    color: colors.textMuted,
-                    size: 16,
-                  ),
-                  const SizedBox(width: 8),
-                  Flexible(
-                    child: Text(
-                      l10n.s91_offline_note,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: colors.textMuted, fontSize: 12),
+                const SizedBox(height: 18),
+                if (plan == OwnKeepPlan.free)
+                  FilledButton(
+                    onPressed: () => _showTestPlayPurchase(context, ref),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFF315BD6),
+                      minimumSize: const Size.fromHeight(50),
                     ),
+                    child: const Text('Continue with Google Play'),
+                  )
+                else
+                  const Chip(
+                    avatar: Icon(Icons.check_circle, color: Colors.green),
+                    label: Text('All Pro features enabled'),
                   ),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+          const SizedBox(height: 12),
+          const Card(
+            child: ListTile(
+              leading: Icon(Icons.science_outlined),
+              title: Text('Developer test purchase'),
+              subtitle: Text(
+                'No money is charged and Google Play Billing is not contacted.',
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          if (plan == OwnKeepPlan.pro) ...[
+            Text(
+              'Pro feature centre',
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            _destination(
+              context,
+              Icons.auto_awesome,
+              'On-device intelligence',
+              'AI organize, chat, insights, tags and timeline',
+              '/features/ai-organize',
+            ),
+            _destination(
+              context,
+              Icons.document_scanner_outlined,
+              'OCR and document tools',
+              'Open a document to extract text, or compare records',
+              '/dashboard/all-files',
+            ),
+            _destination(
+              context,
+              Icons.manage_search,
+              'Advanced search',
+              'Filters, duplicates and vault statistics',
+              '/features/advanced-search',
+            ),
+            _destination(
+              context,
+              Icons.folder_copy_outlined,
+              'Custom collections',
+              'Create unlimited encrypted collections',
+              '/dashboard/collections',
+            ),
+            _destination(
+              context,
+              Icons.devices_outlined,
+              'Secure offline transfer',
+              'Move an encrypted vault to another device',
+              '/features/device-migration',
+            ),
+            _destination(
+              context,
+              Icons.security_outlined,
+              'Advanced security audit',
+              'Review vault, biometric and document integrity',
+              '/features/security-audit',
+            ),
+            const SizedBox(height: 16),
+          ],
+          ...proFeatures.map(
+            (item) => Card(
+              color: colors.surfacePrimary,
+              child: ListTile(
+                leading: Icon(
+                  plan == OwnKeepPlan.pro ? Icons.check_circle : Icons.star,
+                  color: plan == OwnKeepPlan.pro
+                      ? colors.successGreen
+                      : const Color(0xFFFFB020),
+                ),
+                title: Text(item.title),
+                subtitle: Text(item.description),
+              ),
+            ),
+          ),
+          if (plan == OwnKeepPlan.pro) ...[
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () async {
+                await ref
+                    .read(ownKeepPlanProvider.notifier)
+                    .resetTestPurchase();
+              },
+              child: const Text('Reset test purchase'),
+            ),
+          ],
+        ],
       ),
     );
   }
 
-  Widget _buildFeatureRow(
-    Map<String, dynamic> f,
-    OwnKeepMainColorsTheme colors,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: (f['color'] as Color).withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: SvgPicture.asset(
-              f['icon'] as String,
-              colorFilter: ColorFilter.mode(
-                f['color'] as Color,
-                BlendMode.srcIn,
-              ),
-              width: 24,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  f['title'] as String,
-                  style: TextStyle(
-                    color: colors.textPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  f['body'] as String,
-                  style: TextStyle(color: colors.textSecondary, fontSize: 14),
-                ),
-              ],
-            ),
+  Widget _destination(
+    BuildContext context,
+    IconData icon,
+    String title,
+    String subtitle,
+    String route,
+  ) => Card(
+    child: ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      subtitle: Text(subtitle),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => context.push(route),
+    ),
+  );
+
+  Future<void> _showTestPlayPurchase(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    final purchased = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheetContext) => const _TestPlayPurchaseSheet(),
+    );
+    if (purchased != true || !context.mounted) return;
+    await ref.read(ownKeepPlanProvider.notifier).enableTestPro();
+    if (!context.mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        icon: const Icon(Icons.check_circle, color: Colors.green, size: 52),
+        title: const Text('Payment successful'),
+        content: const Text(
+          'Test purchase completed. All OwnKeep Pro features are now enabled.',
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              final destination = returnTo;
+              if (destination != null && destination.startsWith('/')) {
+                context.go(destination);
+              }
+            },
+            child: const Text('Start using Pro'),
           ),
         ],
       ),
     );
   }
+}
+
+class _TestPlayPurchaseSheet extends StatefulWidget {
+  const _TestPlayPurchaseSheet();
+
+  @override
+  State<_TestPlayPurchaseSheet> createState() => _TestPlayPurchaseSheetState();
+}
+
+class _TestPlayPurchaseSheetState extends State<_TestPlayPurchaseSheet> {
+  bool _processing = false;
+
+  Future<void> _buy() async {
+    setState(() => _processing = true);
+    await Future<void>.delayed(const Duration(milliseconds: 900));
+    if (mounted) Navigator.pop(context, true);
+  }
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: EdgeInsets.fromLTRB(
+      24,
+      8,
+      24,
+      24 + MediaQuery.viewInsetsOf(context).bottom,
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Row(
+          children: [
+            Icon(Icons.play_arrow, color: Color(0xFF01875F), size: 32),
+            SizedBox(width: 10),
+            Text(
+              'Google Play test checkout',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        const ListTile(
+          contentPadding: EdgeInsets.zero,
+          title: Text('OwnKeep Pro – Annual'),
+          subtitle: Text('Dummy purchase for internal testing only'),
+          trailing: Text('₹499.00'),
+        ),
+        const Divider(),
+        const ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: Icon(Icons.credit_card),
+          title: Text('Test payment method'),
+          subtitle: Text('Always approves • No charge'),
+        ),
+        const SizedBox(height: 16),
+        FilledButton(
+          onPressed: _processing ? null : _buy,
+          style: FilledButton.styleFrom(
+            backgroundColor: const Color(0xFF01875F),
+            minimumSize: const Size.fromHeight(52),
+          ),
+          child: _processing
+              ? const SizedBox(
+                  width: 22,
+                  height: 22,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Text('Buy (test)'),
+        ),
+      ],
+    ),
+  );
 }

@@ -23,7 +23,7 @@ class AppGradients {
         blurRadius: 24,
         spreadRadius: 2,
         offset: const Offset(0, 8),
-      )
+      ),
     ];
   }
 }

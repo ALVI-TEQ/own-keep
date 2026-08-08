@@ -6,6 +6,7 @@ import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 import 'package:flutter/services.dart';
+import '../legal/ownkeep_legal.dart';
 
 class HelpSupportScreen extends StatefulWidget {
   const HelpSupportScreen({super.key});
@@ -103,7 +104,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
                 onTap: () => context.push('/features/onboarding-guide'),
               ),
             const SizedBox(height: OwnKeepSpacing.sm),
-            if (_matches('${l10n.s30_contact} support@ownkeep.app'))
+            if (_matches('${l10n.s30_contact} ${OwnKeepLegal.supportEmail}'))
               _buildSupportOption(
                 context: context,
                 colors: colors,
@@ -113,7 +114,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
                 subtitle: l10n.s30_contact_body,
                 onTap: () async {
                   await Clipboard.setData(
-                    const ClipboardData(text: 'support@ownkeep.app'),
+                    const ClipboardData(text: OwnKeepLegal.supportEmail),
                   );
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(

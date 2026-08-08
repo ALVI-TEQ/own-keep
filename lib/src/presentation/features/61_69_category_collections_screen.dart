@@ -95,15 +95,15 @@ class _CategoryCollectionScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          // Search bar
-          Container(
+            // Search bar
+            Container(
               padding: EdgeInsets.symmetric(
                 horizontal: OwnKeepSpacing.md,
                 vertical: 12,
               ),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(12),
+              decoration: BoxDecoration(
+                color: OwnKeepColors.darkSurfaceElevated,
+                borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: OwnKeepColors.darkBorder.withValues(alpha: 0.3),
                 ),
@@ -114,8 +114,8 @@ class _CategoryCollectionScreen extends StatelessWidget {
                     Icons.crop_square_rounded,
                     color: OwnKeepColors.darkTextMuted,
                     size: 20,
-            ),
-              SizedBox(width: 8),
+                  ),
+                  SizedBox(width: 8),
                   Text(
                     'Search this collection...',
                     style: TextStyle(
@@ -126,29 +126,29 @@ class _CategoryCollectionScreen extends StatelessWidget {
                   ),
                 ],
               ),
-          ),
-          SizedBox(height: OwnKeepSpacing.base),
-          // Hero card
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(OwnKeepSpacing.lg),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: accentColor.withValues(alpha: 0.5)),
             ),
+            SizedBox(height: OwnKeepSpacing.base),
+            // Hero card
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(OwnKeepSpacing.lg),
+              decoration: BoxDecoration(
+                color: OwnKeepColors.darkSurfaceElevated,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: accentColor.withValues(alpha: 0.5)),
+              ),
               child: Row(
                 children: [
-              Container(
+                  Container(
                     width: 56,
                     height: 56,
                     decoration: BoxDecoration(
                       color: accentColor.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(14),
                     ),
-                child: Icon(iconData, color: accentColor, size: 28),
-              ),
-              SizedBox(width: OwnKeepSpacing.md),
+                    child: Icon(iconData, color: accentColor, size: 28),
+                  ),
+                  SizedBox(width: OwnKeepSpacing.md),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -169,7 +169,7 @@ class _CategoryCollectionScreen extends StatelessWidget {
                           fontFamily: 'Inter',
                         ),
                       ),
-                SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         '$itemCount',
                         style: TextStyle(
@@ -191,23 +191,23 @@ class _CategoryCollectionScreen extends StatelessWidget {
                   ),
                 ],
               ),
-          ),
-          SizedBox(height: OwnKeepSpacing.base),
-          // Stats row
-          Row(
+            ),
+            SizedBox(height: OwnKeepSpacing.base),
+            // Stats row
+            Row(
               children: stats
                   .asMap()
                   .entries
                   .map(
                     (e) => Expanded(
-              child: Container(
+                      child: Container(
                         margin: EdgeInsets.only(
                           right: e.key < stats.length - 1 ? 8 : 0,
                         ),
-                padding: EdgeInsets.symmetric(vertical: 12),
-                decoration: BoxDecoration(
-                  color: OwnKeepColors.darkSurfaceElevated,
-                  borderRadius: BorderRadius.circular(12),
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          color: OwnKeepColors.darkSurfaceElevated,
+                          borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: OwnKeepColors.darkBorder.withValues(
                               alpha: 0.3,
@@ -225,8 +225,8 @@ class _CategoryCollectionScreen extends StatelessWidget {
                                 fontWeight: FontWeight.w700,
                                 fontFamily: 'Inter',
                               ),
-                ),
-                  SizedBox(height: 2),
+                            ),
+                            SizedBox(height: 2),
                             Text(
                               e.value.$1,
                               style: TextStyle(
@@ -237,22 +237,22 @@ class _CategoryCollectionScreen extends StatelessWidget {
                               textAlign: TextAlign.center,
                             ),
                           ],
-              ),
+                        ),
                       ),
                     ),
                   )
                   .toList(),
-          ),
-          SizedBox(height: OwnKeepSpacing.lg),
-          // Section 1
-          _SectionHeader(title: section1Title),
-          SizedBox(height: OwnKeepSpacing.sm),
-          ...section1Items.map((item) => _DocTile(entry: item)),
-          SizedBox(height: OwnKeepSpacing.lg),
-          // Section 2
-          _SectionHeader(title: section2Title),
-          SizedBox(height: OwnKeepSpacing.sm),
-          ...section2Items.map((item) => _DocTile(entry: item)),
+            ),
+            SizedBox(height: OwnKeepSpacing.lg),
+            // Section 1
+            _SectionHeader(title: section1Title),
+            SizedBox(height: OwnKeepSpacing.sm),
+            ...section1Items.map((item) => _DocTile(entry: item)),
+            SizedBox(height: OwnKeepSpacing.lg),
+            // Section 2
+            _SectionHeader(title: section2Title),
+            SizedBox(height: OwnKeepSpacing.sm),
+            ...section2Items.map((item) => _DocTile(entry: item)),
           ],
         ),
       ),
@@ -320,7 +320,7 @@ class _DocTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-        Container(
+          Container(
             width: 40,
             height: 40,
             decoration: BoxDecoration(
@@ -338,8 +338,8 @@ class _DocTile extends StatelessWidget {
                 ),
               ),
             ),
-        ),
-        SizedBox(width: OwnKeepSpacing.md),
+          ),
+          SizedBox(width: OwnKeepSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -364,12 +364,12 @@ class _DocTile extends StatelessWidget {
               ],
             ),
           ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-          decoration: BoxDecoration(
-            border: Border.all(color: entry.badgeColor),
-            borderRadius: BorderRadius.circular(6),
-          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              border: Border.all(color: entry.badgeColor),
+              borderRadius: BorderRadius.circular(6),
+            ),
             child: Text(
               entry.badgeLabel,
               style: TextStyle(
@@ -379,8 +379,8 @@ class _DocTile extends StatelessWidget {
                 fontFamily: 'Inter',
               ),
             ),
-        ),
-        SizedBox(width: 8),
+          ),
+          SizedBox(width: 8),
           Icon(
             Icons.chevron_right_rounded,
             color: OwnKeepColors.darkTextMuted,

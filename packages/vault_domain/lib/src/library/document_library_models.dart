@@ -72,6 +72,7 @@ final class DocumentListItemView {
     this.isDeleted = false,
     this.nextReminderAt,
     this.expiryAt,
+    this.byteSize = 0,
   });
 
   final String id;
@@ -87,6 +88,7 @@ final class DocumentListItemView {
   final List<DocumentTagView> tags;
   final DateTime? nextReminderAt;
   final DateTime? expiryAt;
+  final int byteSize;
 }
 
 @immutable

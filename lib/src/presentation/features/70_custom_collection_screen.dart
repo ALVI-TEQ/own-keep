@@ -108,7 +108,7 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          // Name
+            // Name
             Text(
               'Collection Name',
               style: TextStyle(
@@ -118,16 +118,16 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
                 fontFamily: 'Inter',
               ),
             ),
-          SizedBox(height: OwnKeepSpacing.sm),
-          TextField(
-            controller: _nameController,
+            SizedBox(height: OwnKeepSpacing.sm),
+            TextField(
+              controller: _nameController,
               style: TextStyle(
                 color: OwnKeepColors.darkTextPrimary,
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
                 fontFamily: 'Inter',
               ),
-            decoration: InputDecoration(
+              decoration: InputDecoration(
                 filled: true,
                 fillColor: OwnKeepColors.darkSurfaceElevated,
                 border: OutlineInputBorder(
@@ -152,10 +152,10 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
                   horizontal: 14,
                   vertical: 14,
                 ),
+              ),
             ),
-          ),
-          SizedBox(height: OwnKeepSpacing.xl),
-          // Icon picker
+            SizedBox(height: OwnKeepSpacing.xl),
+            // Icon picker
             Text(
               'Choose Icon',
               style: TextStyle(
@@ -165,23 +165,23 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
                 fontFamily: 'Inter',
               ),
             ),
-          SizedBox(height: OwnKeepSpacing.sm),
-          Row(
+            SizedBox(height: OwnKeepSpacing.sm),
+            Row(
               children: _icons
                   .asMap()
                   .entries
                   .map(
                     (e) => GestureDetector(
-              onTap: () => setState(() => _selectedIcon = e.key),
-              child: Container(
+                      onTap: () => setState(() => _selectedIcon = e.key),
+                      child: Container(
                         margin: EdgeInsets.only(
                           right: e.key < _icons.length - 1 ? 10 : 0,
                         ),
                         width: 52,
                         height: 52,
-                decoration: BoxDecoration(
-                  color: e.value.$2,
-                  borderRadius: BorderRadius.circular(14),
+                        decoration: BoxDecoration(
+                          color: e.value.$2,
+                          borderRadius: BorderRadius.circular(14),
                           border: _selectedIcon == e.key
                               ? Border.all(color: accentColor, width: 2.5)
                               : null,
@@ -194,26 +194,26 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
                                 color: Colors.white.withValues(alpha: 0.8),
                                 size: 24,
                               ),
-                ),
-                  if (_selectedIcon == e.key)
-                    const Positioned(
+                            ),
+                            if (_selectedIcon == e.key)
+                              const Positioned(
                                 top: 3,
                                 right: 3,
                                 child: Icon(
                                   Icons.check_circle_rounded,
                                   color: Colors.white,
                                   size: 14,
-                    ),
-              ),
+                                ),
+                              ),
                           ],
                         ),
                       ),
                     ),
                   )
                   .toList(),
-          ),
-          SizedBox(height: OwnKeepSpacing.xl),
-          // Color picker
+            ),
+            SizedBox(height: OwnKeepSpacing.xl),
+            // Color picker
             Text(
               'Theme Color',
               style: TextStyle(
@@ -223,42 +223,42 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
                 fontFamily: 'Inter',
               ),
             ),
-          SizedBox(height: OwnKeepSpacing.sm),
-          Row(
+            SizedBox(height: OwnKeepSpacing.sm),
+            Row(
               children: _colors
                   .asMap()
                   .entries
                   .map(
                     (e) => GestureDetector(
-              onTap: () => setState(() => _selectedColor = e.key),
-              child: Container(
+                      onTap: () => setState(() => _selectedColor = e.key),
+                      child: Container(
                         margin: EdgeInsets.only(
                           right: e.key < _colors.length - 1 ? 10 : 0,
                         ),
                         width: 40,
                         height: 40,
-                decoration: BoxDecoration(
-                  color: e.value,
-                  shape: BoxShape.circle,
-                  border: _selectedColor == e.key
-                      ? Border.all(color: Colors.white, width: 3)
-                      : null,
-                  boxShadow: _selectedColor == e.key
+                        decoration: BoxDecoration(
+                          color: e.value,
+                          shape: BoxShape.circle,
+                          border: _selectedColor == e.key
+                              ? Border.all(color: Colors.white, width: 3)
+                              : null,
+                          boxShadow: _selectedColor == e.key
                               ? [
                                   BoxShadow(
                                     color: e.value.withValues(alpha: 0.5),
                                     blurRadius: 8,
                                   ),
                                 ]
-                      : null,
-                ),
-              ),
+                              : null,
+                        ),
+                      ),
                     ),
                   )
                   .toList(),
-          ),
-          SizedBox(height: OwnKeepSpacing.xl),
-          // Smart Rules
+            ),
+            SizedBox(height: OwnKeepSpacing.xl),
+            // Smart Rules
             Text(
               'Smart Rules',
               style: TextStyle(
@@ -268,36 +268,36 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
                 fontFamily: 'Inter',
               ),
             ),
-          SizedBox(height: OwnKeepSpacing.sm),
+            SizedBox(height: OwnKeepSpacing.sm),
             _ToggleRow(
               title: 'Auto-add by tag',
               subtitle: '#family',
               value: _autoAdd,
               onChanged: (v) => setState(() => _autoAdd = v),
             ),
-          SizedBox(height: OwnKeepSpacing.sm),
+            SizedBox(height: OwnKeepSpacing.sm),
             _ToggleRow(
               title: 'Suggest reminders',
               subtitle: 'From detected dates',
               value: _suggestReminders,
               onChanged: (v) => setState(() => _suggestReminders = v),
             ),
-          SizedBox(height: OwnKeepSpacing.sm),
+            SizedBox(height: OwnKeepSpacing.sm),
             _ToggleRow(
               title: 'Allow AI organization',
               subtitle: 'Runs only on device',
               value: _aiOrg,
               onChanged: (v) => setState(() => _aiOrg = v),
             ),
-          SizedBox(height: OwnKeepSpacing.sm),
+            SizedBox(height: OwnKeepSpacing.sm),
             _ToggleRow(
               title: 'Show on Home',
               subtitle: 'Pin as smart collection',
               value: _showOnHome,
               onChanged: (v) => setState(() => _showOnHome = v),
             ),
-          SizedBox(height: OwnKeepSpacing.xl),
-          // Live preview
+            SizedBox(height: OwnKeepSpacing.xl),
+            // Live preview
             Text(
               'Preview',
               style: TextStyle(
@@ -307,18 +307,18 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
                 fontFamily: 'Inter',
               ),
             ),
-          SizedBox(height: OwnKeepSpacing.sm),
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
-            padding: EdgeInsets.all(OwnKeepSpacing.md),
-            decoration: BoxDecoration(
-              color: OwnKeepColors.darkSurfaceElevated,
-              borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-              border: Border.all(color: accentColor.withValues(alpha: 0.5)),
-            ),
+            SizedBox(height: OwnKeepSpacing.sm),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              padding: EdgeInsets.all(OwnKeepSpacing.md),
+              decoration: BoxDecoration(
+                color: OwnKeepColors.darkSurfaceElevated,
+                borderRadius: BorderRadius.circular(OwnKeepRadius.md),
+                border: Border.all(color: accentColor.withValues(alpha: 0.5)),
+              ),
               child: Row(
                 children: [
-              Container(
+                  Container(
                     width: 36,
                     height: 36,
                     decoration: BoxDecoration(
@@ -330,8 +330,8 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
                       color: Colors.white.withValues(alpha: 0.8),
                       size: 18,
                     ),
-              ),
-              SizedBox(width: OwnKeepSpacing.md),
+                  ),
+                  SizedBox(width: OwnKeepSpacing.md),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -365,13 +365,13 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
                   ),
                 ],
               ),
-          ),
-          SizedBox(height: OwnKeepSpacing.xl),
-          FilledButton(
-            onPressed: () {},
-            style: FilledButton.styleFrom(
-              backgroundColor: accentColor,
-              minimumSize: const Size.fromHeight(52),
+            ),
+            SizedBox(height: OwnKeepSpacing.xl),
+            FilledButton(
+              onPressed: () {},
+              style: FilledButton.styleFrom(
+                backgroundColor: accentColor,
+                minimumSize: const Size.fromHeight(52),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(OwnKeepRadius.md),
                 ),
@@ -383,8 +383,8 @@ class _CustomCollectionScreenState extends State<CustomCollectionScreen> {
                   fontWeight: FontWeight.w600,
                   fontFamily: 'Inter',
                 ),
+              ),
             ),
-          ),
           ],
         ),
       ),

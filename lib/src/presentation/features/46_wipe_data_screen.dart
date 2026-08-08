@@ -69,9 +69,11 @@ class _WipeDataScreenState extends ConsumerState<WipeDataScreen> {
             Container(
               padding: const EdgeInsets.all(OwnKeepSpacing.lg),
               decoration: BoxDecoration(
-                color: colors.dangerRed.withOpacity(0.1),
+                color: colors.dangerRed.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: colors.dangerRed.withOpacity(0.3)),
+                border: Border.all(
+                  color: colors.dangerRed.withValues(alpha: 0.3),
+                ),
               ),
               child: Column(
                 children: [
@@ -190,14 +192,16 @@ class _WipeDataScreenState extends ConsumerState<WipeDataScreen> {
                         await ref
                             .read(vaultSessionProvider.notifier)
                             .destroyVault();
-                  if (context.mounted) {
-                    context.go('/welcome');
-                  }
+                        if (context.mounted) {
+                          context.go('/welcome');
+                        }
                       }
                     : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colors.dangerRed,
-                  disabledBackgroundColor: colors.dangerRed.withOpacity(0.3),
+                  disabledBackgroundColor: colors.dangerRed.withValues(
+                    alpha: 0.3,
+                  ),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
@@ -208,7 +212,7 @@ class _WipeDataScreenState extends ConsumerState<WipeDataScreen> {
                   style: TextStyle(
                     color: _canDelete
                         ? Colors.white
-                        : Colors.white.withOpacity(0.5),
+                        : Colors.white.withValues(alpha: 0.5),
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Inter',

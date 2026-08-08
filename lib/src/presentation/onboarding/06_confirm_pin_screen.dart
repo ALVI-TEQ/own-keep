@@ -24,7 +24,7 @@ class _ConfirmPinScreenState extends ConsumerState<ConfirmPinScreen> {
     setState(() {
       _error = null;
     });
-    
+
     if (_pin.length < 6) {
       setState(() {
         _pin += value;
@@ -59,7 +59,7 @@ class _ConfirmPinScreenState extends ConsumerState<ConfirmPinScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Scaffold(
       backgroundColor: context.onboardingColors.backgroundDeep,
       body: SafeArea(
@@ -72,7 +72,11 @@ class _ConfirmPinScreenState extends ConsumerState<ConfirmPinScreen> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: IconButton(
-                  icon: SvgPicture.asset(OwnKeepOnboardingIcons.back_arrow, width: 24, height: 24),
+                  icon: SvgPicture.asset(
+                    OwnKeepOnboardingIcons.back_arrow,
+                    width: 24,
+                    height: 24,
+                  ),
                   onPressed: () {
                     if (context.canPop()) {
                       context.pop();
@@ -123,12 +127,13 @@ class _ConfirmPinScreenState extends ConsumerState<ConfirmPinScreen> {
                 ),
               ],
               const Spacer(),
-              OwnKeepPinIndicator(length: 6, currentLength: _pin.length, hasError: _error != null),
-              const Spacer(),
-              OwnKeepPinPad(
-                onKeyPress: _onKeyPress,
-                onBackspace: _onBackspace,
+              OwnKeepPinIndicator(
+                length: 6,
+                currentLength: _pin.length,
+                hasError: _error != null,
               ),
+              const Spacer(),
+              OwnKeepPinPad(onKeyPress: _onKeyPress, onBackspace: _onBackspace),
               const SizedBox(height: 32),
             ],
           ),
