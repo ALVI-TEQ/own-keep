@@ -44,7 +44,7 @@ class _EnableBiometricsScreenState
         }
       }
 
-      if (mounted) context.push('/setup-complete');
+      if (mounted) context.go('/first-person');
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(

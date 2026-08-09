@@ -48,8 +48,9 @@ class SharedCollectionsScreen extends ConsumerWidget {
                               leading: const Icon(Icons.folder),
                               title: Text(item.name),
                               subtitle: const Text('Stored locally'),
-                              onTap: () =>
-                                  context.push('/collections/${item.id}'),
+                              onTap: () => context.push(
+                                '/collections/custom/${item.id}',
+                              ),
                             ),
                           ),
                         )
@@ -58,7 +59,7 @@ class SharedCollectionsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 20),
           FilledButton.icon(
-            onPressed: () => context.push('/features/share-export'),
+            onPressed: () => context.push('/features/multi-select'),
             icon: const Icon(Icons.ios_share),
             label: const Text('Select documents to export'),
           ),

@@ -151,7 +151,7 @@ class ImportExportScreen extends ConsumerWidget {
                     l10n.s41_export_documents,
                     l10n.s41_export_documents_body,
                     const Color(0xFF27C5E8),
-                    () => context.push('/features/share-export'),
+                    () => context.push('/features/multi-select?kind=documents'),
                   ),
                   _buildDivider(colors),
                   _buildActionItem(
@@ -161,7 +161,7 @@ class ImportExportScreen extends ConsumerWidget {
                     l10n.s41_export_media,
                     l10n.s41_export_media_body,
                     colors.warningOrange,
-                    () => context.push('/features/share-export'),
+                    () => context.push('/features/multi-select?kind=media'),
                   ),
                   _buildDivider(colors),
                   _buildActionItem(

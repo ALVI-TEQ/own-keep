@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vault_domain/vault_domain.dart';
 
 import '../../providers/document_provider.dart';
 import '../../providers/vault_provider.dart';
@@ -11,9 +12,10 @@ import '../../theme/ownkeep_spacing.dart';
 import '../dashboard/dashboard_document_presentation.dart';
 
 class MultiSelectScreen extends ConsumerStatefulWidget {
-  const MultiSelectScreen({super.key, this.collectionName});
+  const MultiSelectScreen({super.key, this.collectionName, this.initialKind});
 
   final String? collectionName;
+  final String? initialKind;
 
   @override
   ConsumerState<MultiSelectScreen> createState() => _MultiSelectScreenState();
@@ -41,7 +43,10 @@ class _MultiSelectScreenState extends ConsumerState<MultiSelectScreen> {
             onPressed: documents.value == null
                 ? null
                 : () => setState(() {
-                    final all = documents.value!.map((item) => item.id).toSet();
+                    final all = documents.value!
+                        .where(_matchesInitialKind)
+                        .map((item) => item.id)
+                        .toSet();
                     _selectedIds
                       ..clear()
                       ..addAll(
@@ -56,39 +61,42 @@ class _MultiSelectScreenState extends ConsumerState<MultiSelectScreen> {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) =>
             Center(child: Text('Unable to load documents: $error')),
-        data: (items) => items.isEmpty
-            ? const Center(child: Text('No documents available.'))
-            : ListView.builder(
-                padding: const EdgeInsets.all(OwnKeepSpacing.md),
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  final selected = _selectedIds.contains(item.id);
-                  return Card(
-                    color: selected
-                        ? colors.surfaceSelected
-                        : colors.surfacePrimary,
-                    child: CheckboxListTile(
-                      value: selected,
-                      onChanged: (_) => setState(() {
-                        selected
-                            ? _selectedIds.remove(item.id)
-                            : _selectedIds.add(item.id);
-                      }),
-                      secondary: SvgPicture.asset(
-                        dashboardDocumentIcon(item),
-                        width: 24,
-                        colorFilter: ColorFilter.mode(
-                          colors.primaryBlue,
-                          BlendMode.srcIn,
+        data: (allItems) {
+          final items = allItems.where(_matchesInitialKind).toList();
+          return items.isEmpty
+              ? const Center(child: Text('No documents available.'))
+              : ListView.builder(
+                  padding: const EdgeInsets.all(OwnKeepSpacing.md),
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    final item = items[index];
+                    final selected = _selectedIds.contains(item.id);
+                    return Card(
+                      color: selected
+                          ? colors.surfaceSelected
+                          : colors.surfacePrimary,
+                      child: CheckboxListTile(
+                        value: selected,
+                        onChanged: (_) => setState(() {
+                          selected
+                              ? _selectedIds.remove(item.id)
+                              : _selectedIds.add(item.id);
+                        }),
+                        secondary: SvgPicture.asset(
+                          dashboardDocumentIcon(item),
+                          width: 24,
+                          colorFilter: ColorFilter.mode(
+                            colors.primaryBlue,
+                            BlendMode.srcIn,
+                          ),
                         ),
+                        title: Text(item.logicalFilename),
+                        subtitle: Text(item.mimeType),
                       ),
-                      title: Text(item.logicalFilename),
-                      subtitle: Text(item.mimeType),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                );
+        },
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
@@ -117,9 +125,7 @@ class _MultiSelectScreenState extends ConsumerState<MultiSelectScreen> {
               const SizedBox(width: 8),
               Expanded(
                 child: OutlinedButton(
-                  onPressed: _selectedIds.isEmpty
-                      ? null
-                      : () => context.push('/features/share-export'),
+                  onPressed: _selectedIds.isEmpty ? null : _exportSelected,
                   child: const Text('Export'),
                 ),
               ),
@@ -135,6 +141,45 @@ class _MultiSelectScreenState extends ConsumerState<MultiSelectScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  bool _matchesInitialKind(DocumentListItemView item) {
+    final kind = widget.initialKind;
+    if (kind == null) return true;
+    final mimeType = item.mimeType.toString().toLowerCase();
+    return switch (kind) {
+      'media' => mimeType.startsWith('image/') || mimeType.startsWith('video/'),
+      'documents' =>
+        !mimeType.startsWith('image/') && !mimeType.startsWith('video/'),
+      _ => true,
+    };
+  }
+
+  Future<void> _exportSelected() async {
+    final controller = ref.read(ingestionControllerProvider);
+    if (controller == null) return;
+    var exported = 0;
+    var cancelled = 0;
+    for (final id in _selectedIds.toList()) {
+      final detail = await ref.read(documentDetailProvider(id).future);
+      if (detail == null) continue;
+      final message = await controller.exportDocument(detail);
+      if (message.startsWith('Document copy saved')) {
+        exported++;
+      } else {
+        cancelled++;
+      }
+    }
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          cancelled == 0
+              ? '$exported item(s) exported.'
+              : '$exported item(s) exported; $cancelled skipped or failed.',
         ),
       ),
     );

@@ -70,7 +70,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
               onChanged: (value) =>
                   setState(() => _query = value.toLowerCase().trim()),
               decoration: InputDecoration(
-                hintText: 'Search help...',
+                hintText: l10n.s30_search,
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
                 fillColor: colors.surfacePrimary,
@@ -128,7 +128,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
 
             // Popular Topics
             Text(
-              'Popular Topics',
+              l10n.s30_popular_topics,
               style: TextStyle(
                 color: colors.textSecondary,
                 fontSize: 14,
@@ -138,25 +138,25 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
               ),
             ),
             const SizedBox(height: OwnKeepSpacing.md),
-            if (_matches('Recover'))
+            if (_matches(l10n.s30_recover))
               _buildPopularTopic(
                 context,
                 colors,
-                'Recover',
+                l10n.s30_recover,
                 '/features/recovery-center',
               ),
-            if (_matches('Share'))
+            if (_matches(l10n.s30_share))
               _buildPopularTopic(
                 context,
                 colors,
-                'Share',
-                '/features/share-export',
+                l10n.s30_share,
+                '/features/multi-select',
               ),
-            if (_matches('Backup'))
+            if (_matches(l10n.s30_backup))
               _buildPopularTopic(
                 context,
                 colors,
-                'Backup',
+                l10n.s30_backup,
                 '/features/backup-restore',
               ),
 

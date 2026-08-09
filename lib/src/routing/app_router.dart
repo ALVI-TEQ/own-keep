@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../presentation/gallery/component_gallery_screen.dart';
 import '../presentation/onboarding/01_splash_screen.dart';
@@ -13,6 +14,8 @@ import '../presentation/onboarding/07_recovery_phrase_screen.dart';
 import '../presentation/onboarding/08_verify_phrase_screen.dart';
 import '../presentation/onboarding/09_enable_biometrics_screen.dart';
 import '../presentation/onboarding/10_setup_complete_screen.dart';
+import '../presentation/onboarding/onboarding_language_screen.dart';
+import '../presentation/onboarding/first_person_screen.dart';
 import '../citizen_vault/vault/user_agreement_screen.dart';
 import '../citizen_vault/settings/language_settings_screen.dart';
 import '../presentation/legal/ownkeep_legal.dart';
@@ -28,7 +31,8 @@ import '../presentation/dashboard/18_global_search_screen.dart';
 import '../presentation/dashboard/19_filter_and_sort_screen.dart';
 import '../presentation/dashboard/20_navigation_menu.dart';
 
-import '../theme/app_theme.dart';
+import '../theme/ownkeep_main_colors.dart';
+import '../l10n/app_localizations.dart';
 import '../providers/vault_provider.dart';
 import '../providers/subscription_provider.dart';
 import '../domain/subscription/feature_entitlements.dart';
@@ -208,7 +212,6 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     '/features/recovery-verification',
     '/features/encryption-details',
     '/features/device-migration',
-    '/features/restore-vault',
     '/features/security-audit',
   };
   return GoRouter(
@@ -218,6 +221,19 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               state.uri.path.startsWith('/collections/')) &&
           ref.read(vaultSessionProvider).value == null) {
         return '/lock';
+      }
+      if (state.uri.path.startsWith('/dashboard/')) {
+        final controller = ref.read(ingestionControllerProvider);
+        final hasPrimaryPerson =
+            controller?.entities.any(
+              (entity) =>
+                  entity.type.storageValue == 'PERSON' &&
+                  entity.status.storageValue == 'ACTIVE',
+            ) ??
+            false;
+        if (controller != null && !hasPrimaryPerson) {
+          return '/first-person';
+        }
       }
       if ((proFeaturePaths.contains(state.uri.path) ||
               state.uri.path == '/collections/custom/new') &&
@@ -238,6 +254,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/welcome',
         builder: (context, state) => const WelcomeScreen(),
+      ),
+      GoRoute(
+        path: '/choose-language',
+        builder: (context, state) => const OnboardingLanguageScreen(),
       ),
       GoRoute(
         path: '/features',
@@ -310,6 +330,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         redirect: (context, state) =>
             ref.read(vaultSessionProvider).value == null ? '/splash' : null,
         builder: (context, state) => const SetupCompleteScreen(),
+      ),
+      GoRoute(
+        path: '/first-person',
+        redirect: (context, state) =>
+            ref.read(vaultSessionProvider).value == null ? '/splash' : null,
+        builder: (context, state) => const FirstPersonScreen(),
       ),
       GoRoute(
         path: '/components',
@@ -472,6 +498,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/features/multi-select',
         builder: (context, state) => MultiSelectScreen(
           collectionName: state.uri.queryParameters['collection'],
+          initialKind: state.uri.queryParameters['kind'],
         ),
       ),
       GoRoute(
@@ -631,8 +658,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             ref.read(ingestionControllerProvider) == null ? '/lock' : null,
         builder: (context, state) => LanguageSettingsScreen(
           controller: ref.read(ingestionControllerProvider)!,
-          onLanguageChanged: (language) =>
-              ref.read(appLanguageProvider.notifier).state = language.code,
+          onLanguageChanged: (language) async {
+            ref.read(appLanguageProvider.notifier).state = language.code;
+            await (await SharedPreferences.getInstance()).setString(
+              'ownkeep_ui_language',
+              language.code,
+            );
+          },
         ),
       ),
       GoRoute(
@@ -749,6 +781,8 @@ class _DashboardScaffoldState extends State<DashboardScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.mainColors;
+    final l10n = AppLocalizations.of(context)!;
     _currentIndex = switch (GoRouterState.of(context).uri.path) {
       '/dashboard/collections' => 1,
       '/dashboard/recent' => 2,
@@ -765,10 +799,12 @@ class _DashboardScaffoldState extends State<DashboardScaffold> {
         margin: const EdgeInsets.only(top: 32),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          gradient: OwnKeepColors.primaryGradient,
+          gradient: LinearGradient(
+            colors: [colors.primaryBlue, colors.aiPurple],
+          ),
           boxShadow: [
             BoxShadow(
-              color: OwnKeepColors.primaryPurple.withValues(alpha: 0.5),
+              color: colors.aiPurple.withValues(alpha: 0.35),
               blurRadius: 16,
               offset: const Offset(0, 4),
             ),
@@ -789,9 +825,9 @@ class _DashboardScaffoldState extends State<DashboardScaffold> {
           height: 80,
           margin: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
           decoration: BoxDecoration(
-            color: OwnKeepColors.surfaceDark.withValues(alpha: 0.9),
+            color: colors.navigationBackground.withValues(alpha: 0.96),
             borderRadius: BorderRadius.circular(32),
-            border: Border.all(color: OwnKeepColors.surfaceHighlight),
+            border: Border.all(color: colors.borderSoft),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -800,14 +836,14 @@ class _DashboardScaffoldState extends State<DashboardScaffold> {
                 0,
                 Icons.home_outlined,
                 Icons.home,
-                'Home',
+                l10n.navHome,
                 () => innerContext.go('/dashboard/home'),
               ),
               _buildNavItem(
                 1,
                 Icons.folder_outlined,
                 Icons.folder,
-                'Collections',
+                l10n.navCollections,
                 () => innerContext.go('/dashboard/collections'),
               ),
               const SizedBox(width: 48), // Space for FAB
@@ -815,14 +851,14 @@ class _DashboardScaffoldState extends State<DashboardScaffold> {
                 2,
                 Icons.history,
                 Icons.history,
-                'Activity',
+                l10n.nav_activity,
                 () => innerContext.go('/dashboard/recent'),
               ),
               _buildNavItem(
                 3,
                 Icons.person_outline,
                 Icons.person,
-                'Profile',
+                l10n.nav_profile,
                 () {
                   innerContext.push('/features/profile');
                 },
@@ -842,6 +878,7 @@ class _DashboardScaffoldState extends State<DashboardScaffold> {
     VoidCallback onTap,
   ) {
     bool isSelected = _currentIndex == index;
+    final colors = context.mainColors;
     return GestureDetector(
       onTap: () {
         onTap();
@@ -852,18 +889,14 @@ class _DashboardScaffoldState extends State<DashboardScaffold> {
         children: [
           Icon(
             isSelected ? selectedIcon : unselectedIcon,
-            color: isSelected
-                ? OwnKeepColors.primaryBlue
-                : OwnKeepColors.textSecondary,
+            color: isSelected ? colors.primaryBlue : colors.textSecondary,
             size: 24,
           ),
           const SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(
-              color: isSelected
-                  ? OwnKeepColors.primaryBlue
-                  : OwnKeepColors.textSecondary,
+              color: isSelected ? colors.primaryBlue : colors.textSecondary,
               fontSize: 10,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
             ),

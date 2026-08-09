@@ -78,9 +78,41 @@ class OwnKeepRadius {
 }
 
 class AppTheme {
-  static ThemeData get darkTheme {
+  static ThemeData get darkTheme => darkThemeFor('blue');
+  static ThemeData get lightTheme => lightThemeFor('blue');
+
+  static ({Color primary, Color secondary}) _palette(String name) =>
+      switch (name) {
+        'cyan' => (
+          primary: const Color(0xFF0891B2),
+          secondary: const Color(0xFF06B6D4),
+        ),
+        'green' => (
+          primary: const Color(0xFF059669),
+          secondary: const Color(0xFF10B981),
+        ),
+        'orange' => (
+          primary: const Color(0xFFD97706),
+          secondary: const Color(0xFFF59E0B),
+        ),
+        _ => (
+          primary: const Color(0xFF4F46E5),
+          secondary: const Color(0xFF7C3AED),
+        ),
+      };
+
+  static ThemeData darkThemeFor(String themeName) {
     final base = ThemeData.dark();
-    final colors = AppColors.defaultDark;
+    final palette = _palette(themeName);
+    final colors = AppColors.defaultDark.copyWith(
+      brandPurple: palette.primary,
+      brandPurpleDark: palette.primary,
+      brandPurpleLight: palette.secondary,
+    );
+    final mainColors = OwnKeepMainColorsTheme.defaultDark.copyWith(
+      primaryBlue: palette.primary,
+      aiPurple: palette.secondary,
+    );
 
     return base.copyWith(
       scaffoldBackgroundColor: colors.bgPrimary,
@@ -138,12 +170,44 @@ class AppTheme {
         bodySmall: TextStyle(color: colors.textSecondary, fontSize: 12),
       ),
       iconTheme: IconThemeData(color: colors.textPrimary),
-      extensions: [colors, OwnKeepMainColorsTheme.defaultDark],
+      extensions: [colors, mainColors],
     );
   }
 
-  // Optional light theme placeholder
-  static ThemeData get lightTheme => ThemeData.light().copyWith(
-    extensions: [OwnKeepMainColorsTheme.defaultLight],
-  );
+  static ThemeData lightThemeFor(String themeName) {
+    final base = ThemeData.light();
+    final palette = _palette(themeName);
+    final colors = AppColors.defaultLight.copyWith(
+      brandPurple: palette.primary,
+      brandPurpleDark: palette.primary,
+      brandPurpleLight: palette.secondary,
+    );
+    final mainColors = OwnKeepMainColorsTheme.defaultLight.copyWith(
+      primaryBlue: palette.primary,
+      aiPurple: palette.secondary,
+    );
+    final scheme = ColorScheme.fromSeed(
+      seedColor: palette.primary,
+      brightness: Brightness.light,
+      surface: colors.surface,
+    );
+    return base.copyWith(
+      scaffoldBackgroundColor: colors.bgPrimary,
+      primaryColor: palette.primary,
+      colorScheme: scheme,
+      cardColor: colors.surface,
+      canvasColor: colors.bgPrimary,
+      dividerColor: colors.borderSubtle,
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: colors.textPrimary,
+      ),
+      textTheme: GoogleFonts.interTextTheme(
+        base.textTheme,
+      ).apply(bodyColor: colors.textPrimary, displayColor: colors.textPrimary),
+      iconTheme: IconThemeData(color: colors.textPrimary),
+      extensions: [colors, mainColors],
+    );
+  }
 }

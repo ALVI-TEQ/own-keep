@@ -160,7 +160,7 @@ class OnboardingGuideScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () => context.go('/dashboard'),
+                      onPressed: () => context.go('/dashboard/home'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: colors.primaryBlue,
                         foregroundColor: Colors.white,

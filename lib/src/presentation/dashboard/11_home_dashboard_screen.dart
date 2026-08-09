@@ -52,6 +52,7 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
     final controller = ref.watch(ingestionControllerProvider);
     final allDocuments = ref.watch(allDocumentsProvider).value ?? const [];
     final storage = ref.watch(vaultStorageSummaryProvider).value;
+    final personName = ref.watch(primaryPersonProvider).value?.displayName;
 
     if (vault == null || controller == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -113,7 +114,7 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          l10n.s11_greeting,
+                          _greeting(l10n, personName),
                           style: TextStyle(
                             color: colors.textPrimary,
                             fontSize: 24,
@@ -244,7 +245,7 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
                           const Center(child: CircularProgressIndicator()),
                       error: (error, stack) => Center(
                         child: Text(
-                          'Error loading documents',
+                          l10n.s11_documents_load_error,
                           style: TextStyle(color: colors.textSecondary),
                         ),
                       ),
@@ -252,7 +253,7 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
                         if (docs.isEmpty) {
                           return Center(
                             child: Text(
-                              'No recent files',
+                              l10n.s11_no_recent_files,
                               style: TextStyle(color: colors.textSecondary),
                             ),
                           );
@@ -265,8 +266,10 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
                               child: _buildRecentCard(
                                 doc.logicalFilename.isNotEmpty
                                     ? doc.logicalFilename
-                                    : 'Untitled',
-                                doc.documentType.displayName,
+                                    : l10n.common_untitled,
+                                doc.documentType.displayName.isEmpty
+                                    ? l10n.common_unknown
+                                    : doc.documentType.displayName,
                                 dashboardDocumentIcon(doc),
                                 colors.primaryBlue,
                                 () => context.push(
@@ -303,28 +306,28 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
                 children: [
                   _buildCollectionCard(
                     l10n.collection_personal,
-                    '$identityCount items',
+                    l10n.common_item_count(identityCount),
                     OwnKeepMainIcons.profile,
                     colors.primaryBlue,
                     () => context.push('/collections/identity'),
                   ),
                   _buildCollectionCard(
                     l10n.collection_finance,
-                    '$financeCount items',
+                    l10n.common_item_count(financeCount),
                     OwnKeepMainIcons.finance,
                     colors.successGreen,
                     () => context.push('/collections/finance'),
                   ),
                   _buildCollectionCard(
                     l10n.collection_health,
-                    '$healthCount items',
+                    l10n.common_item_count(healthCount),
                     OwnKeepMainIcons.health,
                     colors.dangerRed,
                     () => context.push('/collections/health'),
                   ),
                   _buildCollectionCard(
                     l10n.collection_property,
-                    '$propertyCount items',
+                    l10n.common_item_count(propertyCount),
                     OwnKeepMainIcons.property,
                     colors.warningOrange,
                     () => context.push('/collections/property'),
@@ -373,7 +376,7 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
                       Expanded(
                         child: Text(
                           activeReminders.isEmpty
-                              ? 'No upcoming reminders'
+                              ? l10n.s11_no_upcoming_reminders
                               : activeReminders.first.title,
                           style: TextStyle(
                             color: colors.textPrimary,
@@ -464,6 +467,15 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
         ),
       ),
     );
+  }
+
+  String _greeting(AppLocalizations l10n, String? personName) {
+    final name = personName?.trim();
+    if (name == null || name.isEmpty) return l10n.greeting_welcome;
+    final hour = DateTime.now().hour;
+    if (hour < 12) return l10n.greeting_morning(name);
+    if (hour < 17) return l10n.greeting_afternoon(name);
+    return l10n.greeting_evening(name);
   }
 
   Widget _buildActionTile(

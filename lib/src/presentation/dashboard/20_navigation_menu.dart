@@ -15,6 +15,7 @@ class NavigationMenuDrawer extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final colors = context.mainColors;
     final location = GoRouterState.of(context).uri.path;
+    final personName = ref.watch(primaryPersonProvider).value?.displayName;
 
     return Drawer(
       backgroundColor: colors.navigationBackground,
@@ -51,7 +52,7 @@ class NavigationMenuDrawer extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          l10n.s20_profile_name,
+                          personName ?? l10n.profile_vault,
                           style: TextStyle(
                             color: colors.textPrimary,
                             fontSize: 16,

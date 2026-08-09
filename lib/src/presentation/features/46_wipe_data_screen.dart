@@ -193,7 +193,7 @@ class _WipeDataScreenState extends ConsumerState<WipeDataScreen> {
                             .read(vaultSessionProvider.notifier)
                             .destroyVault();
                         if (context.mounted) {
-                          context.go('/welcome');
+                          context.go('/splash');
                         }
                       }
                     : null,

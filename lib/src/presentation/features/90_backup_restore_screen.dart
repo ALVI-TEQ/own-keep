@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../components/ownkeep_components.dart';
 import '../components/ownkeep_ui_kit.dart';
 import '../../theme/ownkeep_colors.dart';
@@ -8,7 +9,9 @@ import '../../theme/ownkeep_radius.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/vault_provider.dart';
 import '../../citizen_vault/backup/backup_archive_transfer.dart';
+import '../../citizen_vault/vault/vault_lifecycle.dart';
 import '../components/recovery_credential_dialog.dart';
+import '../components/new_pin_dialog.dart';
 import 'package:vault_domain/vault_domain.dart';
 
 class BackupRestoreScreen extends ConsumerStatefulWidget {
@@ -42,8 +45,9 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
     if (passphrase == null || !mounted) return;
     setState(() => _isBackingUp = true);
 
+    PendingVaultBackup? pending;
     try {
-      final pending = await handle.createBackup(recoveryPassphrase: passphrase);
+      pending = await handle.createBackup(recoveryPassphrase: passphrase);
 
       final transfer = const PlatformBackupArchiveTransfer();
       final saved = await transfer.exportArchive(pending.archive);
@@ -82,6 +86,8 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
           context,
         ).showSnackBar(SnackBar(content: Text('Backup failed: $e')));
       }
+    } finally {
+      pending?.dispose();
     }
   }
 
@@ -124,17 +130,22 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
       if (replace != true || !mounted) return;
       final passphrase = await _requestRecoveryPhrase(confirm: false);
       if (passphrase == null || !mounted) return;
+      final newPin = await showNewPinDialog(
+        context,
+        title: 'Set PIN for restored vault',
+      );
+      if (newPin == null || !mounted) return;
       setState(() => _isRestoring = true);
       await ref
           .read(vaultSessionProvider.notifier)
           .restoreVault(selected.file, passphrase);
+      await ref
+          .read(pinCredentialStoreProvider)
+          .enroll(pin: newPin, recoveryCredential: passphrase);
 
       if (mounted) {
         setState(() => _isRestoring = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Data restored successfully!')),
-        );
-        Navigator.of(context).popUntil((route) => route.isFirst);
+        context.go('/dashboard/home');
       }
     } catch (e) {
       if (mounted) {

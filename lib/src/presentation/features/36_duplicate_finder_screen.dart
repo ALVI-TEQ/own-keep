@@ -21,6 +21,21 @@ class DuplicateFinderScreen extends ConsumerWidget {
     final duplicateGroups = duplicateDocumentGroups(
       allDocsAsync.value ?? const <DocumentListItemView>[],
     );
+    final duplicateCopies = duplicateGroups
+        .expand((group) => group.skip(1))
+        .toList(growable: false);
+    final duplicatePhotos = duplicateCopies
+        .where((document) => document.mimeType.startsWith('image/'))
+        .length;
+    final duplicateVideos = duplicateCopies
+        .where((document) => document.mimeType.startsWith('video/'))
+        .length;
+    final duplicateFiles =
+        duplicateCopies.length - duplicatePhotos - duplicateVideos;
+    final reclaimableBytes = duplicateCopies.fold<int>(
+      0,
+      (total, document) => total + document.byteSize,
+    );
 
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -98,21 +113,21 @@ class DuplicateFinderScreen extends ConsumerWidget {
                     children: [
                       _buildStatColumn(
                         colors,
-                        l10n.s36_photos_count,
+                        '$duplicatePhotos',
                         l10n.s36_photos,
                         OwnKeepMainIcons.image,
                         colors.primaryBlue,
                       ),
                       _buildStatColumn(
                         colors,
-                        l10n.s36_documents_count,
+                        '$duplicateFiles',
                         l10n.s36_documents,
                         OwnKeepMainIcons.file_pdf,
                         const Color(0xFF27C5E8),
                       ),
                       _buildStatColumn(
                         colors,
-                        l10n.s36_videos_count,
+                        '$duplicateVideos',
                         l10n.s36_videos,
                         OwnKeepMainIcons.video,
                         colors.aiPurple,
@@ -150,7 +165,7 @@ class DuplicateFinderScreen extends ConsumerWidget {
                           ),
                         ),
                         Text(
-                          l10n.s36_free_up_value,
+                          _formatBytes(reclaimableBytes),
                           style: TextStyle(
                             color: colors.warningOrange,
                             fontSize: 16,
@@ -215,7 +230,7 @@ class DuplicateFinderScreen extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(vertical: 32),
                 child: Center(
                   child: Text(
-                    'No duplicate documents found.',
+                    'No duplicate files found in this vault.',
                     style: TextStyle(color: colors.textSecondary),
                   ),
                 ),
@@ -370,16 +385,18 @@ class DuplicateFinderScreen extends ConsumerWidget {
 }
 
 int duplicateDocumentCount(List<DocumentListItemView> documents) {
-  final counts = <String, int>{};
-  for (final document in documents) {
-    final key =
-        '${document.logicalFilename.trim().toLowerCase()}|${document.mimeType.toLowerCase()}';
-    counts[key] = (counts[key] ?? 0) + 1;
+  return duplicateDocumentGroups(
+    documents,
+  ).fold(0, (total, group) => total + group.length - 1);
+}
+
+String _formatBytes(int bytes) {
+  if (bytes < 1024) return '$bytes B';
+  if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+  if (bytes < 1024 * 1024 * 1024) {
+    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
   }
-  return counts.values.fold(
-    0,
-    (total, count) => total + (count > 1 ? count - 1 : 0),
-  );
+  return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
 }
 
 List<List<DocumentListItemView>> duplicateDocumentGroups(

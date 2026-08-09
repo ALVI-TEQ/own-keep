@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/vault_provider.dart';
 import '../../citizen_vault/backup/backup_archive_transfer.dart';
 import '../components/recovery_credential_dialog.dart';
+import '../components/new_pin_dialog.dart';
 
 class RestoreVaultScreen extends ConsumerStatefulWidget {
   const RestoreVaultScreen({super.key});
@@ -54,18 +55,24 @@ class _RestoreVaultScreenState extends ConsumerState<RestoreVaultScreen> {
     }
     final passphrase = await _requestRecoveryPhrase();
     if (passphrase == null || !mounted) return;
+    final newPin = await showNewPinDialog(
+      context,
+      title: 'Set PIN for restored vault',
+    );
+    if (newPin == null || !mounted) return;
     setState(() => _isRestoring = true);
 
     try {
       await ref
           .read(vaultSessionProvider.notifier)
           .restoreVault(_selectedArchive!.file, passphrase);
+      await ref
+          .read(pinCredentialStoreProvider)
+          .enroll(pin: newPin, recoveryCredential: passphrase);
 
       if (mounted) {
         setState(() => _isRestoring = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Vault restored successfully!')),
-        );
+        context.go('/dashboard/home');
       }
     } catch (e) {
       if (mounted) {

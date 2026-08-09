@@ -10,6 +10,7 @@ import '../../theme/ownkeep_spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/vault_provider.dart';
+import '../components/recovery_credential_dialog.dart';
 
 class SettingsAdvancedScreen extends ConsumerStatefulWidget {
   const SettingsAdvancedScreen({super.key});
@@ -45,7 +46,30 @@ class _SettingsAdvancedScreenState
       await ref.read(vaultLifecycleProvider).disableBiometrics();
       if (mounted) setState(() => _biometricEnabled = false);
     } else if (mounted) {
-      context.push('/features/recovery-center');
+      final credential = await showRecoveryCredentialDialog(
+        context,
+        title: 'Enable biometric unlock',
+      );
+      if (credential == null || !mounted) return;
+      try {
+        await ref
+            .read(vaultSessionProvider.notifier)
+            .enableBiometrics(credential);
+        if (!mounted) return;
+        setState(() => _biometricEnabled = true);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Biometric unlock enabled.')),
+        );
+      } catch (_) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Could not enable biometrics. Check the recovery credential and device biometric setup.',
+            ),
+          ),
+        );
+      }
     }
   }
 
@@ -137,11 +161,12 @@ class _SettingsAdvancedScreenState
                     isToggleOn: ref.watch(appDarkModeProvider),
                     onTap: () async {
                       final value = !ref.read(appDarkModeProvider);
+                      ref.read(appUseSystemThemeProvider.notifier).state =
+                          false;
                       ref.read(appDarkModeProvider.notifier).state = value;
-                      await (await SharedPreferences.getInstance()).setBool(
-                        'app_dark_mode',
-                        value,
-                      );
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setBool('appearance_use_system', false);
+                      await prefs.setBool('app_dark_mode', value);
                     },
                   ),
                 ],
@@ -193,9 +218,7 @@ class _SettingsAdvancedScreenState
                       OwnKeepMainIcons.pin_protection,
                       l10n.s40_pin,
                       value: l10n.s40_on,
-                      onTap: () {
-                        context.push('/lock');
-                      },
+                      onTap: () => context.push('/features/app-lock'),
                     ),
                     _buildDivider(colors),
                     _buildSettingItem(

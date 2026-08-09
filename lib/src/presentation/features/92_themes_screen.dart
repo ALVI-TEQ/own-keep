@@ -33,7 +33,7 @@ class _ThemesScreenState extends ConsumerState<ThemesScreen> {
         _selectedThemeIndex = _themeKeys
             .indexOf(key)
             .clamp(0, _themeKeys.length - 1);
-        _useSystem = prefs.getBool('appearance_use_system') ?? false;
+        _useSystem = ref.read(appUseSystemThemeProvider);
         _reduceMotion = prefs.getBool('appearance_reduce_motion') ?? false;
         _increaseContrast =
             prefs.getBool('appearance_increase_contrast') ?? false;
@@ -239,15 +239,8 @@ class _ThemesScreenState extends ConsumerState<ThemesScreen> {
                 _useSystem,
                 (v) {
                   setState(() => _useSystem = v);
-                  final dark = v
-                      ? MediaQuery.platformBrightnessOf(context) ==
-                            Brightness.dark
-                      : ref.read(appDarkModeProvider);
-                  ref.read(appDarkModeProvider.notifier).state = dark;
+                  ref.read(appUseSystemThemeProvider.notifier).state = v;
                   _setAppearance('appearance_use_system', v);
-                  SharedPreferences.getInstance().then(
-                    (prefs) => prefs.setBool('app_dark_mode', dark),
-                  );
                 },
                 colors,
               ),

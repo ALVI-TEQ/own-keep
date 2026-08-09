@@ -110,10 +110,7 @@ class DataUsageScreen extends ConsumerWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              l10n.s42_used.replaceAll(
-                                '850 MB',
-                                _formatBytes(used),
-                              ),
+                              l10n.s42_used(_formatBytes(used)),
                               style: TextStyle(
                                 color: colors.textPrimary,
                                 fontSize: 14,

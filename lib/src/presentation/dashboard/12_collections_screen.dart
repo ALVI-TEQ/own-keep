@@ -178,7 +178,7 @@ class CollectionsScreen extends ConsumerWidget {
                           ),
                           const SizedBox(width: 12),
                           Text(
-                            '6 ${l10n.s12_collection_total.replaceAll('7 ', '')} • ${docs.length} ${l10n.s12_item_total.replaceAll('63 ', '')}',
+                            '${l10n.s12_collection_count(7)} • ${l10n.common_item_count(docs.length)}',
                             style: TextStyle(
                               color: colors.textSecondary,
                               fontSize: 14,
@@ -199,7 +199,7 @@ class CollectionsScreen extends ConsumerWidget {
                           _buildCollectionCard(
                             context,
                             l10n.collection_personal,
-                            '$personalCount items',
+                            l10n.common_item_count(personalCount),
                             OwnKeepMainIcons.profile,
                             colors.primaryBlue,
                             () => context.push('/collections/identity'),
@@ -207,7 +207,7 @@ class CollectionsScreen extends ConsumerWidget {
                           _buildCollectionCard(
                             context,
                             l10n.collection_finance,
-                            '$financeCount items',
+                            l10n.common_item_count(financeCount),
                             OwnKeepMainIcons.finance,
                             colors.successGreen,
                             () => context.push('/collections/finance'),
@@ -215,7 +215,7 @@ class CollectionsScreen extends ConsumerWidget {
                           _buildCollectionCard(
                             context,
                             l10n.collection_health,
-                            '$healthCount items',
+                            l10n.common_item_count(healthCount),
                             OwnKeepMainIcons.health,
                             colors.dangerRed,
                             () => context.push('/collections/health'),
@@ -223,7 +223,7 @@ class CollectionsScreen extends ConsumerWidget {
                           _buildCollectionCard(
                             context,
                             l10n.collection_property,
-                            '$propertyCount items',
+                            l10n.common_item_count(propertyCount),
                             OwnKeepMainIcons.property,
                             colors.warningOrange,
                             () => context.push('/collections/property'),
@@ -231,7 +231,7 @@ class CollectionsScreen extends ConsumerWidget {
                           _buildCollectionCard(
                             context,
                             l10n.collection_vehicle,
-                            '$vehicleCount items',
+                            l10n.common_item_count(vehicleCount),
                             OwnKeepMainIcons.vehicle,
                             colors.accentCyan,
                             () => context.push('/collections/vehicle'),
@@ -239,7 +239,7 @@ class CollectionsScreen extends ConsumerWidget {
                           _buildCollectionCard(
                             context,
                             l10n.collection_education,
-                            '$educationCount items',
+                            l10n.common_item_count(educationCount),
                             OwnKeepMainIcons.education,
                             colors.aiPurple,
                             () => context.push('/collections/education'),
@@ -247,7 +247,7 @@ class CollectionsScreen extends ConsumerWidget {
                           _buildCollectionCard(
                             context,
                             l10n.collection_others,
-                            '${otherCount > 0 ? otherCount : 0} items',
+                            l10n.common_item_count(otherCount),
                             OwnKeepMainIcons.collections,
                             colors.favoriteYellow,
                             () {
@@ -277,7 +277,7 @@ class CollectionsScreen extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      'Custom collections',
+                      l10n.s12_custom_collections,
                       style: TextStyle(
                         color: colors.textPrimary,
                         fontSize: 18,
@@ -288,20 +288,20 @@ class CollectionsScreen extends ConsumerWidget {
                   TextButton.icon(
                     onPressed: () => context.push('/collections/custom/new'),
                     icon: const Icon(Icons.add),
-                    label: const Text('Create'),
+                    label: Text(l10n.s12_create),
                   ),
                 ],
               ),
               customCollectionsAsync.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (error, _) => Text(
-                  'Could not load custom collections.',
+                  l10n.s12_custom_collections_error,
                   style: TextStyle(color: colors.textSecondary),
                 ),
                 data: (collections) {
                   if (collections.isEmpty) {
                     return Text(
-                      'No custom collections yet.',
+                      l10n.s12_no_custom_collections,
                       style: TextStyle(color: colors.textSecondary),
                     );
                   }
@@ -326,7 +326,7 @@ class CollectionsScreen extends ConsumerWidget {
                       return _buildCollectionCard(
                         context,
                         collection.name,
-                        '$count items',
+                        l10n.common_item_count(count),
                         collection.iconKey,
                         Color(collection.colorValue),
                         () => context.push(

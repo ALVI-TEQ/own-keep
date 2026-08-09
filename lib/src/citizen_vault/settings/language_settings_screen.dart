@@ -25,6 +25,13 @@ final class LanguageSettingsScreen extends StatefulWidget {
 }
 
 final class _LanguageSettingsScreenState extends State<LanguageSettingsScreen> {
+  static const _supportedUiLanguages = <SupportedLanguage>[
+    SupportedLanguage.english,
+    SupportedLanguage.hindi,
+    SupportedLanguage.telugu,
+    SupportedLanguage.tamil,
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -131,11 +138,7 @@ final class _LanguageSettingsScreenState extends State<LanguageSettingsScreen> {
                 color: Colors.transparent,
                 child: Column(
                   children: [
-                    for (
-                      var i = 0;
-                      i < SupportedLanguage.values.length;
-                      i++
-                    ) ...[
+                    for (var i = 0; i < _supportedUiLanguages.length; i++) ...[
                       if (i > 0)
                         Divider(
                           height: 1,
@@ -147,13 +150,13 @@ final class _LanguageSettingsScreenState extends State<LanguageSettingsScreen> {
                           vertical: 4,
                         ),
                         title: Text(
-                          SupportedLanguage.values[i].displayName,
+                          _supportedUiLanguages[i].displayName,
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
-                        trailing: pref.uiLanguage == SupportedLanguage.values[i]
+                        trailing: pref.uiLanguage == _supportedUiLanguages[i]
                             ? const Icon(
                                 Icons.check_circle,
                                 color: Color(0xFF3B82F6),
@@ -163,7 +166,7 @@ final class _LanguageSettingsScreenState extends State<LanguageSettingsScreen> {
                                 color: Color(0xFFCBD5E1),
                               ),
                         onTap: () {
-                          final language = SupportedLanguage.values[i];
+                          final language = _supportedUiLanguages[i];
                           widget.controller.setUiLanguage(language);
                           widget.onLanguageChanged?.call(language);
                         },

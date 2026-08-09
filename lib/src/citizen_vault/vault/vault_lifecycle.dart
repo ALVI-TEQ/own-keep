@@ -78,6 +78,9 @@ abstract interface class VaultLifecycle {
   /// Authenticates [recoveryPassphrase] and opens the existing vault.
   Future<UnlockedVaultHandle> unlock({required String recoveryPassphrase});
 
+  /// Authenticates a recovery credential without opening another vault session.
+  Future<void> verifyRecoveryCredential(String recoveryPassphrase);
+
   /// Whether a valid device envelope is configured.
   Future<bool> biometricEnabled();
 
@@ -249,6 +252,24 @@ final class LocalVaultLifecycle implements VaultLifecycle {
   Future<bool> biometricEnabled() async {
     if (!await exists()) return false;
     return (await _readMetadata()).deviceEnvelope != null;
+  }
+
+  @override
+  Future<void> verifyRecoveryCredential(String recoveryPassphrase) async {
+    try {
+      final metadata = await _readMetadata();
+      final masterKey = await VaultCryptography(random: _random)
+          .recoverMasterKey(
+            recoveryPassphrase: recoveryPassphrase,
+            envelope: RecoveryEnvelopeCodec.decode(metadata.recoveryEnvelope),
+          );
+      masterKey.destroy();
+    } on RecoveryEnvelopeAuthenticationFailure catch (error) {
+      throw VaultLifecycleFailure(
+        'incorrect_recovery_credential',
+        cause: error,
+      );
+    }
   }
 
   @override

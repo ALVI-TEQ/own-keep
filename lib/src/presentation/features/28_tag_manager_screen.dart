@@ -21,35 +21,11 @@ class _TagManagerScreenState extends ConsumerState<TagManagerScreen> {
   String _query = '';
 
   Future<void> _createTag() async {
-    final input = TextEditingController();
     final name = await showDialog<String>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Create tag'),
-        content: TextField(
-          controller: input,
-          autofocus: true,
-          maxLength: 40,
-          textInputAction: TextInputAction.done,
-          decoration: const InputDecoration(
-            labelText: 'Tag name',
-            hintText: 'Example: Tax documents',
-          ),
-          onSubmitted: (value) => Navigator.of(dialogContext).pop(value.trim()),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(dialogContext).pop(input.text.trim()),
-            child: const Text('Create'),
-          ),
-        ],
-      ),
+      builder: (dialogContext) =>
+          const _TagNameDialog(title: 'Create tag', confirmLabel: 'Create'),
     );
-    input.dispose();
     if (name == null || name.isEmpty || !mounted) return;
     try {
       await ref.read(ingestionControllerProvider)?.createTag(name);
@@ -69,25 +45,14 @@ class _TagManagerScreenState extends ConsumerState<TagManagerScreen> {
   }
 
   Future<void> _renameTag(DocumentTagView tag) async {
-    final input = TextEditingController(text: tag.name);
     final name = await showDialog<String>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Rename tag'),
-        content: TextField(controller: input, autofocus: true),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, input.text.trim()),
-            child: const Text('Save'),
-          ),
-        ],
+      builder: (context) => _TagNameDialog(
+        title: 'Rename tag',
+        confirmLabel: 'Save',
+        initialValue: tag.name,
       ),
     );
-    input.dispose();
     if (name == null || name.isEmpty || name == tag.name) return;
     await ref.read(ingestionControllerProvider)?.renameTag(tag.id, name);
     ref.invalidate(customTagsProvider);
@@ -303,7 +268,7 @@ class _TagManagerScreenState extends ConsumerState<TagManagerScreen> {
             // Custom Tags Section
             _buildSectionHeader(
               l10n.s28_custom_tags,
-              l10n.s28_custom_count,
+              '${customTagsAsync.value?.length ?? 0}',
               colors,
             ),
             const SizedBox(height: OwnKeepSpacing.md),
@@ -438,18 +403,21 @@ class _TagManagerScreenState extends ConsumerState<TagManagerScreen> {
               ),
             ),
             const SizedBox(width: 12),
-            IconButton(
-              onPressed: onMenu,
-              icon: SvgPicture.asset(
-                OwnKeepMainIcons.more_vertical,
-                colorFilter: ColorFilter.mode(
-                  colors.textSecondary,
-                  BlendMode.srcIn,
+            if (onMenu != null) ...[
+              const SizedBox(width: 12),
+              IconButton(
+                onPressed: onMenu,
+                icon: SvgPicture.asset(
+                  OwnKeepMainIcons.more_vertical,
+                  colorFilter: ColorFilter.mode(
+                    colors.textSecondary,
+                    BlendMode.srcIn,
+                  ),
+                  width: 24,
+                  height: 24,
                 ),
-                width: 24,
-                height: 24,
               ),
-            ),
+            ],
           ],
         ),
       ),
@@ -468,7 +436,9 @@ class _TagManagerScreenState extends ConsumerState<TagManagerScreen> {
               title: const Text('Rename'),
               onTap: () {
                 Navigator.pop(context);
-                _renameTag(tag);
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) _renameTag(tag);
+                });
               },
             ),
             ListTile(
@@ -476,7 +446,9 @@ class _TagManagerScreenState extends ConsumerState<TagManagerScreen> {
               title: const Text('Delete'),
               onTap: () {
                 Navigator.pop(context);
-                _deleteTag(tag);
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) _deleteTag(tag);
+                });
               },
             ),
           ],
@@ -484,4 +456,63 @@ class _TagManagerScreenState extends ConsumerState<TagManagerScreen> {
       ),
     );
   }
+}
+
+class _TagNameDialog extends StatefulWidget {
+  const _TagNameDialog({
+    required this.title,
+    required this.confirmLabel,
+    this.initialValue = '',
+  });
+
+  final String title;
+  final String confirmLabel;
+  final String initialValue;
+
+  @override
+  State<_TagNameDialog> createState() => _TagNameDialogState();
+}
+
+class _TagNameDialogState extends State<_TagNameDialog> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialValue);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final value = _controller.text.trim();
+    if (value.isNotEmpty) Navigator.of(context).pop(value);
+  }
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+    title: Text(widget.title),
+    content: TextField(
+      controller: _controller,
+      autofocus: true,
+      maxLength: 40,
+      textInputAction: TextInputAction.done,
+      decoration: const InputDecoration(
+        labelText: 'Tag name',
+        hintText: 'Example: Tax documents',
+      ),
+      onSubmitted: (_) => _submit(),
+    ),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.of(context).pop(),
+        child: const Text('Cancel'),
+      ),
+      FilledButton(onPressed: _submit, child: Text(widget.confirmLabel)),
+    ],
+  );
 }

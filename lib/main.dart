@@ -28,6 +28,7 @@ void main() async {
   final lifecycle = await LocalVaultLifecycle.applicationSupport();
   final prefs = await SharedPreferences.getInstance();
   final isDark = prefs.getBool('app_dark_mode') ?? true;
+  final useSystemTheme = prefs.getBool('appearance_use_system') ?? false;
   final themeColor = prefs.getString('app_theme_color') ?? 'blue';
   final languageCode = prefs.getString('ownkeep_ui_language') ?? 'en';
   final initialPlan = prefs.getBool('ownkeep_test_pro_entitlement') == true
@@ -40,6 +41,9 @@ void main() async {
         vaultLifecycleProvider.overrideWithValue(lifecycle),
         appDarkModeProvider.overrideWith(
           () => AppDarkModeNotifier(initialValue: isDark),
+        ),
+        appUseSystemThemeProvider.overrideWith(
+          () => AppUseSystemThemeNotifier(initialValue: useSystemTheme),
         ),
         appThemeColorProvider.overrideWith(
           () => AppThemeColorNotifier(initialValue: themeColor),
@@ -133,6 +137,7 @@ class _OwnKeepAppState extends ConsumerState<OwnKeepApp>
   Widget build(BuildContext context) {
     final router = ref.watch(goRouterProvider);
     final isDarkMode = ref.watch(appDarkModeProvider);
+    final useSystemTheme = ref.watch(appUseSystemThemeProvider);
     final themeColor = ref.watch(appThemeColorProvider);
     final languageCode = ref.watch(appLanguageProvider);
 
@@ -141,9 +146,11 @@ class _OwnKeepAppState extends ConsumerState<OwnKeepApp>
     return MaterialApp.router(
       title: 'OwnKeep',
       themeAnimationDuration: Duration.zero,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      theme: AppTheme.lightThemeFor(themeColor),
+      darkTheme: AppTheme.darkThemeFor(themeColor),
+      themeMode: useSystemTheme
+          ? ThemeMode.system
+          : (isDarkMode ? ThemeMode.dark : ThemeMode.light),
       locale: Locale(languageCode),
       localizationsDelegates: const [
         AppLocalizations.delegate,

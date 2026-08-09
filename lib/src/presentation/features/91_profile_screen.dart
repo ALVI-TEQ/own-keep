@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ownkeep/src/l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/vault_provider.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../theme/ownkeep_spacing.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<OwnKeepMainColorsTheme>()!;
+    final l10n = AppLocalizations.of(context)!;
+    final personName = ref.watch(primaryPersonProvider).value?.displayName;
 
     return Scaffold(
       backgroundColor: colors.backgroundTop,
@@ -27,7 +32,7 @@ class ProfileScreen extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Profile',
+          l10n.profile_title,
           style: TextStyle(
             color: colors.textPrimary,
             fontSize: 20,
@@ -73,7 +78,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: OwnKeepSpacing.md),
                 Text(
-                  'My Vault Profile',
+                  personName ?? l10n.profile_vault,
                   style: TextStyle(
                     color: colors.textPrimary,
                     fontSize: 22,
@@ -86,7 +91,7 @@ class ProfileScreen extends StatelessWidget {
                 _buildOption(
                   context,
                   colors,
-                  'Settings & Preferences',
+                  l10n.profile_settings,
                   OwnKeepMainIcons.settings,
                   '/features/settings-advanced',
                 ),
@@ -94,15 +99,15 @@ class ProfileScreen extends StatelessWidget {
                 _buildOption(
                   context,
                   colors,
-                  'Security & App Lock',
+                  l10n.profile_security,
                   OwnKeepMainIcons.lock,
-                  '/lock',
+                  '/features/app-lock',
                 ),
                 Divider(color: colors.borderSoft, height: 1),
                 _buildOption(
                   context,
                   colors,
-                  'Help & Support',
+                  l10n.profile_help,
                   OwnKeepMainIcons.help,
                   '/features/help-support',
                 ),

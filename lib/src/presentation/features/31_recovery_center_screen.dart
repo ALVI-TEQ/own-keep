@@ -139,17 +139,6 @@ class RecoveryCenterScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: OwnKeepSpacing.md),
-                  const Divider(color: Color(0xFF1B2940)),
-                  const SizedBox(height: OwnKeepSpacing.md),
-                  Text(
-                    l10n.s31_last_verified,
-                    style: TextStyle(
-                      color: colors.textMuted,
-                      fontSize: 12,
-                      fontFamily: 'Inter',
-                    ),
-                  ),
                 ],
               ),
             ),

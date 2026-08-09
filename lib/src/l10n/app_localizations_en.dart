@@ -260,42 +260,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get s07_body => 'Write these words down in order and keep them safe.';
 
   @override
-  String get s07_word_01 => 'mango';
-
-  @override
-  String get s07_word_02 => 'desert';
-
-  @override
-  String get s07_word_03 => 'trust';
-
-  @override
-  String get s07_word_04 => 'polar';
-
-  @override
-  String get s07_word_05 => 'kitten';
-
-  @override
-  String get s07_word_06 => 'guitar';
-
-  @override
-  String get s07_word_07 => 'planet';
-
-  @override
-  String get s07_word_08 => 'purple';
-
-  @override
-  String get s07_word_09 => 'silver';
-
-  @override
-  String get s07_word_10 => 'eagle';
-
-  @override
-  String get s07_word_11 => 'bridge';
-
-  @override
-  String get s07_word_12 => 'fitness';
-
-  @override
   String get s07_warning => 'Never share your recovery phrase with anyone.';
 
   @override
@@ -453,6 +417,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String get s12_item_total => '128 items';
 
   @override
+  String get s12_custom_collections => 'Custom collections';
+
+  @override
+  String get s12_create => 'Create';
+
+  @override
+  String get s12_no_custom_collections => 'No custom collections yet.';
+
+  @override
+  String get s12_custom_collections_error =>
+      'Could not load custom collections.';
+
+  @override
+  String common_item_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+      zero: 'No items',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String s12_collection_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count collections',
+      one: '1 collection',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get common_unknown => 'Unknown';
+
+  @override
+  String get common_untitled => 'Untitled';
+
+  @override
+  String get s11_no_recent_files => 'No recent files';
+
+  @override
+  String get s11_no_upcoming_reminders => 'No upcoming reminders';
+
+  @override
+  String get s11_documents_load_error => 'Could not load documents';
+
+  @override
   String get collection_vehicle => 'Vehicle';
 
   @override
@@ -562,6 +577,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get s14_subtitle => 'Your latest vault activity';
+
+  @override
+  String get s14_load_error => 'Failed to load recent files';
+
+  @override
+  String get s14_empty => 'No recent items';
 
   @override
   String get filter_viewed => 'Viewed';
@@ -1063,7 +1084,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get s42_others_size => '25.0 GB';
 
   @override
-  String get s42_used => 'Used: 103 GB';
+  String s42_used(String size) {
+    return 'Used: $size';
+  }
 
   @override
   String get s42_free => 'Free: 25 GB';
@@ -2276,6 +2299,36 @@ class AppLocalizationsEn extends AppLocalizations {
       'Tip: All your data is stored only on your device. We never collect or transmit your information.';
 
   @override
+  String get s30_search => 'Search help...';
+
+  @override
+  String get s30_popular_topics => 'Popular Topics';
+
+  @override
+  String get s30_recover => 'Recover';
+
+  @override
+  String get s30_share => 'Share';
+
+  @override
+  String get s30_backup => 'Backup';
+
+  @override
+  String get profile_title => 'Profile';
+
+  @override
+  String get profile_vault => 'My Vault Profile';
+
+  @override
+  String get profile_settings => 'Settings & Preferences';
+
+  @override
+  String get profile_security => 'Security & App Lock';
+
+  @override
+  String get profile_help => 'Help & Support';
+
+  @override
   String get s31_title => 'Recovery Center';
 
   @override
@@ -2297,7 +2350,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get s31_view_title => 'View Recovery Phrase';
 
   @override
-  String get s31_view_body => 'View your 24-word recovery phrase';
+  String get s31_view_body => 'View your 12-word recovery phrase';
 
   @override
   String get s31_verify_title => 'Verify Recovery Phrase';
@@ -6070,4 +6123,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get s71_prompt_summarize => 'Summarize';
+
+  @override
+  String get onboarding_language_title => 'Choose your language';
+
+  @override
+  String get onboarding_language_body =>
+      'You can change this later in Settings.';
+
+  @override
+  String get person_title => 'Tell us your name';
+
+  @override
+  String get person_body =>
+      'This creates the first person in your private vault and personalizes your dashboard.';
+
+  @override
+  String get person_name_label => 'Your name';
+
+  @override
+  String get person_name_hint => 'How should OwnKeep address you?';
+
+  @override
+  String get person_name_error => 'Please enter your name.';
+
+  @override
+  String get person_save_error => 'Your encrypted profile could not be saved.';
+
+  @override
+  String get person_privacy =>
+      'Your name is encrypted inside this vault and never leaves your device.';
+
+  @override
+  String get greeting_welcome => 'Welcome to OwnKeep';
+
+  @override
+  String greeting_morning(String name) {
+    return 'Good morning, $name';
+  }
+
+  @override
+  String greeting_afternoon(String name) {
+    return 'Good afternoon, $name';
+  }
+
+  @override
+  String greeting_evening(String name) {
+    return 'Good evening, $name';
+  }
 }

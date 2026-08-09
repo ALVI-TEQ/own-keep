@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
+import '../../theme/ownkeep_main_colors.dart';
 
 class OwnKeepActionTile extends StatelessWidget {
   final IconData icon;
@@ -17,6 +18,7 @@ class OwnKeepActionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.mainColors;
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -40,7 +42,7 @@ class OwnKeepActionTile extends StatelessWidget {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: Colors.white,
+              color: colors.textPrimary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -68,6 +70,7 @@ class OwnKeepRecentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.mainColors;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -77,7 +80,7 @@ class OwnKeepRecentCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-          border: Border.all(color: OwnKeepColors.surfaceHighlight),
+          border: Border.all(color: colors.borderSoft),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +107,7 @@ class OwnKeepRecentCard extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: colors.textPrimary,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
@@ -114,10 +117,7 @@ class OwnKeepRecentCard extends StatelessWidget {
                 SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: TextStyle(
-                    color: OwnKeepColors.textSecondary,
-                    fontSize: 10,
-                  ),
+                  style: TextStyle(color: colors.textSecondary, fontSize: 10),
                 ),
               ],
             ),
@@ -146,6 +146,7 @@ class OwnKeepSmartCollectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.mainColors;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -153,7 +154,7 @@ class OwnKeepSmartCollectionCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-          border: Border.all(color: OwnKeepColors.surfaceHighlight),
+          border: Border.all(color: colors.borderSoft),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,7 +167,7 @@ class OwnKeepSmartCollectionCard extends StatelessWidget {
                 Text(
                   label,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: colors.textPrimary,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
@@ -174,10 +175,7 @@ class OwnKeepSmartCollectionCard extends StatelessWidget {
                 SizedBox(height: 4),
                 Text(
                   '$count items',
-                  style: TextStyle(
-                    color: OwnKeepColors.textSecondary,
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: colors.textSecondary, fontSize: 12),
                 ),
               ],
             ),
@@ -200,6 +198,7 @@ class OwnKeepStorageBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.mainColors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -209,14 +208,14 @@ class OwnKeepStorageBar extends StatelessWidget {
             Text(
               'Storage Overview',
               style: TextStyle(
-                color: Colors.white,
+                color: colors.textPrimary,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
             ),
             Text(
               labelText,
-              style: TextStyle(color: OwnKeepColors.primaryBlue, fontSize: 12),
+              style: TextStyle(color: colors.primaryBlue, fontSize: 12),
             ),
           ],
         ),
@@ -227,7 +226,7 @@ class OwnKeepStorageBar extends StatelessWidget {
               height: 8,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: OwnKeepColors.surfaceHighlight,
+                color: colors.surfaceSelected,
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
@@ -236,7 +235,9 @@ class OwnKeepStorageBar extends StatelessWidget {
               child: Container(
                 height: 8,
                 decoration: BoxDecoration(
-                  gradient: OwnKeepColors.primaryGradient,
+                  gradient: LinearGradient(
+                    colors: [colors.primaryBlue, colors.aiPurple],
+                  ),
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -248,7 +249,7 @@ class OwnKeepStorageBar extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: Text(
             '${(percentage * 100).toInt()}%',
-            style: TextStyle(color: OwnKeepColors.primaryBlue, fontSize: 12),
+            style: TextStyle(color: colors.primaryBlue, fontSize: 12),
           ),
         ),
       ],
@@ -263,12 +264,13 @@ class OwnKeepSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.mainColors;
     return TextField(
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: colors.textPrimary),
       decoration: InputDecoration(
         hintText: placeholder,
-        hintStyle: TextStyle(color: OwnKeepColors.textSecondary),
-        prefixIcon: Icon(Icons.search, color: OwnKeepColors.textSecondary),
+        hintStyle: TextStyle(color: colors.textSecondary),
+        prefixIcon: Icon(Icons.search, color: colors.textSecondary),
         filled: true,
         fillColor: Theme.of(context).cardColor,
         border: OutlineInputBorder(
@@ -300,6 +302,7 @@ class OwnKeepFileTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.mainColors;
     return ListTile(
       leading: Container(
         padding: EdgeInsets.all(OwnKeepSpacing.sm),
@@ -311,13 +314,13 @@ class OwnKeepFileTile extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+        style: TextStyle(
+          fontWeight: FontWeight.w500,
+          color: colors.textPrimary,
+        ),
       ),
-      subtitle: Text(
-        date,
-        style: TextStyle(color: OwnKeepColors.textSecondary),
-      ),
-      trailing: Icon(Icons.more_vert, color: OwnKeepColors.textSecondary),
+      subtitle: Text(date, style: TextStyle(color: colors.textSecondary)),
+      trailing: Icon(Icons.more_vert, color: colors.textSecondary),
       onTap: onTap,
     );
   }
@@ -339,6 +342,7 @@ class OwnKeepCollectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.mainColors;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -346,27 +350,24 @@ class OwnKeepCollectionCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(OwnKeepRadius.md),
-          border: Border.all(color: OwnKeepColors.surfaceHighlight),
+          border: Border.all(color: colors.borderSoft),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: OwnKeepColors.primaryBlue, size: 32),
+            Icon(icon, color: colors.primaryBlue, size: 32),
             SizedBox(height: OwnKeepSpacing.sm),
             Text(
               label,
               style: TextStyle(
-                color: Colors.white,
+                color: colors.textPrimary,
                 fontWeight: FontWeight.w500,
               ),
             ),
             SizedBox(height: OwnKeepSpacing.xs),
             Text(
               '$count items',
-              style: TextStyle(
-                color: OwnKeepColors.textSecondary,
-                fontSize: 12,
-              ),
+              style: TextStyle(color: colors.textSecondary, fontSize: 12),
             ),
           ],
         ),

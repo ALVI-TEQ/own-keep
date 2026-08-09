@@ -116,10 +116,31 @@ class AppColors extends ThemeExtension<AppColors> {
     green: Color(0xFF19C48B),
     red: Color(0xFFF24B4B),
   );
+
+  static const AppColors defaultLight = AppColors(
+    bgPrimary: Color(0xFFF8FAFC),
+    bgSecondary: Color(0xFFF1F5F9),
+    surface: Color(0xFFFFFFFF),
+    surfaceSoft: Color(0xFFF1F5F9),
+    borderSubtle: Color(0xFFE2E8F0),
+    borderStrong: Color(0xFF94A3B8),
+    textPrimary: Color(0xFF0F172A),
+    textSecondary: Color(0xFF475569),
+    textMuted: Color(0xFF64748B),
+    brandPurple: Color(0xFF4F46E5),
+    brandPurpleDark: Color(0xFF4338CA),
+    brandPurpleLight: Color(0xFF6366F1),
+    cyan: Color(0xFF0891B2),
+    green: Color(0xFF059669),
+    red: Color(0xFFDC2626),
+  );
 }
 
 // Convenience extension for easier access
 extension AppColorsExtension on BuildContext {
   AppColors get appColors =>
-      Theme.of(this).extension<AppColors>() ?? AppColors.defaultDark;
+      Theme.of(this).extension<AppColors>() ??
+      (Theme.of(this).brightness == Brightness.dark
+          ? AppColors.defaultDark
+          : AppColors.defaultLight);
 }

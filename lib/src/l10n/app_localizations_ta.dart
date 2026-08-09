@@ -155,925 +155,963 @@ class AppLocalizationsTa extends AppLocalizations {
   String get spaceUsed => 'பயன்படுத்திய இடம்';
 
   @override
-  String get s01_brand_name => 'OwnKeep';
+  String get s01_brand_name => 'ஓன்கீப்';
 
   @override
-  String get s01_tagline_line_1 => 'Keep What Matters.';
+  String get s01_tagline_line_1 => 'முக்கியமானதை பாதுகாப்பாக வைத்திருங்கள்.';
 
   @override
-  String get s01_tagline_line_2 => 'Own Your Data.';
+  String get s01_tagline_line_2 => 'உங்கள் தரவு உங்கள் கட்டுப்பாட்டில்.';
 
   @override
-  String get s01_security_badge => '100% Offline • End-to-End Encrypted';
+  String get s01_security_badge =>
+      '100% ஆஃப்லைன் • முனை முதல் முனை வரை குறியாக்கப்பட்டது';
 
   @override
-  String get s01_action_get_started => 'Get Started';
+  String get s01_action_get_started => 'தொடங்குங்கள்';
 
   @override
-  String get s01_action_existing_account => 'Restore a vault backup';
+  String get s01_action_existing_account =>
+      'வால்ட் காப்புப்பிரதியை மீட்டமைக்கவும்';
 
   @override
-  String get s02_title_line_1 => 'Your data.';
+  String get s02_title_line_1 => 'உங்கள் தரவு.';
 
   @override
-  String get s02_title_line_2 => 'Your control.';
+  String get s02_title_line_2 => 'உங்கள் கட்டுப்பாடு.';
 
   @override
-  String get s02_offline_title => '100% Offline';
+  String get s02_offline_title => '100% ஆஃப்லைன்';
 
   @override
-  String get s02_offline_body => 'No servers. Ever.';
+  String get s02_offline_body => 'சேவையகங்கள் இல்லை. எப்போதும் இல்லை.';
 
   @override
-  String get s02_encrypted_title => 'End-to-End Encrypted';
+  String get s02_encrypted_title => 'முனை முதல் முனை வரை குறியாக்கப்பட்டது';
 
   @override
-  String get s02_encrypted_body => 'Only you have the key.';
+  String get s02_encrypted_body => 'சாவி உங்களிடம் மட்டுமே உள்ளது.';
 
   @override
-  String get s02_forever_title => 'Yours Forever';
+  String get s02_forever_title => 'என்றும் உங்களுடையது';
 
   @override
-  String get s02_forever_body => 'No tracking. No ads.';
+  String get s02_forever_body => 'கண்காணிப்பு இல்லை. விளம்பரங்கள் இல்லை.';
 
   @override
-  String get s02_action_continue => 'Continue';
+  String get s02_action_continue => 'தொடரவும்';
 
   @override
-  String get s02_action_learn_more => 'Learn More';
+  String get s02_action_learn_more => 'மேலும் அறிக';
 
   @override
-  String get s03_title => 'Everything you need to keep safe';
+  String get s03_title =>
+      'உங்கள் முக்கியமானவற்றை பாதுகாப்பாக வைத்திருக்க தேவையான அனைத்தும்';
 
   @override
-  String get s03_store_title => 'Store Everything';
+  String get s03_store_title => 'அனைத்தையும் சேமிக்கவும்';
 
   @override
-  String get s03_store_body => 'Documents, photos, files & more';
+  String get s03_store_body => 'ஆவணங்கள், புகைப்படங்கள், கோப்புகள் மற்றும் பல';
 
   @override
-  String get s03_ai_title => 'AI-Powered';
+  String get s03_ai_title => 'AI இயக்கம்';
 
   @override
-  String get s03_ai_body => 'Smart search, insights & suggestions';
+  String get s03_ai_body => 'ஸ்மார்ட் தேடல், நுண்ணறிவுகள் & பரிந்துரைகள்';
 
   @override
-  String get s03_organized_title => 'Organized';
+  String get s03_organized_title => 'ஒழுங்குபடுத்தப்பட்டது';
 
   @override
-  String get s03_organized_body => 'Smart collections & tags';
+  String get s03_organized_body => 'ஸ்மார்ட் தொகுப்புகள் & குறிச்சொற்கள்';
 
   @override
-  String get s03_secure_title => 'Secure by Design';
+  String get s03_secure_title => 'வடிவமைப்பிலேயே பாதுகாப்பு';
 
   @override
-  String get s03_secure_body => 'Military-grade encryption';
+  String get s03_secure_body => 'இராணுவத் தர குறியாக்கம்';
 
   @override
-  String get s03_action_next => 'Next';
+  String get s03_action_next => 'அடுத்து';
 
   @override
-  String get s04_title => 'Let\'s create your vault';
+  String get s04_title => 'உங்கள் வால்ட்டை உருவாக்கலாம்';
 
   @override
   String get s04_body =>
-      'Your vault is a secure space on this device. No data leaves your phone.';
+      'உங்கள் வால்ட் இந்த சாதனத்தில் உள்ள பாதுகாப்பான இடம். எந்தத் தரவும் உங்கள் தொலைபேசியை விட்டு வெளியேறாது.';
 
   @override
-  String get s04_action_create => 'Create Vault';
+  String get s04_action_create => 'வால்ட்டை உருவாக்கவும்';
 
   @override
-  String get s04_action_skip => 'Skip for now';
+  String get s04_action_skip => 'இப்போதைக்கு தவிர்க்கவும்';
 
   @override
-  String get s05_title => 'Set a strong PIN';
+  String get s05_title => 'வலுவான PIN அமைக்கவும்';
 
   @override
-  String get s05_body => 'You\'ll use this to unlock your vault';
+  String get s05_body => 'உங்கள் வால்ட்டை திறக்க இதைப் பயன்படுத்துவீர்கள்';
 
   @override
-  String get s06_title => 'Confirm your PIN';
+  String get s06_title => 'உங்கள் PIN-ஐ உறுதிப்படுத்தவும்';
 
   @override
-  String get s06_body => 'Enter the same PIN again';
+  String get s06_body => 'அதே PIN-ஐ மீண்டும் உள்ளிடவும்';
 
   @override
-  String get s07_title => 'Your recovery phrase';
+  String get s07_title => 'உங்கள் மீட்பு சொற்றொடர்';
 
   @override
-  String get s07_body => 'Write these words down in order and keep them safe.';
+  String get s07_body =>
+      'இந்த வார்த்தைகளை வரிசையாக எழுதிப் பாதுகாப்பாக வைத்திருங்கள்.';
 
   @override
-  String get s07_word_01 => 'mango';
+  String get s07_warning => 'உங்கள் மீட்பு சொற்றொடரை யாருடனும் பகிர வேண்டாம்.';
 
   @override
-  String get s07_word_02 => 'desert';
+  String get s07_action_next => 'அடுத்து';
 
   @override
-  String get s07_word_03 => 'trust';
+  String get s08_title => 'உங்கள் சொற்றொடரை சரிபார்க்கவும்';
 
   @override
-  String get s07_word_04 => 'polar';
+  String get s08_body => 'வார்த்தைகளை சரியான வரிசையில் தட்டவும்';
 
   @override
-  String get s07_word_05 => 'kitten';
+  String get s08_action_verify => 'சரிபார்க்கவும்';
 
   @override
-  String get s07_word_06 => 'guitar';
+  String get s08_action_clear => 'தேர்வை அழிக்கவும்';
 
   @override
-  String get s07_word_07 => 'planet';
+  String get s08_error_incomplete =>
+      'தயவுசெய்து அனைத்து 12 வார்த்தைகளையும் தேர்ந்தெடுக்கவும்.';
 
   @override
-  String get s07_word_08 => 'purple';
+  String get s08_error_incorrect =>
+      'வரிசை தவறாக உள்ளது. மீண்டும் முயற்சிக்கவும்.';
 
   @override
-  String get s07_word_09 => 'silver';
-
-  @override
-  String get s07_word_10 => 'eagle';
-
-  @override
-  String get s07_word_11 => 'bridge';
-
-  @override
-  String get s07_word_12 => 'fitness';
-
-  @override
-  String get s07_warning => 'Never share your recovery phrase with anyone.';
-
-  @override
-  String get s07_action_next => 'Next';
-
-  @override
-  String get s08_title => 'Verify your phrase';
-
-  @override
-  String get s08_body => 'Tap the words in the correct order';
-
-  @override
-  String get s08_action_verify => 'Verify';
-
-  @override
-  String get s08_action_clear => 'Clear Selection';
-
-  @override
-  String get s08_error_incomplete => 'Please select all 12 words.';
-
-  @override
-  String get s08_error_incorrect => 'Incorrect order. Please try again.';
-
-  @override
-  String get s09_title => 'Enable Biometrics';
+  String get s09_title => 'பயோமெட்ரிக்ஸை இயக்கு';
 
   @override
   String get s09_body =>
-      'Use your fingerprint or face to unlock your vault quickly.';
+      'உங்கள் வால்ட்டை விரைவாகத் திறக்க கைரேகை அல்லது முகத்தைப் பயன்படுத்தவும்.';
 
   @override
-  String get s09_fingerprint => 'Use Fingerprint';
+  String get s09_fingerprint => 'கைரேகையைப் பயன்படுத்தவும்';
 
   @override
-  String get s09_face_id => 'Use Face ID';
+  String get s09_face_id => 'Face ID-ஐ பயன்படுத்தவும்';
 
   @override
-  String get s09_action_enable => 'Enable';
+  String get s09_action_enable => 'இயக்கு';
 
   @override
-  String get s09_action_skip => 'Skip for now';
+  String get s09_action_skip => 'இப்போதைக்கு தவிர்க்கவும்';
 
   @override
-  String get s10_title => 'Everything is set up.';
+  String get s10_title => 'அனைத்தும் அமைக்கப்பட்டுவிட்டது.';
 
   @override
-  String get s10_body => 'You can start adding your important data.';
+  String get s10_body =>
+      'இப்போது உங்கள் முக்கியமான தரவைச் சேர்க்கத் தொடங்கலாம்.';
 
   @override
-  String get s10_action_home => 'Go to Home';
+  String get s10_action_home => 'முகப்புக்குச் செல்லவும்';
 
   @override
-  String get s11_greeting => 'Good evening, Arjun 👋';
+  String get s11_greeting => 'மாலை வணக்கம், அர்ஜுன் 👋';
 
   @override
-  String get s11_subtitle => 'Everything important is safe and organized';
+  String get s11_subtitle =>
+      'முக்கியமான அனைத்தும் பாதுகாப்பாகவும் ஒழுங்காகவும் உள்ளது';
 
   @override
-  String get s11_search_hint => 'Search anything...';
+  String get s11_search_hint => 'எதையும் தேடுங்கள்...';
 
   @override
-  String get s11_action_scan => 'Scan';
+  String get s11_action_scan => 'ஸ்கேன்';
 
   @override
-  String get s11_action_add_new => 'Add New';
+  String get s11_action_add_new => 'புதிதாகச் சேர்';
 
   @override
-  String get s11_action_ai_assistant => 'AI Assistant';
+  String get s11_action_ai_assistant => 'AI உதவியாளர்';
 
   @override
-  String get s11_action_quick_note => 'Quick Note';
+  String get s11_action_quick_note => 'விரைவுக் குறிப்பு';
 
   @override
-  String get s11_recent_items => 'Recent Items';
+  String get s11_recent_items => 'சமீபத்திய உருப்படிகள்';
 
   @override
-  String get common_view_all => 'View all';
+  String get common_view_all => 'அனைத்தையும் காண்க';
 
   @override
-  String get s11_recent_passport => 'Passport';
+  String get s11_recent_passport => 'கடவுச்சீட்டு';
 
   @override
-  String get s11_recent_passport_time => 'Today, 10:30 AM';
+  String get s11_recent_passport_time => 'இன்று, 10:30 AM';
 
   @override
-  String get s11_recent_insurance => 'Insurance Policy';
+  String get s11_recent_insurance => 'காப்பீட்டு பாலிசி';
 
   @override
-  String get s11_recent_insurance_time => 'Yesterday';
+  String get s11_recent_insurance_time => 'நேற்று';
 
   @override
-  String get s11_recent_licence => 'Driving Licence';
+  String get s11_recent_licence => 'ஓட்டுநர் உரிமம்';
 
   @override
-  String get s11_recent_licence_time => '2 days ago';
+  String get s11_recent_licence_time => '2 நாட்களுக்கு முன்பு';
 
   @override
-  String get s11_smart_collections => 'Smart Collections';
+  String get s11_smart_collections => 'ஸ்மார்ட் தொகுப்புகள்';
 
   @override
-  String get collection_personal => 'Personal';
+  String get collection_personal => 'தனிப்பட்டவை';
 
   @override
-  String get collection_finance => 'Finance';
+  String get collection_finance => 'நிதி';
 
   @override
-  String get collection_health => 'Health';
+  String get collection_health => 'உடல்நலம்';
 
   @override
-  String get collection_property => 'Property';
+  String get collection_property => 'சொத்து';
 
   @override
-  String get s11_personal_count => '28 items';
+  String get s11_personal_count => '28 உருப்படிகள்';
 
   @override
-  String get s11_finance_count => '16 items';
+  String get s11_finance_count => '16 உருப்படிகள்';
 
   @override
-  String get s11_health_count => '12 items';
+  String get s11_health_count => '12 உருப்படிகள்';
 
   @override
-  String get s11_property_count => '9 items';
+  String get s11_property_count => '9 உருப்படிகள்';
 
   @override
-  String get s11_today_reminder => 'Today\'s Reminder';
+  String get s11_today_reminder => 'இன்றைய நினைவூட்டல்';
 
   @override
-  String get s11_reminder_text => 'Vehicle insurance expires in 15 days';
+  String get s11_reminder_text => 'வாகன காப்பீடு 15 நாட்களில் காலாவதியாகும்';
 
   @override
-  String get s11_storage_overview => 'Storage Overview';
+  String get s11_storage_overview => 'சேமிப்பகக் கண்ணோட்டம்';
 
   @override
-  String get s11_storage_value => '2.4 GB of 10 GB used';
+  String get s11_storage_value => '10 GB-இல் 2.4 GB பயன்படுத்தப்பட்டது';
 
   @override
   String get s11_storage_percent => '24%';
 
   @override
-  String get s12_title => 'Collections';
+  String get s12_title => 'தொகுப்புகள்';
 
   @override
-  String get s12_subtitle => 'Everything in its place';
+  String get s12_subtitle => 'அனைத்தும் அதனதன் இடத்தில்';
 
   @override
-  String get s12_search_hint => 'Search collections...';
+  String get s12_search_hint => 'தொகுப்புகளைத் தேடுங்கள்...';
 
   @override
-  String get s12_total_collections => 'Total Collections';
+  String get s12_total_collections => 'மொத்தத் தொகுப்புகள்';
 
   @override
   String get s12_collection_total => '12';
 
   @override
-  String get s12_item_total => '128 items';
+  String get s12_item_total => '128 உருப்படிகள்';
 
   @override
-  String get collection_vehicle => 'Vehicle';
+  String get s12_custom_collections => 'தனிப்பயன் தொகுப்புகள்';
 
   @override
-  String get collection_education => 'Education';
+  String get s12_create => 'உருவாக்கு';
 
   @override
-  String get collection_others => 'Others';
+  String get s12_no_custom_collections =>
+      'தனிப்பயன் தொகுப்புகள் இன்னும் இல்லை.';
 
   @override
-  String get s12_personal_count => '28 items';
+  String get s12_custom_collections_error =>
+      'தனிப்பயன் தொகுப்புகளை ஏற்ற முடியவில்லை.';
 
   @override
-  String get s12_finance_count => '16 items';
+  String common_item_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count உருப்படிகள்',
+      one: '1 உருப்படி',
+      zero: 'உருப்படிகள் இல்லை',
+    );
+    return '$_temp0';
+  }
 
   @override
-  String get s12_health_count => '12 items';
+  String s12_collection_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count தொகுப்புகள்',
+      one: '1 தொகுப்பு',
+    );
+    return '$_temp0';
+  }
 
   @override
-  String get s12_property_count => '9 items';
+  String get common_unknown => 'தெரியவில்லை';
 
   @override
-  String get s12_vehicle_count => '8 items';
+  String get common_untitled => 'தலைப்பிடப்படாதது';
 
   @override
-  String get s12_education_count => '6 items';
+  String get s11_no_recent_files => 'சமீபத்திய கோப்புகள் இல்லை';
 
   @override
-  String get s12_others_count => '7 items';
+  String get s11_no_upcoming_reminders => 'வரவிருக்கும் நினைவூட்டல்கள் இல்லை';
 
   @override
-  String get s13_title => 'All Files';
+  String get s11_documents_load_error => 'ஆவணங்களை ஏற்ற முடியவில்லை';
 
   @override
-  String get s13_subtitle => 'Everything stored in your vault';
+  String get collection_vehicle => 'வாகனம்';
 
   @override
-  String get s13_search_hint => 'Search all files...';
+  String get collection_education => 'கல்வி';
 
   @override
-  String get filter_all => 'All';
+  String get collection_others => 'மற்றவை';
 
   @override
-  String get filter_documents => 'Documents';
+  String get s12_personal_count => '28 உருப்படிகள்';
 
   @override
-  String get filter_images => 'Images';
+  String get s12_finance_count => '16 உருப்படிகள்';
 
   @override
-  String get filter_videos => 'Videos';
+  String get s12_health_count => '12 உருப்படிகள்';
 
   @override
-  String get filter_others => 'Others';
+  String get s12_property_count => '9 உருப்படிகள்';
+
+  @override
+  String get s12_vehicle_count => '8 உருப்படிகள்';
+
+  @override
+  String get s12_education_count => '6 உருப்படிகள்';
+
+  @override
+  String get s12_others_count => '7 உருப்படிகள்';
+
+  @override
+  String get s13_title => 'அனைத்து கோப்புகளும்';
+
+  @override
+  String get s13_subtitle => 'உங்கள் வால்ட்டில் சேமிக்கப்பட்ட அனைத்தும்';
+
+  @override
+  String get s13_search_hint => 'அனைத்து கோப்புகளிலும் தேடவும்...';
+
+  @override
+  String get filter_all => 'அனைத்தும்';
+
+  @override
+  String get filter_documents => 'ஆவணங்கள்';
+
+  @override
+  String get filter_images => 'படங்கள்';
+
+  @override
+  String get filter_videos => 'வீடியோக்கள்';
+
+  @override
+  String get filter_others => 'மற்றவை';
 
   @override
   String get s13_all_count => '128';
 
   @override
-  String get s13_passport_title => 'Passport.pdf';
+  String get s13_passport_title => 'கடவுச்சீட்டு.pdf';
 
   @override
-  String get s13_passport_meta => 'PDF • 1.2 MB • Today, 10:30 AM';
+  String get s13_passport_meta => 'PDF • 1.2 MB • இன்று, 10:30 AM';
 
   @override
-  String get s13_insurance_title => 'Insurance Policy.pdf';
+  String get s13_insurance_title => 'காப்பீட்டு பாலிசி.pdf';
 
   @override
-  String get s13_insurance_meta => 'PDF • 2.4 MB • Yesterday';
+  String get s13_insurance_meta => 'PDF • 2.4 MB • நேற்று';
 
   @override
-  String get s13_licence_title => 'Driving Licence.jpg';
+  String get s13_licence_title => 'ஓட்டுநர் உரிமம்.jpg';
 
   @override
-  String get s13_licence_meta => 'JPG • 860 KB • 2 days ago';
+  String get s13_licence_meta => 'JPG • 860 KB • 2 நாட்களுக்கு முன்பு';
 
   @override
-  String get s13_bank_title => 'Bank Statement.pdf';
+  String get s13_bank_title => 'வங்கி அறிக்கை.pdf';
 
   @override
-  String get s13_bank_meta => 'PDF • 3.1 MB • 3 days ago';
+  String get s13_bank_meta => 'PDF • 3.1 MB • 3 நாட்களுக்கு முன்பு';
 
   @override
-  String get s13_family_photo_title => 'Family Photo.jpg';
+  String get s13_family_photo_title => 'குடும்பப் புகைப்படம்.jpg';
 
   @override
-  String get s13_family_photo_meta => 'JPG • 4.6 MB • 5 days ago';
+  String get s13_family_photo_meta => 'JPG • 4.6 MB • 5 நாட்களுக்கு முன்பு';
 
   @override
-  String get s13_investment_title => 'Investment Summary.xlsx';
+  String get s13_investment_title => 'முதலீட்டு சுருக்கம்.xlsx';
 
   @override
-  String get s13_investment_meta => 'XLSX • 540 KB • 7 days ago';
+  String get s13_investment_meta => 'XLSX • 540 KB • 7 நாட்களுக்கு முன்பு';
 
   @override
-  String get s13_property_title => 'Property Papers.pdf';
+  String get s13_property_title => 'சொத்து ஆவணங்கள்.pdf';
 
   @override
-  String get s13_property_meta => 'PDF • 4.8 MB • 8 days ago';
+  String get s13_property_meta => 'PDF • 4.8 MB • 8 நாட்களுக்கு முன்பு';
 
   @override
-  String get s13_project_title => 'Project Plan.docx';
+  String get s13_project_title => 'திட்டத் திட்டம்.docx';
 
   @override
-  String get s13_project_meta => 'DOCX • 520 KB • 9 days ago';
+  String get s13_project_meta => 'DOCX • 520 KB • 9 நாட்களுக்கு முன்பு';
 
   @override
-  String get s14_title => 'Recent';
+  String get s14_title => 'சமீபத்தியவை';
 
   @override
-  String get s14_subtitle => 'Your latest vault activity';
+  String get s14_subtitle => 'உங்கள் வால்ட்டின் சமீபத்திய செயல்பாடு';
 
   @override
-  String get filter_viewed => 'Viewed';
+  String get s14_load_error => 'சமீபத்திய கோப்புகளை ஏற்ற முடியவில்லை';
 
   @override
-  String get filter_added => 'Added';
+  String get s14_empty => 'சமீபத்திய உருப்படிகள் இல்லை';
 
   @override
-  String get filter_updated => 'Updated';
+  String get filter_viewed => 'பார்க்கப்பட்டது';
 
   @override
-  String get common_today => 'Today';
+  String get filter_added => 'சேர்க்கப்பட்டவை';
 
   @override
-  String get common_yesterday => 'Yesterday';
+  String get filter_updated => 'புதுப்பிக்கப்பட்டது';
 
   @override
-  String get s14_insurance_title => 'Insurance Policy';
+  String get common_today => 'இன்று';
 
   @override
-  String get s14_insurance_meta => 'Viewed • 10:30 AM';
+  String get common_yesterday => 'நேற்று';
 
   @override
-  String get s14_passport_title => 'Passport';
+  String get s14_insurance_title => 'காப்பீட்டு பாலிசி';
 
   @override
-  String get s14_passport_meta => 'Viewed • 9:15 AM';
+  String get s14_insurance_meta => 'பார்க்கப்பட்டது • 10:30 AM';
 
   @override
-  String get s14_vehicle_title => 'Vehicle Insurance';
+  String get s14_passport_title => 'கடவுச்சீட்டு';
 
   @override
-  String get s14_vehicle_meta => 'Added • 8:45 AM';
+  String get s14_passport_meta => 'பார்க்கப்பட்டது • 9:15 AM';
 
   @override
-  String get s14_licence_title => 'Driving Licence';
+  String get s14_vehicle_title => 'வாகன காப்பீடு';
 
   @override
-  String get s14_licence_meta => 'Updated • 7:30 PM';
+  String get s14_vehicle_meta => 'சேர்க்கப்பட்டது • 8:45 AM';
 
   @override
-  String get s14_bank_title => 'Bank Statement';
+  String get s14_licence_title => 'ஓட்டுநர் உரிமம்';
 
   @override
-  String get s14_bank_meta => 'Added • 4:20 PM';
+  String get s14_licence_meta => 'புதுப்பிக்கப்பட்டது • 7:30 PM';
 
   @override
-  String get s14_aadhaar_title => 'Aadhaar Card';
+  String get s14_bank_title => 'வங்கி அறிக்கை';
 
   @override
-  String get s14_aadhaar_meta => 'Viewed • 11:10 AM';
+  String get s14_bank_meta => 'சேர்க்கப்பட்டது • 4:20 PM';
 
   @override
-  String get s14_lic_title => 'LIC Policy';
+  String get s14_aadhaar_title => 'ஆதார் அட்டை';
 
   @override
-  String get s14_lic_meta => 'Added • 10:05 AM';
+  String get s14_aadhaar_meta => 'பார்க்கப்பட்டது • 11:10 AM';
 
   @override
-  String get s15_title => 'Favorites';
+  String get s14_lic_title => 'LIC பாலிசி';
 
   @override
-  String get s15_subtitle => 'All your important items in one place';
+  String get s14_lic_meta => 'சேர்க்கப்பட்டது • 10:05 AM';
 
   @override
-  String get s15_search_hint => 'Search favorites...';
+  String get s15_title => 'பிடித்தவை';
 
   @override
-  String get s15_passport_title => 'Passport';
+  String get s15_subtitle => 'உங்கள் முக்கியமான அனைத்தும் ஒரே இடத்தில்';
 
   @override
-  String get s15_passport_meta => 'PDF • 1.2 MB • Today';
+  String get s15_search_hint => 'பிடித்தவைகளில் தேடவும்...';
 
   @override
-  String get s15_insurance_title => 'Insurance Policy';
+  String get s15_passport_title => 'கடவுச்சீட்டு';
 
   @override
-  String get s15_insurance_meta => 'PDF • 2.4 MB • Yesterday';
+  String get s15_passport_meta => 'PDF • 1.2 MB • இன்று';
 
   @override
-  String get s15_family_photo_title => 'Family Photo';
+  String get s15_insurance_title => 'காப்பீட்டு பாலிசி';
 
   @override
-  String get s15_family_photo_meta => 'JPG • 3.6 MB • 2 days ago';
+  String get s15_insurance_meta => 'PDF • 2.4 MB • நேற்று';
 
   @override
-  String get s15_aadhaar_title => 'Aadhaar Card';
+  String get s15_family_photo_title => 'குடும்பப் புகைப்படம்';
 
   @override
-  String get s15_aadhaar_meta => 'PDF • 1.1 MB • 3 days ago';
+  String get s15_family_photo_meta => 'JPG • 3.6 MB • 2 நாட்களுக்கு முன்பு';
 
   @override
-  String get s15_licence_title => 'Driving License';
+  String get s15_aadhaar_title => 'ஆதார் அட்டை';
 
   @override
-  String get s15_licence_meta => 'PDF • 1.0 MB • 5 days ago';
+  String get s15_aadhaar_meta => 'PDF • 1.1 MB • 3 நாட்களுக்கு முன்பு';
 
   @override
-  String get s15_bank_title => 'Bank Statement';
+  String get s15_licence_title => 'ஓட்டுநர் உரிமம்';
 
   @override
-  String get s15_bank_meta => 'PDF • 3.2 MB • 7 days ago';
+  String get s15_licence_meta => 'PDF • 1.0 MB • 5 நாட்களுக்கு முன்பு';
 
   @override
-  String get s15_itr_title => 'Income Tax Return 2024';
+  String get s15_bank_title => 'வங்கி அறிக்கை';
 
   @override
-  String get s15_itr_meta => 'XLSX • 540 KB • 10 days ago';
+  String get s15_bank_meta => 'PDF • 3.2 MB • 7 நாட்களுக்கு முன்பு';
 
   @override
-  String get s16_title => 'Categories';
+  String get s15_itr_title => 'வருமான வரி அறிக்கை 2024';
 
   @override
-  String get s16_subtitle => 'Browse by type';
+  String get s15_itr_meta => 'XLSX • 540 KB • 10 நாட்களுக்கு முன்பு';
 
   @override
-  String get s16_search_hint => 'Search categories...';
+  String get s16_title => 'வகைகள்';
 
   @override
-  String get collection_identity => 'Identity';
+  String get s16_subtitle => 'வகைபடி உலாவவும்';
 
   @override
-  String get collection_insurance => 'Insurance';
+  String get s16_search_hint => 'வகைகளில் தேடவும்...';
 
   @override
-  String get collection_work => 'Work';
+  String get collection_identity => 'அடையாளம்';
 
   @override
-  String get collection_travel => 'Travel';
+  String get collection_insurance => 'காப்பீடு';
 
   @override
-  String get collection_family => 'Family';
+  String get collection_work => 'வேலை';
 
   @override
-  String get collection_important => 'Important';
+  String get collection_travel => 'பயணம்';
 
   @override
-  String get s16_identity_count => '24 items';
+  String get collection_family => 'குடும்பம்';
 
   @override
-  String get s16_finance_count => '38 items';
+  String get collection_important => 'முக்கியம்';
 
   @override
-  String get s16_insurance_count => '16 items';
+  String get s16_identity_count => '24 உருப்படிகள்';
 
   @override
-  String get s16_health_count => '22 items';
+  String get s16_finance_count => '38 உருப்படிகள்';
 
   @override
-  String get s16_property_count => '18 items';
+  String get s16_insurance_count => '16 உருப்படிகள்';
 
   @override
-  String get s16_vehicle_count => '14 items';
+  String get s16_health_count => '22 உருப்படிகள்';
 
   @override
-  String get s16_education_count => '12 items';
+  String get s16_property_count => '18 உருப்படிகள்';
 
   @override
-  String get s16_work_count => '9 items';
+  String get s16_vehicle_count => '14 உருப்படிகள்';
 
   @override
-  String get s16_personal_count => '27 items';
+  String get s16_education_count => '12 உருப்படிகள்';
 
   @override
-  String get s16_travel_count => '6 items';
+  String get s16_work_count => '9 உருப்படிகள்';
 
   @override
-  String get s16_family_count => '11 items';
+  String get s16_personal_count => '27 உருப்படிகள்';
 
   @override
-  String get s16_important_count => '10 items';
+  String get s16_travel_count => '6 உருப்படிகள்';
 
   @override
-  String get s17_title => 'Search';
+  String get s16_family_count => '11 உருப்படிகள்';
 
   @override
-  String get s17_subtitle => 'Find anything in your vault';
+  String get s16_important_count => '10 உருப்படிகள்';
 
   @override
-  String get s17_query => 'insurance';
+  String get s17_title => 'தேடல்';
 
   @override
-  String get filter_notes => 'Notes';
+  String get s17_subtitle => 'உங்கள் வால்ட்டில் எதையும் கண்டறியுங்கள்';
 
   @override
-  String get s17_top_result => 'Top Result';
+  String get s17_query => 'காப்பீடு';
 
   @override
-  String get s17_top_title => 'Insurance Policy';
+  String get filter_notes => 'குறிப்புகள்';
 
   @override
-  String get s17_top_location => 'Finance › Insurance';
+  String get s17_top_result => 'சிறந்த முடிவு';
 
   @override
-  String get s17_top_meta => 'Today, 10:30 AM  •  1.8 MB';
+  String get s17_top_title => 'காப்பீட்டு பாலிசி';
 
   @override
-  String get s17_other_results => 'Other Results';
+  String get s17_top_location => 'நிதி › காப்பீடு';
 
   @override
-  String get s17_vehicle_title => 'Vehicle Insurance';
+  String get s17_top_meta => 'இன்று, 10:30 AM • 1.8 MB';
 
   @override
-  String get s17_vehicle_meta => 'Vehicle › Documents • 2 days ago';
+  String get s17_other_results => 'மற்ற முடிவுகள்';
 
   @override
-  String get s17_health_title => 'Health Insurance Card';
+  String get s17_vehicle_title => 'வாகன காப்பீடு';
 
   @override
-  String get s17_health_meta => 'Health › Cards • 5 days ago';
+  String get s17_vehicle_meta => 'வாகனம் › ஆவணங்கள் • 2 நாட்களுக்கு முன்பு';
 
   @override
-  String get s17_claim_title => 'Insurance Claim Form';
+  String get s17_health_title => 'சுகாதார காப்பீட்டு அட்டை';
 
   @override
-  String get s17_claim_meta => 'Finance › Forms • 12 Apr 2024';
+  String get s17_health_meta => 'சுகாதாரம் › அட்டைகள் • 5 நாட்களுக்கு முன்பு';
 
   @override
-  String get s17_receipts_title => 'Insurance Receipts';
+  String get s17_claim_title => 'காப்பீட்டு கோரிக்கை படிவம்';
 
   @override
-  String get s17_receipts_meta => 'Finance › Receipts • 3 Apr 2024';
+  String get s17_claim_meta => 'நிதி › படிவங்கள் • 12 ஏப்ரல் 2024';
 
   @override
-  String get s17_not_found => 'Can\'t find what you\'re looking for?';
+  String get s17_receipts_title => 'காப்பீட்டு ரசீதுகள்';
 
   @override
-  String get s17_try_ai => 'Try AI Search';
+  String get s17_receipts_meta => 'நிதி › ரசீதுகள் • 3 ஏப்ரல் 2024';
 
   @override
-  String get s18_title => 'Global Search';
+  String get s17_not_found => 'நீங்கள் தேடுவது கிடைக்கவில்லையா?';
 
   @override
-  String get s18_subtitle => 'Search documents, notes, tags and reminders';
+  String get s17_try_ai => 'AI தேடலை முயற்சிக்கவும்';
 
   @override
-  String get s18_query => 'passport';
+  String get s18_title => 'உலகளாவிய தேடல்';
 
   @override
-  String get s18_search_everywhere => 'Search Everywhere';
+  String get s18_subtitle =>
+      'ஆவணங்கள், குறிப்புகள், குறிச்சொற்கள் மற்றும் நினைவூட்டல்களைத் தேடவும்';
 
   @override
-  String get filter_tags => 'Tags';
+  String get s18_query => 'கடவுச்சீட்டு';
 
   @override
-  String get filter_reminders => 'Reminders';
+  String get s18_search_everywhere => 'எங்கும் தேடவும்';
 
   @override
-  String get s18_passport_title => 'Passport.pdf';
+  String get filter_tags => 'குறிச்சொற்கள்';
 
   @override
-  String get s18_passport_meta => 'Identity • 1.2 MB';
+  String get filter_reminders => 'நினைவூட்டல்கள்';
 
   @override
-  String get s18_passport_copy_title => 'Passport Copy.pdf';
+  String get s18_passport_title => 'கடவுச்சீட்டு.pdf';
 
   @override
-  String get s18_passport_copy_meta => 'Identity • 860 KB';
+  String get s18_passport_meta => 'அடையாளம் • 1.2 MB';
 
   @override
-  String get s18_note_title => 'Passport renewal checklist';
+  String get s18_passport_copy_title => 'கடவுச்சீட்டு நகல்.pdf';
 
   @override
-  String get s18_note_meta => 'Updated 2 days ago';
+  String get s18_passport_copy_meta => 'அடையாளம் • 860 KB';
 
   @override
-  String get s18_tag_passport => '#passport';
+  String get s18_note_title =>
+      'கடவுச்சீட்டு புதுப்பிப்பு சரிபார்ப்புப் பட்டியல்';
 
   @override
-  String get s18_tag_passport_meta => '4 linked items';
+  String get s18_note_meta => '2 நாட்களுக்கு முன்பு புதுப்பிக்கப்பட்டது';
 
   @override
-  String get s18_tag_identity => '#identity';
+  String get s18_tag_passport => '#கடவுச்சீட்டு';
 
   @override
-  String get s18_tag_identity_meta => '24 linked items';
+  String get s18_tag_passport_meta => '4 இணைக்கப்பட்ட உருப்படிகள்';
 
   @override
-  String get s18_reminder_title => 'Passport expires in 2028';
+  String get s18_tag_identity => '#அடையாளம்';
 
   @override
-  String get s18_reminder_date => '15 Jun 2028';
+  String get s18_tag_identity_meta => '24 இணைக்கப்பட்ட உருப்படிகள்';
 
   @override
-  String get s19_title => 'Filter & Sort';
+  String get s18_reminder_title => 'கடவுச்சீட்டு 2028-ல் காலாவதியாகும்';
 
   @override
-  String get s19_subtitle => 'Refine your results';
+  String get s18_reminder_date => '15 ஜூன் 2028';
 
   @override
-  String get s19_file_type => 'File Type';
+  String get s19_title => 'வடிகட்டி & வரிசைப்படுத்தவும்';
 
   @override
-  String get filter_all_files => 'All Files';
+  String get s19_subtitle => 'உங்கள் முடிவுகளைச் செம்மைப்படுத்தவும்';
 
   @override
-  String get s19_date_added => 'Date Added';
+  String get s19_file_type => 'கோப்பு வகை';
 
   @override
-  String get filter_any_time => 'Any Time';
+  String get filter_all_files => 'அனைத்து கோப்புகளும்';
 
   @override
-  String get filter_today => 'Today';
+  String get s19_date_added => 'சேர்க்கப்பட்ட தேதி';
 
   @override
-  String get filter_this_week => 'This Week';
+  String get filter_any_time => 'எந்த நேரமும்';
 
   @override
-  String get filter_this_month => 'This Month';
+  String get filter_today => 'இன்று';
 
   @override
-  String get s19_sort_by => 'Sort By';
+  String get filter_this_week => 'இந்த வாரம்';
 
   @override
-  String get sort_newest => 'Newest First';
+  String get filter_this_month => 'இந்த மாதம்';
 
   @override
-  String get sort_oldest => 'Oldest First';
+  String get s19_sort_by => 'இதன்படி வரிசைப்படுத்தவும்';
 
   @override
-  String get sort_name_az => 'Name A–Z';
+  String get sort_newest => 'புதியவை முதலில்';
 
   @override
-  String get sort_name_za => 'Name Z–A';
+  String get sort_oldest => 'பழையவை முதலில்';
 
   @override
-  String get sort_largest => 'Largest First';
+  String get sort_name_az => 'பெயர் A–Z';
 
   @override
-  String get sort_smallest => 'Smallest First';
+  String get sort_name_za => 'பெயர் Z–A';
 
   @override
-  String get s19_apply => 'Apply Filters';
+  String get sort_largest => 'பெரியவை முதலில்';
 
   @override
-  String get s19_reset => 'Reset all filters';
+  String get sort_smallest => 'சிறியவை முதலில்';
 
   @override
-  String get s20_profile_name => 'Arjun Sharma';
+  String get s19_apply => 'வடிகட்டிகளைப் பயன்படுத்து';
 
   @override
-  String get s20_vault_name => 'My Personal Vault';
+  String get s19_reset => 'அனைத்து வடிகட்டிகளையும் மீட்டமைக்கவும்';
 
   @override
-  String get s20_vault_summary => '128 items • 2.4 GB';
+  String get s20_profile_name => 'அர்ஜுன் சர்மா';
 
   @override
-  String get s20_navigation => 'Navigation';
+  String get s20_vault_name => 'எனது தனிப்பட்ட வால்ட்';
 
   @override
-  String get nav_home => 'Home';
+  String get s20_vault_summary => '128 உருப்படிகள் • 2.4 GB';
 
   @override
-  String get nav_home_body => 'Your dashboard';
+  String get s20_navigation => 'வழிசெலுத்தல்';
 
   @override
-  String get nav_collections => 'Collections';
+  String get nav_home => 'முகப்பு';
 
   @override
-  String get nav_collections_body => 'Browse organized items';
+  String get nav_home_body => 'உங்கள் டாஷ்போர்டு';
 
   @override
-  String get nav_ai => 'AI Assistant';
+  String get nav_collections => 'தொகுப்புகள்';
 
   @override
-  String get nav_ai_body => 'Private on-device assistant';
+  String get nav_collections_body =>
+      'ஒழுங்கமைக்கப்பட்ட உருப்படிகளைப் பாருங்கள்';
 
   @override
-  String get nav_reminders => 'Reminders';
+  String get nav_ai => 'AI உதவியாளர்';
 
   @override
-  String get nav_reminders_body => 'Important dates and expiries';
+  String get nav_ai_body => 'சாதனத்திலேயே இயங்கும் தனிப்பட்ட உதவியாளர்';
 
   @override
-  String get nav_activity => 'Activity';
+  String get nav_reminders => 'நினைவூட்டல்கள்';
 
   @override
-  String get nav_activity_body => 'Recent changes';
+  String get nav_reminders_body => 'முக்கிய தேதிகளும் காலாவதிகளும்';
 
   @override
-  String get nav_backup => 'Backup & Export';
+  String get nav_activity => 'செயல்பாடு';
 
   @override
-  String get nav_backup_body => 'Create encrypted backups';
+  String get nav_activity_body => 'சமீபத்திய மாற்றங்கள்';
 
   @override
-  String get nav_settings => 'Settings';
+  String get nav_backup => 'காப்புநகல் & ஏற்றுமதி';
 
   @override
-  String get nav_settings_body => 'Security and preferences';
+  String get nav_backup_body => 'மறையாக்கப்பட்ட காப்புநகல்களை உருவாக்குங்கள்';
 
   @override
-  String get nav_help => 'Help & Support';
+  String get nav_settings => 'அமைப்புகள்';
 
   @override
-  String get nav_help_body => 'Guides and troubleshooting';
+  String get nav_settings_body => 'பாதுகாப்பும் விருப்பங்களும்';
 
   @override
-  String get nav_lock => 'Lock Vault';
+  String get nav_help => 'உதவி & ஆதரவு';
 
   @override
-  String get nav_lock_body => 'Lock immediately';
+  String get nav_help_body => 'வழிகாட்டிகளும் சிக்கல் தீர்வும்';
 
   @override
-  String get s41_title => 'Import & Export';
+  String get nav_lock => 'வால்ட்டைப் பூட்டு';
 
   @override
-  String get s41_import_section => 'Import Into OwnKeep';
+  String get nav_lock_body => 'உடனடியாகப் பூட்டு';
 
   @override
-  String get s41_import_files => 'Import from Files';
+  String get s41_title => 'இறக்குமதி & ஏற்றுமதி';
 
   @override
-  String get s41_import_files_body => 'From your device storage';
+  String get s41_import_section => 'OwnKeep-க்கு இறக்குமதி செய்யவும்';
 
   @override
-  String get s41_import_gallery => 'Import from Gallery';
+  String get s41_import_files => 'கோப்புகளிலிருந்து இறக்குமதி செய்யவும்';
 
   @override
-  String get s41_import_gallery_body => 'Photos and videos';
+  String get s41_import_files_body => 'உங்கள் சாதன சேமிப்பிலிருந்து';
 
   @override
-  String get s41_import_cloud => 'Import from Cloud';
+  String get s41_import_gallery => 'கேலரியிலிருந்து இறக்குமதி செய்யவும்';
 
   @override
-  String get s41_import_cloud_body => 'Google Drive, Dropbox (Download first)';
+  String get s41_import_gallery_body => 'புகைப்படங்கள் மற்றும் வீடியோக்கள்';
 
   @override
-  String get s41_import_computer => 'Import from Computer';
+  String get s41_import_cloud => 'கிளவுட் இலிருந்து இறக்குமதி செய்யவும்';
 
   @override
-  String get s41_import_computer_body => 'Via USB or local network';
+  String get s41_import_cloud_body =>
+      'Google Drive, Dropbox (முதலில் பதிவிறக்கவும்)';
 
   @override
-  String get s41_export_section => 'Export From OwnKeep';
+  String get s41_import_computer => 'கணினியிலிருந்து இறக்குமதி செய்யவும்';
 
   @override
-  String get s41_export_backup => 'Export Vault Backup';
+  String get s41_import_computer_body => 'USB அல்லது உள்ளூர் நெட்வொர்க் வழியாக';
 
   @override
-  String get s41_export_backup_body => 'Create .cvault backup file';
+  String get s41_export_section => 'OwnKeep இலிருந்து ஏற்றுமதி செய்யவும்';
 
   @override
-  String get s41_export_documents => 'Export Documents';
+  String get s41_export_backup => 'வால்ட் காப்புப்பிரதியை ஏற்றுமதி செய்யவும்';
 
   @override
-  String get s41_export_documents_body => 'As PDF or original files';
+  String get s41_export_backup_body =>
+      '.cvault காப்புப்பிரதி கோப்பை உருவாக்கவும்';
 
   @override
-  String get s41_export_media => 'Export Photos & Videos';
+  String get s41_export_documents => 'ஆவணங்களை ஏற்றுமதி செய்யவும்';
 
   @override
-  String get s41_export_media_body => 'As original files';
+  String get s41_export_documents_body => 'PDF அல்லது அசல் கோப்புகளாக';
 
   @override
-  String get s41_export_report => 'Export Report';
+  String get s41_export_media =>
+      'புகைப்படங்கள் & வீடியோக்களை ஏற்றுமதி செய்யவும்';
 
   @override
-  String get s41_export_report_body => 'Inventory and summary report';
+  String get s41_export_media_body => 'அசல் கோப்புகளாக';
+
+  @override
+  String get s41_export_report => 'அறிக்கையை ஏற்றுமதி செய்யவும்';
+
+  @override
+  String get s41_export_report_body => 'சரக்கு மற்றும் சுருக்க அறிக்கை';
 
   @override
   String get s41_tip =>
-      'Tip: Keep regular backups of your vault in multiple locations.';
+      'உதவி: உங்கள் வால்ட்டின் வழக்கமான காப்புப்பிரதிகளை பல இடங்களில் வைத்திருங்கள்.';
 
   @override
-  String get nav_profile => 'Profile';
+  String get nav_profile => 'சுயவிவரம்';
 
   @override
-  String get s42_title => 'Data Usage';
+  String get s42_title => 'தரவு பயன்பாடு';
 
   @override
-  String get s42_vault_storage => 'Vault Storage';
+  String get s42_vault_storage => 'வால்ட் சேமிப்பு';
 
   @override
   String get s42_total => '128 GB';
 
   @override
-  String get s42_documents => 'Documents';
+  String get s42_documents => 'ஆவணங்கள்';
 
   @override
   String get s42_documents_size => '48.5 GB';
 
   @override
-  String get s42_images => 'Images';
+  String get s42_images => 'படங்கள்';
 
   @override
   String get s42_images_size => '32.4 GB';
 
   @override
-  String get s42_videos => 'Videos';
+  String get s42_videos => 'வீடியோக்கள்';
 
   @override
   String get s42_videos_size => '22.1 GB';
 
   @override
-  String get s42_others => 'Others';
+  String get s42_others => 'மற்றவை';
 
   @override
   String get s42_others_size => '25.0 GB';
 
   @override
-  String get s42_used => 'Used: 103 GB';
+  String s42_used(String size) {
+    return 'பயன்படுத்தப்பட்டது: $size';
+  }
 
   @override
-  String get s42_free => 'Free: 25 GB';
+  String get s42_free => 'காலி: 25 GB';
 
   @override
-  String get s42_storage_type => 'Storage by Type';
+  String get s42_storage_type => 'வகைபடி சேமிப்பு';
 
   @override
   String get s42_documents_percent => '38%';
@@ -1088,89 +1126,93 @@ class AppLocalizationsTa extends AppLocalizations {
   String get s42_others_percent => '20%';
 
   @override
-  String get s42_large_files => 'Large Files';
+  String get s42_large_files => 'பெரிய கோப்புகள்';
 
   @override
-  String get common_see_all => 'See All';
+  String get common_see_all => 'அனைத்தையும் காண்க';
 
   @override
-  String get s42_video_file => 'Vacation Video.mp4';
+  String get s42_video_file => 'விடுமுறை வீடியோ.mp4';
 
   @override
   String get s42_video_file_size => '2.4 GB';
 
   @override
-  String get s42_project_file => 'Project Files.zip';
+  String get s42_project_file => 'திட்டக் கோப்புகள்.zip';
 
   @override
   String get s42_project_file_size => '1.2 GB';
 
   @override
-  String get s42_raw_file => 'Family Photos RAW.dng';
+  String get s42_raw_file => 'குடும்பப் புகைப்படங்கள் RAW.dng';
 
   @override
   String get s42_raw_file_size => '1.0 GB';
 
   @override
-  String get s42_optimization => 'Storage Optimization';
+  String get s42_optimization => 'சேமிப்பு மேம்படுத்தல்';
 
   @override
-  String get s42_duplicates => 'Duplicate Files';
+  String get s42_duplicates => 'நகல் கோப்புகள்';
 
   @override
   String get s42_duplicates_size => '2.48 GB';
 
   @override
-  String get s42_unneeded => 'Unneeded Files';
+  String get s42_unneeded => 'தேவையற்ற கோப்புகள்';
 
   @override
   String get s42_unneeded_size => '1.13 GB';
 
   @override
-  String get s43_title => 'About OwnKeep';
+  String get s43_title => 'OwnKeep பற்றி';
 
   @override
-  String get s43_app_name => 'OwnKeep';
+  String get s43_app_name => 'ஓன்கீப்';
 
   @override
-  String get s43_tagline => 'Keep What Matters. Own Your Data.';
+  String get s43_tagline =>
+      'முக்கியமானதை பாதுகாப்பாக வைத்திருங்கள். உங்கள் தரவு உங்கள் கட்டுப்பாட்டில்.';
 
   @override
-  String get s43_version => 'Version 1.3.0';
+  String get s43_version => 'பதிப்பு 1.3.0';
 
   @override
-  String get s43_whats_new => 'What\'s New';
+  String get s43_whats_new => 'புதிதாக என்ன';
 
   @override
-  String get s43_whats_new_body => 'See what\'s new in this version';
+  String get s43_whats_new_body =>
+      'இந்த பதிப்பில் புதிதாக என்ன உள்ளது என்பதைப் பார்க்கவும்';
 
   @override
-  String get s43_privacy => 'Privacy First';
+  String get s43_privacy => 'தனியுரிமை முதலில்';
 
   @override
   String get s43_privacy_body =>
-      '100% offline. Your data stays on your device.';
+      '100% ஆஃப்லைன். உங்கள் தரவு உங்கள் சாதனத்திலேயே இருக்கும்.';
 
   @override
-  String get s43_legal => 'Legal';
+  String get s43_legal => 'சட்டம்';
 
   @override
-  String get s43_legal_body => 'Terms of Use, Privacy Policy and Licenses';
+  String get s43_legal_body =>
+      'பயன்பாட்டு விதிமுறைகள், தனியுரிமைக் கொள்கை மற்றும் உரிமங்கள்';
 
   @override
-  String get s43_acknowledgements => 'Acknowledgements';
+  String get s43_acknowledgements => 'நன்றியுரைகள்';
 
   @override
-  String get s43_acknowledgements_body => 'Open source libraries and credits';
+  String get s43_acknowledgements_body =>
+      'திறந்த மூல நூலகங்கள் மற்றும் நன்றிகள்';
 
   @override
-  String get s43_website => 'Website';
+  String get s43_website => 'இணையதளம்';
 
   @override
   String get s43_website_value => 'www.ownkeep.app';
 
   @override
-  String get s43_contact => 'Contact';
+  String get s43_contact => 'தொடர்பு';
 
   @override
   String get s43_contact_value => 'support@ownkeep.app';
@@ -1179,1559 +1221,1612 @@ class AppLocalizationsTa extends AppLocalizations {
   String get s43_copyright => '© 2025 OwnKeep';
 
   @override
-  String get s43_rights => 'All rights reserved.';
+  String get s43_rights => 'அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.';
 
   @override
-  String get s44_title => 'Tutorials';
+  String get s44_title => 'பயிற்சிகள்';
 
   @override
-  String get s44_search_hint => 'Search tutorials...';
+  String get s44_search_hint => 'பயிற்சிகளைத் தேடவும்...';
 
   @override
-  String get s44_getting_started => 'Getting Started';
+  String get s44_getting_started => 'தொடங்குதல்';
 
   @override
-  String get s44_tutorial_01 => '01. Welcome to OwnKeep';
+  String get s44_tutorial_01 => '01. OwnKeep-க்கு வரவேற்கிறோம்';
 
   @override
-  String get s44_tutorial_01_body => 'Overview and key features';
+  String get s44_tutorial_01_body => 'மேலோட்டம் மற்றும் முக்கிய அம்சங்கள்';
 
   @override
   String get s44_tutorial_01_duration => '2:45';
 
   @override
-  String get s44_tutorial_02 => '02. Create Your First Vault';
+  String get s44_tutorial_02 => '02. உங்கள் முதல் வால்ட்டை உருவாக்கவும்';
 
   @override
-  String get s44_tutorial_02_body => 'Secure your data in minutes';
+  String get s44_tutorial_02_body =>
+      'சில நிமிடங்களில் உங்கள் தரவை பாதுகாக்கவும்';
 
   @override
   String get s44_tutorial_02_duration => '4:12';
 
   @override
-  String get s44_tutorial_03 => '03. Add Documents & Photos';
+  String get s44_tutorial_03 => '03. ஆவணங்கள் & புகைப்படங்களைச் சேர்க்கவும்';
 
   @override
-  String get s44_tutorial_03_body => 'Import and organize your files';
+  String get s44_tutorial_03_body =>
+      'உங்கள் கோப்புகளை இறக்குமதி செய்து ஒழுங்குபடுத்தவும்';
 
   @override
   String get s44_tutorial_03_duration => '3:38';
 
   @override
-  String get s44_tutorial_04 => '04. Set Reminders';
+  String get s44_tutorial_04 => '04. நினைவூட்டல்களை அமைக்கவும்';
 
   @override
-  String get s44_tutorial_04_body => 'Never miss important things';
+  String get s44_tutorial_04_body => 'முக்கியமானவற்றை ஒருபோதும் தவறவிடாதீர்கள்';
 
   @override
   String get s44_tutorial_04_duration => '3:05';
 
   @override
-  String get s44_manage_vault => 'Manage Your Vault';
+  String get s44_manage_vault => 'உங்கள் வால்ட்டை நிர்வகிக்கவும்';
 
   @override
-  String get s44_tutorial_05 => '05. Tags and Collections';
+  String get s44_tutorial_05 => '05. குறிச்சொற்கள் மற்றும் தொகுப்புகள்';
 
   @override
-  String get s44_tutorial_05_body => 'Organize with ease';
+  String get s44_tutorial_05_body => 'எளிதாக ஒழுங்குபடுத்தவும்';
 
   @override
   String get s44_tutorial_05_duration => '2:50';
 
   @override
-  String get s44_tutorial_06 => '06. Backup Your Vault';
+  String get s44_tutorial_06 => '06. உங்கள் வால்ட்டை காப்புப்பிரதி எடுக்கவும்';
 
   @override
-  String get s44_tutorial_06_body => 'Keep your data safe';
+  String get s44_tutorial_06_body => 'உங்கள் தரவை பாதுகாப்பாக வைத்திருங்கள்';
 
   @override
   String get s44_tutorial_06_duration => '3:20';
 
   @override
-  String get s44_tutorial_07 => '07. Export and Share';
+  String get s44_tutorial_07 => '07. ஏற்றுமதி செய்து பகிரவும்';
 
   @override
-  String get s44_tutorial_07_body => 'Share securely';
+  String get s44_tutorial_07_body => 'பாதுகாப்பாக பகிரவும்';
 
   @override
   String get s44_tutorial_07_duration => '2:35';
 
   @override
-  String get s44_advanced => 'Advanced';
+  String get s44_advanced => 'மேம்பட்ட';
 
   @override
-  String get s44_tutorial_08 => '08. Security Features';
+  String get s44_tutorial_08 => '08. பாதுகாப்பு அம்சங்கள்';
 
   @override
-  String get s44_tutorial_08_body => 'All about encryption & more';
+  String get s44_tutorial_08_body =>
+      'குறியாக்கம் மற்றும் மேலும் பல பாதுகாப்பு அம்சங்கள் பற்றி';
 
   @override
   String get s44_tutorial_08_duration => '4:18';
 
   @override
-  String get s45_title => 'Rate OwnKeep';
+  String get s45_title => 'OwnKeep-ஐ மதிப்பிடவும்';
 
   @override
-  String get s45_hero_title => 'Enjoying OwnKeep?';
+  String get s45_hero_title => 'OwnKeep பிடித்திருக்கிறதா?';
 
   @override
   String get s45_hero_body =>
-      'Your feedback helps us build a better app for you.';
+      'உங்கள் கருத்து உங்களுக்காக சிறந்த செயலியை உருவாக்க எங்களுக்கு உதவுகிறது.';
 
   @override
-  String get s45_rate_hint => 'Tap a star to rate';
+  String get s45_rate_hint => 'மதிப்பிட ஒரு நட்சத்திரத்தைத் தட்டவும்';
 
   @override
-  String get s45_comment_hint => 'Tell us what you love about OwnKeep...';
+  String get s45_comment_hint =>
+      'OwnKeep-ல் உங்களுக்கு பிடித்ததை எங்களிடம் சொல்லுங்கள்...';
 
   @override
-  String get s45_optional => '(Optional)';
+  String get s45_optional => '(விருப்பத்தேர்வு)';
 
   @override
   String get s45_counter => '0/500';
 
   @override
-  String get s45_submit => 'Submit Rating';
+  String get s45_submit => 'மதிப்பீட்டைச் சமர்ப்பிக்கவும்';
 
   @override
-  String get s45_share => 'Share OwnKeep';
+  String get s45_share => 'OwnKeep-ஐ பகிரவும்';
 
   @override
-  String get s45_share_body => 'Recommend to your friends';
+  String get s45_share_body => 'உங்கள் நண்பர்களுக்கு பரிந்துரைக்கவும்';
 
   @override
-  String get s45_feedback => 'Send Feedback';
+  String get s45_feedback => 'கருத்தை அனுப்பவும்';
 
   @override
-  String get s45_feedback_body => 'We\'d love to hear from you';
+  String get s45_feedback_body => 'உங்களிடமிருந்து கேட்க விரும்புகிறோம்';
 
   @override
-  String get s46_title => 'Wipe Data';
+  String get s46_title => 'தரவை அழிக்கவும்';
 
   @override
-  String get s46_subtitle => 'Permanently erase this vault';
+  String get s46_subtitle => 'இந்த வால்ட்டை நிரந்தரமாக அழிக்கவும்';
 
   @override
-  String get s46_warning_title => 'This action cannot be undone';
+  String get s46_warning_title => 'இந்த செயலை மாற்ற முடியாது';
 
   @override
   String get s46_warning_body =>
-      'All documents, notes, reminders, tags, recovery settings and encryption keys in this vault will be permanently removed from this device.';
+      'இந்த வால்ட்டிலுள்ள அனைத்து ஆவணங்கள், குறிப்புகள், நினைவூட்டல்கள், குறிச்சொற்கள், மீட்பு அமைப்புகள் மற்றும் குறியாக்க விசைகள் இந்த சாதனத்திலிருந்து நிரந்தரமாக அகற்றப்படும்.';
 
   @override
-  String get s46_before => 'Before continuing';
+  String get s46_before => 'தொடர்வதற்கு முன்';
 
   @override
-  String get s46_backup_check => 'I have created an encrypted backup';
+  String get s46_backup_check =>
+      'நான் குறியாக்கப்பட்ட காப்புப்பிரதியை உருவாக்கியுள்ளேன்';
 
   @override
-  String get s46_recovery_check => 'I understand recovery will be impossible';
+  String get s46_recovery_check =>
+      'மீட்பு சாத்தியமற்றதாகிவிடும் என்பதை நான் புரிந்துகொள்கிறேன்';
 
   @override
-  String get s46_device_check => 'I want to erase this vault from this device';
+  String get s46_device_check =>
+      'இந்த சாதனத்திலிருந்து இந்த வால்ட்டை அழிக்க விரும்புகிறேன்';
 
   @override
-  String get s46_confirm_hint => 'Type DELETE to confirm';
+  String get s46_confirm_hint => 'உறுதிப்படுத்த DELETE என தட்டச்சு செய்யவும்';
 
   @override
-  String get s46_delete => 'Permanently Delete Vault';
+  String get s46_delete => 'வால்ட்டை நிரந்தரமாக நீக்கவும்';
 
   @override
-  String get common_cancel => 'Cancel';
+  String get common_cancel => 'ரத்து செய்யவும்';
 
   @override
-  String get s47_title => 'Data Check';
+  String get s47_title => 'தரவு சரிபார்ப்பு';
 
   @override
-  String get s47_subtitle => 'Verify vault integrity';
+  String get s47_subtitle => 'வால்ட் முழுமையை சரிபார்க்கவும்';
 
   @override
-  String get s47_status => 'Everything looks good';
+  String get s47_status => 'அனைத்தும் சரியாக உள்ளது';
 
   @override
-  String get s47_last_checked => 'Last checked today at 9:20 AM';
+  String get s47_last_checked =>
+      'கடைசியாக இன்று 9:20 AM-க்கு சரிபார்க்கப்பட்டது';
 
   @override
   String get s47_items_value => '248';
 
   @override
-  String get s47_items_label => 'Items checked';
+  String get s47_items_label => 'சரிபார்க்கப்பட்ட உருப்படிகள்';
 
   @override
   String get s47_corrupt_value => '0';
 
   @override
-  String get s47_corrupt_label => 'Corrupt files';
+  String get s47_corrupt_label => 'சேதமடைந்த கோப்புகள்';
 
   @override
   String get s47_missing_value => '0';
 
   @override
-  String get s47_missing_label => 'Missing files';
+  String get s47_missing_label => 'காணாமல் போன கோப்புகள்';
 
   @override
   String get s47_integrity_value => '100%';
 
   @override
-  String get s47_integrity_label => 'Integrity';
+  String get s47_integrity_label => 'முழுமை';
 
   @override
-  String get s47_checks => 'Checks Performed';
+  String get s47_checks => 'செய்யப்பட்ட சரிபார்ப்புகள்';
 
   @override
-  String get s47_file_integrity => 'File integrity';
+  String get s47_file_integrity => 'கோப்பு முழுமை';
 
   @override
-  String get s47_file_integrity_body => 'All file hashes match';
+  String get s47_file_integrity_body =>
+      'அனைத்து கோப்பு ஹாஷ்களும் பொருந்துகின்றன';
 
   @override
-  String get s47_manifests => 'Encrypted manifests';
+  String get s47_manifests => 'குறியாக்கப்பட்ட மேனிஃபெஸ்ட்கள்';
 
   @override
-  String get s47_manifests_body => 'Valid and readable';
+  String get s47_manifests_body => 'செல்லுபடியாகும் மற்றும் படிக்கக்கூடியது';
 
   @override
-  String get s47_document_index => 'Document index';
+  String get s47_document_index => 'ஆவண குறியீடு';
 
   @override
-  String get s47_document_index_body => 'No missing entries';
+  String get s47_document_index_body => 'எந்த பதிவும் காணவில்லை';
 
   @override
-  String get s47_recovery_metadata => 'Recovery metadata';
+  String get s47_recovery_metadata => 'மீட்பு மெட்டாடேட்டா';
 
   @override
-  String get s47_recovery_metadata_body => 'Verified';
+  String get s47_recovery_metadata_body => 'சரிபார்க்கப்பட்டது';
 
   @override
-  String get s47_storage_consistency => 'Storage consistency';
+  String get s47_storage_consistency => 'சேமிப்பு ஒற்றுமை';
 
   @override
-  String get s47_storage_consistency_body => 'No orphaned files';
+  String get s47_storage_consistency_body => 'தொடர்பற்ற கோப்புகள் இல்லை';
 
   @override
-  String get s47_run_again => 'Run Data Check Again';
+  String get s47_run_again => 'தரவு சரிபார்ப்பை மீண்டும் இயக்கவும்';
 
   @override
-  String get s48_title => 'File Details';
+  String get s48_title => 'கோப்பு விவரங்கள்';
 
   @override
-  String get s48_subtitle => 'Passport.pdf';
+  String get s48_subtitle => 'கடவுச்சீட்டு.pdf';
 
   @override
-  String get s48_preview_title => 'PASSPORT';
+  String get s48_preview_title => 'கடவுச்சீட்டு';
 
   @override
-  String get s48_preview_body => 'Preview';
+  String get s48_preview_body => 'முன்னோட்டம்';
 
   @override
-  String get s48_general => 'General';
+  String get s48_general => 'பொது';
 
   @override
-  String get s48_file_name_label => 'File name';
+  String get s48_file_name_label => 'கோப்பு பெயர்';
 
   @override
-  String get s48_file_name => 'Passport.pdf';
+  String get s48_file_name => 'கடவுச்சீட்டு.pdf';
 
   @override
-  String get s48_type_label => 'Type';
+  String get s48_type_label => 'வகை';
 
   @override
-  String get s48_type => 'PDF document';
+  String get s48_type => 'PDF ஆவணம்';
 
   @override
-  String get s48_size_label => 'Size';
+  String get s48_size_label => 'அளவு';
 
   @override
   String get s48_size => '1.2 MB';
 
   @override
-  String get s48_added_label => 'Added';
+  String get s48_added_label => 'சேர்க்கப்பட்டது';
 
   @override
-  String get s48_added => '10 May 2025, 10:30 AM';
+  String get s48_added => '10 மே 2025, 10:30 AM';
 
   @override
-  String get s48_modified_label => 'Modified';
+  String get s48_modified_label => 'மாற்றப்பட்டது';
 
   @override
-  String get s48_modified => '10 May 2025, 10:31 AM';
+  String get s48_modified => '10 மே 2025, 10:31 AM';
 
   @override
-  String get s48_location_label => 'Location';
+  String get s48_location_label => 'இடம்';
 
   @override
-  String get s48_location => 'Personal › Identity';
+  String get s48_location => 'தனிப்பட்ட › அடையாளம்';
 
   @override
-  String get s48_security => 'Security';
+  String get s48_security => 'பாதுகாப்பு';
 
   @override
-  String get s48_encryption_label => 'Encryption';
+  String get s48_encryption_label => 'குறியாக்கம்';
 
   @override
   String get s48_encryption => 'AES-256-GCM';
 
   @override
-  String get s48_integrity_label => 'Integrity';
+  String get s48_integrity_label => 'முழுமை';
 
   @override
-  String get s48_integrity => 'Verified';
+  String get s48_integrity => 'சரிபார்க்கப்பட்டது';
 
   @override
-  String get s48_local_id_label => 'Local file ID';
+  String get s48_local_id_label => 'உள்ளூர் கோப்பு ID';
 
   @override
   String get s48_local_id => '7FA2-91C8-48D2';
 
   @override
-  String get s48_open => 'Open Document';
+  String get s48_open => 'ஆவணத்தைத் திறக்கவும்';
 
   @override
-  String get s49_title => 'Version History';
+  String get s49_title => 'பதிப்பு வரலாறு';
 
   @override
-  String get s49_subtitle => 'Passport.pdf';
+  String get s49_subtitle => 'கடவுச்சீட்டு.pdf';
 
   @override
-  String get s49_current => 'Current version';
+  String get s49_current => 'தற்போதைய பதிப்பு';
 
   @override
-  String get s49_version_4 => 'Version 4';
+  String get s49_version_4 => 'பதிப்பு 4';
 
   @override
-  String get s49_version_4_time => 'Today, 10:31 AM';
+  String get s49_version_4_time => 'இன்று, 10:31 AM';
 
   @override
-  String get s49_previous => 'Previous Versions';
+  String get s49_previous => 'முந்தைய பதிப்புகள்';
 
   @override
-  String get s49_version_3 => 'Version 3';
+  String get s49_version_3 => 'பதிப்பு 3';
 
   @override
-  String get s49_version_3_body => 'Metadata updated';
+  String get s49_version_3_body => 'மெட்டாடேட்டா புதுப்பிக்கப்பட்டது';
 
   @override
-  String get s49_version_3_time => 'Today, 10:30 AM';
+  String get s49_version_3_time => 'இன்று, 10:30 AM';
 
   @override
-  String get s49_version_2 => 'Version 2';
+  String get s49_version_2 => 'பதிப்பு 2';
 
   @override
-  String get s49_version_2_body => 'Tags changed';
+  String get s49_version_2_body => 'குறிச்சொற்கள் மாற்றப்பட்டன';
 
   @override
-  String get s49_version_2_time => '9 May 2025, 4:20 PM';
+  String get s49_version_2_time => '9 மே 2025, 4:20 PM';
 
   @override
-  String get s49_version_1 => 'Version 1';
+  String get s49_version_1 => 'பதிப்பு 1';
 
   @override
-  String get s49_version_1_body => 'Original document added';
+  String get s49_version_1_body => 'அசல் ஆவணம் சேர்க்கப்பட்டது';
 
   @override
-  String get s49_version_1_time => '8 May 2025, 2:15 PM';
+  String get s49_version_1_time => '8 மே 2025, 2:15 PM';
 
   @override
-  String get common_restore => 'Restore';
+  String get common_restore => 'மீட்டமைக்கவும்';
 
   @override
-  String get s49_storage => 'Version storage';
+  String get s49_storage => 'பதிப்பு சேமிப்பு';
 
   @override
-  String get s49_storage_value => '3 previous versions • 4.8 MB';
+  String get s49_storage_value => '3 முந்தைய பதிப்புகள் • 4.8 MB';
 
   @override
-  String get s49_how => 'How it works';
+  String get s49_how => 'இது எப்படி செயல்படுகிறது';
 
   @override
   String get s49_how_body =>
-      'OwnKeep stores local encrypted snapshots when you edit metadata or replace a file. Versions never leave your device and can be removed at any time.';
+      'நீங்கள் மெட்டாடேட்டாவைத் திருத்தும்போது அல்லது கோப்பை மாற்றும்போது OwnKeep உள்ளூர் குறியாக்கப்பட்ட ஸ்னாப்ஷாட்களைச் சேமிக்கிறது. பதிப்புகள் உங்கள் சாதனத்தை விட்டு வெளியேறாது; எப்போது வேண்டுமானாலும் நீக்கலாம்.';
 
   @override
-  String get s49_delete_old => 'Delete Old Versions';
+  String get s49_delete_old => 'பழைய பதிப்புகளை நீக்கவும்';
 
   @override
-  String get s50_title => 'Move or Copy';
+  String get s50_title => 'நகர்த்தவும் அல்லது நகலெடுக்கவும்';
 
   @override
-  String get s50_subtitle => 'Choose destination';
+  String get s50_subtitle => 'இலக்கைத் தேர்ந்தெடுக்கவும்';
 
   @override
-  String get s50_selected => 'Selected item';
+  String get s50_selected => 'தேர்ந்தெடுக்கப்பட்ட உருப்படி';
 
   @override
-  String get s50_file_name => 'Passport.pdf';
+  String get s50_file_name => 'கடவுச்சீட்டு.pdf';
 
   @override
   String get s50_file_size => '1.2 MB';
 
   @override
-  String get s50_destination => 'Destination';
+  String get s50_destination => 'இலக்கு';
 
   @override
-  String get s50_personal => 'Personal';
+  String get s50_personal => 'தனிப்பட்ட';
 
   @override
-  String get s50_personal_count => '28 items';
+  String get s50_personal_count => '28 உருப்படிகள்';
 
   @override
-  String get s50_finance => 'Finance';
+  String get s50_finance => 'நிதி';
 
   @override
-  String get s50_finance_count => '16 items';
+  String get s50_finance_count => '16 உருப்படிகள்';
 
   @override
-  String get s50_health => 'Health';
+  String get s50_health => 'சுகாதாரம்';
 
   @override
-  String get s50_health_count => '12 items';
+  String get s50_health_count => '12 உருப்படிகள்';
 
   @override
-  String get s50_property => 'Property';
+  String get s50_property => 'சொத்து';
 
   @override
-  String get s50_property_count => '9 items';
+  String get s50_property_count => '9 உருப்படிகள்';
 
   @override
-  String get s50_vehicle => 'Vehicle';
+  String get s50_vehicle => 'வாகனம்';
 
   @override
-  String get s50_vehicle_count => '8 items';
+  String get s50_vehicle_count => '8 உருப்படிகள்';
 
   @override
-  String get s50_education => 'Education';
+  String get s50_education => 'கல்வி';
 
   @override
-  String get s50_education_count => '6 items';
+  String get s50_education_count => '6 உருப்படிகள்';
 
   @override
-  String get s50_new_folder => 'New Folder';
+  String get s50_new_folder => 'புதிய கோப்புறை';
 
   @override
-  String get s50_new_folder_body => 'Create a new destination';
+  String get s50_new_folder_body => 'புதிய இலக்கை உருவாக்கவும்';
 
   @override
-  String get common_copy => 'Copy';
+  String get common_copy => 'நகலெடுக்கவும்';
 
   @override
-  String get common_move => 'Move';
+  String get common_move => 'நகர்த்தவும்';
 
   @override
-  String get s50_keep_original => 'Keep original location';
+  String get s50_keep_original => 'அசல் இடத்தை வைத்திருக்கவும்';
 
   @override
-  String get s21_title => 'Share & Export';
+  String get s21_title => 'பகிர்வு & ஏற்றுமதி';
 
   @override
-  String get s21_share_securely => 'Share Securely';
+  String get s21_share_securely => 'பாதுகாப்பாக பகிரவும்';
 
   @override
   String get s21_share_securely_body =>
-      'Your data stays encrypted. You\'re in control.';
+      'உங்கள் தரவு குறியாக்கப்பட்டே இருக்கும். கட்டுப்பாடு உங்களிடம் உள்ளது.';
 
   @override
-  String get s21_ownkeep_user => 'Share with OwnKeep User';
+  String get s21_ownkeep_user => 'OwnKeep பயனருடன் பகிரவும்';
 
   @override
   String get s21_ownkeep_user_body =>
-      'Share vault items with another OwnKeep user via encrypted link';
+      'குறியாக்கப்பட்ட இணைப்பின் மூலம் மற்றொரு OwnKeep பயனருடன் வால்ட் உருப்படிகளைப் பகிரவும்';
 
   @override
-  String get s21_secure_link => 'Generate Secure Link';
+  String get s21_secure_link => 'பாதுகாப்பான இணைப்பை உருவாக்கவும்';
 
   @override
   String get s21_secure_link_body =>
-      'Create a time-limited encrypted link to share';
+      'பகிர்வதற்காக காலவரையறையுள்ள குறியாக்கப்பட்ட இணைப்பை உருவாக்கவும்';
 
   @override
-  String get s21_encrypted_file => 'Export Encrypted File';
+  String get s21_encrypted_file => 'குறியாக்கப்பட்ட கோப்பை ஏற்றுமதி செய்யவும்';
 
   @override
   String get s21_encrypted_file_body =>
-      'Export as encrypted .cvault file to share via any medium';
+      'எந்த வழியிலும் பகிர குறியாக்கப்பட்ட .cvault கோப்பாக ஏற்றுமதி செய்யவும்';
 
   @override
-  String get s21_export_pdf => 'Export as PDF';
+  String get s21_export_pdf => 'PDF ஆக ஏற்றுமதி செய்யவும்';
 
   @override
-  String get s21_export_pdf_body => 'Export documents as PDF files';
+  String get s21_export_pdf_body =>
+      'ஆவணங்களை PDF கோப்புகளாக ஏற்றுமதி செய்யவும்';
 
   @override
-  String get s21_export_zip => 'Export as ZIP';
+  String get s21_export_zip => 'ZIP ஆக ஏற்றுமதி செய்யவும்';
 
   @override
-  String get s21_export_zip_body => 'Export original files in ZIP (Encrypted)';
+  String get s21_export_zip_body =>
+      'அசல் கோப்புகளை ZIP-ல் ஏற்றுமதி செய்யவும் (குறியாக்கப்பட்டது)';
 
   @override
   String get s21_security_note =>
-      'Shared items can only be opened in OwnKeep and cannot be accessed by anyone else.';
+      'பகிரப்பட்ட உருப்படிகளை OwnKeep-ல் மட்டுமே திறக்க முடியும்; வேறு யாரும் அணுக முடியாது.';
 
   @override
-  String get s22_title => 'Favorites';
+  String get s22_title => 'பிடித்தவை';
 
   @override
-  String get common_all => 'All';
+  String get common_all => 'அனைத்தும்';
 
   @override
-  String get common_documents => 'Documents';
+  String get common_documents => 'ஆவணங்கள்';
 
   @override
-  String get common_images => 'Images';
+  String get common_images => 'படங்கள்';
 
   @override
-  String get common_others => 'Others';
+  String get common_others => 'மற்றவை';
 
   @override
-  String get s22_passport => 'Passport';
+  String get s22_passport => 'கடவுச்சீட்டு';
 
   @override
-  String get s22_passport_meta => 'PDF  •  1.2 MB';
+  String get s22_passport_meta => 'PDF • 1.2 MB';
 
   @override
-  String get s22_passport_date => 'Today, 10:30 AM';
+  String get s22_passport_date => 'இன்று, 10:30 AM';
 
   @override
-  String get s22_insurance => 'Insurance Policy';
+  String get s22_insurance => 'காப்பீட்டு பாலிசி';
 
   @override
-  String get s22_insurance_meta => 'PDF  •  2.4 MB';
+  String get s22_insurance_meta => 'PDF • 2.4 MB';
 
   @override
-  String get s22_family_photo => 'Family Photo';
+  String get s22_family_photo => 'குடும்பப் புகைப்படம்';
 
   @override
-  String get s22_family_photo_meta => 'JPG  •  3.6 MB';
+  String get s22_family_photo_meta => 'JPG • 3.6 MB';
 
   @override
-  String get s22_family_photo_date => '2 days ago';
+  String get s22_family_photo_date => '2 நாட்களுக்கு முன்பு';
 
   @override
-  String get s22_aadhaar => 'Aadhaar Card';
+  String get s22_aadhaar => 'ஆதார் அட்டை';
 
   @override
-  String get s22_aadhaar_meta => 'PDF  •  1.1 MB';
+  String get s22_aadhaar_meta => 'PDF • 1.1 MB';
 
   @override
-  String get s22_aadhaar_date => '3 days ago';
+  String get s22_aadhaar_date => '3 நாட்களுக்கு முன்பு';
 
   @override
-  String get s22_licence => 'Driving License';
+  String get s22_licence => 'ஓட்டுநர் உரிமம்';
 
   @override
-  String get s22_licence_meta => 'PDF  •  1.0 MB';
+  String get s22_licence_meta => 'PDF • 1.0 MB';
 
   @override
-  String get s22_licence_date => '5 days ago';
+  String get s22_licence_date => '5 நாட்களுக்கு முன்பு';
 
   @override
-  String get s22_bank => 'Bank Statement';
+  String get s22_bank => 'வங்கி அறிக்கை';
 
   @override
-  String get s22_bank_meta => 'PDF  •  3.2 MB';
+  String get s22_bank_meta => 'PDF • 3.2 MB';
 
   @override
-  String get s22_bank_date => '7 days ago';
+  String get s22_bank_date => '7 நாட்களுக்கு முன்பு';
 
   @override
-  String get s22_itr => 'Income Tax Return 2024';
+  String get s22_itr => 'வருமான வரி அறிக்கை 2024';
 
   @override
-  String get s22_itr_meta => 'XLSX  •  540 KB';
+  String get s22_itr_meta => 'XLSX • 540 KB';
 
   @override
-  String get s22_itr_date => '10 May 2025';
+  String get s22_itr_date => '10 மே 2025';
 
   @override
-  String get s22_property => 'Property Papers';
+  String get s22_property => 'சொத்து ஆவணங்கள்';
 
   @override
-  String get s22_property_meta => 'PDF  •  4.8 MB';
+  String get s22_property_meta => 'PDF • 4.8 MB';
 
   @override
-  String get s22_property_date => '8 May 2025';
+  String get s22_property_date => '8 மே 2025';
 
   @override
-  String get s23_title => 'Recently Deleted';
+  String get s23_title => 'சமீபத்தில் நீக்கப்பட்டவை';
 
   @override
-  String get s23_select => 'Select';
+  String get s23_select => 'தேர்ந்தெடுக்கவும்';
 
   @override
-  String get s23_trash_notice => 'Items in trash are stored locally';
+  String get s23_trash_notice =>
+      'குப்பைத்தொட்டியில் உள்ள உருப்படிகள் உள்ளூராக சேமிக்கப்படும்';
 
   @override
   String get s23_trash_notice_body =>
-      'You can restore or permanently delete them.';
+      'அவற்றை மீட்டமைக்கலாம் அல்லது நிரந்தரமாக நீக்கலாம்.';
 
   @override
-  String get s23_item_count => '30 items';
+  String get s23_item_count => '30 உருப்படிகள்';
 
   @override
-  String get s23_sort => 'Newest first';
+  String get s23_sort => 'புதியவை முதலில்';
 
   @override
-  String get s23_old_insurance => 'Old Insurance Policy';
+  String get s23_old_insurance => 'பழைய காப்பீட்டு பாலிசி';
 
   @override
-  String get s23_old_insurance_meta => 'PDF  •  1.8 MB';
+  String get s23_old_insurance_meta => 'PDF • 1.8 MB';
 
   @override
-  String get s23_old_insurance_date => 'Deleted 1 hour ago';
+  String get s23_old_insurance_date => '1 மணி நேரத்திற்கு முன்பு நீக்கப்பட்டது';
 
   @override
-  String get s23_screenshot => 'Screenshot_2025...';
+  String get s23_screenshot => 'ஸ்கிரீன்ஷாட்_2025...';
 
   @override
-  String get s23_screenshot_meta => 'JPG  •  1.2 MB';
+  String get s23_screenshot_meta => 'JPG • 1.2 MB';
 
   @override
-  String get s23_screenshot_date => 'Deleted 3 hours ago';
+  String get s23_screenshot_date => '3 மணி நேரத்திற்கு முன்பு நீக்கப்பட்டது';
 
   @override
-  String get s23_bank => 'Old Bank Statement';
+  String get s23_bank => 'பழைய வங்கி அறிக்கை';
 
   @override
-  String get s23_bank_meta => 'PDF  •  2.3 MB';
+  String get s23_bank_meta => 'PDF • 2.3 MB';
 
   @override
-  String get s23_bank_date => 'Deleted Yesterday';
+  String get s23_bank_date => 'நேற்று நீக்கப்பட்டது';
 
   @override
   String get s23_image => 'IMG_20240115_1205';
 
   @override
-  String get s23_image_meta => 'JPG  •  3.7 MB';
+  String get s23_image_meta => 'JPG • 3.7 MB';
 
   @override
-  String get s23_image_date => 'Deleted 2 days ago';
+  String get s23_image_date => '2 நாட்களுக்கு முன்பு நீக்கப்பட்டது';
 
   @override
-  String get s23_tax => 'Tax Receipt 2023';
+  String get s23_tax => 'வரி ரசீது 2023';
 
   @override
-  String get s23_tax_meta => 'PDF  •  1.1 MB';
+  String get s23_tax_meta => 'PDF • 1.1 MB';
 
   @override
-  String get s23_tax_date => 'Deleted 5 days ago';
+  String get s23_tax_date => '5 நாட்களுக்கு முன்பு நீக்கப்பட்டது';
 
   @override
-  String get s23_project => 'Project Plan.docx';
+  String get s23_project => 'திட்டத் திட்டம்.docx';
 
   @override
-  String get s23_project_meta => 'DOCX  •  520 KB';
+  String get s23_project_meta => 'DOCX • 520 KB';
 
   @override
-  String get s23_project_date => 'Deleted 7 days ago';
+  String get s23_project_date => '7 நாட்களுக்கு முன்பு நீக்கப்பட்டது';
 
   @override
-  String get s23_empty_trash => 'Empty Trash';
+  String get s23_empty_trash => 'குப்பைத்தொட்டியை காலி செய்யவும்';
 
   @override
-  String get s23_restore_all => 'Restore All';
+  String get s23_restore_all => 'அனைத்தையும் மீட்டமைக்கவும்';
 
   @override
-  String get s24_title => 'Storage Overview';
+  String get s24_title => 'சேமிப்பு மேலோட்டம்';
 
   @override
-  String get s24_vault_storage => 'Vault Storage';
+  String get s24_vault_storage => 'வால்ட் சேமிப்பு';
 
   @override
-  String get s24_total => '128 GB Total';
+  String get s24_total => 'மொத்தம் 128 GB';
 
   @override
   String get s24_used_percent => '73%';
 
   @override
-  String get s24_used => 'Used';
+  String get s24_used => 'பயன்படுத்தப்பட்டது';
 
   @override
-  String get s24_documents => 'Documents';
+  String get s24_documents => 'ஆவணங்கள்';
 
   @override
   String get s24_documents_size => '48.5 GB';
 
   @override
-  String get s24_images => 'Images';
+  String get s24_images => 'படங்கள்';
 
   @override
   String get s24_images_size => '28.3 GB';
 
   @override
-  String get s24_videos => 'Videos';
+  String get s24_videos => 'வீடியோக்கள்';
 
   @override
   String get s24_videos_size => '22.1 GB';
 
   @override
-  String get s24_others => 'Others';
+  String get s24_others => 'மற்றவை';
 
   @override
   String get s24_others_size => '6.2 GB';
 
   @override
-  String get s24_usage => '93.8 GB used of 128 GB';
+  String get s24_usage => '128 GB-இல் 93.8 GB பயன்படுத்தப்பட்டது';
 
   @override
-  String get s24_large_items => 'Large Items';
+  String get s24_large_items => 'பெரிய உருப்படிகள்';
 
   @override
-  String get s24_video => 'Vacation Video.mp4';
+  String get s24_video => 'விடுமுறை வீடியோ.mp4';
 
   @override
   String get s24_video_size => '2.4 GB';
 
   @override
-  String get s24_raw_photo => 'Family Photo RAW.dng';
+  String get s24_raw_photo => 'குடும்பப் புகைப்படம் RAW.dng';
 
   @override
   String get s24_raw_photo_size => '1.8 GB';
 
   @override
-  String get s24_project_zip => 'Project Files.zip';
+  String get s24_project_zip => 'திட்டக் கோப்புகள்.zip';
 
   @override
   String get s24_project_zip_size => '1.2 GB';
 
   @override
-  String get s24_cleanup => 'Cleanup Suggestions';
+  String get s24_cleanup => 'சுத்தப்படுத்தல் பரிந்துரைகள்';
 
   @override
-  String get s24_duplicates => 'Duplicate Photos';
+  String get s24_duplicates => 'நகல் புகைப்படங்கள்';
 
   @override
-  String get s24_duplicates_meta => '367 files  •  2.1 GB';
+  String get s24_duplicates_meta => '367 கோப்புகள் • 2.1 GB';
 
   @override
-  String get s24_large_videos => 'Large Videos';
+  String get s24_large_videos => 'பெரிய வீடியோக்கள்';
 
   @override
-  String get s24_large_videos_meta => '12 files  •  9.8 GB';
+  String get s24_large_videos_meta => '12 கோப்புகள் • 9.8 GB';
 
   @override
-  String get s24_unopened => 'Unopened Documents';
+  String get s24_unopened => 'திறக்கப்படாத ஆவணங்கள்';
 
   @override
-  String get s24_unopened_meta => '23 files  •  1.3 GB';
+  String get s24_unopened_meta => '23 கோப்புகள் • 1.3 GB';
 
   @override
-  String get s24_last_scan => 'Last scanned: Today, 9:20 AM';
+  String get s24_last_scan => 'கடைசி ஸ்கேன்: இன்று, 9:20 AM';
 
   @override
-  String get s24_scan_again => 'Scan Again';
+  String get s24_scan_again => 'மீண்டும் ஸ்கேன் செய்யவும்';
 
   @override
-  String get s25_title => 'Add New Item';
+  String get s25_title => 'புதிய உருப்படியைச் சேர்க்கவும்';
 
   @override
-  String get s25_create_new => 'Create New';
+  String get s25_create_new => 'புதியதை உருவாக்கவும்';
 
   @override
-  String get s25_scan => 'Scan Document';
+  String get s25_scan => 'ஆவணத்தை ஸ்கேன் செய்யவும்';
 
   @override
-  String get s25_photo => 'Take Photo';
+  String get s25_photo => 'புகைப்படம் எடுக்கவும்';
 
   @override
-  String get s25_add_files => 'Add Files';
+  String get s25_add_files => 'கோப்புகளைச் சேர்க்கவும்';
 
   @override
-  String get s25_voice => 'Voice Note';
+  String get s25_voice => 'குரல் குறிப்பு';
 
   @override
-  String get s25_note => 'Note';
+  String get s25_note => 'குறிப்பு';
 
   @override
-  String get s25_contact => 'Contact';
+  String get s25_contact => 'தொடர்பு';
 
   @override
-  String get s25_import_from => 'Import From';
+  String get s25_import_from => 'இங்கிருந்து இறக்குமதி செய்யவும்';
 
   @override
-  String get s25_gallery => 'Import from Gallery';
+  String get s25_gallery => 'கேலரியிலிருந்து இறக்குமதி செய்யவும்';
 
   @override
-  String get s25_files => 'Import from Files';
+  String get s25_files => 'கோப்புகளிலிருந்து இறக்குமதி செய்யவும்';
 
   @override
-  String get s25_cloud => 'Import from Cloud';
+  String get s25_cloud => 'கிளவுட் இலிருந்து இறக்குமதி செய்யவும்';
 
   @override
-  String get s25_cloud_note => '(Requires download first)';
+  String get s25_cloud_note => '(முதலில் பதிவிறக்கம் செய்ய வேண்டும்)';
 
   @override
-  String get s25_create_folder => 'Create New Folder';
+  String get s25_create_folder => 'புதிய கோப்புறையை உருவாக்கவும்';
 
   @override
-  String get s25_new_folder => 'New Folder';
+  String get s25_new_folder => 'புதிய கோப்புறை';
 
   @override
   String get s25_tip =>
-      'Tip: Keep your vault organized by adding items to collections.';
+      'உதவி: உருப்படிகளை தொகுப்புகளில் சேர்த்து உங்கள் வால்ட்டை ஒழுங்காக வைத்திருங்கள்.';
 
   @override
-  String get s26_title => 'Passport.pdf';
+  String get s26_title => 'கடவுச்சீட்டு.pdf';
 
   @override
   String get s26_page => '1 / 2';
 
   @override
-  String get s26_file => 'Passport.pdf';
+  String get s26_file => 'கடவுச்சீட்டு.pdf';
 
   @override
-  String get s26_type => 'PDF Document • 1.2 MB';
+  String get s26_type => 'PDF ஆவணம் • 1.2 MB';
 
   @override
-  String get s26_added => 'Added:  10 May 2025, 10:30 AM';
+  String get s26_added => 'சேர்க்கப்பட்டது: 10 மே 2025, 10:30 AM';
 
   @override
-  String get s26_location => 'Location:  Personal  ›  IDs';
+  String get s26_location => 'இடம்: தனிப்பட்ட › IDs';
 
   @override
-  String get s26_tags => 'Tags:';
+  String get s26_tags => 'குறிச்சொற்கள்:';
 
   @override
-  String get s26_tag_identity => 'Identity';
+  String get s26_tag_identity => 'அடையாளம்';
 
   @override
-  String get s26_tag_important => 'Important';
+  String get s26_tag_important => 'முக்கியம்';
 
   @override
-  String get s26_tag_personal => 'Personal';
+  String get s26_tag_personal => 'தனிப்பட்ட';
 
   @override
-  String get s26_notes => 'Notes:  My valid passport document.';
+  String get s26_notes =>
+      'குறிப்புகள்: எனது செல்லுபடியாகும் கடவுச்சீட்டு ஆவணம்.';
 
   @override
-  String get s26_share => 'Share';
+  String get s26_share => 'பகிரவும்';
 
   @override
-  String get s26_favorite => 'Favorite';
+  String get s26_favorite => 'பிடித்தது';
 
   @override
-  String get s26_download => 'Download';
+  String get s26_download => 'பதிவிறக்கவும்';
 
   @override
-  String get s26_more => 'More';
+  String get s26_more => 'மேலும்';
 
   @override
-  String get s27_title => 'AI Organize';
+  String get s27_title => 'AI மூலம் ஒழுங்குபடுத்தவும்';
 
   @override
-  String get s27_scan_complete => 'AI Scan Complete';
+  String get s27_scan_complete => 'AI ஸ்கேன் முடிந்தது';
 
   @override
   String get s27_scan_complete_body =>
-      'I found 28 items that can be better organized.';
+      'மேலும் சிறப்பாக ஒழுங்குபடுத்தக்கூடிய 28 உருப்படிகளை கண்டறிந்தேன்.';
 
   @override
-  String get s27_review => 'Review Suggestions';
+  String get s27_review => 'பரிந்துரைகளை மதிப்பாய்வு செய்யவும்';
 
   @override
-  String get s27_suggestions => 'Suggestions (12)';
+  String get s27_suggestions => 'பரிந்துரைகள் (12)';
 
   @override
-  String get s27_uncategorized => 'Uncategorized Documents';
+  String get s27_uncategorized => 'வகைப்படுத்தப்படாத ஆவணங்கள்';
 
   @override
-  String get s27_uncategorized_count => '8 items';
+  String get s27_uncategorized_count => '8 உருப்படிகள்';
 
   @override
-  String get s27_uncategorized_body => 'Move to appropriate collections';
+  String get s27_uncategorized_body => 'பொருத்தமான தொகுப்புகளுக்கு நகர்த்தவும்';
 
   @override
-  String get s27_duplicates => 'Duplicate Items';
+  String get s27_duplicates => 'நகல் உருப்படிகள்';
 
   @override
-  String get s27_duplicates_count => '5 items';
+  String get s27_duplicates_count => '5 உருப்படிகள்';
 
   @override
-  String get s27_duplicates_body => 'Review and remove duplicates';
+  String get s27_duplicates_body => 'நகல்களை மதிப்பாய்வு செய்து நீக்கவும்';
 
   @override
-  String get s27_missing_tags => 'Missing Tags';
+  String get s27_missing_tags => 'காணாமல் உள்ள குறிச்சொற்கள்';
 
   @override
-  String get s27_missing_tags_count => '7 items';
+  String get s27_missing_tags_count => '7 உருப்படிகள்';
 
   @override
-  String get s27_missing_tags_body => 'Add relevant tags automatically';
+  String get s27_missing_tags_body =>
+      'தொடர்புடைய குறிச்சொற்களை தானாகச் சேர்க்கவும்';
 
   @override
-  String get s27_similar => 'Similar Documents';
+  String get s27_similar => 'ஒத்த ஆவணங்கள்';
 
   @override
-  String get s27_similar_count => '4 groups';
+  String get s27_similar_count => '4 குழுக்கள்';
 
   @override
-  String get s27_similar_body => 'Organize similar documents together';
+  String get s27_similar_body => 'ஒத்த ஆவணங்களை ஒன்றாக ஒழுங்குபடுத்தவும்';
 
   @override
-  String get s27_auto => 'Auto Organization';
+  String get s27_auto => 'தானியங்கி ஒழுங்குபடுத்தல்';
 
   @override
-  String get s27_auto_body => 'Let AI organize new items automatically';
+  String get s27_auto_body =>
+      'புதிய உருப்படிகளை AI தானாக ஒழுங்குபடுத்த அனுமதிக்கவும்';
 
   @override
-  String get s28_title => 'Tag Manager';
+  String get s28_title => 'குறிச்சொல் மேலாளர்';
 
   @override
-  String get s28_search => 'Search tags...';
+  String get s28_search => 'குறிச்சொற்களைத் தேடுங்கள்...';
 
   @override
-  String get s28_smart_tags => 'Smart Tags';
+  String get s28_smart_tags => 'ஸ்மார்ட் குறிச்சொற்கள்';
 
   @override
   String get s28_smart_count => '8';
 
   @override
-  String get s28_identity => 'Identity';
+  String get s28_identity => 'அடையாளம்';
 
   @override
   String get s28_identity_count => '24';
 
   @override
-  String get s28_finance => 'Finance';
+  String get s28_finance => 'நிதி';
 
   @override
   String get s28_finance_count => '18';
 
   @override
-  String get s28_insurance => 'Insurance';
+  String get s28_insurance => 'காப்பீடு';
 
   @override
   String get s28_insurance_count => '16';
 
   @override
-  String get s28_health => 'Health';
+  String get s28_health => 'உடல்நலம்';
 
   @override
   String get s28_health_count => '14';
 
   @override
-  String get s28_property => 'Property';
+  String get s28_property => 'சொத்து';
 
   @override
   String get s28_property_count => '12';
 
   @override
-  String get s28_vehicle => 'Vehicle';
+  String get s28_vehicle => 'வாகனம்';
 
   @override
   String get s28_vehicle_count => '10';
 
   @override
-  String get s28_work => 'Work';
+  String get s28_work => 'வேலை';
 
   @override
   String get s28_work_count => '8';
 
   @override
-  String get s28_important => 'Important';
+  String get s28_important => 'முக்கியமானவை';
 
   @override
   String get s28_important_count => '20';
 
   @override
-  String get s28_custom_tags => 'Custom Tags';
+  String get s28_custom_tags => 'தனிப்பயன் குறிச்சொற்கள்';
 
   @override
   String get s28_custom_count => '4';
 
   @override
-  String get s28_travel => 'Travel';
+  String get s28_travel => 'பயணம்';
 
   @override
   String get s28_travel_count => '6';
 
   @override
-  String get s28_education => 'Education';
+  String get s28_education => 'கல்வி';
 
   @override
   String get s28_education_count => '7';
 
   @override
-  String get s28_personal => 'Personal';
+  String get s28_personal => 'தனிப்பட்ட';
 
   @override
   String get s28_personal_count => '15';
 
   @override
-  String get s28_family => 'Family';
+  String get s28_family => 'குடும்பம்';
 
   @override
   String get s28_family_count => '9';
 
   @override
-  String get s29_title => 'Vault Information';
+  String get s29_title => 'வால்ட் தகவல்';
 
   @override
-  String get s29_vault_name => 'My First Vault';
+  String get s29_vault_name => 'என் முதல் வால்ட்';
 
   @override
-  String get s29_created_summary => 'Created on 12 May 2025';
+  String get s29_created_summary => '12 மே 2025 அன்று உருவாக்கப்பட்டது';
 
   @override
-  String get s29_vault_id_label => 'Vault ID';
+  String get s29_vault_id_label => 'வால்ட் ID';
 
   @override
   String get s29_vault_id => 'VK-7F3A-9D2B';
 
   @override
-  String get s29_version_label => 'Version';
+  String get s29_version_label => 'பதிப்பு';
 
   @override
   String get s29_version => '1.0.0';
 
   @override
-  String get s29_encryption_label => 'Encryption';
+  String get s29_encryption_label => 'குறியாக்கம்';
 
   @override
   String get s29_encryption => 'AES-256-GCM';
 
   @override
-  String get s29_kdf_label => 'Key Derivation';
+  String get s29_kdf_label => 'விசை உருவாக்கம்';
 
   @override
   String get s29_kdf => 'Argon2id';
 
   @override
-  String get s29_created_label => 'Created On';
+  String get s29_created_label => 'உருவாக்கப்பட்ட தேதி';
 
   @override
-  String get s29_created => '12 May 2025, 10:20 AM';
+  String get s29_created => '12 மே 2025, 10:20 AM';
 
   @override
-  String get s29_modified_label => 'Last Modified';
+  String get s29_modified_label => 'கடைசியாக மாற்றப்பட்டது';
 
   @override
-  String get s29_modified => '15 May 2025, 09:15 AM';
+  String get s29_modified => '15 மே 2025, 09:15 AM';
 
   @override
-  String get s29_items_label => 'Total Items';
+  String get s29_items_label => 'மொத்த உருப்படிகள்';
 
   @override
-  String get s29_items => '248 items';
+  String get s29_items => '248 உருப்படிகள்';
 
   @override
-  String get s29_size_label => 'Total Size';
+  String get s29_size_label => 'மொத்த அளவு';
 
   @override
   String get s29_size => '128 GB';
 
   @override
-  String get s29_backup_label => 'Backup';
+  String get s29_backup_label => 'காப்புப்பிரதி';
 
   @override
-  String get s29_backup => 'Not Created';
+  String get s29_backup => 'உருவாக்கப்படவில்லை';
 
   @override
-  String get s29_export => 'Export Vault Info';
+  String get s29_export => 'வால்ட் தகவலை ஏற்றுமதி செய்யவும்';
 
   @override
-  String get s30_title => 'Help & Support';
+  String get s30_title => 'உதவி & ஆதரவு';
 
   @override
-  String get s30_help_center => 'Help Center';
+  String get s30_help_center => 'உதவி மையம்';
 
   @override
-  String get s30_user_guide => 'User Guide';
+  String get s30_user_guide => 'பயனர் வழிகாட்டி';
 
   @override
-  String get s30_user_guide_body => 'Learn how to use OwnKeep';
+  String get s30_user_guide_body => 'OwnKeep-ஐ பயன்படுத்தக் கற்றுக்கொள்ளுங்கள்';
 
   @override
-  String get s30_faq => 'FAQ';
+  String get s30_faq => 'அடிக்கடி கேட்கப்படும் கேள்விகள்';
 
   @override
-  String get s30_faq_body => 'Find answers to common questions';
+  String get s30_faq_body => 'பொதுவான கேள்விகளுக்கான பதில்களைக் காணுங்கள்';
 
   @override
-  String get s30_video => 'Video Tutorials';
+  String get s30_video => 'வீடியோ பயிற்சிகள்';
 
   @override
-  String get s30_video_body => 'Step by step video guides';
+  String get s30_video_body => 'படிப்படியான வீடியோ வழிகாட்டிகள்';
 
   @override
-  String get s30_support => 'Support';
+  String get s30_support => 'ஆதரவு';
 
   @override
-  String get s30_contact => 'Contact Support';
+  String get s30_contact => 'ஆதரவைத் தொடர்புகொள்ளுங்கள்';
 
   @override
-  String get s30_contact_body => 'We\'ll respond as soon as possible';
+  String get s30_contact_body => 'முடிந்தவரை விரைவில் பதிலளிப்போம்';
 
   @override
-  String get s30_report => 'Report an Issue';
+  String get s30_report => 'சிக்கலைப் புகாரளிக்கவும்';
 
   @override
-  String get s30_report_body => 'Help us improve OwnKeep';
+  String get s30_report_body => 'OwnKeep-ஐ மேம்படுத்த எங்களுக்கு உதவவும்';
 
   @override
-  String get s30_about_section => 'About';
+  String get s30_about_section => 'பற்றி';
 
   @override
-  String get s30_about => 'About OwnKeep';
+  String get s30_about => 'OwnKeep பற்றி';
 
   @override
-  String get s30_version => 'Version 1.0.0';
+  String get s30_version => 'பதிப்பு 1.0.0';
 
   @override
   String get s30_privacy_tip =>
-      'Tip: All your data is stored only on your device. We never collect or transmit your information.';
+      'உதவி: உங்கள் அனைத்து தரவும் உங்கள் சாதனத்தில் மட்டுமே சேமிக்கப்படுகிறது. உங்கள் தகவலை நாங்கள் ஒருபோதும் சேகரிக்கவோ அனுப்பவோ மாட்டோம்.';
 
   @override
-  String get s31_title => 'Recovery Center';
+  String get s30_search => 'உதவியைத் தேடுங்கள்...';
 
   @override
-  String get s31_hero_title => 'Your Recovery Phrase';
+  String get s30_popular_topics => 'பிரபலமான தலைப்புகள்';
 
   @override
-  String get s31_hero_body => 'is your ultimate access';
+  String get s30_recover => 'மீட்டெடுத்தல்';
 
   @override
-  String get s31_status_title => 'Recovery Phrase Status';
+  String get s30_share => 'பகிர்தல்';
 
   @override
-  String get s31_status_verified => 'Verified';
+  String get s30_backup => 'காப்புநகல்';
 
   @override
-  String get s31_last_verified => 'Last verified: 12 May 2025, 10:30 AM';
+  String get profile_title => 'சுயவிவரம்';
 
   @override
-  String get s31_view_title => 'View Recovery Phrase';
+  String get profile_vault => 'எனது வால்ட் சுயவிவரம்';
 
   @override
-  String get s31_view_body => 'View your 24-word recovery phrase';
+  String get profile_settings => 'அமைப்புகள் & விருப்பங்கள்';
 
   @override
-  String get s31_verify_title => 'Verify Recovery Phrase';
+  String get profile_security => 'பாதுகாப்பு & செயலி பூட்டு';
 
   @override
-  String get s31_verify_body => 'Re-verify to make sure it\'s safe';
+  String get profile_help => 'உதவி & ஆதரவு';
 
   @override
-  String get s31_instructions_title => 'Recovery Instructions';
+  String get s31_title => 'மீட்பு மையம்';
 
   @override
-  String get s31_instructions_body => 'Step-by-step guide to recover vault';
+  String get s31_hero_title => 'உங்கள் மீட்பு சொற்றொடர்';
 
   @override
-  String get s31_emergency_title => 'Emergency Access';
+  String get s31_hero_body => 'உங்கள் இறுதி அணுகல்';
 
   @override
-  String get s31_emergency_body => 'Access your vault in critical situations';
+  String get s31_status_title => 'மீட்பு சொற்றொடர் நிலை';
+
+  @override
+  String get s31_status_verified => 'சரிபார்க்கப்பட்டது';
+
+  @override
+  String get s31_last_verified =>
+      'கடைசியாக சரிபார்க்கப்பட்டது: 12 மே 2025, 10:30 AM';
+
+  @override
+  String get s31_view_title => 'மீட்பு சொற்றொடரைப் பார்க்கவும்';
+
+  @override
+  String get s31_view_body =>
+      'உங்கள் 12-வார்த்தை மீட்பு சொற்றொடரைப் பார்க்கவும்';
+
+  @override
+  String get s31_verify_title => 'மீட்பு சொற்றொடரை சரிபார்க்கவும்';
+
+  @override
+  String get s31_verify_body =>
+      'அது பாதுகாப்பாக உள்ளதைக் உறுதிப்படுத்த மீண்டும் சரிபார்க்கவும்';
+
+  @override
+  String get s31_instructions_title => 'மீட்பு வழிமுறைகள்';
+
+  @override
+  String get s31_instructions_body => 'வால்ட்டை மீட்க படிப்படியான வழிகாட்டி';
+
+  @override
+  String get s31_emergency_title => 'அவசர அணுகல்';
+
+  @override
+  String get s31_emergency_body =>
+      'அவசர சூழ்நிலைகளில் உங்கள் வால்ட்டை அணுகவும்';
 
   @override
   String get s31_tip =>
-      'Tip: Store your recovery phrase offline in a safe place. Never share it with anyone.';
+      'உதவி: உங்கள் மீட்பு சொற்றொடரை ஆஃப்லைனில் பாதுகாப்பான இடத்தில் வைத்திருங்கள். யாருடனும் பகிர வேண்டாம்.';
 
   @override
-  String get s32_title => 'Health Reminders';
+  String get s32_title => 'சுகாதார நினைவூட்டல்கள்';
 
   @override
-  String get s32_medicines => 'Medicines';
+  String get s32_medicines => 'மருந்துகள்';
 
   @override
-  String get s32_appointments => 'Appointments';
+  String get s32_appointments => 'நியமனங்கள்';
 
   @override
-  String get s32_reports => 'Reports';
+  String get s32_reports => 'அறிக்கைகள்';
 
   @override
-  String get s32_vitamin => 'Vitamin D3';
+  String get s32_vitamin => 'வைட்டமின் D3';
 
   @override
-  String get s32_vitamin_body => '1 Tablet after breakfast';
+  String get s32_vitamin_body => 'காலை உணவுக்குப் பிறகு 1 மாத்திரை';
 
   @override
   String get s32_vitamin_time => '08:00 AM';
 
   @override
-  String get s32_upcoming => 'Upcoming';
+  String get s32_upcoming => 'வரவிருக்கும்';
 
   @override
-  String get s32_doctor => 'Doctor Appointment';
+  String get s32_doctor => 'மருத்துவர் நியமனம்';
 
   @override
-  String get s32_doctor_name => 'Dr. K. Sharma';
+  String get s32_doctor_name => 'டாக்டர் K. சர்மா';
 
   @override
-  String get s32_doctor_time => '15 May 2025, 04:00 PM';
+  String get s32_doctor_time => '15 மே 2025, 04:00 PM';
 
   @override
-  String get s32_blood => 'Blood Test';
+  String get s32_blood => 'இரத்த பரிசோதனை';
 
   @override
-  String get s32_blood_body => 'Complete Blood Count';
+  String get s32_blood_body => 'முழு இரத்த எண்ணிக்கை';
 
   @override
-  String get s32_blood_time => '17 May 2025, 08:00 AM';
+  String get s32_blood_time => '17 மே 2025, 08:00 AM';
 
   @override
-  String get s32_refill => 'Medicine Refill';
+  String get s32_refill => 'மருந்து மீள்நிரப்பு';
 
   @override
-  String get s32_refill_body => 'Your medicines are running low';
+  String get s32_refill_body => 'உங்கள் மருந்துகள் குறைந்து வருகின்றன';
 
   @override
-  String get s32_refill_time => '20 May 2025';
+  String get s32_refill_time => '20 மே 2025';
 
   @override
-  String get s32_summary => 'Health Summary';
+  String get s32_summary => 'சுகாதார சுருக்கம்';
 
   @override
-  String get s32_medicines_count => '8 Active';
+  String get s32_medicines_count => '8 செயலில்';
 
   @override
-  String get s32_appointments_count => '3 Upcoming';
+  String get s32_appointments_count => '3 வரவிருக்கும்';
 
   @override
-  String get s32_reports_count => '12 Stored';
+  String get s32_reports_count => '12 சேமிக்கப்பட்டவை';
 
   @override
-  String get s32_add => 'Add New Reminder';
+  String get s32_add => 'புதிய நினைவூட்டலைச் சேர்க்கவும்';
 
   @override
-  String get s33_title => 'Expiry Calendar';
+  String get s33_title => 'காலாவதி நாட்காட்டி';
 
   @override
-  String get s33_month => 'May 2025';
+  String get s33_month => 'மே 2025';
 
   @override
-  String get weekday_sun => 'Sun';
+  String get weekday_sun => 'ஞாயிறு';
 
   @override
-  String get weekday_mon => 'Mon';
+  String get weekday_mon => 'திங்கள்';
 
   @override
-  String get weekday_tue => 'Tue';
+  String get weekday_tue => 'செவ்வாய்';
 
   @override
-  String get weekday_wed => 'Wed';
+  String get weekday_wed => 'புதன்';
 
   @override
-  String get weekday_thu => 'Thu';
+  String get weekday_thu => 'வியாழன்';
 
   @override
-  String get weekday_fri => 'Fri';
+  String get weekday_fri => 'வெள்ளி';
 
   @override
-  String get weekday_sat => 'Sat';
+  String get weekday_sat => 'சனி';
 
   @override
-  String get s33_insurance_filter => 'Insurance';
+  String get s33_insurance_filter => 'காப்பீடு';
 
   @override
-  String get s33_licenses_filter => 'Licenses';
+  String get s33_licenses_filter => 'உரிமங்கள்';
 
   @override
-  String get s33_this_month => 'This Month';
+  String get s33_this_month => 'இந்த மாதம்';
 
   @override
-  String get s33_driving_licence => 'Driving License';
+  String get s33_driving_licence => 'ஓட்டுநர் உரிமம்';
 
   @override
-  String get s33_driving_expiry => 'Expires on 28 May 2025';
+  String get s33_driving_expiry => '28 மே 2025 அன்று காலாவதியாகும்';
 
   @override
-  String get s33_driving_days => '13 Days Left';
+  String get s33_driving_days => '13 நாட்கள் மீதம்';
 
   @override
-  String get s33_health_policy => 'Health Insurance Policy';
+  String get s33_health_policy => 'சுகாதார காப்பீட்டு பாலிசி';
 
   @override
-  String get s33_health_expiry => 'Expires on 31 May 2025';
+  String get s33_health_expiry => '31 மே 2025 அன்று காலாவதியாகும்';
 
   @override
-  String get s33_health_days => '16 Days Left';
+  String get s33_health_days => '16 நாட்கள் மீதம்';
 
   @override
-  String get s33_passport => 'Passport';
+  String get s33_passport => 'கடவுச்சீட்டு';
 
   @override
-  String get s33_passport_expiry => 'Expires on 10 Jun 2025';
+  String get s33_passport_expiry => '10 ஜூன் 2025 அன்று காலாவதியாகும்';
 
   @override
-  String get s33_passport_days => '26 Days Left';
+  String get s33_passport_days => '26 நாட்கள் மீதம்';
 
   @override
-  String get s33_car => 'Car Insurance';
+  String get s33_car => 'கார் காப்பீடு';
 
   @override
-  String get s33_car_expiry => 'Expires on 20 Jun 2025';
+  String get s33_car_expiry => '20 ஜூன் 2025 அன்று காலாவதியாகும்';
 
   @override
-  String get s33_car_days => '36 Days Left';
+  String get s33_car_days => '36 நாட்கள் மீதம்';
 
   @override
-  String get s34_title => 'Search';
+  String get s34_title => 'தேடல்';
 
   @override
-  String get s34_query => 'insurance policy';
+  String get s34_query => 'காப்பீட்டு பாலிசி';
 
   @override
-  String get s34_filter_all => 'All (24)';
+  String get s34_filter_all => 'அனைத்தும் (24)';
 
   @override
-  String get s34_filter_documents => 'Documents (8)';
+  String get s34_filter_documents => 'ஆவணங்கள் (8)';
 
   @override
-  String get s34_filter_images => 'Images (6)';
+  String get s34_filter_images => 'படங்கள் (6)';
 
   @override
-  String get s34_filter_others => 'Others (10)';
+  String get s34_filter_others => 'மற்றவை (10)';
 
   @override
-  String get s34_top_results => 'Top Results';
+  String get s34_top_results => 'சிறந்த முடிவுகள்';
 
   @override
-  String get s34_health => 'Health Insurance Policy';
+  String get s34_health => 'சுகாதார காப்பீட்டு பாலிசி';
 
   @override
-  String get s34_health_meta => 'PDF   •   2.4 MB   •   31 May 2025';
+  String get s34_health_meta => 'PDF • 2.4 MB • 31 மே 2025';
 
   @override
-  String get s34_car => 'Car Insurance Policy';
+  String get s34_car => 'கார் காப்பீட்டு பாலிசி';
 
   @override
-  String get s34_car_meta => 'PDF   •   1.8 MB   •   20 Jun 2025';
+  String get s34_car_meta => 'PDF • 1.8 MB • 20 ஜூன் 2025';
 
   @override
-  String get s34_life => 'Life Insurance Policy';
+  String get s34_life => 'ஆயுள் காப்பீட்டு பாலிசி';
 
   @override
-  String get s34_life_meta => 'PDF   •   1.2 MB   •   15 Aug 2025';
+  String get s34_life_meta => 'PDF • 1.2 MB • 15 ஆகஸ்ட் 2025';
 
   @override
-  String get s34_other_results => 'Other Results';
+  String get s34_other_results => 'மற்ற முடிவுகள்';
 
   @override
-  String get s34_receipt => 'Insurance Premium Receipt';
+  String get s34_receipt => 'காப்பீட்டு பிரீமியம் ரசீது';
 
   @override
-  String get s34_receipt_meta => 'JPG   •   845 KB   •   15 May 2025';
+  String get s34_receipt_meta => 'JPG • 845 KB • 15 மே 2025';
 
   @override
-  String get s34_claim => 'Insurance Claim Form';
+  String get s34_claim => 'காப்பீட்டு கோரிக்கை படிவம்';
 
   @override
-  String get s34_claim_meta => 'PDF   •   1.1 MB   •   10 Apr 2025';
+  String get s34_claim_meta => 'PDF • 1.1 MB • 10 ஏப்ரல் 2025';
 
   @override
-  String get s34_folder => 'Policy Documents';
+  String get s34_folder => 'பாலிசி ஆவணங்கள்';
 
   @override
-  String get s34_folder_meta => 'Folder   •   8 Items';
+  String get s34_folder_meta => 'கோப்புறை • 8 உருப்படிகள்';
 
   @override
-  String get s34_copy => 'Insurance Policy Copy';
+  String get s34_copy => 'காப்பீட்டு பாலிசி நகல்';
 
   @override
-  String get s34_copy_meta => 'PDF   •   2.0 MB   •   5 Jan 2025';
+  String get s34_copy_meta => 'PDF • 2.0 MB • 5 ஜனவரி 2025';
 
   @override
-  String get s34_not_found => 'Can\'t find what you\'re looking for?';
+  String get s34_not_found => 'நீங்கள் தேடுவது கிடைக்கவில்லையா?';
 
   @override
-  String get s34_try_ai => 'Try AI Search';
+  String get s34_try_ai => 'AI தேடலை முயற்சிக்கவும்';
 
   @override
-  String get s34_ai_button => 'AI Search';
+  String get s34_ai_button => 'AI தேடல்';
 
   @override
-  String get s35_title => 'Welcome to OwnKeep';
+  String get s35_title => 'OwnKeep-க்கு வரவேற்கிறோம்';
 
   @override
-  String get s35_skip => 'Skip';
+  String get s35_skip => 'தவிர்க்கவும்';
 
   @override
-  String get s35_hero_title => 'Your Data. Your Control.';
+  String get s35_hero_title => 'உங்கள் தரவு. உங்கள் கட்டுப்பாடு.';
 
   @override
-  String get s35_hero_body => '100% Offline. End-to-End Encrypted.';
+  String get s35_hero_body =>
+      '100% ஆஃப்லைன். முனை முதல் முனை வரை குறியாக்கப்பட்டது.';
 
   @override
-  String get s35_private_title => 'Keep everything private';
+  String get s35_private_title => 'அனைத்தையும் தனிப்பட்டதாக வைத்திருங்கள்';
 
   @override
-  String get s35_private_body => 'Your data never leaves your device.';
+  String get s35_private_body =>
+      'உங்கள் தரவு உங்கள் சாதனத்தை ஒருபோதும் விட்டு வெளியேறாது.';
 
   @override
-  String get s35_organize_title => 'Organize with ease';
+  String get s35_organize_title => 'எளிதாக ஒழுங்குபடுத்தவும்';
 
   @override
-  String get s35_organize_body => 'Smart tags and AI suggestions.';
+  String get s35_organize_body =>
+      'ஸ்மார்ட் குறிச்சொற்கள் மற்றும் AI பரிந்துரைகள்.';
 
   @override
-  String get s35_reminders_title => 'Never miss important things';
+  String get s35_reminders_title => 'முக்கியமானவற்றை ஒருபோதும் தவறவிடாதீர்கள்';
 
   @override
-  String get s35_reminders_body => 'Reminders for expiries and events.';
+  String get s35_reminders_body =>
+      'காலாவதி மற்றும் நிகழ்வுகளுக்கான நினைவூட்டல்கள்.';
 
   @override
-  String get s35_secure_title => 'Secure forever';
+  String get s35_secure_title => 'என்றும் பாதுகாப்பாக';
 
   @override
-  String get s35_secure_body => 'Your vault, your rules.';
+  String get s35_secure_body => 'உங்கள் வால்ட், உங்கள் விதிகள்.';
 
   @override
-  String get s35_get_started => 'Get Started';
+  String get s35_get_started => 'தொடங்குங்கள்';
 
   @override
-  String get s36_title => 'Duplicate Finder';
+  String get s36_title => 'நகல் கண்டுபிடிப்பான்';
 
   @override
   String get s36_duplicates => '873';
 
   @override
-  String get s36_found => 'Duplicates Found';
+  String get s36_found => 'நகல்கள் கண்டறியப்பட்டன';
 
   @override
-  String get s36_photos => 'Photos';
+  String get s36_photos => 'புகைப்படங்கள்';
 
   @override
   String get s36_photos_count => '623';
 
   @override
-  String get s36_documents => 'Documents';
+  String get s36_documents => 'ஆவணங்கள்';
 
   @override
   String get s36_documents_count => '186';
 
   @override
-  String get s36_videos => 'Videos';
+  String get s36_videos => 'வீடியோக்கள்';
 
   @override
   String get s36_videos_count => '64';
 
   @override
-  String get s36_free_up => 'You can free up';
+  String get s36_free_up => 'நீங்கள் இத்தனை இடத்தை காலி செய்யலாம்';
 
   @override
   String get s36_free_up_value => '2.48 GB';
 
   @override
-  String get s36_review => 'Review Duplicates';
+  String get s36_review => 'நகல்களை மதிப்பாய்வு செய்யவும்';
 
   @override
-  String get s36_groups => 'Smart Groups';
+  String get s36_groups => 'ஸ்மார்ட் குழுக்கள்';
 
   @override
-  String get s36_similar_photos => 'Similar Photos';
+  String get s36_similar_photos => 'ஒத்த புகைப்படங்கள்';
 
   @override
-  String get s36_similar_photos_meta => '452 items  •  1.36 GB';
+  String get s36_similar_photos_meta => '452 உருப்படிகள் • 1.36 GB';
 
   @override
-  String get s36_similar_documents => 'Similar Documents';
+  String get s36_similar_documents => 'ஒத்த ஆவணங்கள்';
 
   @override
-  String get s36_similar_documents_meta => '214 items  •  680 MB';
+  String get s36_similar_documents_meta => '214 உருப்படிகள் • 680 MB';
 
   @override
-  String get s36_similar_videos => 'Similar Videos';
+  String get s36_similar_videos => 'ஒத்த வீடியோக்கள்';
 
   @override
-  String get s36_similar_videos_meta => '64 items  •  450 MB';
+  String get s36_similar_videos_meta => '64 உருப்படிகள் • 450 MB';
 
   @override
-  String get s36_screenshots => 'Screenshots';
+  String get s36_screenshots => 'ஸ்கிரீன்ஷாட்கள்';
 
   @override
-  String get s36_screenshots_meta => '143 items  •  280 MB';
+  String get s36_screenshots_meta => '143 உருப்படிகள் • 280 MB';
 
   @override
-  String get s37_title => 'Statistics';
+  String get s37_title => 'புள்ளிவிவரங்கள்';
 
   @override
-  String get s37_overview => 'Vault Overview';
+  String get s37_overview => 'வால்ட் மேலோட்டம்';
 
   @override
-  String get common_this_month => 'This Month';
+  String get common_this_month => 'இந்த மாதம்';
 
   @override
   String get s37_total_storage => '128 GB';
 
   @override
-  String get s37_documents => 'Documents';
+  String get s37_documents => 'ஆவணங்கள்';
 
   @override
   String get s37_documents_size => '48.5 GB';
 
   @override
-  String get s37_images => 'Images';
+  String get s37_images => 'படங்கள்';
 
   @override
   String get s37_images_size => '32.4 GB';
 
   @override
-  String get s37_videos => 'Videos';
+  String get s37_videos => 'வீடியோக்கள்';
 
   @override
   String get s37_videos_size => '22.1 GB';
 
   @override
-  String get s37_others => 'Others';
+  String get s37_others => 'மற்றவை';
 
   @override
   String get s37_others_size => '25.0 GB';
 
   @override
-  String get s37_used => 'Used: 103 GB';
+  String get s37_used => 'பயன்படுத்தப்பட்டது: 103 GB';
 
   @override
-  String get s37_free => 'Free: 25 GB';
+  String get s37_free => 'காலி: 25 GB';
 
   @override
-  String get s37_total_items => 'Total Items';
+  String get s37_total_items => 'மொத்த உருப்படிகள்';
 
   @override
   String get s37_total_items_value => '12,547';
 
   @override
-  String get s37_folders => 'Folders';
+  String get s37_folders => 'கோப்புறைகள்';
 
   @override
   String get s37_folders_value => '428';
 
   @override
-  String get s37_files => 'Files';
+  String get s37_files => 'கோப்புகள்';
 
   @override
   String get s37_files_value => '12,119';
 
   @override
-  String get s37_activity => 'Activity Summary';
+  String get s37_activity => 'செயல்பாட்டு சுருக்கம்';
 
   @override
-  String get s37_files_added => 'Files Added';
+  String get s37_files_added => 'சேர்க்கப்பட்ட கோப்புகள்';
 
   @override
   String get s37_files_added_value => '+342';
 
   @override
-  String get s37_files_opened => 'Files Opened';
+  String get s37_files_opened => 'திறக்கப்பட்ட கோப்புகள்';
 
   @override
   String get s37_files_opened_value => '+1,842';
 
   @override
-  String get s37_space_saved => 'Space Saved';
+  String get s37_space_saved => 'சேமிக்கப்பட்ட இடம்';
 
   @override
   String get s37_space_saved_value => '2.48 GB';
 
   @override
-  String get s37_duplicates_removed => 'Duplicates Removed';
+  String get s37_duplicates_removed => 'நீக்கப்பட்ட நகல்கள்';
 
   @override
   String get s37_duplicates_removed_value => '873';
 
   @override
-  String get s38_app_name => 'OwnKeep';
+  String get s38_app_name => 'ஓன்கீப்';
 
   @override
-  String get s38_enter_pin => 'Enter PIN';
+  String get s38_enter_pin => 'PIN-ஐ உள்ளிடவும்';
 
   @override
   String get s38_key_2_letters => 'ABC';
@@ -2758,454 +2853,457 @@ class AppLocalizationsTa extends AppLocalizations {
   String get s38_key_9_letters => 'WXYZ';
 
   @override
-  String get s38_use_fingerprint => 'Use Fingerprint';
+  String get s38_use_fingerprint => 'கைரேகையைப் பயன்படுத்தவும்';
 
   @override
-  String get s38_emergency => 'Emergency Access';
+  String get s38_emergency => 'அவசர அணுகல்';
 
   @override
-  String get s39_title => 'Quick Actions';
+  String get s39_title => 'விரைவு செயல்கள்';
 
   @override
-  String get s39_edit => 'Edit';
+  String get s39_edit => 'திருத்தவும்';
 
   @override
-  String get s39_create_new => 'Create New';
+  String get s39_create_new => 'புதியதை உருவாக்கவும்';
 
   @override
-  String get s39_scan => 'Scan Document';
+  String get s39_scan => 'ஆவணத்தை ஸ்கேன் செய்யவும்';
 
   @override
-  String get s39_photo => 'Take Photo';
+  String get s39_photo => 'புகைப்படம் எடுக்கவும்';
 
   @override
-  String get s39_add_files => 'Add Files';
+  String get s39_add_files => 'கோப்புகளைச் சேர்க்கவும்';
 
   @override
-  String get s39_voice => 'Voice Note';
+  String get s39_voice => 'குரல் குறிப்பு';
 
   @override
-  String get s39_note => 'Note';
+  String get s39_note => 'குறிப்பு';
 
   @override
-  String get s39_folder => 'New Folder';
+  String get s39_folder => 'புதிய கோப்புறை';
 
   @override
-  String get s39_tools => 'Tools';
+  String get s39_tools => 'கருவிகள்';
 
   @override
-  String get s39_ai => 'AI Organize';
+  String get s39_ai => 'AI மூலம் ஒழுங்குபடுத்தவும்';
 
   @override
-  String get s39_ai_body => 'Let AI organize your items';
+  String get s39_ai_body => 'உங்கள் உருப்படிகளை AI ஒழுங்குபடுத்த அனுமதிக்கவும்';
 
   @override
-  String get s39_duplicate => 'Duplicate Finder';
+  String get s39_duplicate => 'நகல் கண்டுபிடிப்பான்';
 
   @override
-  String get s39_duplicate_body => 'Find and remove duplicates';
+  String get s39_duplicate_body => 'நகல்களை கண்டறிந்து நீக்கவும்';
 
   @override
-  String get s39_export => 'Export Vault';
+  String get s39_export => 'வால்ட்டை ஏற்றுமதி செய்யவும்';
 
   @override
-  String get s39_export_body => 'Export your data securely';
+  String get s39_export_body => 'உங்கள் தரவை பாதுகாப்பாக ஏற்றுமதி செய்யவும்';
 
   @override
-  String get s39_lock => 'Lock Vault';
+  String get s39_lock => 'வால்ட்டை பூட்டவும்';
 
   @override
-  String get s39_lock_body => 'Lock immediately';
+  String get s39_lock_body => 'உடனடியாக பூட்டவும்';
 
   @override
-  String get s39_shortcuts => 'Shortcuts';
+  String get s39_shortcuts => 'குறுக்குவழிகள்';
 
   @override
-  String get s39_passport => 'Passport';
+  String get s39_passport => 'கடவுச்சீட்டு';
 
   @override
-  String get s39_passport_path => 'Documents › Personal';
+  String get s39_passport_path => 'ஆவணங்கள் › தனிப்பட்ட';
 
   @override
-  String get s39_insurance => 'Insurance Policy';
+  String get s39_insurance => 'காப்பீட்டு பாலிசி';
 
   @override
-  String get s39_insurance_path => 'Documents › Insurance';
+  String get s39_insurance_path => 'ஆவணங்கள் › காப்பீடு';
 
   @override
-  String get s40_title => 'Settings';
+  String get s40_title => 'அமைப்புகள்';
 
   @override
-  String get s40_security => 'Security';
+  String get s40_security => 'பாதுகாப்பு';
 
   @override
-  String get s40_auto_lock => 'Auto Lock';
+  String get s40_auto_lock => 'தானியங்கி பூட்டு';
 
   @override
-  String get s40_auto_lock_value => '5 minutes';
+  String get s40_auto_lock_value => '5 நிமிடங்கள்';
 
   @override
-  String get s40_stealth => 'Stealth Mode';
+  String get s40_stealth => 'மறைவு முறை';
 
   @override
-  String get s40_off => 'Off';
+  String get s40_off => 'அணைப்பு';
 
   @override
-  String get s40_decoy => 'Decoy Vault';
+  String get s40_decoy => 'டிகாய் வால்ட்';
 
   @override
-  String get s40_not_set => 'Not Set';
+  String get s40_not_set => 'அமைக்கப்படவில்லை';
 
   @override
-  String get s40_biometric => 'Biometric Unlock';
+  String get s40_biometric => 'பயோமெட்ரிக் திறப்பு';
 
   @override
-  String get s40_pin => 'PIN Protection';
+  String get s40_pin => 'PIN பாதுகாப்பு';
 
   @override
-  String get s40_on => 'On';
+  String get s40_on => 'இயக்கம்';
 
   @override
-  String get s40_encryption => 'Vault Encryption';
+  String get s40_encryption => 'வால்ட் குறியாக்கம்';
 
   @override
   String get s40_encryption_value => 'AES-256';
 
   @override
-  String get s40_data => 'Data';
+  String get s40_data => 'தரவு';
 
   @override
-  String get s40_backup => 'Backup Reminders';
+  String get s40_backup => 'காப்புப்பிரதி நினைவூட்டல்கள்';
 
   @override
-  String get s40_data_check => 'Data Check';
+  String get s40_data_check => 'தரவு சரிபார்ப்பு';
 
   @override
-  String get s40_last_check => 'Last check: Today';
+  String get s40_last_check => 'கடைசி சரிபார்ப்பு: இன்று';
 
   @override
-  String get s40_wipe => 'Wipe Data';
+  String get s40_wipe => 'தரவை அழிக்கவும்';
 
   @override
-  String get s40_wipe_body => 'Delete all data permanently';
+  String get s40_wipe_body => 'அனைத்து தரவையும் நிரந்தரமாக நீக்கவும்';
 
   @override
-  String get s40_advanced => 'Advanced';
+  String get s40_advanced => 'மேம்பட்ட';
 
   @override
-  String get s40_developer => 'Developer Options';
+  String get s40_developer => 'டெவலப்பர் விருப்பங்கள்';
 
   @override
-  String get s40_logs => 'Logs';
+  String get s40_logs => 'பதிவுகள்';
 
   @override
-  String get s40_reset => 'Reset All Settings';
+  String get s40_reset => 'அனைத்து அமைப்புகளையும் மீட்டமைக்கவும்';
 
   @override
-  String get s51_title => 'Select Items';
+  String get s51_title => 'உருப்படிகளைத் தேர்ந்தெடுக்கவும்';
 
   @override
-  String get s51_selected_count => '3 selected';
+  String get s51_selected_count => '3 தேர்ந்தெடுக்கப்பட்டன';
 
   @override
-  String get s51_passport => 'Passport.pdf';
+  String get s51_passport => 'கடவுச்சீட்டு.pdf';
 
   @override
   String get s51_passport_meta => 'PDF • 1.2 MB';
 
   @override
-  String get s51_insurance => 'Insurance Policy.pdf';
+  String get s51_insurance => 'காப்பீட்டு பாலிசி.pdf';
 
   @override
   String get s51_insurance_meta => 'PDF • 2.4 MB';
 
   @override
-  String get s51_licence => 'Driving Licence.jpg';
+  String get s51_licence => 'ஓட்டுநர் உரிமம்.jpg';
 
   @override
   String get s51_licence_meta => 'JPG • 860 KB';
 
   @override
-  String get s51_bank => 'Bank Statement.pdf';
+  String get s51_bank => 'வங்கி அறிக்கை.pdf';
 
   @override
   String get s51_bank_meta => 'PDF • 3.1 MB';
 
   @override
-  String get s51_photo => 'Family Photo.jpg';
+  String get s51_photo => 'குடும்பப் புகைப்படம்.jpg';
 
   @override
   String get s51_photo_meta => 'JPG • 4.6 MB';
 
   @override
-  String get s51_project => 'Project Plan.docx';
+  String get s51_project => 'திட்டத் திட்டம்.docx';
 
   @override
   String get s51_project_meta => 'DOCX • 520 KB';
 
   @override
-  String get s51_investment => 'Investment Summary.xlsx';
+  String get s51_investment => 'முதலீட்டு சுருக்கம்.xlsx';
 
   @override
   String get s51_investment_meta => 'XLSX • 540 KB';
 
   @override
-  String get common_share => 'Share';
+  String get common_share => 'பகிரவும்';
 
   @override
-  String get common_delete => 'Delete';
+  String get common_delete => 'நீக்கவும்';
 
   @override
-  String get s52_title => 'Move To';
+  String get s52_title => 'இங்கு நகர்த்தவும்';
 
   @override
-  String get s52_subtitle => 'Choose destination';
+  String get s52_subtitle => 'இலக்கைத் தேர்ந்தெடுக்கவும்';
 
   @override
-  String get s52_selected => 'Selected';
+  String get s52_selected => 'தேர்ந்தெடுக்கப்பட்டது';
 
   @override
-  String get s52_selected_summary => '3 files • 6.7 MB';
+  String get s52_selected_summary => '3 கோப்புகள் • 6.7 MB';
 
   @override
-  String get s52_collections => 'Collections';
+  String get s52_collections => 'தொகுப்புகள்';
 
   @override
-  String get s52_personal_count => '28 items';
+  String get s52_personal_count => '28 உருப்படிகள்';
 
   @override
-  String get s52_finance_count => '16 items';
+  String get s52_finance_count => '16 உருப்படிகள்';
 
   @override
-  String get s52_health_count => '12 items';
+  String get s52_health_count => '12 உருப்படிகள்';
 
   @override
-  String get s52_property_count => '9 items';
+  String get s52_property_count => '9 உருப்படிகள்';
 
   @override
-  String get s52_vehicle_count => '8 items';
+  String get s52_vehicle_count => '8 உருப்படிகள்';
 
   @override
-  String get s52_education_count => '6 items';
+  String get s52_education_count => '6 உருப்படிகள்';
 
   @override
-  String get s52_create_folder => 'Create New Folder';
+  String get s52_create_folder => 'புதிய கோப்புறையை உருவாக்கவும்';
 
   @override
-  String get s52_create_folder_body => 'Add destination';
+  String get s52_create_folder_body => 'இலக்கைச் சேர்க்கவும்';
 
   @override
-  String get s52_move_here => 'Move Here';
+  String get s52_move_here => 'இங்கே நகர்த்தவும்';
 
   @override
-  String get s53_title => 'Rename';
+  String get s53_title => 'பெயர் மாற்றவும்';
 
   @override
-  String get s53_subtitle => 'Update file name';
+  String get s53_subtitle => 'கோப்பு பெயரைப் புதுப்பிக்கவும்';
 
   @override
   String get s53_preview_type => 'PDF';
 
   @override
-  String get s53_preview_name => 'Insurance Policy';
+  String get s53_preview_name => 'காப்பீட்டு பாலிசி';
 
   @override
-  String get s53_file_name => 'File Name';
+  String get s53_file_name => 'கோப்பு பெயர்';
 
   @override
-  String get s53_file_name_value => 'Insurance Policy 2025.pdf';
+  String get s53_file_name_value => 'காப்பீட்டு பாலிசி 2025.pdf';
 
   @override
-  String get s53_location => 'Location';
+  String get s53_location => 'இடம்';
 
   @override
-  String get s53_location_value => 'Finance › Insurance';
+  String get s53_location_value => 'நிதி › காப்பீடு';
 
   @override
-  String get s53_tips => 'Naming Tips';
+  String get s53_tips => 'பெயரிடும் குறிப்புகள்';
 
   @override
-  String get s53_tip_clear => 'Use a clear title';
+  String get s53_tip_clear => 'தெளிவான தலைப்பைப் பயன்படுத்தவும்';
 
   @override
-  String get s53_tip_year => 'Include a year when useful';
+  String get s53_tip_year => 'பயனுள்ளதாக இருந்தால் ஆண்டைச் சேர்க்கவும்';
 
   @override
-  String get s53_tip_special => 'Avoid special characters';
+  String get s53_tip_special => 'சிறப்பு எழுத்துக்களைத் தவிர்க்கவும்';
 
   @override
-  String get s53_tip_extension => 'File extension stays unchanged';
+  String get s53_tip_extension => 'கோப்பு நீட்டிப்பு மாறாது';
 
   @override
-  String get s53_save => 'Save Name';
+  String get s53_save => 'பெயரைச் சேமிக்கவும்';
 
   @override
-  String get s54_title => 'Merge PDF';
+  String get s54_title => 'PDF-களை ஒன்றிணைக்கவும்';
 
   @override
-  String get s54_subtitle => 'Combine selected documents';
+  String get s54_subtitle => 'தேர்ந்தெடுத்த ஆவணங்களை இணைக்கவும்';
 
   @override
-  String get s54_arrange => 'Arrange pages';
+  String get s54_arrange => 'பக்கங்களை ஒழுங்குபடுத்தவும்';
 
   @override
-  String get s54_arrange_hint => 'Drag items to reorder before merging';
+  String get s54_arrange_hint =>
+      'இணைக்கும் முன் வரிசையை மாற்ற உருப்படிகளை இழுக்கவும்';
 
   @override
-  String get s54_passport => 'Passport.pdf';
+  String get s54_passport => 'கடவுச்சீட்டு.pdf';
 
   @override
-  String get s54_passport_meta => '2 pages • 1.2 MB';
+  String get s54_passport_meta => '2 பக்கங்கள் • 1.2 MB';
 
   @override
-  String get s54_position_1 => 'Position 1';
+  String get s54_position_1 => 'நிலை 1';
 
   @override
-  String get s54_insurance => 'Insurance Policy.pdf';
+  String get s54_insurance => 'காப்பீட்டு பாலிசி.pdf';
 
   @override
-  String get s54_insurance_meta => '4 pages • 2.4 MB';
+  String get s54_insurance_meta => '4 பக்கங்கள் • 2.4 MB';
 
   @override
-  String get s54_position_2 => 'Position 2';
+  String get s54_position_2 => 'நிலை 2';
 
   @override
-  String get s54_bank => 'Bank Statement.pdf';
+  String get s54_bank => 'வங்கி அறிக்கை.pdf';
 
   @override
-  String get s54_bank_meta => '6 pages • 3.1 MB';
+  String get s54_bank_meta => '6 பக்கங்கள் • 3.1 MB';
 
   @override
-  String get s54_position_3 => 'Position 3';
+  String get s54_position_3 => 'நிலை 3';
 
   @override
-  String get s54_output_file => 'Output File';
+  String get s54_output_file => 'வெளியீட்டு கோப்பு';
 
   @override
-  String get s54_output_name => 'Merged Documents.pdf';
+  String get s54_output_name => 'இணைக்கப்பட்ட ஆவணங்கள்.pdf';
 
   @override
-  String get s54_estimated => 'Estimated output';
+  String get s54_estimated => 'மதிப்பிடப்பட்ட வெளியீடு';
 
   @override
-  String get s54_estimated_value => '12 pages • 6.7 MB';
+  String get s54_estimated_value => '12 பக்கங்கள் • 6.7 MB';
 
   @override
-  String get s54_merge => 'Merge 3 PDFs';
+  String get s54_merge => '3 PDF-களை ஒன்றிணைக்கவும்';
 
   @override
-  String get s55_title => 'Split PDF';
+  String get s55_title => 'PDF-ஐ பிரிக்கவும்';
 
   @override
-  String get s55_subtitle => 'Choose pages to extract';
+  String get s55_subtitle => 'பிரித்தெடுக்க பக்கங்களைத் தேர்ந்தெடுக்கவும்';
 
   @override
-  String get s55_file => 'Insurance Policy.pdf';
+  String get s55_file => 'காப்பீட்டு பாலிசி.pdf';
 
   @override
-  String get s55_file_meta => '4 pages • 2.4 MB';
+  String get s55_file_meta => '4 பக்கங்கள் • 2.4 MB';
 
   @override
-  String get s55_select_pages => 'Select Pages';
+  String get s55_select_pages => 'பக்கங்களைத் தேர்ந்தெடுக்கவும்';
 
   @override
-  String get s55_page_1 => 'PAGE 1';
+  String get s55_page_1 => 'பக்கம் 1';
 
   @override
-  String get s55_page_2 => 'PAGE 2';
+  String get s55_page_2 => 'பக்கம் 2';
 
   @override
-  String get s55_page_3 => 'PAGE 3';
+  String get s55_page_3 => 'பக்கம் 3';
 
   @override
-  String get s55_page_4 => 'PAGE 4';
+  String get s55_page_4 => 'பக்கம் 4';
 
   @override
-  String get s55_page_label => 'Insurance';
+  String get s55_page_label => 'காப்பீடு';
 
   @override
-  String get s55_split_options => 'Split Options';
+  String get s55_split_options => 'பிரிப்பு விருப்பங்கள்';
 
   @override
-  String get s55_extract => 'Extract selected pages';
+  String get s55_extract => 'தேர்ந்தெடுத்த பக்கங்களைப் பிரித்தெடுக்கவும்';
 
   @override
-  String get s55_extract_body => 'Create one PDF from pages 2–3';
+  String get s55_extract_body => '2–3 பக்கங்களிலிருந்து ஒரு PDF உருவாக்கவும்';
 
   @override
-  String get s55_separate => 'Save pages separately';
+  String get s55_separate => 'பக்கங்களை தனித்தனியாகச் சேமிக்கவும்';
 
   @override
-  String get s55_separate_body => 'Create individual files';
+  String get s55_separate_body => 'தனித்தனி கோப்புகளை உருவாக்கவும்';
 
   @override
-  String get s55_remove => 'Remove selected pages';
+  String get s55_remove => 'தேர்ந்தெடுத்த பக்கங்களை நீக்கவும்';
 
   @override
-  String get s55_remove_body => 'Create PDF without pages 2–3';
+  String get s55_remove_body => '2–3 பக்கங்கள் இல்லாமல் PDF உருவாக்கவும்';
 
   @override
-  String get s55_action => 'Split PDF';
+  String get s55_action => 'PDF-ஐ பிரிக்கவும்';
 
   @override
-  String get s56_title => 'Scan Text';
+  String get s56_title => 'உரையை ஸ்கேன் செய்யவும்';
 
   @override
-  String get s56_subtitle => 'Extract text from document';
+  String get s56_subtitle => 'ஆவணத்திலிருந்து உரையைப் பிரித்தெடுக்கவும்';
 
   @override
-  String get s56_document_title => 'INSURANCE POLICY';
+  String get s56_document_title => 'காப்பீட்டு பாலிசி';
 
   @override
-  String get s56_policy_number => 'Policy Number: POL/AGI/2024/123456789';
+  String get s56_policy_number => 'பாலிசி எண்: POL/AGI/2024/123456789';
 
   @override
-  String get s56_policy_holder => 'Policy Holder: Arjun Sharma';
+  String get s56_policy_holder => 'பாலிசிதாரர்: அர்ஜுன் சர்மா';
 
   @override
-  String get s56_policy_type => 'Policy Type: Health Insurance';
+  String get s56_policy_type => 'பாலிசி வகை: சுகாதார காப்பீடு';
 
   @override
-  String get s56_policy_period => 'Policy Period: 01 Apr 2024 – 31 Mar 2025';
+  String get s56_policy_period =>
+      'பாலிசி காலம்: 01 ஏப்ரல் 2024 – 31 மார்ச் 2025';
 
   @override
-  String get s56_extracted => 'Extracted Text';
+  String get s56_extracted => 'பிரித்தெடுக்கப்பட்ட உரை';
 
   @override
-  String get s56_copy => 'Copy Text';
+  String get s56_copy => 'உரையை நகலெடுக்கவும்';
 
   @override
-  String get s56_save_note => 'Save as Note';
+  String get s56_save_note => 'குறிப்பாகச் சேமிக்கவும்';
 
   @override
-  String get s56_local_notice => 'Text processed only on this device';
+  String get s56_local_notice =>
+      'உரை இந்த சாதனத்தில் மட்டுமே செயலாக்கப்படுகிறது';
 
   @override
-  String get s57_title => 'Compare Documents';
+  String get s57_title => 'ஆவணங்களை ஒப்பிடவும்';
 
   @override
-  String get s57_subtitle => 'Review differences';
+  String get s57_subtitle => 'வேறுபாடுகளை மதிப்பாய்வு செய்யவும்';
 
   @override
-  String get s57_version_a => 'Version A';
+  String get s57_version_a => 'பதிப்பு A';
 
   @override
-  String get s57_version_b => 'Version B';
+  String get s57_version_b => 'பதிப்பு B';
 
   @override
-  String get s57_policy_number_label => 'Policy Number';
+  String get s57_policy_number_label => 'பாலிசி எண்';
 
   @override
   String get s57_policy_number => 'POL/AGI/2024/123';
 
   @override
-  String get s57_policy_holder_label => 'Policy Holder';
+  String get s57_policy_holder_label => 'பாலிசிதாரர்';
 
   @override
-  String get s57_policy_holder => 'Arjun Sharma';
+  String get s57_policy_holder => 'அர்ஜுன் சர்மா';
 
   @override
-  String get s57_premium_label => 'Premium';
+  String get s57_premium_label => 'பிரீமியம்';
 
   @override
   String get s57_premium_a => '₹12,500';
@@ -3214,7 +3312,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get s57_premium_b => '₹13,250';
 
   @override
-  String get s57_period_label => 'Period';
+  String get s57_period_label => 'காலம்';
 
   @override
   String get s57_period_a => '2024–2025';
@@ -3223,2855 +3321,2952 @@ class AppLocalizationsTa extends AppLocalizations {
   String get s57_period_b => '2025–2026';
 
   @override
-  String get s57_changes => 'Changes Found';
+  String get s57_changes => 'மாற்றங்கள் கண்டறியப்பட்டன';
 
   @override
-  String get s57_premium_change => 'Premium';
+  String get s57_premium_change => 'பிரீமியம்';
 
   @override
   String get s57_premium_change_body => '₹12,500 → ₹13,250';
 
   @override
-  String get s57_period_change => 'Policy Period';
+  String get s57_period_change => 'பாலிசி காலம்';
 
   @override
   String get s57_period_change_body => '2024–2025 → 2025–2026';
 
   @override
-  String get s57_no_other => 'No other changes';
+  String get s57_no_other => 'வேறு மாற்றங்கள் இல்லை';
 
   @override
-  String get s57_no_other_body => 'Document structure matches';
+  String get s57_no_other_body => 'ஆவண அமைப்பு பொருந்துகிறது';
 
   @override
-  String get s57_export => 'Export Comparison';
+  String get s57_export => 'ஒப்பீட்டை ஏற்றுமதி செய்யவும்';
 
   @override
-  String get s58_title => 'Add Note';
+  String get s58_title => 'குறிப்பைச் சேர்க்கவும்';
 
   @override
-  String get s58_subtitle => 'Insurance Policy.pdf';
+  String get s58_subtitle => 'காப்பீட்டு பாலிசி.pdf';
 
   @override
-  String get s58_title_label => 'Title';
+  String get s58_title_label => 'தலைப்பு';
 
   @override
-  String get s58_title_value => 'Renewal Notes';
+  String get s58_title_value => 'புதுப்பிப்பு குறிப்புகள்';
 
   @override
-  String get s58_note_label => 'Note';
+  String get s58_note_label => 'குறிப்பு';
 
   @override
-  String get s58_note_line_1 => 'Call insurer before 20 March.';
+  String get s58_note_line_1 =>
+      '20 மார்ச் முன் காப்பீட்டு நிறுவனத்தை அழைக்கவும்.';
 
   @override
   String get s58_note_line_2 =>
-      'Ask about family floater upgrade and cashless hospitals near home.';
+      'குடும்ப ஃப்ளோட்டர் மேம்பாடு மற்றும் வீட்டிற்கு அருகிலுள்ள பணமில்லா மருத்துவமனைகள் பற்றி கேளுங்கள்.';
 
   @override
   String get s58_note_line_3 =>
-      'Compare premium with last year before renewing.';
+      'புதுப்பிப்பதற்கு முன் கடந்த ஆண்டின் பிரீமியத்துடன் ஒப்பிடவும்.';
 
   @override
   String get s58_counter => '164 / 2000';
 
   @override
-  String get s58_attach => 'Attach To';
+  String get s58_attach => 'இதனுடன் இணைக்கவும்';
 
   @override
-  String get s58_attach_value => 'Insurance Policy.pdf';
+  String get s58_attach_value => 'காப்பீட்டு பாலிசி.pdf';
 
   @override
-  String get s58_reminder => 'Reminder';
+  String get s58_reminder => 'நினைவூட்டல்';
 
   @override
-  String get s58_reminder_body => 'Add reminder for this note';
+  String get s58_reminder_body => 'இந்த குறிப்புக்கு நினைவூட்டலைச் சேர்க்கவும்';
 
   @override
-  String get s58_save => 'Save Note';
+  String get s58_save => 'குறிப்பைச் சேமிக்கவும்';
 
   @override
-  String get s59_title => 'Print / Save As';
+  String get s59_title => 'அச்சிடு / இவ்வாறு சேமிக்கவும்';
 
   @override
-  String get s59_subtitle => 'Choose output option';
+  String get s59_subtitle => 'வெளியீட்டு விருப்பத்தைத் தேர்ந்தெடுக்கவும்';
 
   @override
-  String get s59_file => 'Insurance Policy.pdf';
+  String get s59_file => 'காப்பீட்டு பாலிசி.pdf';
 
   @override
-  String get s59_file_meta => '4 pages • 2.4 MB';
+  String get s59_file_meta => '4 பக்கங்கள் • 2.4 MB';
 
   @override
-  String get s59_location => 'Finance › Insurance';
+  String get s59_location => 'நிதி › காப்பீடு';
 
   @override
-  String get s59_output => 'Output';
+  String get s59_output => 'வெளியீடு';
 
   @override
-  String get s59_print => 'Print';
+  String get s59_print => 'அச்சிடு';
 
   @override
-  String get s59_print_body => 'Use a connected printer';
+  String get s59_print_body => 'இணைக்கப்பட்ட அச்சுப்பொறியைப் பயன்படுத்தவும்';
 
   @override
-  String get s59_save_pdf => 'Save as PDF';
+  String get s59_save_pdf => 'PDF ஆகச் சேமிக்கவும்';
 
   @override
-  String get s59_save_pdf_body => 'Create a new PDF copy';
+  String get s59_save_pdf_body => 'புதிய PDF நகலை உருவாக்கவும்';
 
   @override
-  String get s59_save_files => 'Save to Files';
+  String get s59_save_files => 'கோப்புகளில் சேமிக்கவும்';
 
   @override
-  String get s59_save_files_body => 'Choose a local folder';
+  String get s59_save_files_body => 'உள்ளூர் கோப்புறையைத் தேர்ந்தெடுக்கவும்';
 
   @override
-  String get s59_export_images => 'Export Images';
+  String get s59_export_images => 'படங்களை ஏற்றுமதி செய்யவும்';
 
   @override
-  String get s59_export_images_body => 'Save each page as image';
+  String get s59_export_images_body => 'ஒவ்வொரு பக்கத்தையும் படமாக சேமிக்கவும்';
 
   @override
-  String get s59_page_range => 'Page Range';
+  String get s59_page_range => 'பக்க வரம்பு';
 
   @override
-  String get s59_all_pages => 'All pages';
+  String get s59_all_pages => 'அனைத்து பக்கங்களும்';
 
   @override
   String get s59_page_value => '1–4';
 
   @override
-  String get s59_privacy => 'Privacy';
+  String get s59_privacy => 'தனியுரிமை';
 
   @override
   String get s59_privacy_body =>
-      'Printing or saving creates an unencrypted copy outside OwnKeep. Continue only when you trust the destination.';
+      'அச்சிடுதல் அல்லது சேமித்தல் OwnKeep-க்கு வெளியே குறியாக்கப்படாத நகலை உருவாக்கும். இலக்கை நம்பினால் மட்டுமே தொடரவும்.';
 
   @override
-  String get common_continue => 'Continue';
+  String get common_continue => 'தொடரவும்';
 
   @override
-  String get s60_title => 'Secure Scan';
+  String get s60_title => 'பாதுகாப்பான ஸ்கேன்';
 
   @override
-  String get s60_subtitle => 'Capture and encrypt instantly';
+  String get s60_subtitle => 'உடனடியாகப் பிடித்து குறியாக்கவும்';
 
   @override
-  String get s60_document => 'DOCUMENT';
+  String get s60_document => 'ஆவணம்';
 
   @override
-  String get s60_detected => 'Document detected';
+  String get s60_detected => 'ஆவணம் கண்டறியப்பட்டது';
 
   @override
-  String get s60_auto_crop => 'Auto Crop';
+  String get s60_auto_crop => 'தானியங்கி வெட்டு';
 
   @override
-  String get s60_enhance => 'Enhance';
+  String get s60_enhance => 'மேம்படுத்து';
 
   @override
   String get s60_ocr => 'OCR';
 
   @override
-  String get s60_multi_page => 'Multi-page';
+  String get s60_multi_page => 'பல பக்கங்கள்';
 
   @override
-  String get s60_notice => 'Scans are encrypted before saving';
+  String get s60_notice => 'ஸ்கேன்கள் சேமிப்பதற்கு முன் குறியாக்கப்படுகின்றன';
 
   @override
-  String get s61_title => 'Health';
+  String get s61_title => 'சுகாதாரம்';
 
   @override
-  String get s61_subtitle => 'Medical records and reminders';
+  String get s61_subtitle => 'மருத்துவ பதிவுகள் மற்றும் நினைவூட்டல்கள்';
 
   @override
-  String get common_search_collection => 'Search this collection...';
+  String get common_search_collection => 'இந்த தொகுப்பில் தேடவும்...';
 
   @override
   String get s61_item_count => '22';
 
   @override
-  String get s61_item_count_label => 'health items';
+  String get s61_item_count_label => 'சுகாதார உருப்படிகள்';
 
   @override
   String get s61_stat_medicines_value => '8';
 
   @override
-  String get s61_stat_medicines => 'Medicines';
+  String get s61_stat_medicines => 'மருந்துகள்';
 
   @override
   String get s61_stat_appointments_value => '3';
 
   @override
-  String get s61_stat_appointments => 'Appointments';
+  String get s61_stat_appointments => 'நியமனங்கள்';
 
   @override
   String get s61_stat_reports_value => '12';
 
   @override
-  String get s61_stat_reports => 'Reports';
+  String get s61_stat_reports => 'அறிக்கைகள்';
 
   @override
   String get s61_stat_due_value => '2';
 
   @override
-  String get s61_stat_due => 'Due Soon';
+  String get s61_stat_due => 'விரைவில் வரவேண்டியது';
 
   @override
-  String get s61_upcoming => 'Upcoming';
+  String get s61_upcoming => 'வரவிருக்கும்';
 
   @override
-  String get s61_vitamin => 'Vitamin D3';
+  String get s61_vitamin => 'வைட்டமின் D3';
 
   @override
-  String get s61_vitamin_meta => 'Today • 8:00 AM';
+  String get s61_vitamin_meta => 'இன்று • 8:00 AM';
 
   @override
-  String get s61_vitamin_status => 'Reminder';
+  String get s61_vitamin_status => 'நினைவூட்டல்';
 
   @override
-  String get s61_doctor => 'Doctor Appointment';
+  String get s61_doctor => 'மருத்துவர் நியமனம்';
 
   @override
-  String get s61_doctor_meta => '15 May • 4:00 PM';
+  String get s61_doctor_meta => '15 மே • 4:00 PM';
 
   @override
-  String get s61_doctor_status => 'Upcoming';
+  String get s61_doctor_status => 'வரவிருக்கும்';
 
   @override
-  String get s61_blood => 'Blood Test Report';
+  String get s61_blood => 'இரத்த பரிசோதனை அறிக்கை';
 
   @override
-  String get s61_blood_meta => 'Added 2 days ago';
+  String get s61_blood_meta => '2 நாட்களுக்கு முன்பு சேர்க்கப்பட்டது';
 
   @override
-  String get s61_blood_status => 'Report';
+  String get s61_blood_status => 'அறிக்கை';
 
   @override
-  String get s61_documents => 'Documents';
+  String get s61_documents => 'ஆவணங்கள்';
 
   @override
-  String get s61_insurance_card => 'Health Insurance Card';
+  String get s61_insurance_card => 'சுகாதார காப்பீட்டு அட்டை';
 
   @override
-  String get s61_insurance_card_meta => 'Expires in 16 days';
+  String get s61_insurance_card_meta => '16 நாட்களில் காலாவதியாகும்';
 
   @override
-  String get s61_insurance_card_status => 'Active';
+  String get s61_insurance_card_status => 'செயலில்';
 
   @override
-  String get s61_prescription => 'Prescription - April';
+  String get s61_prescription => 'மருந்துச் சீட்டு - ஏப்ரல்';
 
   @override
-  String get s61_prescription_meta => '3 medicines listed';
+  String get s61_prescription_meta => '3 மருந்துகள் பட்டியலிடப்பட்டுள்ளன';
 
   @override
-  String get s61_prescription_status => 'Recent';
+  String get s61_prescription_status => 'சமீபத்தியவை';
 
   @override
-  String get s62_title => 'Finance';
+  String get s62_title => 'நிதி';
 
   @override
-  String get s62_subtitle => 'Money, tax and investments';
+  String get s62_subtitle => 'பணம், வரி மற்றும் முதலீடுகள்';
 
   @override
   String get s62_item_count => '38';
 
   @override
-  String get s62_item_count_label => 'finance items';
+  String get s62_item_count_label => 'நிதி உருப்படிகள்';
 
   @override
   String get s62_income_value => '₹2.4L';
 
   @override
-  String get s62_income => 'Income';
+  String get s62_income => 'வருமானம்';
 
   @override
   String get s62_expenses_value => '₹68K';
 
   @override
-  String get s62_expenses => 'Expenses';
+  String get s62_expenses => 'செலவுகள்';
 
   @override
   String get s62_statements_value => '12';
 
   @override
-  String get s62_statements => 'Statements';
+  String get s62_statements => 'அறிக்கைகள்';
 
   @override
   String get s62_tax_docs_value => '6';
 
   @override
-  String get s62_tax_docs => 'Tax Docs';
+  String get s62_tax_docs => 'வரி ஆவணங்கள்';
 
   @override
-  String get s62_this_month => 'This Month';
+  String get s62_this_month => 'இந்த மாதம்';
 
   @override
-  String get s62_salary => 'Salary Slip - July';
+  String get s62_salary => 'சம்பள சீட்டு - ஜூலை';
 
   @override
-  String get s62_salary_meta => 'Income • ₹1,25,000';
+  String get s62_salary_meta => 'வருமானம் • ₹1,25,000';
 
   @override
-  String get s62_salary_status => 'Income';
+  String get s62_salary_status => 'வருமானம்';
 
   @override
-  String get s62_card_bill => 'Credit Card Bill';
+  String get s62_card_bill => 'கிரெடிட் கார்டு பில்';
 
   @override
-  String get s62_card_bill_meta => 'Due in 4 days • ₹18,420';
+  String get s62_card_bill_meta => '4 நாட்களில் செலுத்த வேண்டும் • ₹18,420';
 
   @override
-  String get s62_card_bill_status => 'Due';
+  String get s62_card_bill_status => 'செலுத்த வேண்டியது';
 
   @override
-  String get s62_mutual_fund => 'Mutual Fund Summary';
+  String get s62_mutual_fund => 'மியூச்சுவல் ஃபண்ட் சுருக்கம்';
 
   @override
-  String get s62_mutual_fund_meta => 'Updated yesterday';
+  String get s62_mutual_fund_meta => 'நேற்று புதுப்பிக்கப்பட்டது';
 
   @override
-  String get s62_mutual_fund_status => 'Invest';
+  String get s62_mutual_fund_status => 'முதலீடு';
 
   @override
-  String get s62_pinned => 'Pinned Documents';
+  String get s62_pinned => 'பின் செய்யப்பட்ட ஆவணங்கள்';
 
   @override
-  String get s62_pan => 'PAN Card';
+  String get s62_pan => 'PAN அட்டை';
 
   @override
-  String get s62_pan_meta => 'Identity • 1.1 MB';
+  String get s62_pan_meta => 'அடையாளம் • 1.1 MB';
 
   @override
-  String get s62_pan_status => 'Pinned';
+  String get s62_pan_status => 'பின் செய்யப்பட்டது';
 
   @override
-  String get s62_itr => 'Income Tax Return 2025';
+  String get s62_itr => 'வருமான வரி அறிக்கை 2025';
 
   @override
-  String get s62_itr_meta => 'Filed • 2.8 MB';
+  String get s62_itr_meta => 'தாக்கல் செய்யப்பட்டது • 2.8 MB';
 
   @override
-  String get s62_itr_status => 'Tax';
+  String get s62_itr_status => 'வரி';
 
   @override
-  String get s63_title => 'Property';
+  String get s63_title => 'சொத்து';
 
   @override
-  String get s63_subtitle => 'Home, land and ownership';
+  String get s63_subtitle => 'வீடு, நிலம் மற்றும் உரிமை';
 
   @override
   String get s63_item_count => '18';
 
   @override
-  String get s63_item_count_label => 'property items';
+  String get s63_item_count_label => 'சொத்து உருப்படிகள்';
 
   @override
   String get s63_properties_value => '2';
 
   @override
-  String get s63_properties => 'Properties';
+  String get s63_properties => 'சொத்துகள்';
 
   @override
   String get s63_legal_value => '5';
 
   @override
-  String get s63_legal => 'Legal Docs';
+  String get s63_legal => 'சட்ட ஆவணங்கள்';
 
   @override
   String get s63_payments_value => '3';
 
   @override
-  String get s63_payments => 'Payments';
+  String get s63_payments => 'கட்டணங்கள்';
 
   @override
   String get s63_due_value => '1';
 
   @override
-  String get s63_due => 'Due Soon';
+  String get s63_due => 'விரைவில் வரவேண்டியது';
 
   @override
-  String get s63_important => 'Important';
+  String get s63_important => 'முக்கியம்';
 
   @override
-  String get s63_sale_deed => 'Sale Deed';
+  String get s63_sale_deed => 'விற்பனை பத்திரம்';
 
   @override
-  String get s63_sale_deed_meta => 'Apartment • 8.4 MB';
+  String get s63_sale_deed_meta => 'அபார்ட்மெண்ட் • 8.4 MB';
 
   @override
-  String get s63_sale_deed_status => 'Primary';
+  String get s63_sale_deed_status => 'முதன்மை';
 
   @override
-  String get s63_tax_receipt => 'Property Tax Receipt';
+  String get s63_tax_receipt => 'சொத்து வரி ரசீது';
 
   @override
-  String get s63_tax_receipt_meta => 'Paid for 2025';
+  String get s63_tax_receipt_meta => '2025-க்காக செலுத்தப்பட்டது';
 
   @override
-  String get s63_tax_receipt_status => 'Paid';
+  String get s63_tax_receipt_status => 'செலுத்தப்பட்டது';
 
   @override
-  String get s63_loan => 'Home Loan Agreement';
+  String get s63_loan => 'வீட்டு கடன் ஒப்பந்தம்';
 
   @override
-  String get s63_loan_meta => 'HDFC Bank • 14 pages';
+  String get s63_loan_meta => 'HDFC வங்கி • 14 பக்கங்கள்';
 
   @override
-  String get s63_loan_status => 'Loan';
+  String get s63_loan_status => 'கடன்';
 
   @override
-  String get s63_maintenance => 'Maintenance';
+  String get s63_maintenance => 'பராமரிப்பு';
 
   @override
-  String get s63_society => 'Society Maintenance';
+  String get s63_society => 'சொசைட்டி பராமரிப்பு';
 
   @override
-  String get s63_society_meta => 'Due 10 Aug • ₹4,500';
+  String get s63_society_meta => '10 ஆகஸ்ட் அன்று செலுத்த வேண்டும் • ₹4,500';
 
   @override
-  String get s63_society_status => 'Due';
+  String get s63_society_status => 'செலுத்த வேண்டியது';
 
   @override
-  String get s63_home_insurance => 'Home Insurance';
+  String get s63_home_insurance => 'வீட்டு காப்பீடு';
 
   @override
-  String get s63_home_insurance_meta => 'Expires in 42 days';
+  String get s63_home_insurance_meta => '42 நாட்களில் காலாவதியாகும்';
 
   @override
-  String get s63_home_insurance_status => 'Active';
+  String get s63_home_insurance_status => 'செயலில்';
 
   @override
-  String get s64_title => 'Vehicle';
+  String get s64_title => 'வாகனம்';
 
   @override
-  String get s64_subtitle => 'Documents, service and expenses';
+  String get s64_subtitle => 'ஆவணங்கள், சேவை மற்றும் செலவுகள்';
 
   @override
   String get s64_item_count => '14';
 
   @override
-  String get s64_item_count_label => 'vehicle items';
+  String get s64_item_count_label => 'வாகன உருப்படிகள்';
 
   @override
   String get s64_vehicle_value => '1';
 
   @override
-  String get s64_vehicle => 'Vehicle';
+  String get s64_vehicle => 'வாகனம்';
 
   @override
   String get s64_documents_value => '4';
 
   @override
-  String get s64_documents => 'Documents';
+  String get s64_documents => 'ஆவணங்கள்';
 
   @override
   String get s64_reminders_value => '2';
 
   @override
-  String get s64_reminders => 'Reminders';
+  String get s64_reminders => 'நினைவூட்டல்கள்';
 
   @override
   String get s64_fuel_value => '₹4.8K';
 
   @override
-  String get s64_fuel => 'Fuel';
+  String get s64_fuel => 'எரிபொருள்';
 
   @override
-  String get s64_vehicle_documents => 'Vehicle Documents';
+  String get s64_vehicle_documents => 'வாகன ஆவணங்கள்';
 
   @override
-  String get s64_rc => 'Registration Certificate';
+  String get s64_rc => 'பதிவு சான்றிதழ்';
 
   @override
   String get s64_rc_meta => 'KA 03 MN 4582';
 
   @override
-  String get s64_rc_status => 'Active';
+  String get s64_rc_status => 'செயலில்';
 
   @override
-  String get s64_insurance => 'Vehicle Insurance';
+  String get s64_insurance => 'வாகன காப்பீடு';
 
   @override
-  String get s64_insurance_meta => 'Expires in 15 days';
+  String get s64_insurance_meta => '15 நாட்களில் காலாவதியாகும்';
 
   @override
-  String get s64_insurance_status => 'Due';
+  String get s64_insurance_status => 'செலுத்த வேண்டியது';
 
   @override
-  String get s64_puc => 'PUC Certificate';
+  String get s64_puc => 'PUC சான்றிதழ்';
 
   @override
-  String get s64_puc_meta => 'Valid until 30 Sep';
+  String get s64_puc_meta => '30 செப்டம்பர் வரை செல்லுபடியாகும்';
 
   @override
-  String get s64_puc_status => 'Valid';
+  String get s64_puc_status => 'செல்லுபடியாகும்';
 
   @override
-  String get s64_service_expenses => 'Service & Expenses';
+  String get s64_service_expenses => 'சேவை & செலவுகள்';
 
   @override
-  String get s64_last_service => 'Last Service';
+  String get s64_last_service => 'கடைசி சேவை';
 
   @override
-  String get s64_last_service_meta => '12 Jul • 18,450 km';
+  String get s64_last_service_meta => '12 ஜூலை • 18,450 கி.மீ';
 
   @override
-  String get s64_last_service_status => 'Done';
+  String get s64_last_service_status => 'முடிந்தது';
 
   @override
-  String get s64_fuel_log => 'Fuel Log';
+  String get s64_fuel_log => 'எரிபொருள் பதிவு';
 
   @override
-  String get s64_fuel_log_meta => '₹4,820 this month';
+  String get s64_fuel_log_meta => 'இந்த மாதம் ₹4,820';
 
   @override
-  String get s64_fuel_log_status => 'Monthly';
+  String get s64_fuel_log_status => 'மாதாந்திர';
 
   @override
-  String get s65_title => 'Education';
+  String get s65_title => 'கல்வி';
 
   @override
-  String get s65_subtitle => 'Certificates and learning';
+  String get s65_subtitle => 'சான்றிதழ்கள் மற்றும் கற்றல்';
 
   @override
   String get s65_item_count => '12';
 
   @override
-  String get s65_item_count_label => 'education items';
+  String get s65_item_count_label => 'கல்வி உருப்படிகள்';
 
   @override
   String get s65_certificates_value => '6';
 
   @override
-  String get s65_certificates => 'Certificates';
+  String get s65_certificates => 'சான்றிதழ்கள்';
 
   @override
   String get s65_notes_value => '12';
 
   @override
-  String get s65_notes => 'Notes';
+  String get s65_notes => 'குறிப்புகள்';
 
   @override
   String get s65_courses_value => '3';
 
   @override
-  String get s65_courses => 'Courses';
+  String get s65_courses => 'பாடநெறிகள்';
 
   @override
   String get s65_reminder_value => '1';
 
   @override
-  String get s65_reminder => 'Reminder';
+  String get s65_reminder => 'நினைவூட்டல்';
 
   @override
-  String get s65_certificates_section => 'Certificates';
+  String get s65_certificates_section => 'சான்றிதழ்கள்';
 
   @override
-  String get s65_degree => 'B.Tech Degree';
+  String get s65_degree => 'B.Tech பட்டம்';
 
   @override
-  String get s65_degree_meta => 'Computer Science • 4.2 MB';
+  String get s65_degree_meta => 'கணினி அறிவியல் • 4.2 MB';
 
   @override
-  String get s65_degree_status => 'Degree';
+  String get s65_degree_status => 'பட்டம்';
 
   @override
-  String get s65_class_x => 'Class X Certificate';
+  String get s65_class_x => '10ஆம் வகுப்பு சான்றிதழ்';
 
   @override
   String get s65_class_x_meta => 'CBSE • 1.8 MB';
 
   @override
-  String get s65_class_x_status => 'Academic';
+  String get s65_class_x_status => 'கல்வி';
 
   @override
-  String get s65_course => 'Course Certificate';
+  String get s65_course => 'பாடநெறி சான்றிதழ்';
 
   @override
-  String get s65_course_meta => 'Flutter Advanced • 940 KB';
+  String get s65_course_meta => 'Flutter மேம்பட்ட • 940 KB';
 
   @override
-  String get s65_course_status => 'Skill';
+  String get s65_course_status => 'திறன்';
 
   @override
-  String get s65_learning => 'Learning';
+  String get s65_learning => 'கற்றல்';
 
   @override
-  String get s65_study_notes => 'Study Notes';
+  String get s65_study_notes => 'படிப்பு குறிப்புகள்';
 
   @override
-  String get s65_study_notes_meta => '12 notes';
+  String get s65_study_notes_meta => '12 குறிப்புகள்';
 
   @override
-  String get s65_study_notes_status => 'Notes';
+  String get s65_study_notes_status => 'குறிப்புகள்';
 
   @override
-  String get s65_exam => 'Exam Reminder';
+  String get s65_exam => 'தேர்வு நினைவூட்டல்';
 
   @override
-  String get s65_exam_meta => '20 Aug • 9:00 AM';
+  String get s65_exam_meta => '20 ஆகஸ்ட் • 9:00 AM';
 
   @override
-  String get s65_exam_status => 'Upcoming';
+  String get s65_exam_status => 'வரவிருக்கும்';
 
   @override
-  String get s66_title => 'Identity';
+  String get s66_title => 'அடையாளம்';
 
   @override
-  String get s66_subtitle => 'Your verified identity documents';
+  String get s66_subtitle => 'உங்கள் சரிபார்க்கப்பட்ட அடையாள ஆவணங்கள்';
 
   @override
   String get s66_item_count => '24';
 
   @override
-  String get s66_item_count_label => 'identity items';
+  String get s66_item_count_label => 'அடையாள உருப்படிகள்';
 
   @override
   String get s66_primary_value => '5';
 
   @override
-  String get s66_primary => 'Primary IDs';
+  String get s66_primary => 'முதன்மை IDs';
 
   @override
   String get s66_verified_value => '4';
 
   @override
-  String get s66_verified => 'Verified';
+  String get s66_verified => 'சரிபார்க்கப்பட்டது';
 
   @override
   String get s66_expiring_value => '1';
 
   @override
-  String get s66_expiring => 'Expiring';
+  String get s66_expiring => 'விரைவில் காலாவதியாகும்';
 
   @override
   String get s66_copies_value => '2';
 
   @override
-  String get s66_copies => 'Copies';
+  String get s66_copies => 'நகல்கள்';
 
   @override
-  String get s66_government => 'Government IDs';
+  String get s66_government => 'அரசு IDs';
 
   @override
-  String get s66_aadhaar => 'Aadhaar Card';
+  String get s66_aadhaar => 'ஆதார் அட்டை';
 
   @override
-  String get s66_aadhaar_meta => 'Updated 3 months ago';
+  String get s66_aadhaar_meta => '3 மாதங்களுக்கு முன்பு புதுப்பிக்கப்பட்டது';
 
   @override
-  String get s66_aadhaar_status => 'Verified';
+  String get s66_aadhaar_status => 'சரிபார்க்கப்பட்டது';
 
   @override
-  String get s66_pan => 'PAN Card';
+  String get s66_pan => 'PAN அட்டை';
 
   @override
-  String get s66_pan_meta => 'Permanent account number';
+  String get s66_pan_meta => 'நிரந்தர கணக்கு எண்';
 
   @override
-  String get s66_pan_status => 'Verified';
+  String get s66_pan_status => 'சரிபார்க்கப்பட்டது';
 
   @override
-  String get s66_passport => 'Passport';
+  String get s66_passport => 'கடவுச்சீட்டு';
 
   @override
-  String get s66_passport_meta => 'Expires 14 Jun 2031';
+  String get s66_passport_meta => '14 ஜூன் 2031 அன்று காலாவதியாகும்';
 
   @override
-  String get s66_passport_status => 'Active';
+  String get s66_passport_status => 'செயலில்';
 
   @override
-  String get s66_other => 'Other Identity';
+  String get s66_other => 'மற்ற அடையாளங்கள்';
 
   @override
-  String get s66_driving => 'Driving Licence';
+  String get s66_driving => 'ஓட்டுநர் உரிமம்';
 
   @override
-  String get s66_driving_meta => 'Expires in 26 days';
+  String get s66_driving_meta => '26 நாட்களில் காலாவதியாகும்';
 
   @override
-  String get s66_driving_status => 'Due Soon';
+  String get s66_driving_status => 'விரைவில் வரவேண்டியது';
 
   @override
-  String get s66_voter => 'Voter ID';
+  String get s66_voter => 'வாக்காளர் ID';
 
   @override
-  String get s66_voter_meta => 'Added 12 May';
+  String get s66_voter_meta => '12 மே அன்று சேர்க்கப்பட்டது';
 
   @override
-  String get s66_voter_status => 'Stored';
+  String get s66_voter_status => 'சேமிக்கப்பட்டது';
 
   @override
-  String get s67_title => 'Insurance';
+  String get s67_title => 'காப்பீடு';
 
   @override
-  String get s67_subtitle => 'Policies, claims and renewals';
+  String get s67_subtitle => 'பாலிசிகள், கோரிக்கைகள் மற்றும் புதுப்பிப்புகள்';
 
   @override
   String get s67_item_count => '16';
 
   @override
-  String get s67_item_count_label => 'insurance items';
+  String get s67_item_count_label => 'காப்பீட்டு உருப்படிகள்';
 
   @override
   String get s67_policies_value => '3';
 
   @override
-  String get s67_policies => 'Policies';
+  String get s67_policies => 'பாலிசிகள்';
 
   @override
   String get s67_due_value => '2';
 
   @override
-  String get s67_due => 'Due Soon';
+  String get s67_due => 'விரைவில் வரவேண்டியது';
 
   @override
   String get s67_receipts_value => '4';
 
   @override
-  String get s67_receipts => 'Receipts';
+  String get s67_receipts => 'ரசீதுகள்';
 
   @override
   String get s67_claim_value => '1';
 
   @override
-  String get s67_claim => 'Claim';
+  String get s67_claim => 'கோரிக்கை';
 
   @override
-  String get s67_policies_section => 'Policies';
+  String get s67_policies_section => 'பாலிசிகள்';
 
   @override
-  String get s67_health => 'Health Insurance';
+  String get s67_health => 'சுகாதார காப்பீடு';
 
   @override
-  String get s67_health_meta => 'Expires in 16 days';
+  String get s67_health_meta => '16 நாட்களில் காலாவதியாகும்';
 
   @override
-  String get s67_health_status => 'Health';
+  String get s67_health_status => 'சுகாதாரம்';
 
   @override
-  String get s67_vehicle => 'Vehicle Insurance';
+  String get s67_vehicle => 'வாகன காப்பீடு';
 
   @override
-  String get s67_vehicle_meta => 'Expires in 15 days';
+  String get s67_vehicle_meta => '15 நாட்களில் காலாவதியாகும்';
 
   @override
-  String get s67_vehicle_status => 'Vehicle';
+  String get s67_vehicle_status => 'வாகனம்';
 
   @override
-  String get s67_life => 'Life Insurance';
+  String get s67_life => 'ஆயுள் காப்பீடு';
 
   @override
-  String get s67_life_meta => 'Premium due 28 Aug';
+  String get s67_life_meta => 'பிரீமியம் 28 ஆகஸ்ட் அன்று செலுத்த வேண்டும்';
 
   @override
-  String get s67_life_status => 'Life';
+  String get s67_life_status => 'ஆயுள்';
 
   @override
-  String get s67_claims => 'Claims & Receipts';
+  String get s67_claims => 'கோரிக்கைகள் & ரசீதுகள்';
 
   @override
-  String get s67_claim_form => 'Claim Form';
+  String get s67_claim_form => 'கோரிக்கை படிவம்';
 
   @override
-  String get s67_claim_form_meta => 'Submitted 12 Apr';
+  String get s67_claim_form_meta => '12 ஏப்ரல் அன்று சமர்ப்பிக்கப்பட்டது';
 
   @override
-  String get s67_claim_form_status => 'Claim';
+  String get s67_claim_form_status => 'கோரிக்கை';
 
   @override
-  String get s67_premium => 'Premium Receipt';
+  String get s67_premium => 'பிரீமியம் ரசீது';
 
   @override
-  String get s67_premium_meta => 'Paid 02 Jul';
+  String get s67_premium_meta => '02 ஜூலை அன்று செலுத்தப்பட்டது';
 
   @override
-  String get s67_premium_status => 'Paid';
+  String get s67_premium_status => 'செலுத்தப்பட்டது';
 
   @override
-  String get s68_title => 'Travel';
+  String get s68_title => 'பயணம்';
 
   @override
-  String get s68_subtitle => 'Trips, tickets and plans';
+  String get s68_subtitle => 'பயணங்கள், டிக்கெட்டுகள் மற்றும் திட்டங்கள்';
 
   @override
   String get s68_item_count => '6';
 
   @override
-  String get s68_item_count_label => 'travel items';
+  String get s68_item_count_label => 'பயண உருப்படிகள்';
 
   @override
   String get s68_trip_value => '1';
 
   @override
-  String get s68_trip => 'Upcoming Trip';
+  String get s68_trip => 'வரவிருக்கும் பயணம்';
 
   @override
   String get s68_bookings_value => '2';
 
   @override
-  String get s68_bookings => 'Bookings';
+  String get s68_bookings => 'முன்பதிவுகள்';
 
   @override
   String get s68_documents_value => '3';
 
   @override
-  String get s68_documents => 'Documents';
+  String get s68_documents => 'ஆவணங்கள்';
 
   @override
   String get s68_checklist_value => '1';
 
   @override
-  String get s68_checklist => 'Checklist';
+  String get s68_checklist => 'சரிபார்ப்புப் பட்டியல்';
 
   @override
-  String get s68_upcoming => 'Upcoming Trip';
+  String get s68_upcoming => 'வரவிருக்கும் பயணம்';
 
   @override
-  String get s68_flight => 'Flight Ticket';
+  String get s68_flight => 'விமான டிக்கெட்';
 
   @override
-  String get s68_flight_meta => 'Bengaluru → Singapore';
+  String get s68_flight_meta => 'பெங்களூரு → சிங்கப்பூர்';
 
   @override
-  String get s68_flight_status => '12 Sep';
+  String get s68_flight_status => '12 செப்டம்பர்';
 
   @override
-  String get s68_hotel => 'Hotel Booking';
+  String get s68_hotel => 'ஹோட்டல் முன்பதிவு';
 
   @override
-  String get s68_hotel_meta => 'Marina Bay • 4 nights';
+  String get s68_hotel_meta => 'மரீனா பே • 4 இரவுகள்';
 
   @override
-  String get s68_hotel_status => 'Booked';
+  String get s68_hotel_status => 'முன்பதிவு செய்யப்பட்டது';
 
   @override
-  String get s68_insurance => 'Travel Insurance';
+  String get s68_insurance => 'பயண காப்பீடு';
 
   @override
-  String get s68_insurance_meta => 'Valid 11–17 Sep';
+  String get s68_insurance_meta => '11–17 செப்டம்பர் வரை செல்லுபடியாகும்';
 
   @override
-  String get s68_insurance_status => 'Active';
+  String get s68_insurance_status => 'செயலில்';
 
   @override
-  String get s68_travel_documents => 'Travel Documents';
+  String get s68_travel_documents => 'பயண ஆவணங்கள்';
 
   @override
-  String get s68_passport => 'Passport Copy';
+  String get s68_passport => 'கடவுச்சீட்டு நகல்';
 
   @override
-  String get s68_passport_meta => 'Encrypted copy';
+  String get s68_passport_meta => 'குறியாக்கப்பட்ட நகல்';
 
   @override
-  String get s68_passport_status => 'Ready';
+  String get s68_passport_status => 'தயார்';
 
   @override
-  String get s68_packing => 'Packing Checklist';
+  String get s68_packing => 'பேக்கிங் சரிபார்ப்புப் பட்டியல்';
 
   @override
-  String get s68_packing_meta => '18 items • 6 completed';
+  String get s68_packing_meta => '18 உருப்படிகள் • 6 முடிந்தது';
 
   @override
-  String get s68_packing_status => 'Checklist';
+  String get s68_packing_status => 'சரிபார்ப்புப் பட்டியல்';
 
   @override
-  String get s69_title => 'Work';
+  String get s69_title => 'வேலை';
 
   @override
-  String get s69_subtitle => 'Career and professional records';
+  String get s69_subtitle => 'தொழில் மற்றும் தொழில்முறை பதிவுகள்';
 
   @override
   String get s69_item_count => '9';
 
   @override
-  String get s69_item_count_label => 'work items';
+  String get s69_item_count_label => 'வேலை உருப்படிகள்';
 
   @override
   String get s69_employers_value => '2';
 
   @override
-  String get s69_employers => 'Employers';
+  String get s69_employers => 'பணியமர்த்துநர்கள்';
 
   @override
   String get s69_contracts_value => '4';
 
   @override
-  String get s69_contracts => 'Contracts';
+  String get s69_contracts => 'ஒப்பந்தங்கள்';
 
   @override
   String get s69_payslips_value => '12';
 
   @override
-  String get s69_payslips => 'Payslips';
+  String get s69_payslips => 'சம்பள சீட்டுகள்';
 
   @override
   String get s69_projects_value => '3';
 
   @override
-  String get s69_projects => 'Projects';
+  String get s69_projects => 'திட்டங்கள்';
 
   @override
-  String get s69_employment => 'Employment';
+  String get s69_employment => 'வேலைவாய்ப்பு';
 
   @override
-  String get s69_contract => 'Employment Contract';
+  String get s69_contract => 'வேலைவாய்ப்பு ஒப்பந்தம்';
 
   @override
-  String get s69_contract_meta => 'CleanDesk AI • 14 pages';
+  String get s69_contract_meta => 'CleanDesk AI • 14 பக்கங்கள்';
 
   @override
-  String get s69_contract_status => 'Active';
+  String get s69_contract_status => 'செயலில்';
 
   @override
-  String get s69_salary => 'Salary Slip - July';
+  String get s69_salary => 'சம்பள சீட்டு - ஜூலை';
 
   @override
   String get s69_salary_meta => '₹1,25,000 • PDF';
 
   @override
-  String get s69_salary_status => 'Recent';
+  String get s69_salary_status => 'சமீபத்தியவை';
 
   @override
-  String get s69_experience => 'Experience Letter';
+  String get s69_experience => 'அனுபவக் கடிதம்';
 
   @override
-  String get s69_experience_meta => 'Previous employer • 2 pages';
+  String get s69_experience_meta => 'முந்தைய பணியமர்த்துநர் • 2 பக்கங்கள்';
 
   @override
-  String get s69_experience_status => 'Archived';
+  String get s69_experience_status => 'காப்பகப்படுத்தப்பட்டது';
 
   @override
-  String get s69_projects_section => 'Projects';
+  String get s69_projects_section => 'திட்டங்கள்';
 
   @override
-  String get s69_notes => 'Project Notes';
+  String get s69_notes => 'திட்ட குறிப்புகள்';
 
   @override
-  String get s69_notes_meta => 'OwnKeep • 28 notes';
+  String get s69_notes_meta => 'OwnKeep • 28 குறிப்புகள்';
 
   @override
-  String get s69_notes_status => 'Personal';
+  String get s69_notes_status => 'தனிப்பட்ட';
 
   @override
-  String get s69_portfolio => 'Portfolio PDF';
+  String get s69_portfolio => 'போர்ட்ஃபோலியோ PDF';
 
   @override
-  String get s69_portfolio_meta => 'Updated last week';
+  String get s69_portfolio_meta => 'கடந்த வாரம் புதுப்பிக்கப்பட்டது';
 
   @override
-  String get s69_portfolio_status => 'Portfolio';
+  String get s69_portfolio_status => 'போர்ட்ஃபோலியோ';
 
   @override
-  String get s70_title => 'Custom Collection';
+  String get s70_title => 'தனிப்பயன் தொகுப்பு';
 
   @override
-  String get s70_subtitle => 'Create your own category';
+  String get s70_subtitle => 'உங்கள் சொந்த வகையை உருவாக்கவும்';
 
   @override
-  String get s70_collection_name => 'Collection Name';
+  String get s70_collection_name => 'தொகுப்பு பெயர்';
 
   @override
-  String get s70_collection_value => 'Family Records';
+  String get s70_collection_value => 'குடும்ப பதிவுகள்';
 
   @override
-  String get s70_choose_icon => 'Choose Icon';
+  String get s70_choose_icon => 'ஐகானைத் தேர்ந்தெடுக்கவும்';
 
   @override
-  String get s70_theme_color => 'Theme Color';
+  String get s70_theme_color => 'தீம் நிறம்';
 
   @override
-  String get s70_smart_rules => 'Smart Rules';
+  String get s70_smart_rules => 'ஸ்மார்ட் விதிகள்';
 
   @override
-  String get s70_auto_tag => 'Auto-add by tag';
+  String get s70_auto_tag => 'குறிச்சொல்லின் அடிப்படையில் தானாகச் சேர்க்கவும்';
 
   @override
-  String get s70_auto_tag_body => '#family';
+  String get s70_auto_tag_body => '#குடும்பம்';
 
   @override
-  String get s70_suggest => 'Suggest reminders';
+  String get s70_suggest => 'நினைவூட்டல்களைப் பரிந்துரைக்கவும்';
 
   @override
-  String get s70_suggest_body => 'From detected dates';
+  String get s70_suggest_body => 'கண்டறியப்பட்ட தேதிகளிலிருந்து';
 
   @override
-  String get s70_ai => 'Allow AI organization';
+  String get s70_ai => 'AI ஒழுங்குபடுத்தலை அனுமதிக்கவும்';
 
   @override
-  String get s70_ai_body => 'Runs only on device';
+  String get s70_ai_body => 'சாதனத்தில் மட்டுமே இயங்கும்';
 
   @override
-  String get s70_home => 'Show on Home';
+  String get s70_home => 'முகப்பில் காட்டவும்';
 
   @override
-  String get s70_home_body => 'Pin as smart collection';
+  String get s70_home_body => 'ஸ்மார்ட் தொகுப்பாக பின் செய்யவும்';
 
   @override
-  String get s70_preview => 'Preview';
+  String get s70_preview => 'முன்னோட்டம்';
 
   @override
-  String get s70_preview_name => 'Family Records';
+  String get s70_preview_name => 'குடும்ப பதிவுகள்';
 
   @override
-  String get s70_preview_meta => '0 items • Ready to use';
+  String get s70_preview_meta => '0 உருப்படிகள் • பயன்படுத்தத் தயாராக உள்ளது';
 
   @override
-  String get s70_create => 'Create Collection';
+  String get s70_create => 'தொகுப்பை உருவாக்கவும்';
 
   @override
-  String get s71_title => 'AI Assistant';
+  String get s71_title => 'AI உதவியாளர்';
 
   @override
-  String get s71_subtitle => 'Private • On-device';
+  String get s71_subtitle => 'தனிப்பட்ட • சாதனத்தில்';
 
   @override
-  String get s71_greeting => 'Hello, Arjun 👋';
+  String get s71_greeting => 'வணக்கம், அர்ஜுன் 👋';
 
   @override
-  String get s71_prompt => 'How can I help with your vault?';
+  String get s71_prompt => 'உங்கள் வால்ட்டில் நான் எவ்வாறு உதவலாம்?';
 
   @override
-  String get s71_quick_vehicle => 'Find my vehicle insurance';
+  String get s71_quick_vehicle => 'என் வாகன காப்பீட்டை கண்டறியவும்';
 
   @override
-  String get s71_quick_expiring => 'Show documents expiring soon';
+  String get s71_quick_expiring => 'விரைவில் காலாவதியாகும் ஆவணங்களை காட்டவும்';
 
   @override
-  String get s71_quick_health => 'Summarize health reports';
+  String get s71_quick_health => 'சுகாதார அறிக்கைகளை சுருக்கமாக்கவும்';
 
   @override
-  String get s71_quick_travel => 'How much did I spend on travel?';
+  String get s71_quick_travel => 'பயணத்திற்கு நான் எவ்வளவு செலவிட்டேன்?';
 
   @override
   String get s71_ai_label => 'AI';
 
   @override
   String get s71_response =>
-      'Your vehicle insurance is in Vehicle › Documents. It expires in 15 days. I found the policy PDF and a renewal reminder.';
+      'உங்கள் வாகன காப்பீடு Vehicle › Documents-ல் உள்ளது. இது 15 நாட்களில் காலாவதியாகும். பாலிசி PDF மற்றும் புதுப்பிப்பு நினைவூட்டலை கண்டறிந்தேன்.';
 
   @override
-  String get s71_open_policy => 'Open Insurance Policy';
+  String get s71_open_policy => 'காப்பீட்டு பாலிசியைத் திறக்கவும்';
 
   @override
-  String get s71_input_hint => 'Ask anything...';
+  String get s71_input_hint => 'எதையும் கேளுங்கள்...';
 
   @override
-  String get s71_local_notice => 'All AI processing happens on this device';
+  String get s71_local_notice =>
+      'அனைத்து AI செயலாக்கமும் இந்த சாதனத்திலேயே நடக்கும்';
 
   @override
-  String get s72_title => 'AI Insights';
+  String get s72_title => 'AI நுண்ணறிவுகள்';
 
   @override
-  String get s72_subtitle => 'Patterns found in your vault';
+  String get s72_subtitle => 'உங்கள் வால்ட்டில் கண்டறியப்பட்ட முறைகள்';
 
   @override
-  String get s72_monthly => 'Monthly Vault Insight';
+  String get s72_monthly => 'மாதாந்திர வால்ட் நுண்ணறிவு';
 
   @override
-  String get s72_hero_title => 'Your vault is getting healthier';
+  String get s72_hero_title => 'உங்கள் வால்ட் மேம்பட்டு வருகிறது';
 
   @override
   String get s72_hero_body =>
-      'You organized 34 documents, resolved 12 duplicates and added 6 expiry reminders this month.';
+      'இந்த மாதம் நீங்கள் 34 ஆவணங்களை ஒழுங்குபடுத்தி, 12 நகல்களைத் தீர்த்து, 6 காலாவதி நினைவூட்டல்களைச் சேர்த்தீர்கள்.';
 
   @override
   String get s72_organized_value => '34';
 
   @override
-  String get s72_organized => 'Organized';
+  String get s72_organized => 'ஒழுங்குபடுத்தப்பட்டது';
 
   @override
   String get s72_duplicates_value => '12';
 
   @override
-  String get s72_duplicates => 'Duplicates fixed';
+  String get s72_duplicates => 'நகல்கள் சரிசெய்யப்பட்டன';
 
   @override
   String get s72_reminders_value => '6';
 
   @override
-  String get s72_reminders => 'Reminders';
+  String get s72_reminders => 'நினைவூட்டல்கள்';
 
   @override
   String get s72_space_value => '2.8 GB';
 
   @override
-  String get s72_space => 'Space saved';
+  String get s72_space => 'இடம் சேமிக்கப்பட்டது';
 
   @override
-  String get s72_insights => 'Insights';
+  String get s72_insights => 'நுண்ணறிவுகள்';
 
   @override
-  String get s72_tags_title => '12 documents need tags';
+  String get s72_tags_title => '12 ஆவணங்களுக்கு குறிச்சொற்கள் தேவை';
 
   @override
-  String get s72_tags_body => 'Mostly insurance and finance files';
+  String get s72_tags_body => 'முக்கியமாக காப்பீடு மற்றும் நிதி கோப்புகள்';
 
   @override
-  String get s72_expiry_title => '3 documents expire this month';
+  String get s72_expiry_title => 'இந்த மாதம் 3 ஆவணங்கள் காலாவதியாகும்';
 
   @override
-  String get s72_expiry_body => 'Vehicle insurance, licence, health policy';
+  String get s72_expiry_body => 'வாகன காப்பீடு, உரிமம், சுகாதார பாலிசி';
 
   @override
-  String get s72_duplicate_title => '5 duplicate groups detected';
+  String get s72_duplicate_title => '5 நகல் குழுக்கள் கண்டறியப்பட்டன';
 
   @override
-  String get s72_duplicate_body => 'Potentially save 1.4 GB';
+  String get s72_duplicate_body => 'சுமார் 1.4 GB சேமிக்கலாம்';
 
   @override
-  String get s72_uncategorized_title => '8 files are uncategorized';
+  String get s72_uncategorized_title => '8 கோப்புகள் வகைப்படுத்தப்படவில்லை';
 
   @override
-  String get s72_uncategorized_body => 'AI can organize them automatically';
+  String get s72_uncategorized_body => 'AI அவற்றை தானாக ஒழுங்குபடுத்தலாம்';
 
   @override
-  String get s72_outdated_title => '2 reminders may be outdated';
+  String get s72_outdated_title =>
+      '2 நினைவூட்டல்கள் காலாவதியானவையாக இருக்கலாம்';
 
   @override
-  String get s72_outdated_body => 'Review and update due dates';
+  String get s72_outdated_body =>
+      'காலக்கெடு தேதிகளை மதிப்பாய்வு செய்து புதுப்பிக்கவும்';
 
   @override
-  String get s73_title => 'Smart Suggestions';
+  String get s73_title => 'ஸ்மார்ட் பரிந்துரைகள்';
 
   @override
-  String get s73_subtitle => 'Review before applying';
+  String get s73_subtitle => 'பயன்படுத்தும் முன் மதிப்பாய்வு செய்யவும்';
 
   @override
-  String get filter_organize => 'Organize';
+  String get filter_organize => 'ஒழுங்குபடுத்தவும்';
 
   @override
-  String get filter_cleanup => 'Cleanup';
+  String get filter_cleanup => 'சுத்தப்படுத்தல்';
 
   @override
-  String get s73_move_title => 'Move 4 files to Insurance';
+  String get s73_move_title => '4 கோப்புகளை Insurance-க்கு நகர்த்தவும்';
 
   @override
-  String get s73_move_body => 'Detected policy documents in Finance';
+  String get s73_move_body => 'Finance-ல் பாலிசி ஆவணங்கள் கண்டறியப்பட்டன';
 
   @override
-  String get common_apply => 'Apply';
+  String get common_apply => 'பயன்படுத்து';
 
   @override
-  String get s73_tag_title => 'Add #identity tag to 3 files';
+  String get s73_tag_title =>
+      '3 கோப்புகளுக்கு #அடையாளம் குறிச்சொல்லைச் சேர்க்கவும்';
 
   @override
-  String get s73_tag_body => 'Passport, PAN and Aadhaar';
+  String get s73_tag_body => 'கடவுச்சீட்டு, PAN மற்றும் ஆதார்';
 
   @override
-  String get s73_expiry_title => 'Create expiry reminder';
+  String get s73_expiry_title => 'காலாவதி நினைவூட்டலை உருவாக்கவும்';
 
   @override
-  String get s73_expiry_body => 'Driving licence expires in 26 days';
+  String get s73_expiry_body => 'ஓட்டுநர் உரிமம் 26 நாட்களில் காலாவதியாகும்';
 
   @override
-  String get common_add => 'Add';
+  String get common_add => 'சேர்க்கவும்';
 
   @override
-  String get s73_duplicate_title => 'Merge duplicate receipts';
+  String get s73_duplicate_title => 'நகல் ரசீதுகளை ஒன்றிணைக்கவும்';
 
   @override
-  String get s73_duplicate_body => 'Two identical premium receipts';
+  String get s73_duplicate_body => 'ஒரே மாதிரியான இரண்டு பிரீமியம் ரசீதுகள்';
 
   @override
-  String get common_review => 'Review';
+  String get common_review => 'மதிப்பாய்வு செய்யவும்';
 
   @override
-  String get s73_rename_title => 'Rename unclear document';
+  String get s73_rename_title => 'தெளிவில்லாத ஆவணத்தின் பெயரை மாற்றவும்';
 
   @override
-  String get s73_rename_body => 'IMG_2045 → Health Report - May';
+  String get s73_rename_body => 'IMG_2045 → சுகாதார அறிக்கை - மே';
 
   @override
-  String get common_rename => 'Rename';
+  String get common_rename => 'பெயர் மாற்றவும்';
 
   @override
-  String get s73_archive_title => 'Archive old policy';
+  String get s73_archive_title => 'பழைய பாலிசியை காப்பகப்படுத்தவும்';
 
   @override
-  String get s73_archive_body => 'Policy expired 8 months ago';
+  String get s73_archive_body => 'பாலிசி 8 மாதங்களுக்கு முன்பு காலாவதியானது';
 
   @override
-  String get common_archive => 'Archive';
+  String get common_archive => 'காப்பகப்படுத்தவும்';
 
   @override
-  String get s73_apply_selected => 'Apply Selected Suggestions';
+  String get s73_apply_selected =>
+      'தேர்ந்தெடுத்த பரிந்துரைகளைப் பயன்படுத்தவும்';
 
   @override
-  String get s74_title => 'Similar Documents';
+  String get s74_title => 'ஒத்த ஆவணங்கள்';
 
   @override
-  String get s74_subtitle => 'Group related files';
+  String get s74_subtitle => 'தொடர்புடைய கோப்புகளை குழுவாக்கவும்';
 
   @override
-  String get s74_found => '4 similarity groups found';
+  String get s74_found => '4 ஒற்றுமை குழுக்கள் கண்டறியப்பட்டன';
 
   @override
-  String get s74_local => 'AI compares text and file structure locally';
+  String get s74_local => 'AI உரை மற்றும் கோப்பு அமைப்பை உள்ளூராக ஒப்பிடுகிறது';
 
   @override
   String get s74_percent => '92%';
 
   @override
-  String get s74_vehicle => 'Vehicle Insurance Policies';
+  String get s74_vehicle => 'வாகன காப்பீட்டு பாலிசிகள்';
 
   @override
-  String get s74_vehicle_meta => '3 files • 88–96% similar';
+  String get s74_vehicle_meta => '3 கோப்புகள் • 88–96% ஒத்தவை';
 
   @override
-  String get s74_salary => 'Salary Slips - 2025';
+  String get s74_salary => 'சம்பள சீட்டுகள் - 2025';
 
   @override
-  String get s74_salary_meta => '6 files • Same layout';
+  String get s74_salary_meta => '6 கோப்புகள் • ஒரே அமைப்பு';
 
   @override
-  String get s74_health => 'Health Reports';
+  String get s74_health => 'சுகாதார அறிக்கைகள்';
 
   @override
-  String get s74_health_meta => '4 files • Same hospital';
+  String get s74_health_meta => '4 கோப்புகள் • ஒரே மருத்துவமனை';
 
   @override
-  String get s74_property => 'Property Tax Receipts';
+  String get s74_property => 'சொத்து வரி ரசீதுகள்';
 
   @override
-  String get s74_property_meta => '3 files • Same property';
+  String get s74_property_meta => '3 கோப்புகள் • ஒரே சொத்து';
 
   @override
-  String get common_preview_group => 'Preview Group';
+  String get common_preview_group => 'குழுவை முன்னோட்டம் காண்க';
 
   @override
-  String get common_organize => 'Organize';
+  String get common_organize => 'ஒழுங்குபடுத்தவும்';
 
   @override
-  String get s75_title => 'Duplicate Resolution';
+  String get s75_title => 'நகல் தீர்வு';
 
   @override
-  String get s75_subtitle => 'Choose what to keep';
+  String get s75_subtitle =>
+      'எதை வைத்திருக்க வேண்டும் என்பதைத் தேர்ந்தெடுக்கவும்';
 
   @override
-  String get s75_group => 'Group 1 of 5';
+  String get s75_group => '5-இல் குழு 1';
 
   @override
-  String get s75_group_title => 'Insurance Policy duplicates';
+  String get s75_group_title => 'காப்பீட்டு பாலிசி நகல்கள்';
 
   @override
   String get s75_group_size => '2.4 MB';
 
   @override
-  String get s75_current_name => 'Insurance Policy.pdf';
+  String get s75_current_name => 'காப்பீட்டு பாலிசி.pdf';
 
   @override
-  String get s75_current_meta => 'Added today • 2.4 MB';
+  String get s75_current_meta => 'இன்று சேர்க்கப்பட்டது • 2.4 MB';
 
   @override
-  String get s75_current => 'Current';
+  String get s75_current => 'தற்போதைய';
 
   @override
-  String get s75_duplicate_name => 'Insurance Policy Copy.pdf';
+  String get s75_duplicate_name => 'காப்பீட்டு பாலிசி நகல்.pdf';
 
   @override
-  String get s75_duplicate_meta => 'Added 2 days ago • 2.4 MB';
+  String get s75_duplicate_meta =>
+      '2 நாட்களுக்கு முன்பு சேர்க்கப்பட்டது • 2.4 MB';
 
   @override
-  String get s75_duplicate => 'Duplicate';
+  String get s75_duplicate => 'நகல்';
 
   @override
-  String get s75_recommended => 'Recommended';
+  String get s75_recommended => 'பரிந்துரைக்கப்பட்டது';
 
   @override
-  String get s75_recommendation => 'Keep the newer file and delete the copy';
+  String get s75_recommendation => 'புதிய கோப்பை வைத்திருந்து நகலை நீக்கவும்';
 
   @override
-  String get s75_keep_selected => 'Keep Selected & Delete Duplicate';
+  String get s75_keep_selected => 'தேர்ந்தெடுத்ததை வைத்திருந்து நகலை நீக்கவும்';
 
   @override
-  String get s75_keep_both => 'Keep Both Files';
+  String get s75_keep_both => 'இரு கோப்புகளையும் வைத்திருக்கவும்';
 
   @override
-  String get s76_title => 'AI Timeline';
+  String get s76_title => 'AI காலவரிசை';
 
   @override
-  String get s76_subtitle => 'A meaningful view of your life';
+  String get s76_subtitle => 'உங்கள் வாழ்க்கையின் அர்த்தமுள்ள காட்சி';
 
   @override
-  String get filter_events => 'Events';
+  String get filter_events => 'நிகழ்வுகள்';
 
   @override
-  String get filter_insights => 'Insights';
+  String get filter_insights => 'நுண்ணறிவுகள்';
 
   @override
-  String get date_today => 'Today';
+  String get date_today => 'இன்று';
 
   @override
-  String get date_yesterday => 'Yesterday';
+  String get date_yesterday => 'நேற்று';
 
   @override
-  String get date_12_july => '12 July';
+  String get date_12_july => '12 ஜூலை';
 
   @override
-  String get date_10_june => '10 June';
+  String get date_10_june => '10 ஜூன்';
 
   @override
-  String get date_15_may => '15 May';
+  String get date_15_may => '15 மே';
 
   @override
-  String get date_03_april => '03 April';
+  String get date_03_april => '03 ஏப்ரல்';
 
   @override
-  String get s76_vehicle_title => 'Vehicle insurance reminder created';
+  String get s76_vehicle_title =>
+      'வாகன காப்பீட்டு நினைவூட்டல் உருவாக்கப்பட்டது';
 
   @override
-  String get s76_vehicle_body => 'Expires in 15 days';
+  String get s76_vehicle_body => '15 நாட்களில் காலாவதியாகும்';
 
   @override
-  String get s76_health_title => 'Health report added';
+  String get s76_health_title => 'சுகாதார அறிக்கை சேர்க்கப்பட்டது';
 
   @override
-  String get s76_health_body => 'AI detected 4 lab values';
+  String get s76_health_body => 'AI 4 ஆய்வக மதிப்புகளை கண்டறிந்தது';
 
   @override
-  String get s76_service_title => 'Vehicle serviced';
+  String get s76_service_title => 'வாகனம் சர்வீஸ் செய்யப்பட்டது';
 
   @override
-  String get s76_service_body => 'Odometer: 18,450 km';
+  String get s76_service_body => 'ஓடோமீட்டர்: 18,450 கி.மீ';
 
   @override
-  String get s76_passport_title => 'Passport document updated';
+  String get s76_passport_title => 'கடவுச்சீட்டு ஆவணம் புதுப்பிக்கப்பட்டது';
 
   @override
-  String get s76_passport_body => 'New scan replaced older copy';
+  String get s76_passport_body => 'புதிய ஸ்கேன் பழைய நகலை மாற்றியது';
 
   @override
-  String get s76_doctor_title => 'Doctor appointment';
+  String get s76_doctor_title => 'மருத்துவர் நியமனம்';
 
   @override
-  String get s76_doctor_body => 'Dr. R. Sharma • 4:00 PM';
+  String get s76_doctor_body => 'டாக்டர் R. சர்மா • 4:00 PM';
 
   @override
-  String get s76_tax_title => 'Income tax return filed';
+  String get s76_tax_title => 'வருமான வரி அறிக்கை தாக்கல் செய்யப்பட்டது';
 
   @override
-  String get s76_tax_body => 'FY 2024–25';
+  String get s76_tax_body => 'நிதியாண்டு 2024–25';
 
   @override
-  String get s77_title => 'Auto Tagging';
+  String get s77_title => 'தானியங்கி குறிச்சொல் அமைத்தல்';
 
   @override
-  String get s77_subtitle => 'Review AI tag suggestions';
+  String get s77_subtitle => 'AI குறிச்சொல் பரிந்துரைகளை மதிப்பாய்வு செய்யவும்';
 
   @override
-  String get s77_ready => '8 files ready for tagging';
+  String get s77_ready => '8 கோப்புகள் குறிச்சொல் அமைப்பிற்கு தயாராக உள்ளன';
 
   @override
   String get s77_ready_body =>
-      'Tags are suggested using on-device text analysis';
+      'சாதனத்திலேயே உரை பகுப்பாய்வு மூலம் குறிச்சொற்கள் பரிந்துரைக்கப்படுகின்றன';
 
   @override
-  String get s77_apply_all => 'Apply All';
+  String get s77_apply_all => 'அனைத்தையும் பயன்படுத்தவும்';
 
   @override
-  String get s77_passport => 'Passport.pdf';
+  String get s77_passport => 'கடவுச்சீட்டு.pdf';
 
   @override
-  String get tag_identity => '#identity';
+  String get tag_identity => '#அடையாளம்';
 
   @override
-  String get tag_passport => '#passport';
+  String get tag_passport => '#கடவுச்சீட்டு';
 
   @override
-  String get tag_important => '#important';
+  String get tag_important => '#முக்கியம்';
 
   @override
-  String get s77_insurance => 'Insurance Policy.pdf';
+  String get s77_insurance => 'காப்பீட்டு பாலிசி.pdf';
 
   @override
-  String get tag_insurance => '#insurance';
+  String get tag_insurance => '#காப்பீடு';
 
   @override
-  String get tag_health => '#health';
+  String get tag_health => '#சுகாதாரம்';
 
   @override
-  String get tag_expiry => '#expiry';
+  String get tag_expiry => '#காலாவதி';
 
   @override
-  String get s77_salary => 'Salary Slip - July.pdf';
+  String get s77_salary => 'சம்பள சீட்டு - ஜூலை.pdf';
 
   @override
-  String get tag_finance => '#finance';
+  String get tag_finance => '#நிதி';
 
   @override
-  String get tag_salary => '#salary';
+  String get tag_salary => '#சம்பளம்';
 
   @override
   String get tag_2025 => '#2025';
 
   @override
-  String get s77_licence => 'Driving Licence.jpg';
+  String get s77_licence => 'ஓட்டுநர் உரிமம்.jpg';
 
   @override
-  String get tag_vehicle => '#vehicle';
+  String get tag_vehicle => '#வாகனம்';
 
   @override
-  String get s77_deed => 'Sale Deed.pdf';
+  String get s77_deed => 'விற்பனை பத்திரம்.pdf';
 
   @override
-  String get tag_property => '#property';
+  String get tag_property => '#சொத்து';
 
   @override
-  String get tag_legal => '#legal';
+  String get tag_legal => '#சட்டம்';
 
   @override
-  String get s77_review_tags => 'Review Tags';
+  String get s77_review_tags => 'குறிச்சொற்களை மதிப்பாய்வு செய்யவும்';
 
   @override
-  String get s78_title => 'AI Search Results';
+  String get s78_title => 'AI தேடல் முடிவுகள்';
 
   @override
-  String get s78_question => 'Question: What expires soon?';
+  String get s78_question => 'கேள்வி: விரைவில் எது காலாவதியாகும்?';
 
   @override
-  String get s78_summary_label => 'AI Summary';
+  String get s78_summary_label => 'AI சுருக்கம்';
 
   @override
   String get s78_summary =>
-      'Three important documents expire within the next 30 days. Vehicle insurance is the most urgent.';
+      'அடுத்த 30 நாட்களில் மூன்று முக்கிய ஆவணங்கள் காலாவதியாகும். வாகன காப்பீடு மிக அவசரமானது.';
 
   @override
-  String get s78_vehicle => 'Vehicle Insurance';
+  String get s78_vehicle => 'வாகன காப்பீடு';
 
   @override
-  String get s78_vehicle_meta => 'Expires in 15 days • 20 Aug 2026';
+  String get s78_vehicle_meta => '15 நாட்களில் காலாவதி • 20 ஆகஸ்ட் 2026';
 
   @override
-  String get s78_vehicle_days => '15 days';
+  String get s78_vehicle_days => '15 நாட்கள்';
 
   @override
-  String get s78_health => 'Health Insurance';
+  String get s78_health => 'சுகாதார காப்பீடு';
 
   @override
-  String get s78_health_meta => 'Expires in 16 days • 21 Aug 2026';
+  String get s78_health_meta => '16 நாட்களில் காலாவதி • 21 ஆகஸ்ட் 2026';
 
   @override
-  String get s78_health_days => '16 days';
+  String get s78_health_days => '16 நாட்கள்';
 
   @override
-  String get s78_licence => 'Driving Licence';
+  String get s78_licence => 'ஓட்டுநர் உரிமம்';
 
   @override
-  String get s78_licence_meta => 'Expires in 26 days • 31 Aug 2026';
+  String get s78_licence_meta => '26 நாட்களில் காலாவதி • 31 ஆகஸ்ட் 2026';
 
   @override
-  String get s78_licence_days => '26 days';
+  String get s78_licence_days => '26 நாட்கள்';
 
   @override
-  String get s78_suggested => 'Suggested Actions';
+  String get s78_suggested => 'பரிந்துரைக்கப்பட்ட செயல்கள்';
 
   @override
-  String get s78_create_title => 'Create renewal reminders';
+  String get s78_create_title => 'புதுப்பிப்பு நினைவூட்டல்களை உருவாக்கவும்';
 
   @override
-  String get s78_create_body => 'Add reminders 7 days before expiry';
+  String get s78_create_body =>
+      'காலாவதிக்கு 7 நாட்களுக்கு முன் நினைவூட்டல்களைச் சேர்க்கவும்';
 
   @override
-  String get s78_open_title => 'Open vehicle insurance';
+  String get s78_open_title => 'வாகன காப்பீட்டைத் திறக்கவும்';
 
   @override
-  String get s78_open_body => 'Review policy details';
+  String get s78_open_body => 'பாலிசி விவரங்களை மதிப்பாய்வு செய்யவும்';
 
   @override
-  String get s78_compare_title => 'Compare current policies';
+  String get s78_compare_title => 'தற்போதைய பாலிசிகளை ஒப்பிடவும்';
 
   @override
-  String get s78_compare_body => 'See coverage and premium changes';
+  String get s78_compare_body =>
+      'கவரேஜ் மற்றும் பிரீமியம் மாற்றங்களைப் பார்க்கவும்';
 
   @override
-  String get s78_create_all => 'Create All Reminders';
+  String get s78_create_all => 'அனைத்து நினைவூட்டல்களையும் உருவாக்கவும்';
 
   @override
-  String get s79_title => 'AI Settings';
+  String get s79_title => 'AI அமைப்புகள்';
 
   @override
-  String get s79_subtitle => 'Control local intelligence';
+  String get s79_subtitle => 'உள்ளூர் நுண்ணறிவை கட்டுப்படுத்தவும்';
 
   @override
-  String get s79_private_title => 'Private by design';
+  String get s79_private_title => 'வடிவமைப்பிலேயே தனியுரிமை';
 
   @override
   String get s79_private_body =>
-      'OwnKeep AI runs on your device. Your documents and prompts are never uploaded.';
+      'OwnKeep AI உங்கள் சாதனத்தில் இயங்குகிறது. உங்கள் ஆவணங்களும் ப்ராம்ப்ட்களும் ஒருபோதும் பதிவேற்றப்படாது.';
 
   @override
-  String get s79_assistant => 'AI Assistant';
+  String get s79_assistant => 'AI உதவியாளர்';
 
   @override
-  String get s79_assistant_body => 'Enable private vault chat';
+  String get s79_assistant_body => 'தனிப்பட்ட வால்ட் அரட்டையை இயக்கு';
 
   @override
-  String get s79_suggestions => 'Smart Suggestions';
+  String get s79_suggestions => 'ஸ்மார்ட் பரிந்துரைகள்';
 
   @override
-  String get s79_suggestions_body => 'Recommend organization actions';
+  String get s79_suggestions_body =>
+      'ஒழுங்குபடுத்தல் செயல்களைப் பரிந்துரைக்கவும்';
 
   @override
-  String get s79_tagging => 'Auto Tagging';
+  String get s79_tagging => 'தானியங்கி குறிச்சொல் அமைத்தல்';
 
   @override
-  String get s79_tagging_body => 'Suggest tags from document text';
+  String get s79_tagging_body =>
+      'ஆவண உரையிலிருந்து குறிச்சொற்களைப் பரிந்துரைக்கவும்';
 
   @override
-  String get s79_expiry => 'Expiry Detection';
+  String get s79_expiry => 'காலாவதி கண்டறிதல்';
 
   @override
-  String get s79_expiry_body => 'Find dates and create suggestions';
+  String get s79_expiry_body => 'தேதிகளை கண்டறிந்து பரிந்துரைகளை உருவாக்கவும்';
 
   @override
-  String get s79_similar => 'Similar Document Groups';
+  String get s79_similar => 'ஒத்த ஆவண குழுக்கள்';
 
   @override
-  String get s79_similar_body => 'Detect related files';
+  String get s79_similar_body => 'தொடர்புடைய கோப்புகளை கண்டறியவும்';
 
   @override
-  String get s79_history => 'AI Activity History';
+  String get s79_history => 'AI செயல்பாட்டு வரலாறு';
 
   @override
-  String get s79_history_body => 'Save local prompt history';
+  String get s79_history_body => 'உள்ளூர் ப்ராம்ப்ட் வரலாற்றைச் சேமிக்கவும்';
 
   @override
-  String get s79_background => 'Background Analysis';
+  String get s79_background => 'பின்னணி பகுப்பாய்வு';
 
   @override
-  String get s79_background_body => 'Analyze while charging';
+  String get s79_background_body =>
+      'சார்ஜ் செய்யும் போது பகுப்பாய்வு செய்யவும்';
 
   @override
-  String get s79_clear => 'Clear AI History';
+  String get s79_clear => 'AI வரலாற்றை அழிக்கவும்';
 
   @override
-  String get s79_clear_body => 'Deletes prompts and local AI results';
+  String get s79_clear_body =>
+      'ப்ராம்ப்ட்கள் மற்றும் உள்ளூர் AI முடிவுகளை நீக்கும்';
 
   @override
-  String get s80_title => 'AI History';
+  String get s80_title => 'AI வரலாறு';
 
   @override
-  String get s80_subtitle => 'Local conversations and actions';
+  String get s80_subtitle => 'உள்ளூர் உரையாடல்கள் மற்றும் செயல்கள்';
 
   @override
-  String get filter_chats => 'Chats';
+  String get filter_chats => 'அரட்டைகள்';
 
   @override
-  String get filter_searches => 'Searches';
+  String get filter_searches => 'தேடல்கள்';
 
   @override
-  String get filter_actions => 'Actions';
+  String get filter_actions => 'செயல்கள்';
 
   @override
-  String get s80_vehicle_title => 'Find my vehicle insurance';
+  String get s80_vehicle_title => 'என் வாகன காப்பீட்டை கண்டறியவும்';
 
   @override
-  String get s80_vehicle_body => 'Opened policy and expiry reminder';
+  String get s80_vehicle_body =>
+      'பாலிசி மற்றும் காலாவதி நினைவூட்டல் திறக்கப்பட்டது';
 
   @override
-  String get s80_vehicle_time => 'Today, 10:30 AM';
+  String get s80_vehicle_time => 'இன்று, 10:30 AM';
 
   @override
-  String get s80_expiry_title => 'What expires this month?';
+  String get s80_expiry_title => 'இந்த மாதம் எது காலாவதியாகும்?';
 
   @override
-  String get s80_expiry_body => 'Found 3 documents';
+  String get s80_expiry_body => '3 ஆவணங்கள் கண்டறியப்பட்டன';
 
   @override
-  String get s80_expiry_time => 'Today, 9:15 AM';
+  String get s80_expiry_time => 'இன்று, 9:15 AM';
 
   @override
-  String get s80_finance_title => 'Organize my finance files';
+  String get s80_finance_title => 'என் நிதி கோப்புகளை ஒழுங்குபடுத்தவும்';
 
   @override
-  String get s80_finance_body => 'Moved 4 files and added 6 tags';
+  String get s80_finance_body =>
+      '4 கோப்புகளை நகர்த்தி 6 குறிச்சொற்களைச் சேர்த்தது';
 
   @override
-  String get s80_finance_time => 'Yesterday, 7:40 PM';
+  String get s80_finance_time => 'நேற்று, 7:40 PM';
 
   @override
-  String get s80_health_title => 'Summarize health report';
+  String get s80_health_title => 'சுகாதார அறிக்கையைச் சுருக்கமாக்கவும்';
 
   @override
-  String get s80_health_body => 'Generated local summary';
+  String get s80_health_body => 'உள்ளூர் சுருக்கம் உருவாக்கப்பட்டது';
 
   @override
-  String get s80_health_time => 'Yesterday, 4:20 PM';
+  String get s80_health_time => 'நேற்று, 4:20 PM';
 
   @override
-  String get s80_duplicate_title => 'Detect duplicate receipts';
+  String get s80_duplicate_title => 'நகல் ரசீதுகளை கண்டறியவும்';
 
   @override
-  String get s80_duplicate_body => 'Resolved 2 duplicate groups';
+  String get s80_duplicate_body => '2 நகல் குழுக்கள் தீர்க்கப்பட்டன';
 
   @override
-  String get s80_duplicate_time => '12 May, 11:10 AM';
+  String get s80_duplicate_time => '12 மே, 11:10 AM';
 
   @override
-  String get s80_reminder_title => 'Create passport reminder';
+  String get s80_reminder_title => 'கடவுச்சீட்டு நினைவூட்டலை உருவாக்கவும்';
 
   @override
-  String get s80_reminder_body => 'Reminder created for 2031';
+  String get s80_reminder_body => '2031-க்கான நினைவூட்டல் உருவாக்கப்பட்டது';
 
   @override
-  String get s80_reminder_time => '10 May, 8:45 AM';
+  String get s80_reminder_time => '10 மே, 8:45 AM';
 
   @override
-  String get s80_clear => 'Clear AI History';
+  String get s80_clear => 'AI வரலாற்றை அழிக்கவும்';
 
   @override
-  String get s80_local_notice => 'History is stored only on this device';
+  String get s80_local_notice =>
+      'வரலாறு இந்த சாதனத்தில் மட்டுமே சேமிக்கப்படும்';
 
   @override
-  String get s81_title => 'Family Vault';
+  String get s81_title => 'குடும்ப வால்ட்';
 
   @override
-  String get s81_subtitle => 'Private sharing without cloud accounts';
+  String get s81_subtitle => 'கிளவுட் கணக்குகள் இல்லாமல் தனிப்பட்ட பகிர்வு';
 
   @override
-  String get s81_family => 'Our Family';
+  String get s81_family => 'எங்கள் குடும்பம்';
 
   @override
-  String get s81_family_summary => '4 members • 6 shared collections';
+  String get s81_family_summary => '4 உறுப்பினர்கள் • 6 பகிரப்பட்ட தொகுப்புகள்';
 
   @override
-  String get s81_manage_members => 'Manage Members';
+  String get s81_manage_members => 'உறுப்பினர்களை நிர்வகிக்கவும்';
 
   @override
-  String get s81_shared_collections => 'Shared Collections';
+  String get s81_shared_collections => 'பகிரப்பட்ட தொகுப்புகள்';
 
   @override
-  String get s81_family_documents => 'Family Documents';
+  String get s81_family_documents => 'குடும்ப ஆவணங்கள்';
 
   @override
-  String get s81_family_documents_count => '28 items';
+  String get s81_family_documents_count => '28 உருப்படிகள்';
 
   @override
-  String get s81_family_documents_scope => 'All Members';
+  String get s81_family_documents_scope => 'அனைத்து உறுப்பினர்களும்';
 
   @override
-  String get s81_health_records => 'Health Records';
+  String get s81_health_records => 'சுகாதார பதிவுகள்';
 
   @override
-  String get s81_health_records_count => '16 items';
+  String get s81_health_records_count => '16 உருப்படிகள்';
 
   @override
-  String get s81_health_records_scope => 'Parents';
+  String get s81_health_records_scope => 'பெற்றோர்';
 
   @override
-  String get s81_property_papers => 'Property Papers';
+  String get s81_property_papers => 'சொத்து ஆவணங்கள்';
 
   @override
-  String get s81_property_papers_count => '9 items';
+  String get s81_property_papers_count => '9 உருப்படிகள்';
 
   @override
-  String get s81_property_papers_scope => 'Adults';
+  String get s81_property_papers_scope => 'பெரியவர்கள்';
 
   @override
-  String get s81_education => 'Education';
+  String get s81_education => 'கல்வி';
 
   @override
-  String get s81_education_count => '12 items';
+  String get s81_education_count => '12 உருப்படிகள்';
 
   @override
-  String get s81_education_scope => 'Children';
+  String get s81_education_scope => 'குழந்தைகள்';
 
   @override
-  String get s81_emergency_pack => 'Emergency Pack';
+  String get s81_emergency_pack => 'அவசர தொகுப்பு';
 
   @override
-  String get s81_emergency_pack_count => '6 items';
+  String get s81_emergency_pack_count => '6 உருப்படிகள்';
 
   @override
-  String get s81_emergency_pack_scope => 'Trusted';
+  String get s81_emergency_pack_scope => 'நம்பகமானது';
 
   @override
-  String get s81_offline_sharing => 'Offline sharing';
+  String get s81_offline_sharing => 'ஆஃப்லைன் பகிர்வு';
 
   @override
   String get s81_offline_sharing_body =>
-      'Use QR, nearby transfer, or encrypted package';
+      'QR, அருகிலுள்ள பரிமாற்றம் அல்லது குறியாக்கப்பட்ட தொகுப்பைப் பயன்படுத்தவும்';
 
   @override
-  String get s81_add_member => 'Add Family Member';
+  String get s81_add_member => 'குடும்ப உறுப்பினரைச் சேர்க்கவும்';
 
   @override
-  String get s82_title => 'Family Members';
+  String get s82_title => 'குடும்ப உறுப்பினர்கள்';
 
   @override
-  String get s82_member_count => '4 members';
+  String get s82_member_count => '4 உறுப்பினர்கள்';
 
   @override
-  String get member_arjun => 'Arjun Sharma';
+  String get member_arjun => 'அர்ஜுன் சர்மா';
 
   @override
-  String get s82_arjun_meta => 'Owner • This device';
+  String get s82_arjun_meta => 'உரிமையாளர் • இந்த சாதனம்';
 
   @override
-  String get role_owner => 'Owner';
+  String get role_owner => 'உரிமையாளர்';
 
   @override
-  String get member_harika => 'Harika';
+  String get member_harika => 'ஹரிகா';
 
   @override
-  String get s82_harika_meta => 'Adult • Full access';
+  String get s82_harika_meta => 'பெரியவர் • முழு அணுகல்';
 
   @override
-  String get status_active => 'Active';
+  String get status_active => 'செயலில்';
 
   @override
-  String get member_alekhya => 'Alekhya';
+  String get member_alekhya => 'அலேக்யா';
 
   @override
-  String get s82_alekhya_meta => 'Child • Limited access';
+  String get s82_alekhya_meta => 'குழந்தை • வரையறுக்கப்பட்ட அணுகல்';
 
   @override
-  String get member_charvika => 'Charvika';
+  String get member_charvika => 'சார்விகா';
 
   @override
-  String get s82_charvika_meta => 'Child • Limited access';
+  String get s82_charvika_meta => 'குழந்தை • வரையறுக்கப்பட்ட அணுகல்';
 
   @override
-  String get s82_access_summary => 'Access Summary';
+  String get s82_access_summary => 'அணுகல் சுருக்கம்';
 
   @override
   String get s82_members_value => '4';
 
   @override
-  String get s82_members_label => 'Members';
+  String get s82_members_label => 'உறுப்பினர்கள்';
 
   @override
   String get s82_collections_value => '6';
 
   @override
-  String get s82_collections_label => 'Collections';
+  String get s82_collections_label => 'தொகுப்புகள்';
 
   @override
   String get s82_trusted_value => '2';
 
   @override
-  String get s82_trusted_label => 'Trusted';
+  String get s82_trusted_label => 'நம்பகமானது';
 
   @override
   String get s82_pending_value => '1';
 
   @override
-  String get s82_pending_label => 'Pending';
+  String get s82_pending_label => 'நிலுவையில்';
 
   @override
-  String get s82_transfer_options => 'Transfer Options';
+  String get s82_transfer_options => 'பரிமாற்ற விருப்பங்கள்';
 
   @override
-  String get s82_nearby => 'Nearby Transfer';
+  String get s82_nearby => 'அருகிலுள்ள பரிமாற்றம்';
 
   @override
-  String get s82_nearby_body => 'Share encrypted access on local network';
+  String get s82_nearby_body =>
+      'உள்ளூர் நெட்வொர்க்கில் குறியாக்கப்பட்ட அணுகலைப் பகிரவும்';
 
   @override
-  String get s82_qr => 'QR Invitation';
+  String get s82_qr => 'QR அழைப்பு';
 
   @override
-  String get s82_qr_body => 'Scan on another device';
+  String get s82_qr_body => 'மற்றொரு சாதனத்தில் ஸ்கேன் செய்யவும்';
 
   @override
-  String get s82_package => 'Encrypted Package';
+  String get s82_package => 'குறியாக்கப்பட்ட தொகுப்பு';
 
   @override
-  String get s82_package_body => 'Export an offline invitation file';
+  String get s82_package_body => 'ஆஃப்லைன் அழைப்பு கோப்பை ஏற்றுமதி செய்யவும்';
 
   @override
-  String get s83_title => 'Invite Member';
+  String get s83_title => 'உறுப்பினரை அழைக்கவும்';
 
   @override
-  String get s83_subtitle => 'Create an offline encrypted invitation';
+  String get s83_subtitle => 'ஆஃப்லைன் குறியாக்கப்பட்ட அழைப்பை உருவாக்கவும்';
 
   @override
-  String get s83_member_name => 'Member Name';
+  String get s83_member_name => 'உறுப்பினர் பெயர்';
 
   @override
-  String get s83_member_name_value => 'Harika';
+  String get s83_member_name_value => 'ஹரிகா';
 
   @override
-  String get s83_role => 'Role';
+  String get s83_role => 'பங்கு';
 
   @override
-  String get role_adult => 'Adult';
+  String get role_adult => 'பெரியவர்';
 
   @override
-  String get role_adult_body => 'Full family access';
+  String get role_adult_body => 'முழு குடும்ப அணுகல்';
 
   @override
-  String get role_child => 'Child';
+  String get role_child => 'குழந்தை';
 
   @override
-  String get role_child_body => 'Limited by collection';
+  String get role_child_body => 'தொகுப்பின் அடிப்படையில் வரையறுக்கப்பட்டது';
 
   @override
-  String get role_trusted => 'Trusted Contact';
+  String get role_trusted => 'நம்பகமான தொடர்பு';
 
   @override
-  String get role_trusted_body => 'Emergency-only access';
+  String get role_trusted_body => 'அவசர அணுகல் மட்டும்';
 
   @override
-  String get s83_invitation_method => 'Invitation Method';
+  String get s83_invitation_method => 'அழைப்பு முறை';
 
   @override
-  String get s83_qr => 'QR Code';
+  String get s83_qr => 'QR குறியீடு';
 
   @override
-  String get s83_qr_body => 'Scan directly on the second device';
+  String get s83_qr_body => 'இரண்டாவது சாதனத்தில் நேரடியாக ஸ்கேன் செய்யவும்';
 
   @override
-  String get s83_nearby => 'Nearby Transfer';
+  String get s83_nearby => 'அருகிலுள்ள பரிமாற்றம்';
 
   @override
-  String get s83_nearby_body => 'Send over local network';
+  String get s83_nearby_body => 'உள்ளூர் நெட்வொர்க்கில் அனுப்பவும்';
 
   @override
-  String get s83_file => 'Encrypted File';
+  String get s83_file => 'குறியாக்கப்பட்ட கோப்பு';
 
   @override
-  String get s83_file_body => 'Save a portable invitation package';
+  String get s83_file_body =>
+      'எடுத்துச் செல்லக்கூடிய அழைப்பு தொகுப்பைச் சேமிக்கவும்';
 
   @override
-  String get s83_expires_label => 'Invitation expires';
+  String get s83_expires_label => 'அழைப்பு காலாவதியாகும்';
 
   @override
-  String get s83_expires_value => '24 hours after creation';
+  String get s83_expires_value => 'உருவாக்கிய 24 மணி நேரத்திற்குப் பிறகு';
 
   @override
-  String get common_change => 'Change';
+  String get common_change => 'மாற்றவும்';
 
   @override
-  String get s83_create => 'Create Invitation';
+  String get s83_create => 'அழைப்பை உருவாக்கவும்';
 
   @override
-  String get s84_title => 'Permissions';
+  String get s84_title => 'அனுமதிகள்';
 
   @override
-  String get s84_subtitle => 'Harika • Adult';
+  String get s84_subtitle => 'ஹரிகா • பெரியவர்';
 
   @override
-  String get s84_member_meta => 'Family member • Active';
+  String get s84_member_meta => 'குடும்ப உறுப்பினர் • செயலில்';
 
   @override
-  String get s84_general_access => 'General Access';
+  String get s84_general_access => 'பொது அணுகல்';
 
   @override
-  String get s84_view => 'View shared collections';
+  String get s84_view => 'பகிரப்பட்ட தொகுப்புகளைப் பார்க்கவும்';
 
   @override
-  String get s84_view_body => 'Can open permitted items';
+  String get s84_view_body => 'அனுமதிக்கப்பட்ட உருப்படிகளைத் திறக்கலாம்';
 
   @override
-  String get s84_add => 'Add documents';
+  String get s84_add => 'ஆவணங்களைச் சேர்க்கவும்';
 
   @override
-  String get s84_add_body => 'Can add files to shared collections';
+  String get s84_add_body => 'பகிரப்பட்ட தொகுப்புகளில் கோப்புகளைச் சேர்க்கலாம்';
 
   @override
-  String get s84_edit => 'Edit metadata';
+  String get s84_edit => 'மெட்டாடேட்டாவைத் திருத்தவும்';
 
   @override
-  String get s84_edit_body => 'Can rename, tag and add notes';
+  String get s84_edit_body =>
+      'பெயர் மாற்றி, குறிச்சொற்கள் மற்றும் குறிப்புகளைச் சேர்க்கலாம்';
 
   @override
-  String get s84_delete => 'Delete documents';
+  String get s84_delete => 'ஆவணங்களை நீக்கவும்';
 
   @override
-  String get s84_delete_body => 'Requires owner confirmation';
+  String get s84_delete_body => 'உரிமையாளர் உறுதிப்படுத்தல் தேவை';
 
   @override
-  String get s84_export => 'Export shared files';
+  String get s84_export => 'பகிரப்பட்ட கோப்புகளை ஏற்றுமதி செய்யவும்';
 
   @override
-  String get s84_export_body => 'Can create encrypted exports';
+  String get s84_export_body => 'குறியாக்கப்பட்ட ஏற்றுமதிகளை உருவாக்கலாம்';
 
   @override
-  String get s84_collection_access => 'Collection Access';
+  String get s84_collection_access => 'தொகுப்பு அணுகல்';
 
   @override
-  String get s84_family_documents => 'Family Documents';
+  String get s84_family_documents => 'குடும்ப ஆவணங்கள்';
 
   @override
-  String get access_full => 'Full access';
+  String get access_full => 'முழு அணுகல்';
 
   @override
-  String get s84_health_records => 'Health Records';
+  String get s84_health_records => 'சுகாதார பதிவுகள்';
 
   @override
-  String get access_view_only => 'View only';
+  String get access_view_only => 'பார்வை மட்டும்';
 
   @override
-  String get s84_property_papers => 'Property Papers';
+  String get s84_property_papers => 'சொத்து ஆவணங்கள்';
 
   @override
-  String get access_none => 'No access';
+  String get access_none => 'அணுகல் இல்லை';
 
   @override
-  String get s84_education => 'Education';
+  String get s84_education => 'கல்வி';
 
   @override
-  String get s85_title => 'Trusted Contacts';
+  String get s85_title => 'நம்பகமான தொடர்புகள்';
 
   @override
-  String get s85_subtitle => 'Emergency recovery helpers';
+  String get s85_subtitle => 'அவசர மீட்பு உதவியாளர்கள்';
 
   @override
-  String get s85_info_title => 'What trusted contacts can do';
+  String get s85_info_title => 'நம்பகமான தொடர்புகள் என்ன செய்ய முடியும்';
 
   @override
   String get s85_info_body =>
-      'They cannot see your vault. They can only help unlock an emergency package when your rules are satisfied.';
+      'அவர்கள் உங்கள் வால்ட்டைப் பார்க்க முடியாது. உங்கள் விதிகள் பூர்த்தியானபோது அவசர தொகுப்பைத் திறக்க உதவ மட்டும் முடியும்.';
 
   @override
-  String get s85_harika_meta => 'Primary trusted contact';
+  String get s85_harika_meta => 'முதன்மை நம்பகமான தொடர்பு';
 
   @override
-  String get status_verified => 'Verified';
+  String get status_verified => 'சரிபார்க்கப்பட்டது';
 
   @override
-  String get member_ramesh => 'Ramesh';
+  String get member_ramesh => 'ரமேஷ்';
 
   @override
-  String get s85_ramesh_meta => 'Backup contact';
+  String get s85_ramesh_meta => 'காப்பு தொடர்பு';
 
   @override
-  String get s85_rules => 'Emergency Rules';
+  String get s85_rules => 'அவசர விதிகள்';
 
   @override
-  String get s85_min_approvals => 'Minimum approvals';
+  String get s85_min_approvals => 'குறைந்தபட்ச ஒப்புதல்கள்';
 
   @override
-  String get s85_min_approvals_body => '2 of 2 trusted contacts';
+  String get s85_min_approvals_body => '2-இல் 2 நம்பகமான தொடர்புகள்';
 
   @override
-  String get s85_waiting => 'Waiting period';
+  String get s85_waiting => 'காத்திருப்பு காலம்';
 
   @override
-  String get s85_waiting_body => '48 hours before access';
+  String get s85_waiting_body => 'அணுகுவதற்கு முன் 48 மணி நேரம்';
 
   @override
-  String get s85_scope => 'Access scope';
+  String get s85_scope => 'அணுகல் வரம்பு';
 
   @override
-  String get s85_scope_body => 'Emergency Pack only';
+  String get s85_scope_body => 'அவசர தொகுப்பு மட்டும்';
 
   @override
-  String get s85_lifetime => 'Package lifetime';
+  String get s85_lifetime => 'தொகுப்பு ஆயுள்';
 
   @override
-  String get s85_lifetime_body => 'Valid for 24 hours';
+  String get s85_lifetime_body => '24 மணி நேரத்திற்கு செல்லுபடியாகும்';
 
   @override
-  String get s85_add => 'Add Trusted Contact';
+  String get s85_add => 'நம்பகமான தொடர்பைச் சேர்க்கவும்';
 
   @override
-  String get s86_title => 'Emergency Access';
+  String get s86_title => 'அவசர அணுகல்';
 
   @override
-  String get s86_subtitle => 'Prepare a limited recovery package';
+  String get s86_subtitle => 'வரையறுக்கப்பட்ட மீட்பு தொகுப்பைத் தயாரிக்கவும்';
 
   @override
-  String get s86_pack => 'Emergency Pack';
+  String get s86_pack => 'அவசர தொகுப்பு';
 
   @override
-  String get s86_pack_summary => '6 selected items';
+  String get s86_pack_summary => '6 தேர்ந்தெடுக்கப்பட்ட உருப்படிகள்';
 
   @override
-  String get s86_included => 'Included Items';
+  String get s86_included => 'சேர்க்கப்பட்ட உருப்படிகள்';
 
   @override
-  String get s86_identity => 'Identity Card';
+  String get s86_identity => 'அடையாள அட்டை';
 
   @override
-  String get s86_health => 'Health Summary';
+  String get s86_health => 'சுகாதார சுருக்கம்';
 
   @override
-  String get s86_insurance => 'Insurance Details';
+  String get s86_insurance => 'காப்பீட்டு விவரங்கள்';
 
   @override
-  String get s86_contacts => 'Emergency Contacts';
+  String get s86_contacts => 'அவசர தொடர்புகள்';
 
   @override
-  String get s86_warning => 'Emergency access is limited';
+  String get s86_warning => 'அவசர அணுகல் வரையறுக்கப்பட்டுள்ளது';
 
   @override
-  String get s86_warning_body => 'It never unlocks the full vault';
+  String get s86_warning_body => 'இது முழு வால்ட்டையும் ஒருபோதும் திறக்காது';
 
   @override
-  String get s86_create => 'Create Emergency Package';
+  String get s86_create => 'அவசர தொகுப்பை உருவாக்கவும்';
 
   @override
-  String get s87_title => 'Shared Collections';
+  String get s87_title => 'பகிரப்பட்ட தொகுப்புகள்';
 
   @override
-  String get s87_subtitle => 'Available to family members';
+  String get s87_subtitle => 'குடும்ப உறுப்பினர்களுக்கு கிடைக்கும்';
 
   @override
-  String get s87_family_documents => 'Family Documents';
+  String get s87_family_documents => 'குடும்ப ஆவணங்கள்';
 
   @override
-  String get s87_family_documents_meta => '28 items • All members';
+  String get s87_family_documents_meta =>
+      '28 உருப்படிகள் • அனைத்து உறுப்பினர்களும்';
 
   @override
-  String get s87_family_documents_members => '4 members';
+  String get s87_family_documents_members => '4 உறுப்பினர்கள்';
 
   @override
-  String get s87_health => 'Health Records';
+  String get s87_health => 'சுகாதார பதிவுகள்';
 
   @override
-  String get s87_health_meta => '16 items • Parents only';
+  String get s87_health_meta => '16 உருப்படிகள் • பெற்றோர் மட்டும்';
 
   @override
-  String get s87_health_members => '2 members';
+  String get s87_health_members => '2 உறுப்பினர்கள்';
 
   @override
-  String get s87_property => 'Property Papers';
+  String get s87_property => 'சொத்து ஆவணங்கள்';
 
   @override
-  String get s87_property_meta => '9 items • Adults only';
+  String get s87_property_meta => '9 உருப்படிகள் • பெரியவர்கள் மட்டும்';
 
   @override
-  String get s87_property_members => '2 members';
+  String get s87_property_members => '2 உறுப்பினர்கள்';
 
   @override
-  String get s87_education => 'Education';
+  String get s87_education => 'கல்வி';
 
   @override
-  String get s87_education_meta => '12 items • Children and parents';
+  String get s87_education_meta =>
+      '12 உருப்படிகள் • குழந்தைகள் மற்றும் பெற்றோர்';
 
   @override
-  String get s87_education_members => '4 members';
+  String get s87_education_members => '4 உறுப்பினர்கள்';
 
   @override
-  String get s87_emergency => 'Emergency Pack';
+  String get s87_emergency => 'அவசர தொகுப்பு';
 
   @override
-  String get s87_emergency_meta => '6 items • Trusted contacts';
+  String get s87_emergency_meta => '6 உருப்படிகள் • நம்பகமான தொடர்புகள்';
 
   @override
-  String get s87_emergency_contacts => '2 contacts';
+  String get s87_emergency_contacts => '2 தொடர்புகள்';
 
   @override
-  String get s87_method => 'Sharing method';
+  String get s87_method => 'பகிர்வு முறை';
 
   @override
-  String get s87_method_value => 'Encrypted package or nearby transfer';
+  String get s87_method_value =>
+      'குறியாக்கப்பட்ட தொகுப்பு அல்லது அருகிலுள்ள பரிமாற்றம்';
 
   @override
-  String get s87_create => 'Create Shared Collection';
+  String get s87_create => 'பகிரப்பட்ட தொகுப்பை உருவாக்கவும்';
 
   @override
-  String get s88_title => 'Shared Activity';
+  String get s88_title => 'பகிரப்பட்ட செயல்பாடு';
 
   @override
-  String get s88_subtitle => 'Local family vault actions';
+  String get s88_subtitle => 'உள்ளூர் குடும்ப வால்ட் செயல்கள்';
 
   @override
-  String get s88_time_1 => 'Today, 10:30 AM';
+  String get s88_time_1 => 'இன்று, 10:30 AM';
 
   @override
-  String get s88_event_1 => 'Harika added Health Report';
+  String get s88_event_1 => 'ஹரிகா சுகாதார அறிக்கையைச் சேர்த்தார்';
 
   @override
-  String get s88_collection_1 => 'Health Records';
+  String get s88_collection_1 => 'சுகாதார பதிவுகள்';
 
   @override
-  String get s88_time_2 => 'Today, 9:15 AM';
+  String get s88_time_2 => 'இன்று, 9:15 AM';
 
   @override
-  String get s88_event_2 => 'Arjun updated Insurance Policy';
+  String get s88_event_2 => 'அர்ஜுன் காப்பீட்டு பாலிசியைப் புதுப்பித்தார்';
 
   @override
-  String get s88_collection_2 => 'Family Documents';
+  String get s88_collection_2 => 'குடும்ப ஆவணங்கள்';
 
   @override
-  String get s88_time_3 => 'Yesterday, 7:40 PM';
+  String get s88_time_3 => 'நேற்று, 7:40 PM';
 
   @override
-  String get s88_event_3 => 'Alekhya viewed Education Certificate';
+  String get s88_event_3 => 'அலேக்யா கல்வி சான்றிதழைப் பார்த்தார்';
 
   @override
-  String get s88_collection_3 => 'Education';
+  String get s88_collection_3 => 'கல்வி';
 
   @override
-  String get s88_time_4 => 'Yesterday, 4:20 PM';
+  String get s88_time_4 => 'நேற்று, 4:20 PM';
 
   @override
-  String get s88_event_4 => 'Harika added a reminder';
+  String get s88_event_4 => 'ஹரிகா நினைவூட்டலைச் சேர்த்தார்';
 
   @override
-  String get s88_collection_4 => 'Health Records';
+  String get s88_collection_4 => 'சுகாதார பதிவுகள்';
 
   @override
-  String get s88_time_5 => '12 May, 11:10 AM';
+  String get s88_time_5 => '12 மே, 11:10 AM';
 
   @override
-  String get s88_event_5 => 'Charvika opened School ID';
+  String get s88_event_5 => 'சார்விகா பள்ளி ID-ஐ திறந்தார்';
 
   @override
-  String get s88_collection_5 => 'Education';
+  String get s88_collection_5 => 'கல்வி';
 
   @override
-  String get s88_time_6 => '10 May, 8:45 AM';
+  String get s88_time_6 => '10 மே, 8:45 AM';
 
   @override
-  String get s88_event_6 => 'Arjun created Emergency Pack';
+  String get s88_event_6 => 'அர்ஜுன் அவசர தொகுப்பை உருவாக்கினார்';
 
   @override
-  String get s88_collection_6 => 'Emergency Pack';
+  String get s88_collection_6 => 'அவசர தொகுப்பு';
 
   @override
-  String get s88_location => 'Activity log location';
+  String get s88_location => 'செயல்பாட்டு பதிவு இடம்';
 
   @override
-  String get s88_location_value => 'Stored only in this family vault';
+  String get s88_location_value =>
+      'இந்த குடும்ப வால்ட்டில் மட்டுமே சேமிக்கப்படுகிறது';
 
   @override
-  String get s89_title => 'Invitations';
+  String get s89_title => 'அழைப்புகள்';
 
   @override
-  String get s89_subtitle => 'Pending offline invitations';
+  String get s89_subtitle => 'நிலுவையிலுள்ள ஆஃப்லைன் அழைப்புகள்';
 
   @override
-  String get s89_pending => 'Pending';
+  String get s89_pending => 'நிலுவையில்';
 
   @override
-  String get s89_harika_meta => 'Adult member • QR invitation';
+  String get s89_harika_meta => 'பெரியவர் உறுப்பினர் • QR அழைப்பு';
 
   @override
-  String get s89_harika_expiry => 'Expires in 18h';
+  String get s89_harika_expiry => '18 மணிநேரத்தில் காலாவதியாகும்';
 
   @override
-  String get s89_ramesh_meta => 'Trusted contact • Encrypted file';
+  String get s89_ramesh_meta => 'நம்பகமான தொடர்பு • குறியாக்கப்பட்ட கோப்பு';
 
   @override
-  String get s89_ramesh_expiry => 'Expires in 2d';
+  String get s89_ramesh_expiry => '2 நாட்களில் காலாவதியாகும்';
 
   @override
-  String get s89_completed => 'Completed';
+  String get s89_completed => 'முடிந்தது';
 
   @override
-  String get s89_alekhya_joined => 'Joined 12 May 2026';
+  String get s89_alekhya_joined => '12 மே 2026 அன்று சேர்ந்தார்';
 
   @override
-  String get status_accepted => 'Accepted';
+  String get status_accepted => 'ஏற்கப்பட்டது';
 
   @override
-  String get s89_charvika_joined => 'Joined 12 May 2026';
+  String get s89_charvika_joined => '12 மே 2026 அன்று சேர்ந்தார்';
 
   @override
-  String get s89_security => 'Invitation Security';
+  String get s89_security => 'அழைப்பு பாதுகாப்பு';
 
   @override
-  String get s89_single_use => 'Single Use';
+  String get s89_single_use => 'ஒருமுறை பயன்பாடு';
 
   @override
-  String get s89_single_use_body => 'Each invitation can be accepted once';
+  String get s89_single_use_body =>
+      'ஒவ்வொரு அழைப்பையும் ஒருமுறை மட்டுமே ஏற்க முடியும்';
 
   @override
-  String get s89_time_limited => 'Time Limited';
+  String get s89_time_limited => 'கால வரையறை';
 
   @override
-  String get s89_time_limited_body => 'Invitations expire automatically';
+  String get s89_time_limited_body => 'அழைப்புகள் தானாக காலாவதியாகும்';
 
   @override
-  String get s89_device_verified => 'Device Verified';
+  String get s89_device_verified => 'சாதனம் சரிபார்க்கப்பட்டது';
 
   @override
-  String get s89_device_verified_body => 'Second device confirms local keys';
+  String get s89_device_verified_body =>
+      'இரண்டாவது சாதனம் உள்ளூர் விசைகளை உறுதிப்படுத்துகிறது';
 
   @override
-  String get s90_title => 'Access History';
+  String get s90_title => 'அணுகல் வரலாறு';
 
   @override
-  String get s90_subtitle => 'Family vault access log';
+  String get s90_subtitle => 'குடும்ப வால்ட் அணுகல் பதிவு';
 
   @override
-  String get s90_period => 'This month';
+  String get s90_period => 'இந்த மாதம்';
 
   @override
-  String get s90_summary => '86 family vault actions';
+  String get s90_summary => '86 குடும்ப வால்ட் செயல்கள்';
 
   @override
-  String get s90_warnings => 'No warnings';
+  String get s90_warnings => 'எச்சரிக்கைகள் இல்லை';
 
   @override
-  String get s90_event_1 => 'Opened Health Report';
+  String get s90_event_1 => 'சுகாதார அறிக்கை திறக்கப்பட்டது';
 
   @override
-  String get s90_time_1 => 'Today • 10:32 AM';
+  String get s90_time_1 => 'இன்று • 10:32 AM';
 
   @override
-  String get status_allowed => 'Allowed';
+  String get status_allowed => 'அனுமதிக்கப்பட்டது';
 
   @override
-  String get s90_event_2 => 'Exported Family Documents';
+  String get s90_event_2 => 'குடும்ப ஆவணங்கள் ஏற்றுமதி செய்யப்பட்டன';
 
   @override
-  String get member_arjun_short => 'Arjun';
+  String get member_arjun_short => 'அர்ஜுன்';
 
   @override
-  String get s90_time_2 => 'Today • 9:20 AM';
+  String get s90_time_2 => 'இன்று • 9:20 AM';
 
   @override
-  String get s90_event_3 => 'Tried to open Property Papers';
+  String get s90_event_3 => 'சொத்து ஆவணங்களைத் திறக்க முயன்றார்';
 
   @override
-  String get s90_time_3 => 'Yesterday • 7:45 PM';
+  String get s90_time_3 => 'நேற்று • 7:45 PM';
 
   @override
-  String get status_blocked => 'Blocked';
+  String get status_blocked => 'தடுக்கப்பட்டது';
 
   @override
-  String get s90_event_4 => 'Viewed Education Certificate';
+  String get s90_event_4 => 'கல்வி சான்றிதழ் பார்க்கப்பட்டது';
 
   @override
-  String get s90_time_4 => 'Yesterday • 4:15 PM';
+  String get s90_time_4 => 'நேற்று • 4:15 PM';
 
   @override
-  String get s90_event_5 => 'Added doctor reminder';
+  String get s90_event_5 => 'மருத்துவர் நினைவூட்டல் சேர்க்கப்பட்டது';
 
   @override
-  String get s90_time_5 => '12 May • 11:10 AM';
+  String get s90_time_5 => '12 மே • 11:10 AM';
 
   @override
-  String get s90_event_6 => 'Emergency package request';
+  String get s90_event_6 => 'அவசர தொகுப்பு கோரிக்கை';
 
   @override
-  String get s90_time_6 => '10 May • 8:45 AM';
+  String get s90_time_6 => '10 மே • 8:45 AM';
 
   @override
-  String get status_pending => 'Pending';
+  String get status_pending => 'நிலுவையில்';
 
   @override
-  String get s90_export => 'Export access report';
+  String get s90_export => 'அணுகல் அறிக்கையை ஏற்றுமதி செய்யவும்';
 
   @override
-  String get s90_export_body => 'Create a local encrypted audit file';
+  String get s90_export_body =>
+      'உள்ளூர் குறியாக்கப்பட்ட தணிக்கை கோப்பை உருவாக்கவும்';
 
   @override
   String get s91_title => 'OwnKeep Pro';
 
   @override
-  String get s91_subtitle => 'Unlock advanced local features';
+  String get s91_subtitle => 'மேம்பட்ட உள்ளூர் அம்சங்களைத் திறக்கவும்';
 
   @override
   String get s91_badge => 'OWNKEEP PRO';
 
   @override
-  String get s91_hero => 'Everything stays yours';
+  String get s91_hero => 'அனைத்தும் உங்களுடையதே';
 
   @override
   String get s91_hero_body =>
-      'One premium upgrade for advanced security, AI organization, document tools and family vault features.';
+      'மேம்பட்ட பாதுகாப்பு, AI ஒழுங்குபடுத்தல், ஆவண கருவிகள் மற்றும் குடும்ப வால்ட் அம்சங்களுக்கான ஒரு பிரீமியம் மேம்பாடு.';
 
   @override
   String get s91_price => '₹1,499';
 
   @override
-  String get s91_price_type => 'one-time';
+  String get s91_price_type => 'ஒருமுறை';
 
   @override
-  String get s91_features => 'Included Features';
+  String get s91_features => 'சேர்க்கப்பட்ட அம்சங்கள்';
 
   @override
-  String get s91_document_tools => 'Advanced document tools';
+  String get s91_document_tools => 'மேம்பட்ட ஆவண கருவிகள்';
 
   @override
-  String get s91_document_tools_body => 'Merge, split, compare and OCR';
+  String get s91_document_tools_body =>
+      'இணைப்பு, பிரிப்பு, ஒப்பீடு மற்றும் OCR';
 
   @override
-  String get s91_ai => 'On-device AI';
+  String get s91_ai => 'சாதனத்திலுள்ள AI';
 
   @override
-  String get s91_ai_body => 'Smart search, tags and insights';
+  String get s91_ai_body =>
+      'ஸ்மார்ட் தேடல், குறிச்சொற்கள் மற்றும் நுண்ணறிவுகள்';
 
   @override
-  String get s91_family => 'Family Vault';
+  String get s91_family => 'குடும்ப வால்ட்';
 
   @override
-  String get s91_family_body => 'Offline encrypted sharing';
+  String get s91_family_body => 'ஆஃப்லைன் குறியாக்கப்பட்ட பகிர்வு';
 
   @override
-  String get s91_security => 'Security tools';
+  String get s91_security => 'பாதுகாப்பு கருவிகள்';
 
   @override
-  String get s91_security_body => 'Hidden vault, decoy vault and audit';
+  String get s91_security_body => 'மறைவு வால்ட், டிகாய் வால்ட் மற்றும் தணிக்கை';
 
   @override
-  String get s91_collections => 'Unlimited collections';
+  String get s91_collections => 'வரம்பற்ற தொகுப்புகள்';
 
   @override
-  String get s91_collections_body => 'Create and customize freely';
+  String get s91_collections_body => 'சுதந்திரமாக உருவாக்கி தனிப்பயனாக்கவும்';
 
   @override
-  String get s91_upgrade => 'Upgrade to OwnKeep Pro';
+  String get s91_upgrade => 'OwnKeep Pro-க்கு மேம்படுத்தவும்';
 
   @override
   String get s91_offline_note =>
-      'Purchase entitlement is cached for offline use';
+      'ஆஃப்லைன் பயன்பாட்டிற்காக வாங்கும் உரிமை கேஷ் செய்யப்படும்';
 
   @override
-  String get s92_title => 'Themes';
+  String get s92_title => 'தீம்கள்';
 
   @override
-  String get s92_subtitle => 'Personalize your vault';
+  String get s92_subtitle => 'உங்கள் வால்ட்டை தனிப்பயனாக்கவும்';
 
   @override
-  String get s92_app_theme => 'App Theme';
+  String get s92_app_theme => 'செயலி தீம்';
 
   @override
-  String get s92_midnight => 'Midnight';
+  String get s92_midnight => 'மிட்நைட்';
 
   @override
-  String get s92_midnight_body => 'Dark premium theme';
+  String get s92_midnight_body => 'டார்க் பிரீமியம் தீம்';
 
   @override
-  String get s92_active => 'Active';
+  String get s92_active => 'செயலில்';
 
   @override
-  String get s92_indigo => 'Indigo';
+  String get s92_indigo => 'இண்டிகோ';
 
   @override
-  String get s92_indigo_body => 'Dark premium theme';
+  String get s92_indigo_body => 'டார்க் பிரீமியம் தீம்';
 
   @override
-  String get s92_forest => 'Forest';
+  String get s92_forest => 'ஃபாரஸ்ட்';
 
   @override
-  String get s92_forest_body => 'Dark premium theme';
+  String get s92_forest_body => 'டார்க் பிரீமியம் தீம்';
 
   @override
-  String get s92_graphite => 'Graphite';
+  String get s92_graphite => 'கிராஃபைட்';
 
   @override
-  String get s92_graphite_body => 'Dark premium theme';
+  String get s92_graphite_body => 'டார்க் பிரீமியம் தீம்';
 
   @override
-  String get s92_appearance => 'Appearance';
+  String get s92_appearance => 'தோற்றம்';
 
   @override
-  String get s92_system_brightness => 'Use system brightness';
+  String get s92_system_brightness => 'சிஸ்டம் பிரகாசத்தைப் பயன்படுத்தவும்';
 
   @override
-  String get s92_system_brightness_body => 'Follow device dark/light setting';
+  String get s92_system_brightness_body =>
+      'சாதனத்தின் டார்க்/லைட் அமைப்பைப் பின்பற்றவும்';
 
   @override
-  String get s92_reduce_motion => 'Reduce motion';
+  String get s92_reduce_motion => 'இயக்கத்தை குறைக்கவும்';
 
   @override
-  String get s92_reduce_motion_body => 'Use simpler transitions';
+  String get s92_reduce_motion_body => 'எளிய மாற்றங்களைப் பயன்படுத்தவும்';
 
   @override
-  String get s92_increase_contrast => 'Increase contrast';
+  String get s92_increase_contrast => 'கான்ட்ராஸ்டை அதிகரிக்கவும்';
 
   @override
-  String get s92_increase_contrast_body => 'Stronger text and borders';
+  String get s92_increase_contrast_body =>
+      'மேலும் தெளிவான உரை மற்றும் எல்லைகள்';
 
   @override
-  String get s93_title => 'App Lock';
+  String get s93_title => 'செயலி பூட்டு';
 
   @override
-  String get s93_subtitle => 'Control when OwnKeep locks';
+  String get s93_subtitle =>
+      'OwnKeep எப்போது பூட்டப்பட வேண்டும் என்பதை கட்டுப்படுத்தவும்';
 
   @override
-  String get s93_status_label => 'Vault Lock Status';
+  String get s93_status_label => 'வால்ட் பூட்டு நிலை';
 
   @override
-  String get s93_status => 'Protected';
+  String get s93_status => 'பாதுகாக்கப்பட்டது';
 
   @override
-  String get s93_method_summary => 'Biometric + PIN';
+  String get s93_method_summary => 'பயோமெட்ரிக் + PIN';
 
   @override
-  String get s93_methods => 'Lock Methods';
+  String get s93_methods => 'பூட்டு முறைகள்';
 
   @override
-  String get s93_biometric => 'Biometric unlock';
+  String get s93_biometric => 'பயோமெட்ரிக் திறப்பு';
 
   @override
-  String get s93_biometric_body => 'Use fingerprint or face unlock';
+  String get s93_biometric_body =>
+      'கைரேகை அல்லது முகத் திறப்பைப் பயன்படுத்தவும்';
 
   @override
-  String get s93_pin => 'PIN fallback';
+  String get s93_pin => 'PIN மாற்று';
 
   @override
-  String get s93_pin_body => 'Required after device restart';
+  String get s93_pin_body => 'சாதனம் மறுதொடங்கிய பிறகு தேவை';
 
   @override
-  String get s93_recovery => 'Recovery phrase';
+  String get s93_recovery => 'மீட்பு சொற்றொடர்';
 
   @override
-  String get s93_recovery_body => 'Emergency recovery only';
+  String get s93_recovery_body => 'அவசர மீட்பு மட்டும்';
 
   @override
-  String get s93_auto_lock => 'Auto Lock';
+  String get s93_auto_lock => 'தானியங்கி பூட்டு';
 
   @override
-  String get s93_immediately => 'Immediately';
+  String get s93_immediately => 'உடனடியாக';
 
   @override
-  String get s93_after_30 => 'After 30 seconds';
+  String get s93_after_30 => '30 விநாடிகளுக்குப் பிறகு';
 
   @override
-  String get s93_after_2 => 'After 2 minutes';
+  String get s93_after_2 => '2 நிமிடங்களுக்குப் பிறகு';
 
   @override
-  String get s93_background => 'When app goes to background';
+  String get s93_background => 'செயலி பின்னணிக்கு செல்லும்போது';
 
   @override
-  String get s93_lock_now => 'Lock Now';
+  String get s93_lock_now => 'இப்போது பூட்டவும்';
 
   @override
-  String get s93_lock_now_body => 'Immediately secure all vault content';
+  String get s93_lock_now_body =>
+      'வால்ட்டின் அனைத்து உள்ளடக்கத்தையும் உடனடியாக பாதுகாக்கவும்';
 
   @override
-  String get s94_title => 'Hidden Vault';
+  String get s94_title => 'மறைவு வால்ட்';
 
   @override
-  String get s94_subtitle => 'Keep sensitive items out of sight';
+  String get s94_subtitle =>
+      'முக்கியமான உருப்படிகளை பார்வைக்கு அப்பால் வைத்திருங்கள்';
 
   @override
-  String get s94_status => 'Hidden Vault Disabled';
+  String get s94_status => 'மறைவு வால்ட் முடக்கப்பட்டுள்ளது';
 
   @override
   String get s94_body =>
-      'Hidden Vault is concealed from the main app and opens only with a separate gesture and PIN.';
+      'மறைவு வால்ட் பிரதான செயலியில் மறைக்கப்பட்டிருக்கும்; தனி சைகை மற்றும் PIN மூலம் மட்டுமே திறக்கும்.';
 
   @override
-  String get s94_how => 'How it works';
+  String get s94_how => 'இது எப்படி செயல்படுகிறது';
 
   @override
-  String get s94_pin => 'Separate PIN';
+  String get s94_pin => 'தனி PIN';
 
   @override
-  String get s94_pin_body => 'Different from your main vault PIN';
+  String get s94_pin_body => 'உங்கள் முதன்மை வால்ட் PIN-இலிருந்து வேறுபட்டது';
 
   @override
-  String get s94_gesture => 'Hidden entry gesture';
+  String get s94_gesture => 'மறைவு நுழைவு சைகை';
 
   @override
-  String get s94_gesture_body => 'Access from the lock screen';
+  String get s94_gesture_body => 'பூட்டு திரையிலிருந்து அணுகவும்';
 
   @override
-  String get s94_activity => 'No recent activity';
+  String get s94_activity => 'சமீபத்திய செயல்பாடு இல்லை';
 
   @override
-  String get s94_activity_body => 'Hidden files do not appear elsewhere';
+  String get s94_activity_body =>
+      'மறைக்கப்பட்ட கோப்புகள் வேறு எங்கும் தோன்றாது';
 
   @override
-  String get s94_storage => 'Local-only storage';
+  String get s94_storage => 'உள்ளூர் சேமிப்பு மட்டும்';
 
   @override
-  String get s94_storage_body => 'Never uploaded or synchronized';
+  String get s94_storage_body =>
+      'ஒருபோதும் பதிவேற்றம் அல்லது ஒத்திசைவு செய்யப்படாது';
 
   @override
-  String get s94_setup => 'Set Up Hidden Vault';
+  String get s94_setup => 'மறைவு வால்ட்டை அமைக்கவும்';
 
   @override
-  String get s94_note => 'You can remove the hidden vault at any time';
+  String get s94_note => 'மறைவு வால்ட்டை எப்போது வேண்டுமானாலும் நீக்கலாம்';
 
   @override
-  String get s95_title => 'Decoy Vault';
+  String get s95_title => 'டிகாய் வால்ட்';
 
   @override
-  String get s95_subtitle => 'Open a harmless vault with a separate PIN';
+  String get s95_subtitle => 'தனி PIN மூலம் சாதாரண வால்ட்டைத் திறக்கவும்';
 
   @override
-  String get s95_safety => 'Safety Feature';
+  String get s95_safety => 'பாதுகாப்பு அம்சம்';
 
   @override
-  String get s95_hero => 'Create a believable alternate vault';
+  String get s95_hero => 'நம்பத்தகுந்த மாற்று வால்ட்டை உருவாக்கவும்';
 
   @override
   String get s95_hero_body =>
-      'A decoy PIN opens a separate vault containing only the items you choose. Your real vault stays hidden.';
+      'டிகாய் PIN நீங்கள் தேர்ந்தெடுத்த உருப்படிகள் மட்டும் உள்ள தனி வால்ட்டைத் திறக்கும். உங்கள் உண்மையான வால்ட் மறைந்தே இருக்கும்.';
 
   @override
-  String get s95_setup => 'Decoy Setup';
+  String get s95_setup => 'டிகாய் அமைப்பு';
 
   @override
-  String get s95_step_1 => 'Choose decoy PIN';
+  String get s95_step_1 => 'டிகாய் PIN-ஐ தேர்ந்தெடுக்கவும்';
 
   @override
-  String get s95_step_1_body => 'Must differ from your real PIN';
+  String get s95_step_1_body =>
+      'இது உங்கள் உண்மையான PIN-இலிருந்து வேறுபட்டிருக்க வேண்டும்';
 
   @override
-  String get s95_step_2 => 'Add harmless files';
+  String get s95_step_2 => 'சாதாரண கோப்புகளைச் சேர்க்கவும்';
 
   @override
-  String get s95_step_2_body => 'Select ordinary documents or photos';
+  String get s95_step_2_body =>
+      'சாதாரண ஆவணங்கள் அல்லது புகைப்படங்களைத் தேர்ந்தெடுக்கவும்';
 
   @override
-  String get s95_step_3 => 'Test decoy unlock';
+  String get s95_step_3 => 'டிகாய் திறப்பைச் சோதிக்கவும்';
 
   @override
-  String get s95_step_3_body => 'Verify the alternate vault opens';
+  String get s95_step_3_body => 'மாற்று வால்ட் திறக்கப்படுவதை சரிபார்க்கவும்';
 
   @override
-  String get s95_step_4 => 'Enable silent mode';
+  String get s95_step_4 => 'அமைதிப் பயன்முறையை இயக்கு';
 
   @override
-  String get s95_step_4_body => 'No warning appears during unlock';
+  String get s95_step_4_body => 'திறக்கும் போது எந்த எச்சரிக்கையும் தோன்றாது';
 
   @override
-  String get s95_important => 'Important';
+  String get s95_important => 'முக்கியம்';
 
   @override
   String get s95_important_body =>
-      'Decoy mode does not replace physical safety precautions';
+      'டிகாய் பயன்முறை உடல் பாதுகாப்பு முன்னெச்சரிக்கைகளுக்கு மாற்றாகாது';
 
   @override
-  String get s95_create => 'Create Decoy Vault';
+  String get s95_create => 'டிகாய் வால்ட்டை உருவாக்கவும்';
 
   @override
-  String get s96_title => 'Recovery Verification';
+  String get s96_title => 'மீட்பு சரிபார்ப்பு';
 
   @override
-  String get s96_subtitle => 'Confirm you saved the phrase';
+  String get s96_subtitle => 'நீங்கள் சொற்றொடரைச் சேமித்ததை உறுதிப்படுத்தவும்';
 
   @override
-  String get s96_check => 'Recovery check';
+  String get s96_check => 'மீட்பு சரிபார்ப்பு';
 
   @override
   String get s96_check_body =>
-      'Select the missing words in the correct order. This check happens only on this device.';
+      'விடுபட்ட வார்த்தைகளை சரியான வரிசையில் தேர்ந்தெடுக்கவும். இந்தச் சரிபார்ப்பு இந்த சாதனத்தில் மட்டுமே நடக்கும்.';
 
   @override
-  String get s96_phrase => 'Your phrase';
+  String get s96_phrase => 'உங்கள் சொற்றொடர்';
 
   @override
-  String get s96_word_1 => 'copper';
+  String get s96_word_1 => 'செம்பு';
 
   @override
-  String get s96_word_2 => 'river';
+  String get s96_word_2 => 'நதி';
 
   @override
   String get s96_word_3 => '___';
 
   @override
-  String get s96_word_4 => 'forest';
+  String get s96_word_4 => 'காடு';
 
   @override
-  String get s96_word_5 => 'silent';
+  String get s96_word_5 => 'அமைதி';
 
   @override
   String get s96_word_6 => '___';
 
   @override
-  String get s96_word_7 => 'planet';
+  String get s96_word_7 => 'கோள்';
 
   @override
-  String get s96_word_8 => 'harbor';
+  String get s96_word_8 => 'துறைமுகம்';
 
   @override
-  String get s96_word_9 => 'amber';
+  String get s96_word_9 => 'அம்பர்';
 
   @override
   String get s96_word_10 => '___';
 
   @override
-  String get s96_word_11 => 'window';
+  String get s96_word_11 => 'ஜன்னல்';
 
   @override
-  String get s96_word_12 => 'stone';
+  String get s96_word_12 => 'கல்';
 
   @override
-  String get s96_choose => 'Choose missing words';
+  String get s96_choose => 'விடுபட்ட வார்த்தைகளைத் தேர்ந்தெடுக்கவும்';
 
   @override
-  String get s96_option_garden => 'garden';
+  String get s96_option_garden => 'தோட்டம்';
 
   @override
-  String get s96_option_mirror => 'mirror';
+  String get s96_option_mirror => 'கண்ணாடி';
 
   @override
-  String get s96_option_ocean => 'ocean';
+  String get s96_option_ocean => 'பெருங்கடல்';
 
   @override
-  String get s96_option_lantern => 'lantern';
+  String get s96_option_lantern => 'விளக்கு';
 
   @override
-  String get s96_option_violet => 'violet';
+  String get s96_option_violet => 'ஊதா';
 
   @override
-  String get s96_option_engine => 'engine';
+  String get s96_option_engine => 'எஞ்சின்';
 
   @override
-  String get s96_verify => 'Verify Recovery Phrase';
+  String get s96_verify => 'மீட்பு சொற்றொடரை சரிபார்க்கவும்';
 
   @override
-  String get s96_why => 'Why verify?';
+  String get s96_why => 'ஏன் சரிபார்க்க வேண்டும்?';
 
   @override
-  String get s96_why_body => 'A verified phrase prevents permanent data loss';
+  String get s96_why_body =>
+      'சரிபார்க்கப்பட்ட சொற்றொடர் நிரந்தர தரவு இழப்பைத் தடுக்கிறது';
 
   @override
-  String get s97_title => 'Encryption Details';
+  String get s97_title => 'குறியாக்க விவரங்கள்';
 
   @override
-  String get s97_subtitle => 'How OwnKeep protects your vault';
+  String get s97_subtitle => 'OwnKeep உங்கள் வால்ட்டை எவ்வாறு பாதுகாக்கிறது';
 
   @override
-  String get s97_status => 'Vault Fully Encrypted';
+  String get s97_status => 'வால்ட் முழுமையாக குறியாக்கப்பட்டுள்ளது';
 
   @override
-  String get s97_status_body => 'All checks passed';
+  String get s97_status_body => 'அனைத்து சரிபார்ப்புகளும் வெற்றியடைந்தன';
 
   @override
-  String get s97_content => 'Content encryption';
+  String get s97_content => 'உள்ளடக்க குறியாக்கம்';
 
   @override
   String get s97_content_value => 'AES-256-GCM';
 
   @override
-  String get s97_kdf => 'Key derivation';
+  String get s97_kdf => 'விசை உருவாக்கம்';
 
   @override
   String get s97_kdf_value => 'Argon2id';
 
   @override
-  String get s97_manifest => 'Manifest format';
+  String get s97_manifest => 'மேனிஃபெஸ்ட் வடிவம்';
 
   @override
-  String get s97_manifest_value => 'Canonical CBOR';
+  String get s97_manifest_value => 'கேனானிக்கல் CBOR';
 
   @override
-  String get s97_integrity => 'Integrity';
+  String get s97_integrity => 'முழுமை';
 
   @override
-  String get s97_integrity_value => 'SHA-256 digests';
+  String get s97_integrity_value => 'SHA-256 டைஜெஸ்ட்கள்';
 
   @override
-  String get s97_container => 'Container';
+  String get s97_container => 'கண்டெய்னர்';
 
   @override
-  String get s97_container_value => 'Encrypted .cvault';
+  String get s97_container_value => 'குறியாக்கப்பட்ட .cvault';
 
   @override
-  String get s97_envelope => 'Recovery envelope';
+  String get s97_envelope => 'மீட்பு உறை';
 
   @override
-  String get s97_envelope_value => 'Authenticated and local';
+  String get s97_envelope_value => 'அங்கீகரிக்கப்பட்ட மற்றும் உள்ளூர்';
 
   @override
-  String get s97_security_model => 'Security model';
+  String get s97_security_model => 'பாதுகாப்பு மாதிரி';
 
   @override
   String get s97_security_model_body =>
-      'OwnKeep cannot read or recover your vault';
+      'OwnKeep உங்கள் வால்ட்டைப் படிக்கவோ மீட்கவோ முடியாது';
 
   @override
-  String get s98_title => 'Device Migration';
+  String get s98_title => 'சாதன மாற்றம்';
 
   @override
-  String get s98_subtitle => 'Move your vault to another device';
+  String get s98_subtitle => 'உங்கள் வால்ட்டை மற்றொரு சாதனத்திற்கு மாற்றவும்';
 
   @override
-  String get s98_secure => 'Secure Device-to-Device Transfer';
+  String get s98_secure => 'பாதுகாப்பான சாதனம்-முதல்-சாதனம் பரிமாற்றம்';
 
   @override
   String get s98_secure_body =>
-      'Transfer through local network or an encrypted migration package. No cloud account is required.';
+      'உள்ளூர் நெட்வொர்க் அல்லது குறியாக்கப்பட்ட இடமாற்று தொகுப்பின் மூலம் மாற்றவும். கிளவுட் கணக்கு தேவையில்லை.';
 
   @override
-  String get s98_choose => 'Choose Method';
+  String get s98_choose => 'முறையைத் தேர்ந்தெடுக்கவும்';
 
   @override
-  String get s98_nearby => 'Nearby Transfer';
+  String get s98_nearby => 'அருகிலுள்ள பரிமாற்றம்';
 
   @override
-  String get s98_nearby_body => 'Fast local transfer on the same network';
+  String get s98_nearby_body => 'அதே நெட்வொர்க்கில் வேகமான உள்ளூர் பரிமாற்றம்';
 
   @override
-  String get s98_file => 'Encrypted Migration File';
+  String get s98_file => 'குறியாக்கப்பட்ட இடமாற்று கோப்பு';
 
   @override
-  String get s98_file_body => 'Move using USB, Files or SD card';
+  String get s98_file_body =>
+      'USB, Files அல்லது SD கார்டைப் பயன்படுத்தி மாற்றவும்';
 
   @override
-  String get s98_qr => 'QR Pairing';
+  String get s98_qr => 'QR இணைத்தல்';
 
   @override
-  String get s98_qr_body => 'Pair devices before local transfer';
+  String get s98_qr_body =>
+      'உள்ளூர் பரிமாற்றத்திற்கு முன் சாதனங்களை இணைக்கவும்';
 
   @override
-  String get s98_checklist => 'Migration Checklist';
+  String get s98_checklist => 'இடமாற்று சரிபார்ப்புப் பட்டியல்';
 
   @override
-  String get s98_backup => 'Create fresh backup';
+  String get s98_backup => 'புதிய காப்புப்பிரதியை உருவாக்கவும்';
 
   @override
-  String get s98_charge => 'Keep both devices charged';
+  String get s98_charge => 'இரு சாதனங்களையும் சார்ஜ் வைத்திருங்கள்';
 
   @override
-  String get s98_storage => 'Verify available storage';
+  String get s98_storage => 'கிடைக்கும் சேமிப்பை சரிபார்க்கவும்';
 
   @override
-  String get s98_keep_old => 'Do not delete old vault yet';
+  String get s98_keep_old => 'பழைய வால்ட்டை இன்னும் நீக்க வேண்டாம்';
 
   @override
-  String get s98_start => 'Start Device Migration';
+  String get s98_start => 'சாதன இடமாற்றைத் தொடங்கவும்';
 
   @override
-  String get s99_title => 'Restore Vault';
+  String get s99_title => 'வால்ட்டை மீட்டமைக்கவும்';
 
   @override
-  String get s99_subtitle => 'Recover from an encrypted backup';
+  String get s99_subtitle =>
+      'குறியாக்கப்பட்ட காப்புப்பிரதியிலிருந்து மீட்கவும்';
 
   @override
-  String get s99_backup_file => 'Backup File';
+  String get s99_backup_file => 'காப்புப்பிரதி கோப்பு';
 
   @override
   String get s99_file => 'OwnKeep_Backup_2026-08-03.cvault';
 
   @override
-  String get s99_file_meta => '2.4 GB • Verified container';
+  String get s99_file_meta => '2.4 GB • சரிபார்க்கப்பட்ட கண்டெய்னர்';
 
   @override
-  String get s99_change => 'Change';
+  String get s99_change => 'மாற்றவும்';
 
   @override
-  String get s99_options => 'Restore Options';
+  String get s99_options => 'மீட்டமைப்பு விருப்பங்கள்';
 
   @override
-  String get s99_everything => 'Restore everything';
+  String get s99_everything => 'அனைத்தையும் மீட்டமைக்கவும்';
 
   @override
-  String get s99_everything_body => 'Documents, notes, reminders and settings';
+  String get s99_everything_body =>
+      'ஆவணங்கள், குறிப்புகள், நினைவூட்டல்கள் மற்றும் அமைப்புகள்';
 
   @override
-  String get s99_documents => 'Documents only';
+  String get s99_documents => 'ஆவணங்கள் மட்டும்';
 
   @override
-  String get s99_documents_body => 'Skip app preferences and activity history';
+  String get s99_documents_body =>
+      'செயலி விருப்பங்கள் மற்றும் செயல்பாட்டு வரலாற்றைத் தவிர்க்கவும்';
 
   @override
-  String get s99_collections => 'Choose collections';
+  String get s99_collections => 'தொகுப்புகளைத் தேர்ந்தெடுக்கவும்';
 
   @override
-  String get s99_collections_body => 'Restore selected categories';
+  String get s99_collections_body => 'தேர்ந்தெடுத்த வகைகளை மீட்டமைக்கவும்';
 
   @override
-  String get s99_verification => 'Verification';
+  String get s99_verification => 'சரிபார்ப்பு';
 
   @override
-  String get s99_integrity => 'Container integrity';
+  String get s99_integrity => 'கண்டெய்னர் முழுமை';
 
   @override
-  String get s99_integrity_value => 'Verified';
+  String get s99_integrity_value => 'சரிபார்க்கப்பட்டது';
 
   @override
-  String get s99_envelope => 'Recovery envelope';
+  String get s99_envelope => 'மீட்பு உறை';
 
   @override
-  String get s99_envelope_value => 'Valid';
+  String get s99_envelope_value => 'செல்லுபடியாகும்';
 
   @override
-  String get s99_storage => 'Available storage';
+  String get s99_storage => 'கிடைக்கும் சேமிப்பு';
 
   @override
-  String get s99_storage_value => '7.8 GB free';
+  String get s99_storage_value => '7.8 GB காலி';
 
   @override
-  String get s99_version => 'Backup version';
+  String get s99_version => 'காப்புப்பிரதி பதிப்பு';
 
   @override
-  String get s99_version_value => 'Compatible';
+  String get s99_version_value => 'இணக்கமானது';
 
   @override
-  String get s99_restore => 'Restore Vault';
+  String get s99_restore => 'வால்ட்டை மீட்டமைக்கவும்';
 
   @override
-  String get s100_title => 'Security Audit';
+  String get s100_title => 'பாதுகாப்பு தணிக்கை';
 
   @override
-  String get s100_subtitle => 'Final vault safety review';
+  String get s100_subtitle => 'இறுதி வால்ட் பாதுகாப்பு மதிப்பாய்வு';
 
   @override
   String get s100_score => '98';
 
   @override
-  String get s100_score_label => 'Security Score';
+  String get s100_score_label => 'பாதுகாப்பு மதிப்பெண்';
 
   @override
-  String get s100_rating => 'Excellent protection';
+  String get s100_rating => 'சிறந்த பாதுகாப்பு';
 
   @override
-  String get s100_last_audit => 'Last audited today at 9:35 AM';
+  String get s100_last_audit =>
+      'கடைசியாக இன்று 9:35 AM-க்கு தணிக்கை செய்யப்பட்டது';
 
   @override
-  String get s100_results => 'Audit Results';
+  String get s100_results => 'தணிக்கை முடிவுகள்';
 
   @override
-  String get s100_encryption => 'Vault encryption';
+  String get s100_encryption => 'வால்ட் குறியாக்கம்';
 
   @override
-  String get s100_encryption_body => 'Strong and verified';
+  String get s100_encryption_body => 'வலுவான மற்றும் சரிபார்க்கப்பட்டது';
 
   @override
-  String get s100_recovery => 'Recovery phrase';
+  String get s100_recovery => 'மீட்பு சொற்றொடர்';
 
   @override
-  String get s100_recovery_body => 'Verified 12-word phrase';
+  String get s100_recovery_body => 'சரிபார்க்கப்பட்ட 12-வார்த்தை சொற்றொடர்';
 
   @override
-  String get s100_biometric => 'Biometric lock';
+  String get s100_biometric => 'பயோமெட்ரிக் பூட்டு';
 
   @override
-  String get s100_biometric_body => 'Enabled';
+  String get s100_biometric_body => 'இயக்கப்பட்டது';
 
   @override
-  String get s100_backup => 'Encrypted backup';
+  String get s100_backup => 'குறியாக்கப்பட்ட காப்புப்பிரதி';
 
   @override
-  String get s100_backup_body => 'Created 14 days ago';
+  String get s100_backup_body => '14 நாட்களுக்கு முன்பு உருவாக்கப்பட்டது';
 
   @override
-  String get s100_hidden => 'Hidden vault';
+  String get s100_hidden => 'மறைவு வால்ட்';
 
   @override
-  String get s100_hidden_body => 'Not configured';
+  String get s100_hidden_body => 'கட்டமைக்கப்படவில்லை';
 
   @override
-  String get s100_decoy => 'Decoy vault';
+  String get s100_decoy => 'டிகாய் வால்ட்';
 
   @override
-  String get s100_decoy_body => 'Not configured';
+  String get s100_decoy_body => 'கட்டமைக்கப்படவில்லை';
 
   @override
-  String get status_pass => 'Pass';
+  String get status_pass => 'தேர்ச்சி';
 
   @override
-  String get status_review => 'Review';
+  String get status_review => 'மதிப்பாய்வு செய்யவும்';
 
   @override
-  String get status_optional => 'Optional';
+  String get status_optional => 'விருப்பத்தேர்வு';
 
   @override
-  String get s100_next => 'Recommended next step';
+  String get s100_next => 'பரிந்துரைக்கப்பட்ட அடுத்த படி';
 
   @override
-  String get s100_next_body => 'Create a fresh encrypted backup';
+  String get s100_next_body =>
+      'புதிய குறியாக்கப்பட்ட காப்புப்பிரதியை உருவாக்கவும்';
 
   @override
-  String get s71_greeting_subtitle => 'How can I help you?';
+  String get s71_greeting_subtitle => 'நான் உங்களுக்கு எப்படி உதவலாம்?';
 
   @override
-  String get s71_prompt_insurance => 'Insurance';
+  String get s71_prompt_insurance => 'காப்பீடு';
 
   @override
-  String get s71_prompt_expenses => 'Expenses';
+  String get s71_prompt_expenses => 'செலவுகள்';
 
   @override
-  String get s71_prompt_expiry => 'Expiry';
+  String get s71_prompt_expiry => 'காலாவதி';
 
   @override
-  String get s71_prompt_summarize => 'Summarize';
+  String get s71_prompt_summarize => 'சுருக்கமாக்கவும்';
+
+  @override
+  String get onboarding_language_title => 'உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get onboarding_language_body =>
+      'இதைப் பின்னர் அமைப்புகளில் மாற்றலாம்.';
+
+  @override
+  String get person_title => 'உங்கள் பெயரைச் சொல்லுங்கள்';
+
+  @override
+  String get person_body =>
+      'இது உங்கள் தனிப்பட்ட வால்ட்டில் முதல் நபரை உருவாக்கி டாஷ்போர்டைத் தனிப்பயனாக்குகிறது.';
+
+  @override
+  String get person_name_label => 'உங்கள் பெயர்';
+
+  @override
+  String get person_name_hint => 'OwnKeep உங்களை எவ்வாறு அழைக்க வேண்டும்?';
+
+  @override
+  String get person_name_error => 'உங்கள் பெயரை உள்ளிடவும்.';
+
+  @override
+  String get person_save_error =>
+      'உங்கள் மறையாக்கப்பட்ட சுயவிவரத்தைச் சேமிக்க முடியவில்லை.';
+
+  @override
+  String get person_privacy =>
+      'உங்கள் பெயர் இந்த வால்ட்டிற்குள் மறையாக்கப்பட்டு உங்கள் சாதனத்தை விட்டு வெளியேறாது.';
+
+  @override
+  String get greeting_welcome => 'OwnKeep-க்கு வரவேற்கிறோம்';
+
+  @override
+  String greeting_morning(String name) {
+    return 'காலை வணக்கம், $name';
+  }
+
+  @override
+  String greeting_afternoon(String name) {
+    return 'மதிய வணக்கம், $name';
+  }
+
+  @override
+  String greeting_evening(String name) {
+    return 'மாலை வணக்கம், $name';
+  }
 }

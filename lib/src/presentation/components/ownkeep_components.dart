@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
+import '../../theme/ownkeep_main_colors.dart';
 
 class OwnKeepAppScaffold extends StatelessWidget {
   final String title;
@@ -37,15 +38,16 @@ class OwnKeepPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.mainColors;
     return Container(
       width: double.infinity,
       height: 56,
       decoration: BoxDecoration(
-        gradient: OwnKeepColors.primaryGradient,
+        gradient: LinearGradient(colors: [colors.primaryBlue, colors.aiPurple]),
         borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
         boxShadow: [
           BoxShadow(
-            color: OwnKeepColors.primaryPurple.withValues(alpha: 0.3),
+            color: colors.aiPurple.withValues(alpha: 0.3),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -88,13 +90,14 @@ class OwnKeepCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.mainColors;
     return Container(
       margin: margin,
       padding: padding,
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-        border: Border.all(color: OwnKeepColors.surfaceHighlight, width: 1),
+        border: Border.all(color: colors.borderSoft, width: 1),
       ),
       child: child,
     );
@@ -117,6 +120,7 @@ class OwnKeepFeatureTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.mainColors;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: OwnKeepSpacing.md),
       child: Row(
@@ -126,7 +130,7 @@ class OwnKeepFeatureTile extends StatelessWidget {
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(OwnKeepRadius.lg),
-              border: Border.all(color: OwnKeepColors.surfaceHighlight),
+              border: Border.all(color: colors.borderSoft),
             ),
             child: Icon(icon, color: iconColor, size: 28),
           ),
@@ -139,7 +143,7 @@ class OwnKeepFeatureTile extends StatelessWidget {
                   title,
                   style: Theme.of(
                     context,
-                  ).textTheme.titleMedium?.copyWith(color: Colors.white),
+                  ).textTheme.titleMedium?.copyWith(color: colors.textPrimary),
                 ),
                 SizedBox(height: OwnKeepSpacing.xs),
                 Text(subtitle, style: Theme.of(context).textTheme.bodyMedium),

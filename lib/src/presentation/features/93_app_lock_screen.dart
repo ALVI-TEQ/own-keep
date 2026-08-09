@@ -8,6 +8,8 @@ import '../../theme/ownkeep_main_icons.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/vault_provider.dart';
+import '../components/new_pin_dialog.dart';
+import '../components/recovery_credential_dialog.dart';
 
 class AppLockScreen extends ConsumerStatefulWidget {
   const AppLockScreen({super.key});
@@ -20,6 +22,7 @@ class _AppLockScreenState extends ConsumerState<AppLockScreen> {
   int _autoLockIndex = 0; // 0=Immediately, 1=30s, 2=2m
   bool _biometricEnabled = false;
   bool _pinEnabled = false;
+  bool _isUpdating = false;
 
   @override
   void initState() {
@@ -45,6 +48,78 @@ class _AppLockScreenState extends ConsumerState<AppLockScreen> {
       'app_auto_lock_index',
       index,
     );
+  }
+
+  Future<void> _toggleBiometrics() async {
+    if (_isUpdating) return;
+    setState(() => _isUpdating = true);
+    try {
+      if (_biometricEnabled) {
+        await ref.read(vaultLifecycleProvider).disableBiometrics();
+        if (mounted) setState(() => _biometricEnabled = false);
+      } else {
+        final available = await ref
+            .read(vaultLifecycleProvider)
+            .biometricAvailable();
+        if (!available) {
+          throw Exception('No enrolled device biometric is available.');
+        }
+        if (!mounted) return;
+        final credential = await showRecoveryCredentialDialog(
+          context,
+          title: 'Enable biometric unlock',
+        );
+        if (credential == null) return;
+        await ref
+            .read(vaultSessionProvider.notifier)
+            .enableBiometrics(credential);
+        if (mounted) setState(() => _biometricEnabled = true);
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Biometric setting could not be changed: $error'),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isUpdating = false);
+    }
+  }
+
+  Future<void> _changePin() async {
+    if (_isUpdating) return;
+    final credential = await showRecoveryCredentialDialog(
+      context,
+      title: 'Change vault PIN',
+    );
+    if (credential == null || !mounted) return;
+    final pin = await showNewPinDialog(context, title: 'Choose a new PIN');
+    if (pin == null || !mounted) return;
+    setState(() => _isUpdating = true);
+    try {
+      await ref
+          .read(vaultLifecycleProvider)
+          .verifyRecoveryCredential(credential);
+      await ref
+          .read(pinCredentialStoreProvider)
+          .enroll(pin: pin, recoveryCredential: credential);
+      if (mounted) {
+        setState(() => _pinEnabled = true);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Vault PIN changed.')));
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Recovery credential is incorrect.')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isUpdating = false);
+    }
   }
 
   @override
@@ -147,7 +222,9 @@ class _AppLockScreenState extends ConsumerState<AppLockScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        l10n.s93_method_summary,
+                        _biometricEnabled
+                            ? 'PIN + biometric unlock'
+                            : 'PIN unlock',
                         style: TextStyle(
                           color: colors.textPrimary,
                           fontSize: 14,
@@ -177,6 +254,7 @@ class _AppLockScreenState extends ConsumerState<AppLockScreen> {
                 OwnKeepMainIcons.fingerprint,
                 _biometricEnabled,
                 colors,
+                onTap: _toggleBiometrics,
               ),
               _buildMethodItem(
                 context,
@@ -185,6 +263,7 @@ class _AppLockScreenState extends ConsumerState<AppLockScreen> {
                 OwnKeepMainIcons.pin,
                 _pinEnabled,
                 colors,
+                onTap: _changePin,
               ),
               _buildMethodItem(
                 context,
@@ -193,6 +272,7 @@ class _AppLockScreenState extends ConsumerState<AppLockScreen> {
                 OwnKeepMainIcons.key,
                 true,
                 colors,
+                onTap: () => context.push('/features/recovery-verification'),
               ),
 
               const SizedBox(height: 32),
@@ -296,59 +376,69 @@ class _AppLockScreenState extends ConsumerState<AppLockScreen> {
     String body,
     String iconPath,
     bool isActive,
-    OwnKeepMainColorsTheme colors,
-  ) {
-    return Container(
+    OwnKeepMainColorsTheme colors, {
+    VoidCallback? onTap,
+  }) {
+    return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colors.surfacePrimary,
+      color: colors.surfacePrimary,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colors.borderSoft),
+        side: BorderSide(color: colors.borderSoft),
       ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: colors.surfaceSecondary,
-              shape: BoxShape.circle,
-            ),
-            child: SvgPicture.asset(
-              iconPath,
-              colorFilter: ColorFilter.mode(
-                colors.primaryBlue,
-                BlendMode.srcIn,
-              ),
-              width: 24,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: colors.textPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
+      child: InkWell(
+        onTap: _isUpdating ? null : onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: colors.surfaceSecondary,
+                  shape: BoxShape.circle,
+                ),
+                child: SvgPicture.asset(
+                  iconPath,
+                  colorFilter: ColorFilter.mode(
+                    colors.primaryBlue,
+                    BlendMode.srcIn,
                   ),
+                  width: 24,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  body,
-                  style: TextStyle(color: colors.textSecondary, fontSize: 12),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: colors.textPrimary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      body,
+                      style: TextStyle(
+                        color: colors.textSecondary,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              if (isActive)
+                Icon(Icons.check_circle, color: colors.successGreen, size: 24)
+              else
+                Icon(Icons.circle_outlined, color: colors.textMuted, size: 24),
+            ],
           ),
-          if (isActive)
-            Icon(Icons.check_circle, color: colors.successGreen, size: 24)
-          else
-            Icon(Icons.circle_outlined, color: colors.textMuted, size: 24),
-        ],
+        ),
       ),
     );
   }

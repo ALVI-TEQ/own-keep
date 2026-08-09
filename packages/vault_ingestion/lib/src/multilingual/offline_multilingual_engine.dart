@@ -301,6 +301,24 @@ final class OfflineMultilingualEngine {
           'नव्याने आयात केलेल्या दस्तऐवजांसाठी वापरले जाते',
       SupportedLanguage.bengali: 'নতুন আমদানি করা নথির জন্য ব্যবহৃত হয়',
     },
+    'Bundled on this device': {
+      SupportedLanguage.hindi: 'इस डिवाइस में शामिल है',
+      SupportedLanguage.telugu: 'ఈ పరికరంలో చేర్చబడింది',
+      SupportedLanguage.tamil: 'இந்தச் சாதனத்தில் சேர்க்கப்பட்டுள்ளது',
+      SupportedLanguage.kannada: 'ಈ ಸಾಧನದಲ್ಲಿ ಸೇರಿಸಲಾಗಿದೆ',
+      SupportedLanguage.malayalam: 'ഈ ഉപകരണത്തിൽ ഉൾപ്പെടുത്തിയിരിക്കുന്നു',
+      SupportedLanguage.marathi: 'या उपकरणात समाविष्ट आहे',
+      SupportedLanguage.bengali: 'এই ডিভাইসে অন্তর্ভুক্ত আছে',
+    },
+    'Not available on this device': {
+      SupportedLanguage.hindi: 'इस डिवाइस पर उपलब्ध नहीं है',
+      SupportedLanguage.telugu: 'ఈ పరికరంలో అందుబాటులో లేదు',
+      SupportedLanguage.tamil: 'இந்தச் சாதனத்தில் கிடைக்கவில்லை',
+      SupportedLanguage.kannada: 'ಈ ಸಾಧನದಲ್ಲಿ ಲಭ್ಯವಿಲ್ಲ',
+      SupportedLanguage.malayalam: 'ഈ ഉപകരണത്തിൽ ലഭ്യമല്ല',
+      SupportedLanguage.marathi: 'या उपकरणावर उपलब्ध नाही',
+      SupportedLanguage.bengali: 'এই ডিভাইসে উপলভ্য নয়',
+    },
   };
 
   /// Verifies that changing UI language preserves stored Claim values,
@@ -1247,7 +1265,7 @@ final class OfflineMultilingualEngine {
       'Changing a template only changes this checklist. It never changes confirmed facts or claims that an item is legally required.':
           'Changing a template only changes this checklist. It never changes confirmed facts or claims that an item is legally required.',
       'Changing interface language does not alter stored Claim values, predicates, Entity IDs, evidence, or backup bytes.':
-          'Changing interface language does not alter stored Claim values, predicates, Entity IDs, evidence, or backup bytes.',
+          'இடைமுக மொழியை மாற்றுவது சேமிக்கப்பட்ட உரிமைக்கோரல் மதிப்புகள், முன்னிலைகள், அமைப்பு அடையாளங்கள், சான்றுகள் அல்லது காப்புநகல் தரவை மாற்றாது.',
       'Checking this device...': 'சாதனம் சரிபார்க்கப்படுகிறது...',
       'Checklist': 'Checklist',
       'Choose a custom date': 'Choose a custom date',

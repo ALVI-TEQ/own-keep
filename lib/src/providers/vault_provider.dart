@@ -5,6 +5,7 @@ import 'package:ownkeep/src/citizen_vault/vault/vault_lifecycle.dart';
 import 'package:ownkeep/src/citizen_vault/ingestion/ingestion_ui_controller.dart';
 import 'package:ownkeep/src/citizen_vault/vault/pin_credential_store.dart';
 import 'package:ownkeep/src/domain/recovery/recovery_method.dart';
+import 'package:vault_domain/vault_domain.dart';
 
 class AppDarkModeNotifier extends Notifier<bool> {
   final bool initialValue;
@@ -19,6 +20,21 @@ class AppDarkModeNotifier extends Notifier<bool> {
 final appDarkModeProvider = NotifierProvider<AppDarkModeNotifier, bool>(
   AppDarkModeNotifier.new,
 );
+
+class AppUseSystemThemeNotifier extends Notifier<bool> {
+  final bool initialValue;
+  AppUseSystemThemeNotifier({this.initialValue = false});
+
+  @override
+  bool build() => initialValue;
+  @override
+  set state(bool value) => super.state = value;
+}
+
+final appUseSystemThemeProvider =
+    NotifierProvider<AppUseSystemThemeNotifier, bool>(
+      AppUseSystemThemeNotifier.new,
+    );
 
 class AppThemeColorNotifier extends Notifier<String> {
   final String initialValue;
@@ -195,4 +211,18 @@ final onboardingPinProvider = NotifierProvider<OnboardingPinNotifier, String?>(
 final ingestionControllerProvider = Provider<IngestionUiController?>((ref) {
   final vaultHandle = ref.watch(unlockedVaultProvider);
   return vaultHandle?.ingestionController;
+});
+
+/// The first active person created during onboarding. It is stored inside the
+/// encrypted Life Graph and is the owner identity used by the main UI.
+final primaryPersonProvider = FutureProvider<LifeEntity?>((ref) async {
+  final controller = ref.watch(ingestionControllerProvider);
+  if (controller == null) return null;
+  return controller.entities
+      .where(
+        (entity) =>
+            entity.type == LifeEntityType.person &&
+            entity.status == LifeEntityStatus.active,
+      )
+      .firstOrNull;
 });

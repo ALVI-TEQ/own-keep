@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +23,31 @@ class StorageOverviewScreen extends ConsumerWidget {
     final documents = ref.watch(allDocumentsProvider).value ?? const [];
     int countMime(String prefix) =>
         documents.where((doc) => doc.mimeType.startsWith(prefix)).length;
+    bool isDocument(String mime) =>
+        mime.startsWith('application/') || mime.startsWith('text/');
+    bool isOther(String mime) =>
+        !isDocument(mime) &&
+        !mime.startsWith('image/') &&
+        !mime.startsWith('video/');
+    int bytesWhere(bool Function(String mime) matches) => documents
+        .where((doc) => matches(doc.mimeType))
+        .fold(0, (total, doc) => total + doc.byteSize);
+
+    final categoryCounts = <int>[
+      documents.where((doc) => isDocument(doc.mimeType)).length,
+      countMime('image/'),
+      countMime('video/'),
+      documents.where((doc) => isOther(doc.mimeType)).length,
+    ];
+    var categoryValues = <int>[
+      bytesWhere(isDocument),
+      bytesWhere((mime) => mime.startsWith('image/')),
+      bytesWhere((mime) => mime.startsWith('video/')),
+      bytesWhere(isOther),
+    ];
+    if (categoryValues.fold(0, (sum, value) => sum + value) == 0) {
+      categoryValues = categoryCounts;
+    }
 
     String formatBytes(int bytes) {
       if (bytes < 1024) return '$bytes B';
@@ -88,7 +115,7 @@ class StorageOverviewScreen extends ConsumerWidget {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        '${documents.length} encrypted items',
+                        l10n.common_item_count(documents.length),
                         style: TextStyle(
                           color: colors.textSecondary,
                           fontSize: 14,
@@ -107,32 +134,33 @@ class StorageOverviewScreen extends ConsumerWidget {
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
-                            Icon(
-                              Icons.donut_large,
-                              size: 112,
-                              color: colors.primaryBlue,
+                            CustomPaint(
+                              size: const Size.square(112),
+                              painter: _StorageDonutPainter(
+                                values: categoryValues,
+                                colors: [
+                                  colors.primaryBlue,
+                                  colors.successGreen,
+                                  colors.warningOrange,
+                                  colors.aiPurple,
+                                ],
+                                trackColor: colors.surfaceSelected,
+                              ),
                             ),
                             Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  storageStats.maybeWhen(
-                                    data: (stats) => 'Active',
-                                    orElse: () => '-',
-                                  ),
+                                  '${documents.length}',
                                   style: TextStyle(
                                     color: colors.textPrimary,
-                                    fontSize: 24,
+                                    fontSize: 22,
                                     fontWeight: FontWeight.w700,
                                     fontFamily: 'Inter',
                                   ),
                                 ),
                                 Text(
-                                  storageStats.maybeWhen(
-                                    data: (stats) =>
-                                        formatBytes(stats['totalSize'] as int),
-                                    orElse: () => '-',
-                                  ),
+                                  documents.length == 1 ? 'item' : 'items',
                                   style: TextStyle(
                                     color: colors.textSecondary,
                                     fontSize: 12,
@@ -153,28 +181,28 @@ class StorageOverviewScreen extends ConsumerWidget {
                               colors,
                               colors.primaryBlue,
                               l10n.s24_documents,
-                              '${documents.where((doc) => doc.mimeType.startsWith('application/') || doc.mimeType.startsWith('text/')).length} items',
+                              l10n.common_item_count(categoryCounts[0]),
                             ),
                             const SizedBox(height: 12),
                             _buildLegendItem(
                               colors,
                               colors.successGreen,
                               l10n.s24_images,
-                              '${countMime('image/')} items',
+                              l10n.common_item_count(categoryCounts[1]),
                             ),
                             const SizedBox(height: 12),
                             _buildLegendItem(
                               colors,
                               colors.warningOrange,
                               l10n.s24_videos,
-                              '${countMime('video/')} items',
+                              l10n.common_item_count(categoryCounts[2]),
                             ),
                             const SizedBox(height: 12),
                             _buildLegendItem(
                               colors,
                               colors.aiPurple,
                               l10n.s24_others,
-                              '${documents.where((doc) => !doc.mimeType.startsWith('application/') && !doc.mimeType.startsWith('text/') && !doc.mimeType.startsWith('image/') && !doc.mimeType.startsWith('video/')).length} items',
+                              l10n.common_item_count(categoryCounts[3]),
                             ),
                           ],
                         ),
@@ -446,4 +474,52 @@ class StorageOverviewScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+class _StorageDonutPainter extends CustomPainter {
+  const _StorageDonutPainter({
+    required this.values,
+    required this.colors,
+    required this.trackColor,
+  });
+
+  final List<int> values;
+  final List<Color> colors;
+  final Color trackColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = size.center(Offset.zero);
+    final radius = math.min(size.width, size.height) / 2 - 8;
+    final rect = Rect.fromCircle(center: center, radius: radius);
+    const strokeWidth = 16.0;
+    final total = values.fold<int>(0, (sum, value) => sum + value);
+    final basePaint = Paint()
+      ..color = trackColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+    canvas.drawCircle(center, radius, basePaint);
+    if (total == 0) return;
+
+    const gap = 0.035;
+    var start = -math.pi / 2;
+    for (var index = 0; index < values.length; index++) {
+      if (values[index] == 0) continue;
+      final fullSweep = math.pi * 2 * values[index] / total;
+      final sweep = math.max(0.0, fullSweep - gap);
+      final paint = Paint()
+        ..color = colors[index]
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = strokeWidth
+        ..strokeCap = StrokeCap.butt;
+      canvas.drawArc(rect, start + gap / 2, sweep, false, paint);
+      start += fullSweep;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _StorageDonutPainter oldDelegate) =>
+      oldDelegate.values != values ||
+      oldDelegate.colors != colors ||
+      oldDelegate.trackColor != trackColor;
 }

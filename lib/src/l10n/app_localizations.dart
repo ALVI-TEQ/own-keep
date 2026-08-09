@@ -594,78 +594,6 @@ abstract class AppLocalizations {
   /// **'Write these words down in order and keep them safe.'**
   String get s07_body;
 
-  /// No description provided for @s07_word_01.
-  ///
-  /// In en, this message translates to:
-  /// **'mango'**
-  String get s07_word_01;
-
-  /// No description provided for @s07_word_02.
-  ///
-  /// In en, this message translates to:
-  /// **'desert'**
-  String get s07_word_02;
-
-  /// No description provided for @s07_word_03.
-  ///
-  /// In en, this message translates to:
-  /// **'trust'**
-  String get s07_word_03;
-
-  /// No description provided for @s07_word_04.
-  ///
-  /// In en, this message translates to:
-  /// **'polar'**
-  String get s07_word_04;
-
-  /// No description provided for @s07_word_05.
-  ///
-  /// In en, this message translates to:
-  /// **'kitten'**
-  String get s07_word_05;
-
-  /// No description provided for @s07_word_06.
-  ///
-  /// In en, this message translates to:
-  /// **'guitar'**
-  String get s07_word_06;
-
-  /// No description provided for @s07_word_07.
-  ///
-  /// In en, this message translates to:
-  /// **'planet'**
-  String get s07_word_07;
-
-  /// No description provided for @s07_word_08.
-  ///
-  /// In en, this message translates to:
-  /// **'purple'**
-  String get s07_word_08;
-
-  /// No description provided for @s07_word_09.
-  ///
-  /// In en, this message translates to:
-  /// **'silver'**
-  String get s07_word_09;
-
-  /// No description provided for @s07_word_10.
-  ///
-  /// In en, this message translates to:
-  /// **'eagle'**
-  String get s07_word_10;
-
-  /// No description provided for @s07_word_11.
-  ///
-  /// In en, this message translates to:
-  /// **'bridge'**
-  String get s07_word_11;
-
-  /// No description provided for @s07_word_12.
-  ///
-  /// In en, this message translates to:
-  /// **'fitness'**
-  String get s07_word_12;
-
   /// No description provided for @s07_warning.
   ///
   /// In en, this message translates to:
@@ -978,6 +906,72 @@ abstract class AppLocalizations {
   /// **'128 items'**
   String get s12_item_total;
 
+  /// No description provided for @s12_custom_collections.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom collections'**
+  String get s12_custom_collections;
+
+  /// No description provided for @s12_create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get s12_create;
+
+  /// No description provided for @s12_no_custom_collections.
+  ///
+  /// In en, this message translates to:
+  /// **'No custom collections yet.'**
+  String get s12_no_custom_collections;
+
+  /// No description provided for @s12_custom_collections_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load custom collections.'**
+  String get s12_custom_collections_error;
+
+  /// No description provided for @common_item_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No items} =1{1 item} other{{count} items}}'**
+  String common_item_count(int count);
+
+  /// No description provided for @s12_collection_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 collection} other{{count} collections}}'**
+  String s12_collection_count(int count);
+
+  /// No description provided for @common_unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get common_unknown;
+
+  /// No description provided for @common_untitled.
+  ///
+  /// In en, this message translates to:
+  /// **'Untitled'**
+  String get common_untitled;
+
+  /// No description provided for @s11_no_recent_files.
+  ///
+  /// In en, this message translates to:
+  /// **'No recent files'**
+  String get s11_no_recent_files;
+
+  /// No description provided for @s11_no_upcoming_reminders.
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming reminders'**
+  String get s11_no_upcoming_reminders;
+
+  /// No description provided for @s11_documents_load_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load documents'**
+  String get s11_documents_load_error;
+
   /// No description provided for @collection_vehicle.
   ///
   /// In en, this message translates to:
@@ -1199,6 +1193,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your latest vault activity'**
   String get s14_subtitle;
+
+  /// No description provided for @s14_load_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load recent files'**
+  String get s14_load_error;
+
+  /// No description provided for @s14_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'No recent items'**
+  String get s14_empty;
 
   /// No description provided for @filter_viewed.
   ///
@@ -2199,8 +2205,8 @@ abstract class AppLocalizations {
   /// No description provided for @s42_used.
   ///
   /// In en, this message translates to:
-  /// **'Used: 103 GB'**
-  String get s42_used;
+  /// **'Used: {size}'**
+  String s42_used(String size);
 
   /// No description provided for @s42_free.
   ///
@@ -4596,6 +4602,66 @@ abstract class AppLocalizations {
   /// **'Tip: All your data is stored only on your device. We never collect or transmit your information.'**
   String get s30_privacy_tip;
 
+  /// No description provided for @s30_search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search help...'**
+  String get s30_search;
+
+  /// No description provided for @s30_popular_topics.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Topics'**
+  String get s30_popular_topics;
+
+  /// No description provided for @s30_recover.
+  ///
+  /// In en, this message translates to:
+  /// **'Recover'**
+  String get s30_recover;
+
+  /// No description provided for @s30_share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get s30_share;
+
+  /// No description provided for @s30_backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup'**
+  String get s30_backup;
+
+  /// No description provided for @profile_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile_title;
+
+  /// No description provided for @profile_vault.
+  ///
+  /// In en, this message translates to:
+  /// **'My Vault Profile'**
+  String get profile_vault;
+
+  /// No description provided for @profile_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings & Preferences'**
+  String get profile_settings;
+
+  /// No description provided for @profile_security.
+  ///
+  /// In en, this message translates to:
+  /// **'Security & App Lock'**
+  String get profile_security;
+
+  /// No description provided for @profile_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Support'**
+  String get profile_help;
+
   /// No description provided for @s31_title.
   ///
   /// In en, this message translates to:
@@ -4641,7 +4707,7 @@ abstract class AppLocalizations {
   /// No description provided for @s31_view_body.
   ///
   /// In en, this message translates to:
-  /// **'View your 24-word recovery phrase'**
+  /// **'View your 12-word recovery phrase'**
   String get s31_view_body;
 
   /// No description provided for @s31_verify_title.
@@ -12149,6 +12215,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Summarize'**
   String get s71_prompt_summarize;
+
+  /// No description provided for @onboarding_language_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your language'**
+  String get onboarding_language_title;
+
+  /// No description provided for @onboarding_language_body.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change this later in Settings.'**
+  String get onboarding_language_body;
+
+  /// No description provided for @person_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us your name'**
+  String get person_title;
+
+  /// No description provided for @person_body.
+  ///
+  /// In en, this message translates to:
+  /// **'This creates the first person in your private vault and personalizes your dashboard.'**
+  String get person_body;
+
+  /// No description provided for @person_name_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get person_name_label;
+
+  /// No description provided for @person_name_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'How should OwnKeep address you?'**
+  String get person_name_hint;
+
+  /// No description provided for @person_name_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name.'**
+  String get person_name_error;
+
+  /// No description provided for @person_save_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Your encrypted profile could not be saved.'**
+  String get person_save_error;
+
+  /// No description provided for @person_privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name is encrypted inside this vault and never leaves your device.'**
+  String get person_privacy;
+
+  /// No description provided for @greeting_welcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to OwnKeep'**
+  String get greeting_welcome;
+
+  /// No description provided for @greeting_morning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning, {name}'**
+  String greeting_morning(String name);
+
+  /// No description provided for @greeting_afternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon, {name}'**
+  String greeting_afternoon(String name);
+
+  /// No description provided for @greeting_evening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening, {name}'**
+  String greeting_evening(String name);
 }
 
 class _AppLocalizationsDelegate

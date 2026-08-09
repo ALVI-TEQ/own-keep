@@ -110,7 +110,7 @@ class _RecentScreenState extends ConsumerState<RecentScreen> {
                       const Center(child: CircularProgressIndicator()),
                   error: (error, stack) => Center(
                     child: Text(
-                      'Failed to load recent files',
+                      l10n.s14_load_error,
                       style: TextStyle(color: colors.textSecondary),
                     ),
                   ),
@@ -131,7 +131,7 @@ class _RecentScreenState extends ConsumerState<RecentScreen> {
                     if (docs.isEmpty) {
                       return Center(
                         child: Text(
-                          'No recent items',
+                          l10n.s14_empty,
                           style: TextStyle(color: colors.textSecondary),
                         ),
                       );
@@ -155,8 +155,10 @@ class _RecentScreenState extends ConsumerState<RecentScreen> {
                             doc.id,
                             doc.logicalFilename.isNotEmpty
                                 ? doc.logicalFilename
-                                : 'Untitled',
-                            doc.documentType.displayName,
+                                : l10n.common_untitled,
+                            doc.documentType.displayName == 'Unknown'
+                                ? l10n.common_unknown
+                                : doc.documentType.displayName,
                             dashboardDocumentIcon(doc),
                             colors.primaryBlue,
                           ),
@@ -255,10 +257,27 @@ class _RecentScreenState extends ConsumerState<RecentScreen> {
                 ],
               ),
             ),
-            SvgPicture.asset(
-              OwnKeepMainIcons.moreVertical,
-              colorFilter: ColorFilter.mode(colors.textMuted, BlendMode.srcIn),
-              width: 20,
+            PopupMenuButton<String>(
+              tooltip: 'File actions',
+              icon: SvgPicture.asset(
+                OwnKeepMainIcons.moreVertical,
+                colorFilter: ColorFilter.mode(
+                  colors.textMuted,
+                  BlendMode.srcIn,
+                ),
+                width: 20,
+              ),
+              onSelected: (action) {
+                if (action == 'details') {
+                  context.push('/features/file-details?id=$documentId');
+                } else {
+                  context.push('/features/document-preview?id=$documentId');
+                }
+              },
+              itemBuilder: (context) => const [
+                PopupMenuItem(value: 'open', child: Text('Open')),
+                PopupMenuItem(value: 'details', child: Text('File details')),
+              ],
             ),
           ],
         ),

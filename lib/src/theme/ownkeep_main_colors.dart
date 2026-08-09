@@ -213,7 +213,9 @@ class OwnKeepMainColorsTheme extends ThemeExtension<OwnKeepMainColorsTheme> {
 extension OwnKeepMainColorsExtension on BuildContext {
   OwnKeepMainColorsTheme get mainColors =>
       Theme.of(this).extension<OwnKeepMainColorsTheme>() ??
-      OwnKeepMainColorsTheme.defaultDark;
+      (Theme.of(this).brightness == Brightness.dark
+          ? OwnKeepMainColorsTheme.defaultDark
+          : OwnKeepMainColorsTheme.defaultLight);
 }
 
 abstract final class OwnKeepMainGradients {
