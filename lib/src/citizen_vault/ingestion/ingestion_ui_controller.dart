@@ -1480,6 +1480,16 @@ final class UnlockedIngestionUiController extends IngestionUiController {
     required String displayName,
     String? subtype,
   }) async {
+    if (type == LifeEntityType.person &&
+        subtype?.trim().toUpperCase() == 'SELF' &&
+        _entities.any(
+          (entity) =>
+              entity.type == LifeEntityType.person &&
+              entity.status == LifeEntityStatus.active &&
+              entity.subtype?.trim().toUpperCase() == 'SELF',
+        )) {
+      throw StateError('Only one active SELF profile is allowed.');
+    }
     String? createdId;
     await _libraryAction(() async {
       createdId = await _graph.createEntity(
@@ -1489,6 +1499,9 @@ final class UnlockedIngestionUiController extends IngestionUiController {
       );
       _notice = '${EntityTemplateRegistry.forType(type).singularLabel} saved.';
     });
+    if (createdId == null) {
+      throw StateError('The encrypted entity could not be saved.');
+    }
     return createdId;
   }
 
@@ -1497,13 +1510,25 @@ final class UnlockedIngestionUiController extends IngestionUiController {
     required String entityId,
     required String displayName,
     String? subtype,
-  }) => _libraryAction(
-    () => _graph.updateEntity(
-      entityId: entityId,
-      displayName: displayName,
-      subtype: subtype,
-    ),
-  );
+  }) {
+    if (subtype?.trim().toUpperCase() == 'SELF' &&
+        _entities.any(
+          (entity) =>
+              entity.id != entityId &&
+              entity.type == LifeEntityType.person &&
+              entity.status == LifeEntityStatus.active &&
+              entity.subtype?.trim().toUpperCase() == 'SELF',
+        )) {
+      throw StateError('Only one active SELF profile is allowed.');
+    }
+    return _libraryAction(
+      () => _graph.updateEntity(
+        entityId: entityId,
+        displayName: displayName,
+        subtype: subtype,
+      ),
+    );
+  }
 
   @override
   Future<void> setEntityArchived(String entityId, bool archived) =>
@@ -2022,6 +2047,7 @@ final class UnlockedIngestionUiController extends IngestionUiController {
     );
     _tags = await _library.listTags();
     _reminders = await _reminderCoordinator.list();
+    await _normalizePrimaryPerson();
     _entities = await _graph.listEntities(includeArchived: true);
     _entityAttributesById = {
       for (final entity in _entities)
@@ -2051,6 +2077,27 @@ final class UnlockedIngestionUiController extends IngestionUiController {
     _checklists = await _attention.listChecklists();
     _smartPacks = await _smartPackRepository.listPacks();
     _preferences = await _library.preferences();
+  }
+
+  Future<void> _normalizePrimaryPerson() async {
+    final selfProfiles = (await _graph.listEntities(includeArchived: false))
+        .where(
+          (entity) =>
+              entity.type == LifeEntityType.person &&
+              entity.subtype?.trim().toUpperCase() == 'SELF',
+        )
+        .toList();
+    if (selfProfiles.length < 2) return;
+    selfProfiles.sort(
+      (left, right) => (left.updatedAt ?? left.createdAt ?? DateTime(1970))
+          .compareTo(right.updatedAt ?? right.createdAt ?? DateTime(1970)),
+    );
+    final canonical = selfProfiles.last;
+    for (final duplicate in selfProfiles) {
+      if (duplicate.id != canonical.id) {
+        await _graph.setEntityArchived(duplicate.id, true);
+      }
+    }
   }
 
   Future<void> _suggestProfileClaims(

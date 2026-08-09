@@ -6,6 +6,7 @@ import 'package:ownkeep/src/l10n/app_localizations.dart';
 import '../../theme/ownkeep_main_colors.dart';
 import '../../theme/ownkeep_main_icons.dart';
 import '../../providers/vault_provider.dart';
+import '../../providers/document_provider.dart';
 
 class NavigationMenuDrawer extends ConsumerWidget {
   const NavigationMenuDrawer({super.key});
@@ -16,6 +17,8 @@ class NavigationMenuDrawer extends ConsumerWidget {
     final colors = context.mainColors;
     final location = GoRouterState.of(context).uri.path;
     final personName = ref.watch(primaryPersonProvider).value?.displayName;
+    final storage = ref.watch(vaultStorageSummaryProvider).value;
+    final documentCount = ref.watch(allDocumentsProvider).value?.length;
 
     return Drawer(
       backgroundColor: colors.navigationBackground,
@@ -114,7 +117,9 @@ class NavigationMenuDrawer extends ConsumerWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        l10n.s20_vault_summary,
+                        storage == null || documentCount == null
+                            ? 'Calculating storage…'
+                            : '$documentCount items • ${_formatBytes(storage.totalBytes)}',
                         style: TextStyle(
                           color: colors.textSecondary,
                           fontSize: 13,
@@ -316,6 +321,15 @@ class NavigationMenuDrawer extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  String _formatBytes(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    if (bytes < 1024 * 1024 * 1024) {
+      return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    }
+    return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
   }
 
   Widget _buildNavItem(

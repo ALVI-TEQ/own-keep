@@ -19,7 +19,7 @@ abstract interface class DocumentFileTransfer {
 final class PlatformDocumentFileTransfer implements DocumentFileTransfer {
   /// Creates the platform adapter.
   const PlatformDocumentFileTransfer({MethodChannel? channel})
-    : _channel = channel ?? const MethodChannel('citizen_vault/files');
+    : _channel = channel ?? const MethodChannel('com.alviteq.ownkeep/files');
 
   final MethodChannel _channel;
 

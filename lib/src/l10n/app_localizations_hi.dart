@@ -2327,6 +2327,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get profile_vault => 'मेरी वॉल्ट प्रोफ़ाइल';
 
   @override
+  String get profile_people => 'लोग';
+
+  @override
   String get profile_settings => 'सेटिंग और प्राथमिकताएं';
 
   @override

@@ -36,9 +36,14 @@ class _OcrScanTextScreenState extends ConsumerState<OcrScanTextScreen> {
   Widget build(BuildContext context) {
     final colors = context.mainColors;
     final id = widget.documentId;
+    final documentAsync = id == null
+        ? null
+        : ref.watch(documentDetailProvider(id));
     final document = id == null
         ? null
-        : ref.watch(documentDetailProvider(id)).value;
+        : documentAsync!.hasError
+        ? null
+        : documentAsync.value;
     final pages =
         document?.textPages
             .where((page) => page.text.trim().isNotEmpty)
@@ -66,8 +71,12 @@ class _OcrScanTextScreenState extends ConsumerState<OcrScanTextScreen> {
         ),
         centerTitle: true,
       ),
-      body: document == null
+      body: documentAsync?.hasError == true
+          ? _loadFailure(colors)
+          : documentAsync?.isLoading == true
           ? const Center(child: CircularProgressIndicator())
+          : document == null
+          ? _notFound(colors)
           : ListView(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
               children: [
@@ -292,6 +301,36 @@ class _OcrScanTextScreenState extends ConsumerState<OcrScanTextScreen> {
       ),
     );
   }
+
+  Widget _loadFailure(OwnKeepMainColorsTheme colors) => Center(
+    child: Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.error_outline, color: colors.dangerRed, size: 48),
+          const SizedBox(height: 12),
+          Text(
+            'Extracted text could not be loaded.',
+            style: TextStyle(color: colors.textPrimary),
+          ),
+          const SizedBox(height: 12),
+          FilledButton(
+            onPressed: () =>
+                ref.invalidate(documentDetailProvider(widget.documentId!)),
+            child: const Text('Try again'),
+          ),
+        ],
+      ),
+    ),
+  );
+
+  Widget _notFound(OwnKeepMainColorsTheme colors) => Center(
+    child: Text(
+      'This document is no longer available.',
+      style: TextStyle(color: colors.textSecondary),
+    ),
+  );
 
   Widget _statChip(
     OwnKeepMainColorsTheme colors,

@@ -2337,6 +2337,9 @@ class AppLocalizationsTe extends AppLocalizations {
   String get profile_vault => 'నా వాల్ట్ ప్రొఫైల్';
 
   @override
+  String get profile_people => 'వ్యక్తులు';
+
+  @override
   String get profile_settings => 'సెట్టింగులు & ప్రాధాన్యతలు';
 
   @override

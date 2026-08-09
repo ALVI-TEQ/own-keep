@@ -31,6 +31,19 @@ final class SqlCipherLifeGraphRepository {
     final id = await _id();
     final now = _now;
     await session.write((db) async {
+      if (type == LifeEntityType.person &&
+          subtype?.trim().toUpperCase() == 'SELF') {
+        final existing = await db
+            .customSelect(
+              "SELECT id FROM entities WHERE entity_type = 'PERSON' "
+              "AND upper(trim(COALESCE(subtype, ''))) = 'SELF' "
+              "AND status = 'ACTIVE' LIMIT 1",
+            )
+            .getSingleOrNull();
+        if (existing != null) {
+          throw StateError('An active SELF profile already exists.');
+        }
+      }
       await db.customStatement(
         'INSERT INTO entities(id, entity_type, subtype, display_name, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)',
         [id, type.storageValue, subtype, displayName, now, now],
@@ -133,6 +146,19 @@ final class SqlCipherLifeGraphRepository {
     final now = _now;
     await session.write((db) async {
       await _ensureEntityIn(db, entityId);
+      if (subtype?.trim().toUpperCase() == 'SELF') {
+        final existing = await db
+            .customSelect(
+              "SELECT id FROM entities WHERE entity_type = 'PERSON' "
+              "AND upper(trim(COALESCE(subtype, ''))) = 'SELF' "
+              "AND status = 'ACTIVE' AND id != ? LIMIT 1",
+              variables: [Variable.withString(entityId)],
+            )
+            .getSingleOrNull();
+        if (existing != null) {
+          throw StateError('An active SELF profile already exists.');
+        }
+      }
       await db.customStatement(
         'UPDATE entities SET display_name = ?, subtype = ?, updated_at = ? WHERE id = ?',
         [displayName.trim(), subtype, now, entityId],
@@ -347,12 +373,7 @@ final class SqlCipherLifeGraphRepository {
       await db.customStatement(
         'UPDATE entities SET status = ?, archived_at = ?, updated_at = ? '
         'WHERE id = ?',
-        [
-          LifeEntityStatus.archived.storageValue,
-          now,
-          now,
-          duplicateEntityId,
-        ],
+        [LifeEntityStatus.archived.storageValue, now, now, duplicateEntityId],
       );
       await _audit(
         db,
@@ -508,14 +529,7 @@ final class SqlCipherLifeGraphRepository {
         'UPDATE claims SET status = ?, confirmed_at = ?, rejected_at = ?, '
         'supersedes_id = COALESCE(?, supersedes_id), updated_at = ? '
         'WHERE id = ?',
-        [
-          status.storageValue,
-          confirmed,
-          rejected,
-          supersedesId,
-          now,
-          claimId,
-        ],
+        [status.storageValue, confirmed, rejected, supersedesId, now, claimId],
       );
       await _history(
         db,
@@ -794,21 +808,12 @@ final class SqlCipherLifeGraphRepository {
         provenanceId,
         now,
       );
-      await _audit(
-        db,
-        'EVENT_SUGGESTED',
-        id,
-        now,
-        subjectType: 'EVENT',
-      );
+      await _audit(db, 'EVENT_SUGGESTED', id, now, subjectType: 'EVENT');
     });
     return id;
   }
 
-  Future<void> setEventStatus(
-    String eventId,
-    LifeEventStatus status,
-  ) async {
+  Future<void> setEventStatus(String eventId, LifeEventStatus status) async {
     final now = _now;
     await session.write((db) async {
       final old = await db
@@ -1104,9 +1109,7 @@ final class SqlCipherLifeGraphRepository {
     final variables = <Variable<Object>>[
       Variable.withInt(from.toUtc().millisecondsSinceEpoch),
       Variable.withInt(until.toUtc().millisecondsSinceEpoch),
-      ...expenseTypes.map(
-        (type) => Variable.withString(type.storageValue),
-      ),
+      ...expenseTypes.map((type) => Variable.withString(type.storageValue)),
       if (entityId != null) Variable.withString(entityId),
     ];
     final rows = await db
@@ -1309,9 +1312,7 @@ final class SqlCipherLifeGraphRepository {
         evidenceRole: row.read<String>('evidence_role'),
         assetId: row.readNullable<String>('asset_id'),
         pageNumber: row.readNullable<int>('page_number'),
-        boundingPolygonJson: row.readNullable<String>(
-          'bounding_polygon_json',
-        ),
+        boundingPolygonJson: row.readNullable<String>('bounding_polygon_json'),
         textFragmentHash: row
             .readNullable<Uint8List>('text_fragment_hash')
             ?.toList(growable: false),
@@ -1419,13 +1420,7 @@ final class SqlCipherLifeGraphRepository {
     final historyId = await _id();
     await db.customStatement(
       'INSERT INTO $table(id, ${table == 'claim_history' ? 'claim_id' : 'relationship_id'}, event_type, provenance_id, created_at) VALUES (?, ?, ?, ?, ?)',
-      [
-        historyId,
-        id,
-        event,
-        provenance,
-        now,
-      ],
+      [historyId, id, event, provenance, now],
     );
   }
 
@@ -1440,14 +1435,7 @@ final class SqlCipherLifeGraphRepository {
     await db.customStatement(
       'INSERT INTO event_history(id, event_id, event_type, previous_status, '
       'provenance_id, created_at) VALUES (?, ?, ?, ?, ?, ?)',
-      [
-        await _id(),
-        eventId,
-        eventType,
-        previousStatus,
-        provenanceId,
-        now,
-      ],
+      [await _id(), eventId, eventType, previousStatus, provenanceId, now],
     );
   }
 

@@ -222,7 +222,8 @@ final primaryPersonProvider = FutureProvider<LifeEntity?>((ref) async {
       .where(
         (entity) =>
             entity.type == LifeEntityType.person &&
-            entity.status == LifeEntityStatus.active,
+            entity.status == LifeEntityStatus.active &&
+            entity.subtype?.trim().toUpperCase() == 'SELF',
       )
       .firstOrNull;
 });

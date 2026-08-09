@@ -195,9 +195,18 @@ class MainActivity : FlutterFragmentActivity() {
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
-            "citizen_vault/files",
+            "com.alviteq.ownkeep/files",
         ).setMethodCallHandler { call, result ->
-            if (call.method != "exportDocument") {
+            if (call.method == "availableBytes") {
+                val path = call.argument<String>("path")
+                if (path.isNullOrBlank()) {
+                    result.error("INVALID_PATH", "Storage path is unavailable", null)
+                } else {
+                    result.success(File(path).usableSpace)
+                }
+                return@setMethodCallHandler
+            }
+            if (call.method != "exportDocument" && call.method != "exportArchive") {
                 result.notImplemented()
                 return@setMethodCallHandler
             }
@@ -206,8 +215,16 @@ class MainActivity : FlutterFragmentActivity() {
                 return@setMethodCallHandler
             }
             val source = call.argument<String>("sourcePath")?.let(::File)
-            val suggestedName = call.argument<String>("suggestedName")
-            val mimeType = call.argument<String>("mimeType") ?: "application/octet-stream"
+            val suggestedName = if (call.method == "exportArchive") {
+                source?.name
+            } else {
+                call.argument<String>("suggestedName")
+            }
+            val mimeType = if (call.method == "exportArchive") {
+                "application/octet-stream"
+            } else {
+                call.argument<String>("mimeType") ?: "application/octet-stream"
+            }
             if (source == null || !source.isFile || suggestedName.isNullOrBlank()) {
                 result.error("INVALID_SOURCE", "Export source is unavailable", null)
                 return@setMethodCallHandler

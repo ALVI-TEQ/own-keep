@@ -88,6 +88,14 @@ class ProfileScreen extends ConsumerWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: OwnKeepSpacing.xxl),
+                _buildMaterialOption(
+                  context,
+                  colors,
+                  l10n.profile_people,
+                  Icons.people_outline,
+                  '/features/people',
+                ),
+                Divider(color: colors.borderSoft, height: 1),
                 _buildOption(
                   context,
                   colors,
@@ -115,6 +123,38 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildMaterialOption(
+    BuildContext context,
+    OwnKeepMainColorsTheme colors,
+    String label,
+    IconData icon,
+    String route,
+  ) {
+    return InkWell(
+      onTap: () => context.push(route),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Row(
+          children: [
+            Icon(icon, color: colors.neutralIcon, size: 24),
+            const SizedBox(width: OwnKeepSpacing.md),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Icon(Icons.chevron_right, color: colors.textMuted, size: 20),
+          ],
+        ),
       ),
     );
   }

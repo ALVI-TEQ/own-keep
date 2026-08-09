@@ -36,6 +36,8 @@ import '../l10n/app_localizations.dart';
 import '../providers/vault_provider.dart';
 import '../providers/subscription_provider.dart';
 import '../domain/subscription/feature_entitlements.dart';
+import '../citizen_vault/life/entity_directory_screen.dart';
+import 'package:vault_domain/vault_domain.dart';
 
 import '../presentation/features/21_share_export_screen.dart';
 import '../presentation/features/22_favorites_list_screen.dart';
@@ -159,6 +161,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     '/features/tag-manager',
     '/features/vault-info',
     '/features/help-support',
+    '/features/people',
     '/features/recovery-center',
     '/features/health-reminders',
     '/features/expiry-calendar',
@@ -228,7 +231,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             controller?.entities.any(
               (entity) =>
                   entity.type.storageValue == 'PERSON' &&
-                  entity.status.storageValue == 'ACTIVE',
+                  entity.status.storageValue == 'ACTIVE' &&
+                  entity.subtype?.trim().toUpperCase() == 'SELF',
             ) ??
             false;
         if (controller != null && !hasPrimaryPerson) {
@@ -394,6 +398,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/features/help-support',
         builder: (context, state) => const HelpSupportScreen(),
+      ),
+      GoRoute(
+        path: '/features/people',
+        builder: (context, state) => EntityDirectoryScreen(
+          controller: ref.read(ingestionControllerProvider)!,
+          initialTypes: const {LifeEntityType.person},
+          title: AppLocalizations.of(context)!.profile_people,
+        ),
       ),
       GoRoute(
         path: '/features/recovery-center',

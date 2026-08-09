@@ -4644,6 +4644,12 @@ abstract class AppLocalizations {
   /// **'My Vault Profile'**
   String get profile_vault;
 
+  /// No description provided for @profile_people.
+  ///
+  /// In en, this message translates to:
+  /// **'People'**
+  String get profile_people;
+
   /// No description provided for @profile_settings.
   ///
   /// In en, this message translates to:

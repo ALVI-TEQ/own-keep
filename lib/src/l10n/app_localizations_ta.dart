@@ -2358,6 +2358,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get profile_vault => 'எனது வால்ட் சுயவிவரம்';
 
   @override
+  String get profile_people => 'நபர்கள்';
+
+  @override
   String get profile_settings => 'அமைப்புகள் & விருப்பங்கள்';
 
   @override

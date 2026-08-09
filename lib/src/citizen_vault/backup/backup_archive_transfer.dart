@@ -33,7 +33,7 @@ final class SelectedBackupArchive {
 final class PlatformBackupArchiveTransfer implements BackupArchiveTransfer {
   /// Creates the platform adapter.
   const PlatformBackupArchiveTransfer({MethodChannel? channel})
-    : _channel = channel ?? const MethodChannel('citizen_vault/files');
+    : _channel = channel ?? const MethodChannel('com.alviteq.ownkeep/files');
 
   final MethodChannel _channel;
 

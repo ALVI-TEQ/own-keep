@@ -2320,6 +2320,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profile_vault => 'My Vault Profile';
 
   @override
+  String get profile_people => 'People';
+
+  @override
   String get profile_settings => 'Settings & Preferences';
 
   @override

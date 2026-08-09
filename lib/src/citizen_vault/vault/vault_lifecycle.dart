@@ -519,6 +519,17 @@ final class LocalVaultLifecycle implements VaultLifecycle {
         ),
         projection: FlutterLocalNotificationProjection(),
       );
+      final ingestionController = UnlockedIngestionUiController(
+        coordinator: coordinator,
+        library: SqlCipherDocumentLibrary(
+          session: databaseSession,
+          random: _random,
+        ),
+        graph: SqlCipherLifeGraphRepository(databaseSession, _random),
+        reminders: reminderCoordinator,
+        vaultRoot: _root,
+      );
+      await ingestionController.refresh();
       return _LocalUnlockedVaultHandle(
         databaseSession: databaseSession,
         fileRootKey: fileRootKey,
@@ -526,16 +537,7 @@ final class LocalVaultLifecycle implements VaultLifecycle {
           databaseSession: databaseSession!,
           recoveryPassphrase: recoveryPassphrase,
         ),
-        ingestionController: UnlockedIngestionUiController(
-          coordinator: coordinator,
-          library: SqlCipherDocumentLibrary(
-            session: databaseSession,
-            random: _random,
-          ),
-          graph: SqlCipherLifeGraphRepository(databaseSession, _random),
-          reminders: reminderCoordinator,
-          vaultRoot: _root,
-        ),
+        ingestionController: ingestionController,
       );
     } on Object {
       fileRootKey?.destroy();

@@ -45,11 +45,28 @@ class _FirstPersonScreenState extends ConsumerState<FirstPersonScreen> {
           orElse: () => SupportedLanguage.english,
         ),
       );
-      await controller.createEntity(
-        type: LifeEntityType.person,
-        displayName: name,
-        subtype: 'SELF',
-      );
+      final existingSelf = controller.entities
+          .where(
+            (entity) =>
+                entity.type == LifeEntityType.person &&
+                entity.status == LifeEntityStatus.active &&
+                entity.subtype?.trim().toUpperCase() == 'SELF',
+          )
+          .firstOrNull;
+      if (existingSelf == null) {
+        final entityId = await controller.createEntity(
+          type: LifeEntityType.person,
+          displayName: name,
+          subtype: 'SELF',
+        );
+        if (entityId == null) throw StateError('Person was not saved');
+      } else {
+        await controller.updateEntity(
+          entityId: existingSelf.id,
+          displayName: name,
+          subtype: 'SELF',
+        );
+      }
       ref.invalidate(primaryPersonProvider);
       if (mounted) context.go('/setup-complete');
     } catch (_) {

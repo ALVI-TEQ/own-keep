@@ -49,6 +49,7 @@ final class _EntityDirectoryScreenState extends State<EntityDirectoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     final entities = widget.controller.entities
         .where(
           (entity) =>
@@ -65,13 +66,13 @@ final class _EntityDirectoryScreenState extends State<EntityDirectoryScreen> {
         scrolledUnderElevation: 0,
         title: Text(
           widget.title.tr,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 24,
-            color: Color(0xFF0F172A),
+            color: scheme.onSurface,
           ),
         ),
-        iconTheme: const IconThemeData(color: Color(0xFF0F172A)),
+        iconTheme: IconThemeData(color: scheme.onSurface),
         actions: [
           IconButton(
             tooltip: (_showArchived ? 'Hide archived' : 'Show archived').tr,
@@ -93,11 +94,12 @@ final class _EntityDirectoryScreenState extends State<EntityDirectoryScreen> {
                 return Container(
                   margin: const EdgeInsets.only(bottom: 8),
                   decoration: BoxDecoration(
+                    color: scheme.surfaceContainer,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0xFFE2E8F0)),
+                    border: Border.all(color: scheme.outlineVariant),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.02),
+                        color: scheme.shadow.withValues(alpha: 0.08),
                         blurRadius: 5,
                         offset: const Offset(0, 2),
                       ),
@@ -111,31 +113,31 @@ final class _EntityDirectoryScreenState extends State<EntityDirectoryScreen> {
                     leading: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF1F5F9),
+                        color: scheme.surfaceContainerHighest,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
                         _iconFor(entity.type),
-                        color: const Color(0xFF0F172A),
+                        color: scheme.onSurface,
                       ),
                     ),
                     title: Text(
                       entity.displayName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF0F172A),
+                        color: scheme.onSurface,
                       ),
                     ),
                     subtitle: Text(
                       '${EntityTemplateRegistry.forType(entity.type).singularLabel.tr}'
                       '${entity.subtype == null ? '' : ' · ${entity.subtype}'}',
-                      style: const TextStyle(color: Color(0xFF64748B)),
+                      style: TextStyle(color: scheme.onSurfaceVariant),
                     ),
                     trailing: entity.status == LifeEntityStatus.archived
                         ? Chip(label: Text(AppStrings.txtArchived.tr))
-                        : const Icon(
+                        : Icon(
                             Icons.chevron_right,
-                            color: Color(0xFF94A3B8),
+                            color: scheme.onSurfaceVariant,
                           ),
                     onTap: () => Navigator.of(context).push<void>(
                       MaterialPageRoute(
@@ -168,11 +170,23 @@ final class _EntityDirectoryScreenState extends State<EntityDirectoryScreen> {
       ),
     );
     if (draft == null) return;
-    await widget.controller.createEntity(
-      type: draft.type,
-      displayName: draft.displayName,
-      subtype: draft.subtype,
-    );
+    try {
+      await widget.controller.createEntity(
+        type: draft.type,
+        displayName: draft.displayName,
+        subtype: draft.subtype,
+      );
+    } on StateError {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'This vault already has an owner. Edit the existing SELF profile instead.',
+            ),
+          ),
+        );
+      }
+    }
   }
 }
 
@@ -216,13 +230,15 @@ final class _EntityProfileScreenState extends State<EntityProfileScreen> {
         scrolledUnderElevation: 0,
         title: Text(
           _entity.displayName,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 24,
-            color: Color(0xFF0F172A),
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
-        iconTheme: const IconThemeData(color: Color(0xFF0F172A)),
+        iconTheme: IconThemeData(
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
         actions: [
           IconButton(
             tooltip: 'Edit profile'.tr,
@@ -232,9 +248,9 @@ final class _EntityProfileScreenState extends State<EntityProfileScreen> {
         ],
         bottom: TabBar(
           isScrollable: true,
-          labelColor: Color(0xFF3B82F6),
-          unselectedLabelColor: Color(0xFF64748B),
-          indicatorColor: Color(0xFF3B82F6),
+          labelColor: Theme.of(context).colorScheme.primary,
+          unselectedLabelColor: Theme.of(context).colorScheme.onSurfaceVariant,
+          indicatorColor: Theme.of(context).colorScheme.primary,
           tabs: [
             Tab(text: 'Overview'.tr),
             Tab(text: 'Evidence'.tr),
